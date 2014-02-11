@@ -8,7 +8,6 @@ Madeira OpsAgent states adaptor
 # System imports
 import os
 import hashlib
-import collections
 
 # Internal imports
 from opsagent import utils
@@ -100,7 +99,7 @@ class StateAdaptor(object):
 		'linux.apt.repo'	: {
 			'attributes' : {
 				'name' 		: 'name',
-				'contents' 	: 'content'
+				'content' 	: 'contents'
 			},
 			'states' : [
 				'managed'
@@ -110,7 +109,7 @@ class StateAdaptor(object):
 		'linux.yum.repo' : {
 			'attributes' : {
 				'name' 		: 'name',
-				'contents' 	: 'content'
+				'content' 	: 'contents'
 			},
 			'states' : [
 				'managed'
@@ -647,8 +646,8 @@ class StateAdaptor(object):
 					module_state[pkg_state]['names'].append(item)
 
 		elif module in ['common.git', 'common.svn', 'common.hg']:
-			if 'name' in addin:
-				module_state[default_state]['name'] = addin['name'].split('-')[1].strip()
+			# if 'name' in addin:
+			# 	module_state[default_state]['name'] = addin['name'].split('-')[1].strip()
 
 			# set revision
 			if 'branch' in addin:
@@ -733,10 +732,10 @@ class StateAdaptor(object):
 		elif module in ['linux.user']:
 			# set nologin shell
 			if 'nologin' in addin:
-				module_state[default_state].pop('nologin')
-
 				if addin['nologin']:
 					module_state[default_state]['shell'] = '/sbin/nologin'
+
+				module_state[default_state].pop('nologin')
 
 		elif module in ['linux.mount']:
 			for attr in ['dump', 'pass_num']:
@@ -785,7 +784,7 @@ class StateAdaptor(object):
 			# tag 	= self.__get_tag(module, None, None, 'require', state)
 			# type 	= self.salt_map[module]['type']
 
-			the_requre_state = self._transfer('require', module, parameter)
+			the_requre_state = self.__salt('require', module, parameter)
 
 			if the_requre_state:
 				requre_state.update(the_requre_state)
@@ -903,7 +902,7 @@ class StateAdaptor(object):
 # ===================== UT =====================
 def ut():
 	import json
-	pre_states = json.loads(open('/opt/madeira/env/lib/python2.7/site-packages/opsagent/state/api.json').read())
+	pre_states = json.loads(open('api.json').read())
 
 	# salt_opts = {
 	# 	'file_client':       'local',
