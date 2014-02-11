@@ -910,7 +910,7 @@ class StateAdaptor(object):
 # ===================== UT =====================
 def ut():
 	import json
-	pre_states = json.loads(open('api.json').read())
+	pre_states = json.loads(open('/opt/madeira/env/lib/python2.7/site-packages/opsagent/state/api.json').read())
 
 	# salt_opts = {
 	# 	'file_client':       'local',
