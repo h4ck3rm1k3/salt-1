@@ -4,7 +4,7 @@ no=$1
 
 BASE_DIR=/opt/madeira/env/lib/python2.7/site-packages/opsagent/state
 PY_BIN=/opt/madeira/env/bin/python
-EXE_BIN=adaptor.py
+EXE_BIN=${BASE_DIR}/adaptor.py
 
 if [ $# -ne 1 ]
 then
@@ -26,8 +26,7 @@ do
     echo `date '+%Y-%m-%d %H:%M:%S' `" - start test '${line}'"
     echo "- test json ---------------------------------------"
     cp json/${line}.json ${BASE_DIR}/api.json
-    cd ${BASE_DIR}
-    cat api.json
+    cat json/${line}.json
     echo "- result ---------------------------------------"
     ${PY_BIN} ${EXE_BIN}
     break
