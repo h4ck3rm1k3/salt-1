@@ -28,7 +28,7 @@ do
   OUT_=`cat ./log/${line}.out|wc -l`
   ERR_=`cat ./log/${line}.err|wc -l`
   echo -e `expr ${END_TIME} - ${START_TIME}`"s\tout: ${OUT_}\t  err: ${ERR_}"
-  cd ${BASE_DIR}/test
+
 done
 
 echo "---------------------------------------------------------------"
