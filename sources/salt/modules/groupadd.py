@@ -129,5 +129,5 @@ def chgid(name, gid, **kwargs):
     state_std(kwargs, result)
     post_gid = __salt__['file.group_to_gid'](name)
     if post_gid != pre_gid:
-        return post_gid == gid
+        return str(post_gid) == gid
     return False
