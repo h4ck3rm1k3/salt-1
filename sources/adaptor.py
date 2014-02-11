@@ -626,7 +626,7 @@ class StateAdaptor(object):
 						pkg_name 	= k
 						pkg_state 	= default_state
 
-						if v in self.salt_map[module]['states']:
+						if v in self.mod_map[module]['states']:
 							pkg_state = v
 
 						if pkg_state not in module_state:			module_state[pkg_state] = {}
@@ -788,9 +788,9 @@ class StateAdaptor(object):
 
 			# addin = self.__init_addin(module, parameter)
 
-			# state 	= self.salt_map[module]['states'][0]
+			# state 	= self.mod_map[module]['states'][0]
 			# tag 	= self.__get_tag(module, None, None, 'require', state)
-			# type 	= self.salt_map[module]['type']
+			# type 	= self.mod_map[module]['type']
 
 			the_requre_state = self.__salt('require', module, parameter)
 

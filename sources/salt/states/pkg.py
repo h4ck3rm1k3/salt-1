@@ -809,7 +809,7 @@ def _uninstall(action='remove', name=None, pkgs=None, **kwargs):
                 'result': False,
                 'comment': 'An error was encountered while parsing targets: '
                            '{0}'.format(exc)})
-        return kwargs
+        return kwargs['state_ret']
     old = __salt__['pkg.list_pkgs'](versions_as_list=True, **kwargs)
     targets = [x for x in pkg_params if x in old]
     if action == 'purge':
@@ -826,14 +826,14 @@ def _uninstall(action='remove', name=None, pkgs=None, **kwargs):
                 'comment': 'None of the targeted packages are installed'
                            '{0}'.format(' or partially installed'
                                         if action == 'purge' else '')})
-        return kwargs
+        return kwargs['state_ret']
     if __opts__['test']:
         kwargs['state_ret'].update({'name': name,
                 'changes': {},
                 'result': None,
                 'comment': 'The following packages will be {0}d: '
                            '{1}.'.format(action, ', '.join(targets))})
-    	return kwargs
+    	return kwargs['state_ret']
 
     changes = __salt__['pkg.{0}'.format(action)](name, pkgs=pkgs, **kwargs)
     new = __salt__['pkg.list_pkgs'](versions_as_list=True, **kwargs)
@@ -851,7 +851,7 @@ def _uninstall(action='remove', name=None, pkgs=None, **kwargs):
                 'result': False,
                 'comment': 'The following packages failed to {0}: '
                            '{1}.'.format(action, ', '.join(failed))})
-        return kwargs
+        return kwargs['state_ret']
 
     comments = []
     not_installed = sorted([x for x in pkg_params if x not in targets])
@@ -867,7 +867,7 @@ def _uninstall(action='remove', name=None, pkgs=None, **kwargs):
         'changes': changes,
         'result': True,
         'comment': ' '.join(comments)})
-    return kwargs
+    return kwargs['state_ret']
 
 
 def removed(name, pkgs=None, **kwargs):
