@@ -110,7 +110,7 @@ def latest(name,
         A command to run as a check, only run the named command if the command
         passed to the ``unless`` option returns false
     '''
-    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     # Check to make sure rev and mirror/bare are not both in use
     if rev and (mirror or bare):

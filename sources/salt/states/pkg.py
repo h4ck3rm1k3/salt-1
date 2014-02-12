@@ -420,7 +420,7 @@ def installed(
     '''
     rtag = __gen_rtag()
     refresh = bool(salt.utils.is_true(refresh) or os.path.isfile(rtag))
-    ret = {'state_log': ''}
+    ret = {'state_stdout': ''}
 
     if not isinstance(version, basestring) and version is not None:
         version = str(version)
@@ -601,7 +601,7 @@ def latest(
               - baz
     '''
     rtag = __gen_rtag()
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_stdout': ''}
 
     if kwargs.get('sources'):
         ret.update({'name': name,
@@ -887,7 +887,7 @@ def removed(name, pkgs=None, **kwargs):
 
     .. versionadded:: 0.16.0
     '''
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_stdout': ''}
     try:
         return _uninstall(action='remove', name=name, pkgs=pkgs, state_ret=ret, **kwargs)
     except CommandExecutionError as exc:
@@ -915,7 +915,7 @@ def purged(name, pkgs=None, **kwargs):
 
     .. versionadded:: 0.16.0
     '''
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_stdout': ''}
     try:
         return _uninstall(action='purge', name=name, pkgs=pkgs, state_ret=ret, **kwargs)
     except CommandExecutionError as exc:

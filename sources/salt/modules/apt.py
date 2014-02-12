@@ -169,7 +169,7 @@ def latest_version(*names, **kwargs):
 
     if len(names) == 0:
         return ''
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_stdout': ''}
     # Initialize the dict with empty strings
     for name in names:
         ret[name] = ''
@@ -621,9 +621,7 @@ def list_pkgs(versions_as_list=False, removed=False, **kwargs):
     cmd = 'dpkg-query --showformat=\'${Status} ${Package} ' \
           '${Version} ${Architecture}\n\' -W'
 
-    result = __salt__['cmd.run_stdall'](cmd, output_loglevel='debug')
-    state_std(kwargs, result)
-    out = result['stdout']
+    out = __salt__['cmd.run_stdout'](cmd, output_loglevel='debug')
     # Typical lines of output:
     # install ok installed zsh 4.3.17-1ubuntu1 amd64
     # deinstall ok config-files mc 3:4.8.1-2ubuntu1 amd64

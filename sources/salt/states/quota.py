@@ -38,7 +38,7 @@ def mode(name, mode, quotatype):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     fun = 'off'
     if mode is True:
         fun = 'on'

@@ -62,7 +62,7 @@ def installed(name,          # pylint: disable=C0103
     ri : False
         Generate RI documentation for the gem(s).
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     salt.utils.warn_until(
         'Hydrogen',
@@ -140,7 +140,7 @@ def removed(name, ruby=None, runas=None, user=None):
 
         .. versionadded:: 0.17.0
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     salt.utils.warn_until(
         'Hydrogen',

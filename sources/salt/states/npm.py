@@ -69,7 +69,7 @@ def installed(name,
     force_reinstall
         Install the package even if it is already installed
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     salt.utils.warn_until(
         'Hydrogen',
@@ -165,7 +165,7 @@ def removed(name,
 
         .. versionadded:: 0.17.0
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     salt.utils.warn_until(
         'Hydrogen',
@@ -240,7 +240,7 @@ def bootstrap(name,
 
 
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
     salt.utils.warn_until(
         'Hydrogen',
         'Please remove \'runas\' support at this stage. \'user\' support was '

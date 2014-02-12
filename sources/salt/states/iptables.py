@@ -63,7 +63,7 @@ def chain_present(name, table='filter'):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     chain_check = __salt__['iptables.check_chain'](table, name, state_ret=ret)
     if chain_check is True:
@@ -98,7 +98,7 @@ def chain_absent(name, table='filter'):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     chain_check = __salt__['iptables.check_chain'](table, name, state_ret=ret)
     if not chain_check:
@@ -146,7 +146,7 @@ def append(name, **kwargs):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     for ignore in _STATE_INTERNAL_KEYWORDS:
         if ignore in kwargs:
@@ -204,7 +204,7 @@ def insert(name, **kwargs):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     for ignore in _STATE_INTERNAL_KEYWORDS:
         if ignore in kwargs:
@@ -253,7 +253,7 @@ def set_policy(name, **kwargs):
         'changes': {},
         'result': None,
         'comment': '',
-        'state_stdout': '', 'state_stderr': ''}
+        'state_stdout': ''}
 
     for ignore in _STATE_INTERNAL_KEYWORDS:
         if ignore in kwargs:
@@ -292,7 +292,7 @@ def flush(name, **kwargs):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     for ignore in _STATE_INTERNAL_KEYWORDS:
         if ignore in kwargs:

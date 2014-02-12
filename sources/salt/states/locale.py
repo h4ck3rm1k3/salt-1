@@ -30,7 +30,7 @@ def system(name):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     if __salt__['locale.get_locale']() == name:
         ret['result'] = True
         ret['comment'] = 'System locale {0} already set'.format(name)
