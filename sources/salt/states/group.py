@@ -37,7 +37,7 @@ def present(name, gid=None, system=False):
     ret = {'name': name,
            'changes': {},
            'result': True,
-           'comment': '', 'state_stdout': '', 'state_stderr': ''}
+           'comment': '', 'state_stdout': ''}
     grps = __salt__['group.getent']()
     for lgrp in grps:
         # Scan over the groups
@@ -120,7 +120,7 @@ def absent(name):
     ret = {'name': name,
            'changes': {},
            'result': True,
-           'comment': '', 'state_stdout': '', 'state_stderr': ''}
+           'comment': '', 'state_stdout': ''}
     for lgrp in __salt__['group.getent']():
         # Scan over the groups
         if lgrp['name'] == name:

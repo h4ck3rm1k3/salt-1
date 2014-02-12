@@ -420,7 +420,7 @@ def installed(
     '''
     rtag = __gen_rtag()
     refresh = bool(salt.utils.is_true(refresh) or os.path.isfile(rtag))
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_log': ''}
 
     if not isinstance(version, basestring) and version is not None:
         version = str(version)
