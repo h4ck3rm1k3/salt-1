@@ -699,9 +699,12 @@ class StateAdaptor(object):
 				addin.pop('name')
 
 		elif module in ['linux.dir', 'linux.file', 'linux.symlink']:
+			if module == 'linux.dir':
+				addin['makedirs'] = True
+							
 			# set absent
 			if 'absent' in addin and addin['absent']:
-				module_state.pop(default_state)
+				module_state = {}
 				module_state['absent'] = {
 					'name' : addin['name']
 				}
@@ -719,9 +722,6 @@ class StateAdaptor(object):
 						addin['recurse'].append('group')
 					if 'mode' in addin and addin['mode']:
 						addin['recurse'].append('mode')
-
-			if module == 'linux.dir':
-				addin['makedirs'] = True
 
 		elif module in ['linux.cmd']:
 			if 'onlyif' in addin:
