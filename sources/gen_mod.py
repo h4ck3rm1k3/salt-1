@@ -1,3 +1,4 @@
+#!/usr/bin/python
 
 def attr():
 	return {
@@ -40,6 +41,35 @@ def attr():
 #			}
 		},
 		'common'	:	{
+			'timezone'	:	{
+				'module'	:	'common.timezone',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+	manage the timezone
+	
+### Parameters
+
+*   **name** (*required*): the timezone name
+		   Pacific/Tahiti
+
+*   **use_utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True
+					},
+					'use_utc'		:	{
+						'type'		:	'bool',
+						'default'	:	True,
+						'required'	:	False
+					}
+				}
+			},
 			'gem'	:	{
 				'module'	:	'common.gem.package',
 				'distro'	:	None,
@@ -1565,35 +1595,6 @@ def attr():
 					'system'		:	{
 						'type'		:	'bool',
 						'default'	:	False,
-						'required'	:	False
-					}
-				}
-			},
-			'timezone'	:	{
-				'module'	:	'linux.timezone',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage the timezone
-	
-### Parameters
-
-*   **name** (*required*): the timezone name
-		   Pacific/Tahiti
-
-*   **use_utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True
-					},
-					'use_utc'		:	{
-						'type'		:	'bool',
-						'default'	:	True,
 						'required'	:	False
 					}
 				}
