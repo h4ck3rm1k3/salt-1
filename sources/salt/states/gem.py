@@ -101,15 +101,12 @@ def installed(name,          # pylint: disable=C0103
     if __opts__['test']:
         ret['comment'] = 'The gem {0} would have been installed'.format(name)
         return ret
-    r = __salt__['gem.install'](name,
+    if __salt__['gem.install'](name,
                                ruby=ruby,
                                runas=user,
                                version=version,
                                rdoc=rdoc,
-                               ri=ri,
-                               state_ret=ret)
-    ret['log'] = dict(('state_%s' % k,v) for k,v in r.iteritems() if k in ['stdout', 'stderr'])
-    if r['retcode'] == 0:
+                               ri=ri, state_ret=ret):
         ret['result'] = True
         ret['changes'][name] = 'Installed'
         ret['comment'] = 'Gem was successfully installed'
