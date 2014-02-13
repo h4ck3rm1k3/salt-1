@@ -649,6 +649,10 @@ class StateAdaptor(object):
 			# if 'name' in addin:
 			# 	module_state[default_state]['name'] = addin['name'].split('-')[1].strip()
 
+			# svn target path(remove the last prefix)
+			if 'target' in addin and addin['target'][len(addin['target'])-1] == '/':
+				addin['target'] = os.path.split(addin['target'])[0]
+
 			# set revision
 			if 'branch' in addin:
 				if module in ['common.git', 'common.hg']:
