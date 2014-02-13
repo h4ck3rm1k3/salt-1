@@ -132,7 +132,7 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'version'	: 'rev',
-				'ssh_key'	: 'identify',
+				'ssh_key'	: 'identity',
 				'path'		: 'target',
 				'user'		: 'user',
 				'force'		: 'force_checkout',
@@ -651,7 +651,8 @@ class StateAdaptor(object):
 
 			# set revision
 			if 'branch' in addin:
-				addin['rev'] = addin['branch']
+				if module in ['common.git', 'common.hg']:
+					addin['rev'] = addin['branch']
 				addin.pop('branch')
 
 		elif module in ['linux.apt.repo', 'linux.yum.repo']:
@@ -701,7 +702,7 @@ class StateAdaptor(object):
 		elif module in ['linux.dir', 'linux.file', 'linux.symlink']:
 			if module == 'linux.dir':
 				addin['makedirs'] = True
-							
+
 			# set absent
 			if 'absent' in addin and addin['absent']:
 				module_state = {}
