@@ -135,7 +135,7 @@ class StateAdaptor(object):
 				'ssh_key'	: 'identity',
 				'path'		: 'target',
 				'user'		: 'user',
-				'force'		: 'force_checkout',
+				'force'		: 'force',
 			},
 			'states' : [
 				'latest', 'present',
@@ -658,6 +658,10 @@ class StateAdaptor(object):
 				if module in ['common.git', 'common.hg']:
 					addin['rev'] = addin['branch']
 				addin.pop('branch')
+
+			#
+			if module == 'common.git' and 'force' in addin and addin['force']:
+				addin['force_checkout'] = True
 
 		elif module in ['linux.apt.repo', 'linux.yum.repo']:
 			if 'name' in addin:
