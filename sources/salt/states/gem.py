@@ -171,9 +171,7 @@ def removed(name, ruby=None, runas=None, user=None):
     if __opts__['test']:
         ret['comment'] = 'The gem {0} would have been removed'.format(name)
         return ret
-    r = __salt__['gem.uninstall'](name, ruby, runas=user, state_ret=ret)
-    ret['log'] = dict(('state_%s' % k,v) for k,v in r.iteritems() if k in ['stdout', 'stderr'])
-    if r['retcode'] == 0:
+    if __salt__['gem.uninstall'](name, ruby, runas=user, state_ret=ret):
         ret['result'] = True
         ret['changes'][name] = 'Removed'
         ret['comment'] = 'Gem was successfully removed.'
