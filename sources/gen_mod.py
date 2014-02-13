@@ -82,6 +82,8 @@ def attr():
 	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
+
+	note: the specified packages will be installed as global packages (npm install --global)
 					''',
 					'cn'	:	''''''
 				},
@@ -620,16 +622,15 @@ def attr():
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-	manage an apt repo
+	manage apt repo
 
 ### Parameters
 
-*   **name** (*required*): the repository name
-		main
+*   **name** (*required*): the repository name (/etc/apt/sources.list.d/$name.list will be crated)
+		google
 
-* **content** (*required*): the content of the repository configuration file
-	
-		deb http://extras.ubuntu.com/ubuntu precise main
+* **content** (*required*): the source list file content
+		deb http://dl.google.com/linux/deb/ stable non-free
 					''',
 					'cn'	:	''''''
 				},
