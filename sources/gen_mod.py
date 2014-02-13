@@ -51,9 +51,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 					''',
 					'cn'	:	''''''
@@ -78,9 +78,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 
 	note: the specified packages will be installed as global packages (npm install --global)
@@ -137,9 +137,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 					''',
 					'cn'	:	''''''
@@ -577,9 +577,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 
@@ -656,9 +656,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 
@@ -745,9 +745,9 @@ def attr():
 #### Parameters
 #
 #*   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-#	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-#	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-#	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+#	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+#	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+#	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 #	- **removed**: ensure the package is absent
 #	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 # 
