@@ -49,7 +49,7 @@ def revision(cwd, rev='tip', short=False, user=None, **kwargs):
     state_std(kwargs, result)
     
     if result['retcode'] == 0:
-        result['stdout']
+        return result['stdout']
     else:
         return '', result
 
