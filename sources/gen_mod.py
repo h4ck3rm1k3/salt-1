@@ -1,3 +1,4 @@
+#!/usr/bin/python
 
 def attr():
 	return {
@@ -40,6 +41,35 @@ def attr():
 #			}
 		},
 		'common'	:	{
+			'timezone'	:	{
+				'module'	:	'common.timezone',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+	manage the timezone
+	
+### Parameters
+
+*   **name** (*required*): the timezone name
+		   Pacific/Tahiti
+
+*   **use_utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True
+					},
+					'use_utc'		:	{
+						'type'		:	'bool',
+						'default'	:	True,
+						'required'	:	False
+					}
+				}
+			},
 			'gem'	:	{
 				'module'	:	'common.gem.package',
 				'distro'	:	None,
@@ -51,9 +81,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 					''',
 					'cn'	:	''''''
@@ -78,10 +108,12 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
+
+	note: the specified packages will be installed as global packages (npm install --global)
 					''',
 					'cn'	:	''''''
 				},
@@ -135,9 +167,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 					''',
 					'cn'	:	''''''
@@ -575,9 +607,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 
@@ -620,16 +652,15 @@ def attr():
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-	manage an apt repo
+	manage apt repo
 
 ### Parameters
 
-*   **name** (*required*): the repository name
-		main
+*   **name** (*required*): the repository name (/etc/apt/sources.list.d/$name.list will be crated)
+		google
 
-* **content** (*required*): the content of the repository configuration file
-	
-		deb http://extras.ubuntu.com/ubuntu precise main
+* **content** (*required*): the source list file content
+		deb http://dl.google.com/linux/deb/ stable non-free
 					''',
 					'cn'	:	''''''
 				},
@@ -655,9 +686,9 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 
@@ -744,9 +775,9 @@ def attr():
 #### Parameters
 #
 #*   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-#	- <***empty***> (*default*): ensure the package is present. If not, will install the latest version available of all APT repos on                   
-#	- <***version***>: ensure the package is present, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
-#	- **latest**: ensure the package is present with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
+#	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+#	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
+#	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 #	- **removed**: ensure the package is absent
 #	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 # 
@@ -1564,35 +1595,6 @@ def attr():
 					'system'		:	{
 						'type'		:	'bool',
 						'default'	:	False,
-						'required'	:	False
-					}
-				}
-			},
-			'timezone'	:	{
-				'module'	:	'linux.timezone',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage the timezone
-	
-### Parameters
-
-*   **name** (*required*): the timezone name
-		   Pacific/Tahiti
-
-*   **use_utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True
-					},
-					'use_utc'		:	{
-						'type'		:	'bool',
-						'default'	:	True,
 						'required'	:	False
 					}
 				}

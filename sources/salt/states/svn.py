@@ -77,7 +77,7 @@ def latest(name,
     trust : False
         Automatically trust the remote server. SVN's --trust-server-cert
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
     if not target:
         return _fail(ret, 'Target option is required')
 
@@ -191,7 +191,7 @@ def export(name,
     trust : False
         Automatically trust the remote server. SVN's --trust-server-cert
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
     if not target:
         return _fail(ret, 'Target option is required')
 
@@ -243,5 +243,5 @@ def dirty(name,
     '''
     Determine if the working directory has been changed.
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
     return _fail(ret, 'This function is not implemented yet.')

@@ -265,7 +265,7 @@ def running(name, enable=None, sig=None, **kwargs):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Check for common error: using enabled option instead of enable
     if 'enabled' in kwargs:
@@ -332,7 +332,7 @@ def dead(name, enable=None, sig=None, **kwargs):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Check for common error: using enabled option instead of enable
     if 'enabled' in kwargs:
@@ -420,7 +420,7 @@ def mod_watch(name, sig=None, reload=False, full_restart=False):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     action = ''
 
     if __salt__['service.status'](name, sig):

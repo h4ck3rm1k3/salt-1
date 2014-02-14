@@ -195,7 +195,7 @@ def installed(name,
     elif env and not bin_env:
         bin_env = env
 
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     if use_wheel:
         min_version = '1.4'
@@ -467,7 +467,7 @@ def removed(name,
     bin_env : None
         the pip executable or virtualenenv to use
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     if runas is not None:
         # The user is using a deprecated argument, warn!

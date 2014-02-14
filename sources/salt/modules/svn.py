@@ -73,7 +73,7 @@ def _run_svn(cmd, cwd, user, username, password, opts, **kwargs):
 
     if retcode == 0:
         return result['stdout']
-    raise exceptions.CommandExecutionError(result['stderr'] + '\n\n' + cmd)
+    raise exceptions.CommandExecutionError(result['stdout'] + '\n\n' + cmd)
 
 
 def info(cwd,

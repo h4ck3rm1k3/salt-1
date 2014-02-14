@@ -169,7 +169,7 @@ def latest_version(*names, **kwargs):
 
     if len(names) == 0:
         return ''
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_stdout': ''}
     # Initialize the dict with empty strings
     for name in names:
         ret[name] = ''

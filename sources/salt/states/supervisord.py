@@ -76,7 +76,7 @@ def running(name,
         installed
 
     '''
-    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     salt.utils.warn_until(
         'Hydrogen',
@@ -268,7 +268,7 @@ def dead(name,
         installed
 
     '''
-    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     salt.utils.warn_until(
         'Hydrogen',
