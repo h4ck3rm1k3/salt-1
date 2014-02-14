@@ -22,3 +22,7 @@ chmod 755 *.sh
 cd /opt/madeira/env/lib/python2.7/site-packages/opsagent/state
 vim api.json 
 /opt/madeira/env/bin/python adaptor.py
+
+[tips]
+to view result only:
+./step.sh 2 | grep -E  "True|False" | grep -n "" | grep -E "True|False"
