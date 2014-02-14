@@ -387,7 +387,7 @@ class StateAdaptor(object):
 		},
 
 		## timezone
-		'linux.timezone' : {
+		'common.timezone' : {
 			'attributes' : {
 				'name' : 'name',
 				'use_utc' : 'utc'
