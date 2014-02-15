@@ -260,6 +260,13 @@ class StateAdaptor(object):
 			},
 			'states' : ['running'],
 			'type' : 'supervisord',
+			'require' : {
+				'common.pip.package' : {
+					'name' : {
+						'supervisor' : ''
+					}
+				}
+			}
 		},
 		'linux.systemd' : {
 			'attributes' : {
