@@ -260,6 +260,13 @@ class StateAdaptor(object):
 			},
 			'states' : ['running'],
 			'type' : 'supervisord',
+			'require' : {
+				'common.pip.package' : {
+					'name' : {
+						'supervisor' : ''
+					}
+				}
+			}
 		},
 		'linux.systemd' : {
 			'attributes' : {
@@ -485,9 +492,9 @@ class StateAdaptor(object):
 			'states' : ['managed'],
 			'type' : 'virtualenv',
 			'require' : {
-				'linux.apt.package' : {
+				'common.pip.package' : {
 					'name' : {
-						'python-virtualenv' : ''
+						'virtualenv' : ''
 					}
 				}
 			}
@@ -653,7 +660,41 @@ class StateAdaptor(object):
 
 					module_state[pkg_state]['pkgs'].append(item)
 
-		elif module in ['common.gem.package', 'common.npm.package', 'common.pecl.package', 'common.pip.package']:
+		elif module in ['common.npm.package']:
+			module_state = {}
+
+			for item in addin['names']:
+				pkg_name = None
+				pkg_state = None
+
+				if isinstance(item, basestring):	# insert into default state
+					pkg_state	= default_state
+
+					if pkg_state not in module_state:			module_state[pkg_state] = {}
+					if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+
+					module_state[pkg_state]['names'].append(item)
+
+				elif isinstance(item, dict):
+					for k, v in item.items():
+						pkg_name 	= k
+						pkg_state 	= default_state
+
+						if v in self.mod_map[module]['states']:		pkg_state = v
+						if pkg_state not in module_state:			module_state[pkg_state] = {}
+						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+
+						if pkg_state == default_state:
+							module_state[pkg_state]['names'].append(
+								'{0}@{1}'.format(k, v)
+								)
+						else:
+							module_state[pkg_state]['names'].append(pkg_name)
+
+				else:	# invalid
+					continue
+
+		elif module in ['common.gem.package', 'common.pecl.package', 'common.pip.package']:
 			module_state = {}
 
 			for item in addin['names']:
@@ -664,9 +705,7 @@ class StateAdaptor(object):
 						pkg_name 	= k
 						pkg_state 	= default_state
 
-						if v in self.mod_map[module]['states']:
-							pkg_state = v
-
+						if v in self.mod_map[module]['states']:		pkg_state = v
 						if pkg_state not in module_state:			module_state[pkg_state] = {}
 						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
 
