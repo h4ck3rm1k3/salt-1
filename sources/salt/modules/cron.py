@@ -140,7 +140,12 @@ def raw_cron(user, **kwargs):
         cmd = 'crontab -l -u {0}'.format(user)
     result = __salt__['cmd.run_stdall'](cmd, rstrip=False)
     state_std(kwargs, result)
-    return result['stdout']
+
+    if result['retcode']:
+        # failed to fetch existed cron rules
+        return ""
+    else:
+        return result['stdout']
 
 def list_tab(user):
     '''
