@@ -20,7 +20,7 @@ VALID_UNIT_TYPES = ['service', 'socket', 'device', 'mount', 'automount',
                     'swap', 'target', 'path', 'timer']
 
 # Define the module's virtual name
-__virtualname__ = 'service'
+#__virtualname__ = 'systemd'
 
 
 def __virtual__():
