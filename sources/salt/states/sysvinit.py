@@ -61,7 +61,7 @@ def _enable(name, started, result=True, **kwargs):
     ret = {'name': name,
            'changes': {},
            'result': result,
-           'comment': '', 'state_stdout': ''}
+           'comment': ''}
 
     # is service available?
     if not _available(name, ret):
@@ -105,7 +105,7 @@ def _enable(name, started, result=True, **kwargs):
         ret['comment'] = 'Service {0} set to be enabled'.format(name)
         return ret
 
-    if __salt__['service.enable'](name, state_ret=ret, **kwargs):
+    if __salt__['service.enable'](name, **kwargs):
         # Service has been enabled
         if started is True:
             ret['changes'][name] = True
@@ -149,7 +149,7 @@ def _disable(name, started, result=True, **kwargs):
     ret = {'name': name,
            'changes': {},
            'result': result,
-           'comment': '', 'state_stdout': ''}
+           'comment': ''}
 
     # is service available?
     if not _available(name, ret):
@@ -195,7 +195,7 @@ def _disable(name, started, result=True, **kwargs):
         ret['comment'] = 'Service {0} set to be disabled'.format(name)
         return ret
 
-    if __salt__['service.disable'](name, state_ret=ret, **kwargs):
+    if __salt__['service.disable'](name, **kwargs):
         # Service has been disabled
         if started is True:
             ret['changes'][name] = True
@@ -304,9 +304,9 @@ def running(name, enable=None, sig=None, **kwargs):
             return ret
 
     if enable is True:
-        return _enable(name, True, **kwargs)
+        return _enable(name, True, state_ret=ret, **kwargs)
     elif enable is False:
-        return _disable(name, True, **kwargs)
+        return _disable(name, True, state_ret=ret, **kwargs)
     else:
         ret['changes'] = changes
         ret['comment'] = 'Started Service {0}'.format(name)
@@ -346,9 +346,9 @@ def dead(name, enable=None, sig=None, **kwargs):
     if not __salt__['service.status'](name, sig):
         ret['comment'] = 'The service {0} is already dead'.format(name)
         if enable is True:
-            return _enable(name, None, **kwargs)
+            return _enable(name, None, state_ret=ret, **kwargs)
         elif enable is False:
-            return _disable(name, None, **kwargs)
+            return _disable(name, None, state_ret=ret, **kwargs)
         else:
             return ret
 
@@ -363,18 +363,18 @@ def dead(name, enable=None, sig=None, **kwargs):
         ret['result'] = False
         ret['comment'] = 'Service {0} failed to die'.format(name)
         if enable is True:
-            return _enable(name, True, result=False)
+            return _enable(name, True, result=False, state_ret=ret)
         elif enable is False:
-            return _disable(name, True, result=False)
+            return _disable(name, True, result=False, state_ret=ret)
         else:
             ret['result'] = False
             ret['comment'] = 'Service {0} failed to die'.format(name)
             return ret
     else:
         if enable is True:
-            return _enable(name, False)
+            return _enable(name, False, state_ret=ret)
         elif enable is False:
-            return _disable(name, False)
+            return _disable(name, False, state_ret=ret)
         else:
             ret['comment'] = 'Service {0} was killed'.format(name)
             return ret
