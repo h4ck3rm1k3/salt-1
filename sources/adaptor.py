@@ -618,7 +618,7 @@ class StateAdaptor(object):
 		if module in ['linux.apt.package', 'linux.yum.package', 'common.gem.package', 'common.npm.package', 'common.pecl.package', 'common.pip.package']:
 			module_state = {}
 
-			for item in addin['names']:
+			for item in addin['pkgs']:
 				pkg_name = None
 				pkg_state = None
 				if isinstance(item, dict):
@@ -630,20 +630,20 @@ class StateAdaptor(object):
 							pkg_state = v
 
 						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+						if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
 
 						if pkg_state == default_state:
-							module_state[pkg_state]['names'].append(item)
+							module_state[pkg_state]['pkgs'].append(item)
 						else:
-							module_state[pkg_state]['names'].append(pkg_name)
+							module_state[pkg_state]['pkgs'].append(pkg_name)
 
 				else:	# insert into default state
 					pkg_state	= default_state
 
 					if pkg_state not in module_state:			module_state[pkg_state] = {}
-					if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+					if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
 
-					module_state[pkg_state]['names'].append(item)
+					module_state[pkg_state]['pkgs'].append(item)
 
 		elif module in ['common.git', 'common.svn', 'common.hg']:
 			# if 'name' in addin:
