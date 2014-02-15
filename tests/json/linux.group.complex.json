@@ -1,0 +1,139 @@
+{
+  "component": {
+       "init": {
+      "state": [
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324000",
+          "_": "1 [prepare] delete user InstantForge1 - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge1 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324001",
+          "_": "2 [prepare] delete group Dev - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "groupdel Dev"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
+          "_": "3 [test1] create group with required parameters - True",
+          "module": "linux.group",
+          "parameter": {
+            "groupname": "Dev"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324101",
+          "_": "4 [test1] assert group Dev exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep Dev /etc/group"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
+          "_": "5 [test2] delete group Dev - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "groupdel Dev"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324201",
+          "_": "6 [test2] create group Dev(600) with full parameter - True",
+          "module": "linux.group",
+          "parameter": {
+            "groupname": "Dev",
+            "gid" : "600",
+            "system" : false
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324202",
+          "_": "7 [test2] assert group Dev - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep Dev /etc/group"
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E300",
+          "_": "8 [test3] create new user InstantForge1, and add to group Dev(600) - True",
+          "module": "linux.user",
+          "parameter": {
+            "password": "instant",
+            "username": "InstantForge1",
+            "gid": "600",
+            "home": "/madeira1"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
+          "_": "9 [test3] assert users and group exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep Dev /etc/group && grep InstantForge1 /etc/passwd "
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324400",
+          "_": "10 [test4] delete group Dev when has user - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "groupdel Dev"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324500",
+          "_": "11 [test5] delete user InstantForge1 first - True ",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge1 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324501",
+          "_": "12 [test5] delete group without user - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "groupdel Dev"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324502",
+          "_": "13 [test5] assert group Dev - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep Dev /etc/group"
+          }
+        }
+
+      ]
+    }
+  }
+}
