@@ -485,9 +485,9 @@ class StateAdaptor(object):
 			'states' : ['managed'],
 			'type' : 'virtualenv',
 			'require' : {
-				'linux.apt.package' : {
+				'common.pip.package' : {
 					'name' : {
-						'python-virtualenv' : ''
+						'virtualenv' : ''
 					}
 				}
 			}
