@@ -1,0 +1,63 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97614500F46",
+          "_": "1 [prepare] create test binary - True",
+          "module": "linux.file",
+          "parameter": {
+            "content": "#!/bin/bash\n## test\n\necho $$ > /var/run/foo.pid\nwhile 1; do\n    sleep 1\ndone\n\n##",
+            "user": "root",
+            "path": "/usr/local/bin/foo",
+            "mode": "0755",
+            "absent": false,
+            "group": "root"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97614A09F40",
+          "_": "2 [prepare] set supervisor config file - True",
+          "module": "linux.file",
+          "parameter": {
+            "path": "/etc/supervisord.conf",
+            "user": "root",
+            "content": "[unix_http_server]\nfile=/tmp/supervisor.sock\n\n[rpcinterface:supervisor]\nsupervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface\n\n[supervisorctl]\nserverurl=unix:///tmp/supervisor.sock\n\n[program:foo]\ncommand=/usr/local/bin/foo\nautostart=true\nautorestart=true\nstartretries=3\nstdout_logfile=/var/log/foo.log\nstdout_logfile_maxbytes=100MB\nstdout_logfile_backups=5\nstdout_capture_maxbytes=1MB\nstdout_events_enabled=false\nredirect_stderr=true\nuser=root",
+            "mode": "0644",
+            "absent": false,
+            "group": "root"
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8A84-15D020634E1F",
+          "_": "3 [prepare] setup pip - True",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "python-pip": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F9F",
+          "_": "4 [prepare] setup supervisor - True",
+          "module": "common.pip.package",
+          "parameter": {
+            "name": {
+              "supervisor": ""
+            }
+          }
+        },
+        {
+          "id": "state-7E596E8A-17CD-4578-8E85-15D020642ACC",
+          "_": "5 [test1] add foo to supervisor - True",
+          "module": "linux.supervisord",
+          "parameter": {
+            "name": "foo",
+            "config": "/etc/supervisord.conf"
+          }
+        }
+      ]
+    }
+  }
+}
