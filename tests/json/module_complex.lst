@@ -5,6 +5,34 @@
 #######################################
 # single module complex test
 #######################################
-linux.user.complex # detail test for user
-linux.group.complex # detail test for group
-linux.cron.complex # detail test for cron
+linux.user.complex
+linux.group.complex
+linux.cron.complex
+#linux.file.complex
+#linux.dir.complex
+#linux.symlink.complex
+linux.upstart.complex
+#linux.timezone.complex
+linux.systemd.complex
+#linux.cmd.complex
+#linux.hostname.complex
+#linux.yum.repo
+#linux.yum.package
+#linux.apt.repo
+#linux.apt.package
+common.git.complex
+common.hg.complex
+common.svn.complex
+common.npm.package.complex
+common.pip.package.complex
+common.gem.package.complex
+#common.virtualenv.complex
+linux.supervisord.complex
+linux.sysvinit.complex
+linux.mount.complex
+#linux.lvm.pv.complex
+#linux.lvm.vg.complex
+#linux.lvm.lv.complex
+#linux.hosts.complex
+#linux.fs.complex
+#linux.ulimit.complex
