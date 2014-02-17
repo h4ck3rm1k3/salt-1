@@ -54,7 +54,7 @@ def attr():
 *   **name** (*required*): the timezone name
 		   Pacific/Tahiti
 
-*   **use_utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
+*   **use utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
 					''',
 					'cn'	:	''''''
 				},
@@ -63,7 +63,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'use_utc'		:	{
+					'use utc'		:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
@@ -265,7 +265,7 @@ def attr():
 						'default'	:	'',
 						'required'	:	False
 					},
-					'ssh_key'	:	{
+					'ssh key'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -374,7 +374,7 @@ def attr():
 						'default'	:	'',
 						'required'	:	False
 					},
-					'ssh_key'	:	{
+					'ssh key'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -471,7 +471,7 @@ def attr():
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'uri'		:	{
+					'repo'		:	{
 						'type'		:	'line',
 						'required'	:	True
 					},
@@ -528,8 +528,7 @@ def attr():
 	
 ### Parameters
 
-*   **path** (*required*): the project path
-		   Pacific/Tahiti
+*   **path** (*required*): the environment path
 
 *   **python** (*optional*): the python interpreter to use
 		
@@ -537,20 +536,21 @@ def attr():
 			python2.5 will use the python2.5 interpreter to create the new environment.
 			The default is the interpreter that virtualenv was installed with
 
+*   **requirements** (*optional*): the python requirements file path, which will be used to configure this environment
 
-*   **system-site-packages** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***True***
+*   **system site packages** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***True***
 
-*   **always-copy** (*optional*): whether to always copy files rather than symlinking, by default ***False***
+*   **always copy** (*optional*): whether to always copy files rather than symlinking, by default ***False***
 
-*   **unzip-setuptools** (*optional*): whether to always copy files rather than symlinking, by default ***False***
+*   **unzip setuptools** (*optional*): whether to always copy files rather than symlinking, by default ***False***
 
-*   **no-setuptool** (*optional*): whether to install setuptools (or pip) in the new virtualenv, by default ***True***
+*   **no setuptool** (*optional*): whether to install setuptools (or pip) in the new virtualenv, by default ***True***
 
-*   **no-pip** (*optional*): whether to install pip in the new virtualenv, by default ***True***
+*   **no pip** (*optional*): whether to install pip in the new virtualenv, by default ***True***
 
-*   **extra-search-dir** (*optional*): whether to always copy files rather than symlinking., by default ***False***
+*   **extra search dir** (*optional*): whether to always copy files rather than symlinking., by default ***False***
 
-*   **always-copy** (*optional*): the directories to look for setuptools/pip distributions in
+*   **always copy** (*optional*): the directories to look for setuptools/pip distributions in
 					''',
 					'cn'	:	''''''
 				},
@@ -563,32 +563,36 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'system-site-packages'		:	{
+					'requirements'	:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+					'system site packages'		:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
 					},
-					'always-copy'	:	{
+					'always copy'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'unzip-setuptools'	:	{
+					'unzip setuptools'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'no-setuptools'	:	{
+					'no setuptools'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'no-pip'	:	{
+					'no pip'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'extra-search-dir'	:	{
+					'extra search dir'	:	{
 						'type'		:	'array',
 						'required'	:	False
 					}
@@ -620,7 +624,7 @@ def attr():
 * **debconf** (*optional*):
 		/etc/apt/deb.conf
 	
-* **verify_gpg** (*optional*): verify the package's GPG siganature, by default ***True***
+* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 					''',
 					'cn'	:	''''''
 				},
@@ -639,7 +643,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'verify_gpg':	{
+					'verify gpg':	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
@@ -701,7 +705,7 @@ def attr():
 * **disablerepo** (*optional*): an enabled repo name, which you want to disable for installing the packages
 		epel
 	
-* **verify_gpg** (*optional*): verify the package's GPG siganature, by default ***True***
+* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 					''',
 					'cn'	:	''''''
 				},
@@ -724,7 +728,7 @@ def attr():
 						'type'	:	'line',
 						'required'	:	False
 					},
-					'verify_gpg'	:	{
+					'verify gpg'	:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
@@ -785,7 +789,7 @@ def attr():
 #* **fromrepo** (*optional*): an repo name, which you want to use for installing the packages
 #		epel
 #	
-#* **verify_gpg** (*optional*): verify the package's GPG siganature, by default ***True***
+#* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 #					''',
 #					'cn'	:	''''''
 #				},
@@ -800,7 +804,7 @@ def attr():
 #						'type'		:	'line',
 #						'required'	:	False
 #					},
-#					'verify_gpg'	:	{
+#					'verify gpg'	:	{
 #						'type'		:	'bool',
 #						'default'	:	True,
 #						'required'	:	False
@@ -951,7 +955,7 @@ def attr():
 		note:
 			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
-* **content** (*required*): the file content
+* **content** (*optional*): the file content
 		note:
 			If the specified file exists, the file will be reset, otherwise the file will be created with this content
 
@@ -968,7 +972,7 @@ def attr():
 					},
 					'user'	:	{
 						'type'		:	'line',
-						'required'	:	True,
+						'required'	:	False,
 					},
 					'group'	:	{
 						'type'		:	'line',
@@ -977,11 +981,11 @@ def attr():
 					'mode':	{
 						'type'		:	'line',
 						'default'	:	'0755',
-						'required'	:	True
+						'required'	:	False
 					},
 					'content'	:	{
 						'type'		:	'text',
-						'required'	:	True
+						'required'	:	False
 					},
 					'absent'	:	{
 						'type'		:	'bool',
@@ -1069,7 +1073,7 @@ def attr():
 			},
 			'sysvinit'	:	{
 				'module'	:	'linux.sysvinit',
-				'distro'	:	['amazon', 'redhat', 'centos'],
+				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
 ### Description
@@ -1212,9 +1216,7 @@ def attr():
 	
 ### Parameters
 
-*   **username** (*optional*): the user to execute the cron job
-		note:
-			if blank, use will use root by default
+*   **user** (*optional*): the user to execute the cron job, by default: root
 
 *   **cmd** (*required*): the command to execute
 		example:
@@ -1258,9 +1260,9 @@ def attr():
 						'option'	:	['*'],
 						'required'	:	False
 					},
-					'username'	:	{
+					'user'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	False
 					},
 					'cmd'	:	{
 						'type'		:	'line',
@@ -1396,11 +1398,11 @@ def attr():
 					},
 					'dev'	:	{
 						'type'		:	'line',
-						'option'	:	['ext2', 'ext3', 'ext4', 'btrfs', 'iso9660', 'ntfs', 'reiserfs', 'xfs', 'zfs'],
 						'required'	:	True
 					},
 					'filesystem':	{
 						'type'		:	'line',
+						'option'	:	['ext2', 'ext3', 'ext4', 'btrfs', 'iso9660', 'ntfs', 'reiserfs', 'xfs', 'zfs'],
 						'required'	:	True
 					},
 					'dump':	{
@@ -1516,7 +1518,7 @@ def attr():
 
 *   **gid** (*optional*): the group id
 
-*   **home** (*optional*): the home directory of the user
+*   **home** (*optional*): the home directory of the user, by default: ***/home/$username***
 		note:
 			if the directory already exists, the user and group of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the user and group of the user.
 

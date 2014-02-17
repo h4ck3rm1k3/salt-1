@@ -21,7 +21,7 @@ class StateAdaptor(object):
 		## package
 		'linux.apt.package'	: {
 			'attributes' : {
-				'name'			: 'names',
+				'name'			: 'pkgs',
 				'fromrepo'		: 'fromrepo',
 				'debconf'		: 'debconf',
 				'verify_gpg'	: 'verify_gpg',
@@ -33,7 +33,7 @@ class StateAdaptor(object):
 		},
 		'linux.yum.package'	: {
 			'attributes' : {
-				'name'			: 'names',
+				'name'			: 'pkgs',
 				'fromrepo'		: 'fromrepo',
 				'enablerepo'	: 'enablerepo',
 				'disablerepo'	: 'disablerepo',
@@ -260,6 +260,13 @@ class StateAdaptor(object):
 			},
 			'states' : ['running'],
 			'type' : 'supervisord',
+			'require' : {
+				'common.pip.package' : {
+					'name' : {
+						'supervisor' : ''
+					}
+				}
+			}
 		},
 		'linux.systemd' : {
 			'attributes' : {
@@ -387,7 +394,7 @@ class StateAdaptor(object):
 		},
 
 		## timezone
-		'linux.timezone' : {
+		'common.timezone' : {
 			'attributes' : {
 				'name' : 'name',
 				'use_utc' : 'utc'
@@ -480,9 +487,17 @@ class StateAdaptor(object):
 				# 'no-setuptools'			: '',
 				# 'no-pip'				: '',
 				'extra-search-dir'		: 'extra-search-dir',
+				# always-copy				: ''
 			},
 			'states' : ['managed'],
 			'type' : 'virtualenv',
+			'require' : {
+				'common.pip.package' : {
+					'name' : {
+						'virtualenv' : ''
+					}
+				}
+			}
 		},
 
 		## ssh
@@ -615,10 +630,10 @@ class StateAdaptor(object):
 			default_state : addin
 		}
 
-		if module in ['linux.apt.package', 'linux.yum.package', 'common.gem.package', 'common.npm.package', 'common.pecl.package', 'common.pip.package']:
+		if module in ['linux.apt.package', 'linux.yum.package']:
 			module_state = {}
 
-			for item in addin['names']:
+			for item in addin['pkgs']:
 				pkg_name = None
 				pkg_state = None
 				if isinstance(item, dict):
@@ -629,6 +644,68 @@ class StateAdaptor(object):
 						if v in self.mod_map[module]['states']:
 							pkg_state = v
 
+						if pkg_state not in module_state:			module_state[pkg_state] = {}
+						if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
+
+						if pkg_state == default_state:
+							module_state[pkg_state]['pkgs'].append(item)
+						else:
+							module_state[pkg_state]['pkgs'].append(pkg_name)
+
+				else:	# insert into default state
+					pkg_state	= default_state
+
+					if pkg_state not in module_state:			module_state[pkg_state] = {}
+					if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
+
+					module_state[pkg_state]['pkgs'].append(item)
+
+		elif module in ['common.npm.package']:
+			module_state = {}
+
+			for item in addin['names']:
+				pkg_name = None
+				pkg_state = None
+
+				if isinstance(item, basestring):	# insert into default state
+					pkg_state	= default_state
+
+					if pkg_state not in module_state:			module_state[pkg_state] = {}
+					if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+
+					module_state[pkg_state]['names'].append(item)
+
+				elif isinstance(item, dict):
+					for k, v in item.items():
+						pkg_name 	= k
+						pkg_state 	= default_state
+
+						if v in self.mod_map[module]['states']:		pkg_state = v
+						if pkg_state not in module_state:			module_state[pkg_state] = {}
+						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+
+						if pkg_state == default_state:
+							module_state[pkg_state]['names'].append(
+								'{0}@{1}'.format(k, v)
+								)
+						else:
+							module_state[pkg_state]['names'].append(pkg_name)
+
+				else:	# invalid
+					continue
+
+		elif module in ['common.gem.package', 'common.pecl.package', 'common.pip.package']:
+			module_state = {}
+
+			for item in addin['names']:
+				pkg_name = None
+				pkg_state = None
+				if isinstance(item, dict):
+					for k, v in item.items():
+						pkg_name 	= k
+						pkg_state 	= default_state
+
+						if v in self.mod_map[module]['states']:		pkg_state = v
 						if pkg_state not in module_state:			module_state[pkg_state] = {}
 						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
 
@@ -790,7 +867,7 @@ class StateAdaptor(object):
 			Generate require state.
 		"""
 
-		requre_state = {}
+		require_state = {}
 
 		for module, parameter in require.items():
 			if module not in self.mod_map.keys():	continue
@@ -801,10 +878,10 @@ class StateAdaptor(object):
 			# tag 	= self.__get_tag(module, None, None, 'require', state)
 			# type 	= self.mod_map[module]['type']
 
-			the_requre_state = self.__salt('require', module, parameter)
+			the_require_state = self.__salt('require', module, parameter)
 
-			if the_requre_state:
-				requre_state.update(the_requre_state)
+			if the_require_state:
+				require_state.update(the_require_state)
 
 			# requre_state[tag] = {
 			# 	type : [
@@ -813,7 +890,7 @@ class StateAdaptor(object):
 			# 	]
 			# }
 
-		return requre_state
+		return require_state
 
 	def __get_require_in(self, require_in, parameter):
 		"""

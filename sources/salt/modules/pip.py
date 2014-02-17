@@ -671,6 +671,7 @@ def uninstall(pkgs=None,
     try:
         result = __salt__['cmd.run_stdall'](' '.join(cmd), **cmd_kwargs)
         state_std(kwargs, result)
+        return result
     finally:
         for requirement in cleanup_requirements:
             try:

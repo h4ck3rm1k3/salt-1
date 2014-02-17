@@ -1,0 +1,53 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "1 [prepare] install mercurial with yum - True|False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "mercurial": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "2 [prepare] install mercurial with apt - True|False",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "mercurial": ""
+            }
+          }
+        },
+        {
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E0",
+          "_": "3 [prepare] create/ensure mercurial location directory - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": "/tmp/hg",
+            "absent": false,
+            "recursive": true,
+            "mode": "0755"
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
+          "_": "4 [test1] clone hgview with mercurial - True",
+          "module": "common.hg",
+          "parameter": {
+            "repo": "http://hg.logilab.org/hgview",
+            "path": "/tmp/hg/test/",
+            "force": true,
+            "group": "root",
+            "user": "root",
+            "branch": "master",
+            "mode": "0755"
+          }
+        }
+      ]
+    }
+  }
+}

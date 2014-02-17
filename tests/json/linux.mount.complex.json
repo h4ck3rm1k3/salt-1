@@ -1,0 +1,77 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E0",
+          "_": "1 [prepare] create/ensure source (/tmp/volume) - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": "/tmp/volume",
+            "absent": false,
+            "recursive": true,
+            "mode": "0755"
+          }
+        },
+        {
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E0",
+          "_": "2 [prepare] create/ensure destination (/tmp/dest) - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": "/tmp/dest",
+            "absent": false,
+            "recursive": true,
+            "mode": "0755"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A00",
+          "_": "3 [test1] mount - True",
+          "module": "linux.mount",
+          "parameter": {
+            "path": "/tmp/dst",
+            "dev": "/tmp/volume",
+            'filesystem': 'none',
+            'dump': '0',
+            'passno': '0',
+            "args": "['bind','ro']"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97614300F41",
+          "_": "4 [test2] create file in origin directory - True",
+          "module": "linux.file",
+          "parameter": {
+            "content": "foo",
+            "user": "root",
+            "path": "/tmp/volume/foo",
+            "mode": "0644",
+            "absent": false,
+            "group": "root"
+          }
+        },
+        {
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E4",
+          "_": "5 [test3] test file in destination directoy /tmp/dest/foo - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "cat /tmp/dest/foo",
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97614300F42",
+          "_": "6 [test4] create file in destination directory - False",
+          "module": "linux.file",
+          "parameter": {
+            "content": "bar",
+            "user": "root",
+            "path": "/tmp/volume/bar",
+            "mode": "0644",
+            "absent": false,
+            "group": "root"
+          }
+        }
+      ]
+    }
+  }
+}

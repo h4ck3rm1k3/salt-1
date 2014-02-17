@@ -1,48 +1,15 @@
 # -*- coding: utf-8 -*-
 '''
-Starting or restarting of services and daemons
-==============================================
-
-Services are defined as system daemons typically started with system init or
-rc scripts, services can be defined as running or dead.
-
-.. code-block:: yaml
-
-    httpd:
-      service:
-        - running
-
-The service can also be set to be started at runtime via the enable option:
-
-.. code-block:: yaml
-
-    openvpn:
-      service:
-        - running
-        - enable: True
-
-By default if a service is triggered to refresh due to a watch statement the
-service is by default restarted. If the desired behaviour is to reload the
-service, then set the reload value to True:
-
-.. code-block:: yaml
-
-    redis:
-      service:
-        - running
-        - enable: True
-        - reload: True
-        - watch:
-          - pkg: redis
+	Systemd
 '''
 
 
 def __virtual__():
     '''
     Only make these states available if a service provider has been detected or
-    assigned for this host
+    assigned for this minion
     '''
-    return 'service' if 'service.start' in __salt__ else False
+    return 'systemd' if 'systemd.start' in __salt__ else False
 
 
 def _enabled_used_error(ret):
@@ -67,8 +34,8 @@ def _enable(name, started, result=True, **kwargs):
     if not _available(name, ret):
         return ret
 
-    # Check to see if this host supports enable
-    if not 'service.enable' in __salt__ or not 'service.enabled' in __salt__:
+    # Check to see if this minion supports enable
+    if not 'systemd.enable' in __salt__ or not 'systemd.enabled' in __salt__:
         if started is True:
             ret['comment'] = ('Enable is not available on this host,'
                               ' service {0} started').format(name)
@@ -84,7 +51,7 @@ def _enable(name, started, result=True, **kwargs):
             return ret
 
     # Service can be enabled
-    if __salt__['service.enabled'](name):
+    if __salt__['systemd.enabled'](name):
         # Service is enabled
         if started is True:
             ret['comment'] = ('Service {0} is already enabled,'
@@ -105,7 +72,7 @@ def _enable(name, started, result=True, **kwargs):
         ret['comment'] = 'Service {0} set to be enabled'.format(name)
         return ret
 
-    if __salt__['service.enable'](name, state_ret=ret, **kwargs):
+    if __salt__['systemd.enable'](name, state_ret=ret, **kwargs):
         # Service has been enabled
         if started is True:
             ret['changes'][name] = True
@@ -157,23 +124,23 @@ def _disable(name, started, result=True, **kwargs):
         return ret
 
     # is enable/disable available?
-    if not 'service.disable' in __salt__ or not 'service.disabled' in __salt__:
+    if not 'systemd.disable' in __salt__ or not 'systemd.disabled' in __salt__:
         if started is True:
-            ret['comment'] = ('Disable is not available on this host,'
+            ret['comment'] = ('Disable is not available on this minion,'
                               ' service {0} started').format(name)
             return ret
         elif started is None:
-            ret['comment'] = ('Disable is not available on this host,'
+            ret['comment'] = ('Disable is not available on this minion,'
                               ' service {0} is in the desired state'
                               ).format(name)
             return ret
         else:
-            ret['comment'] = ('Disable is not available on this host,'
+            ret['comment'] = ('Disable is not available on this minion,'
                               ' service {0} is dead').format(name)
             return ret
 
     # Service can be disabled
-    if __salt__['service.disabled'](name):
+    if __salt__['systemd.disabled'](name):
         # Service is disabled
         if started is True:
             ret['changes'][name] = True
@@ -195,7 +162,7 @@ def _disable(name, started, result=True, **kwargs):
         ret['comment'] = 'Service {0} set to be disabled'.format(name)
         return ret
 
-    if __salt__['service.disable'](name, state_ret=ret, **kwargs):
+    if __salt__['systemd.disable'](name, state_ret=ret, **kwargs):
         # Service has been disabled
         if started is True:
             ret['changes'][name] = True
@@ -236,10 +203,10 @@ def _disable(name, started, result=True, **kwargs):
 def _available(name, ret):
     # Check if the service is available
     avail = False
-    if 'service.available' in __salt__:
-        avail = __salt__['service.available'](name)
-    elif 'service.get_all' in __salt__:
-        avail = name in __salt__['service.get_all']()
+    if 'systemd.available' in __salt__:
+        avail = __salt__['systemd.available'](name)
+    elif 'systemd.get_all' in __salt__:
+        avail = name in __salt__['systemd.get_all']()
     if not avail:
         ret['result'] = False
         ret['comment'] = 'The named service {0} is not available'.format(name)
@@ -276,7 +243,7 @@ def running(name, enable=None, sig=None, **kwargs):
         return ret
 
     # See if the service is already running
-    if __salt__['service.status'](name, sig):
+    if __salt__['systemd.status'](name, sig):
         ret['comment'] = 'The service {0} is already running'.format(name)
         if enable is True:
             return _enable(name, None, **kwargs)
@@ -291,7 +258,7 @@ def running(name, enable=None, sig=None, **kwargs):
         ret['comment'] = 'Service {0} is set to start'.format(name)
         return ret
 
-    changes = {name: __salt__['service.start'](name, state_ret=ret)}
+    changes = {name: __salt__['systemd.start'](name, state_ret=ret)}
 
     if not changes[name]:
         if enable is True:
@@ -343,12 +310,12 @@ def dead(name, enable=None, sig=None, **kwargs):
         ret['result'] = True
         return ret
 
-    if not __salt__['service.status'](name, sig):
+    if not __salt__['systemd.status'](name, sig):
         ret['comment'] = 'The service {0} is already dead'.format(name)
         if enable is True:
-            return _enable(name, None, **kwargs)
+            return _enable(name, None, state_ret=ret, **kwargs)
         elif enable is False:
-            return _disable(name, None, **kwargs)
+            return _disable(name, None, state_ret=ret, **kwargs)
         else:
             return ret
 
@@ -357,7 +324,7 @@ def dead(name, enable=None, sig=None, **kwargs):
         ret['comment'] = 'Service {0} is set to be killed'.format(name)
         return ret
 
-    ret['changes'] = {name: __salt__['service.stop'](name, state_ret=ret)}
+    ret['changes'] = {name: __salt__['systemd.stop'](name, state_ret=ret)}
 
     if not ret['changes'][name]:
         ret['result'] = False
@@ -423,18 +390,18 @@ def mod_watch(name, sig=None, reload=False, full_restart=False):
            'state_stdout': ''}
     action = ''
 
-    if __salt__['service.status'](name, sig):
-        if 'service.reload' in __salt__ and reload:
-            restart_func = __salt__['service.reload']
+    if __salt__['systemd.status'](name, sig):
+        if 'systemd.reload' in __salt__ and reload:
+            restart_func = __salt__['systemd.reload']
             action = 'reload'
-        elif 'service.full_restart' in __salt__ and full_restart:
-            restart_func = __salt__['service.full_restart']
+        elif 'systemd.full_restart' in __salt__ and full_restart:
+            restart_func = __salt__['systemd.full_restart']
             action = 'fully restart'
         else:
-            restart_func = __salt__['service.restart']
+            restart_func = __salt__['systemd.restart']
             action = 'restart'
     else:
-        restart_func = __salt__['service.start']
+        restart_func = __salt__['systemd.start']
         action = 'start'
 
     if __opts__['test']:

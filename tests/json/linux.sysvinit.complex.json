@@ -1,0 +1,34 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "1 [prepare] install mysql-server - True",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "mysql-server": ""
+            }
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632ACD",
+          "_": "1 [test1] Add on startup - True",
+          "module": "linux.sysvinit",
+          "parameter": {
+            "name": "mysqld"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632ACE",
+          "_": "2 [test2] Ensure mysql init script is loaded - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "chkconfig --list|grep mysqld"
+          }
+        }
+      ]
+    }
+  }
+}

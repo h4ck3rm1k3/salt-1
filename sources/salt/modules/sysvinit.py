@@ -66,7 +66,7 @@ def start(name, **kwargs):
 
     .. code-block:: bash
 
-        salt '*' service.start <service name>
+        salt '*' sysvinit.start <service name>
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
@@ -85,7 +85,7 @@ def stop(name, **kwargs):
 
     .. code-block:: bash
 
-        salt '*' service.stop <service name>
+        salt '*' sysvinit.stop <service name>
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
@@ -104,7 +104,7 @@ def restart(name, **kwargs):
 
     .. code-block:: bash
 
-        salt '*' service.restart <service name>
+        salt '*' sysvinit.restart <service name>
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
@@ -125,7 +125,7 @@ def status(name, sig=None):
 
     .. code-block:: bash
 
-        salt '*' service.status <service name> [service signature]
+        salt '*' sysvinit.status <service name> [service signature]
     '''
     return __salt__['status.pid'](sig if sig else name)
 
@@ -138,7 +138,7 @@ def reload_(name, **kwargs):
 
     .. code-block:: bash
 
-        salt '*' service.reload <service name>
+        salt '*' sysvinit.reload <service name>
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
@@ -158,14 +158,14 @@ def available(name):
 
     .. code-block:: bash
 
-        salt '*' service.available sshd
+        salt '*' sysvinit.available sshd
     '''
     return name in get_all()
 
 
 def missing(name):
     '''
-    The inverse of service.available.
+    The inverse of sysvinit.available.
     Returns ``True`` if the specified service is not available, otherwise returns
     ``False``.
 
@@ -173,7 +173,7 @@ def missing(name):
 
     .. code-block:: bash
 
-        salt '*' service.missing sshd
+        salt '*' sysvinit.missing sshd
     '''
     return not name in get_all()
 
@@ -186,7 +186,7 @@ def get_all():
 
     .. code-block:: bash
 
-        salt '*' service.get_all
+        salt '*' sysvinit.get_all
     '''
     if not os.path.isdir(_GRAINMAP.get(__grains__.get('os'), '/etc/init.d')):
         return []

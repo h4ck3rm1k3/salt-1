@@ -235,8 +235,8 @@ def present(name,
     ret = {'name': name,
            'changes': {},
            'result': True,
-           'comment': 'User {0} is present and up to date'.format(name)
-           'state_stdout: ''}
+           'comment': 'User {0} is present and up to date'.format(name),
+           'state_stdout': ''}
 
     if groups:
         missing_groups = [x for x in groups if not __salt__['group.info'](x)]

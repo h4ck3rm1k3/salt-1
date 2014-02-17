@@ -1,6 +1,10 @@
 ####################################################
 #lines begin with "#" or blank lines will be ignored
 ####################################################
+
+#######################################
+# 1. simple test with required parameter
+#######################################
 linux.user
 linux.group
 linux.cron
@@ -38,6 +42,17 @@ linux.hosts
 #internal.wait
 
 
+#######################################
+# 2. complex test for single module
+#######################################
+linux.user.complex # detail test for user
+linux.group.complex # detail test for group
+linux.cron.complex # detail test for cron
+
+
+#######################################
+# 3. assembly testing
+#######################################
 complex.1 #linux.yum.package git + common.git
 complex.2 #linux.apt.package git + common.git
 complex.3 #linux.yum.package hg + common.hg
