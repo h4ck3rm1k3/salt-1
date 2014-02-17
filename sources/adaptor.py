@@ -534,14 +534,14 @@ class StateAdaptor(object):
 			convert the module json data to salt states.
 		"""
 
-		utils.log("DEBUG", "Begin to convert module json data ...", ("convert", self))
+		utils.log("INFO", "Begin to convert module json data ...", ("convert", self))
 
 		if not isinstance(module, basestring):	raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if not isinstance(parameter, dict):		raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if module not in self.mod_map:			raise StateException("Unsupported module %s" % module)
 
 		# convert from unicode to string
-		utils.log("DEBUG", "Begin to convert unicode parameter to string ...", ("convert", self))
+		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
 		parameter = utils.uni2str(parameter)
 
 		self.states = self.__salt(step, module, parameter)
@@ -550,12 +550,15 @@ class StateAdaptor(object):
 	def __salt(self, step, module, parameter):
 		salt_state = {}
 
+		utils.log("INFO", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
 		addin = self.__init_addin(module, parameter)
+
+		utils.log("INFO", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
 		module_states = self.__build_up(module, addin)
 
 		for state, addin in module_states.items():
 			# add require
-			utils.log("DEBUG", "Begin to generate requirity ...", ("_convert", self))
+			utils.log("INFO", "Begin to generate requirity ...", ("_convert", self))
 			require = []
 			if 'require' in self.mod_map[module]:
 				req_state = self.__get_require(self.mod_map[module]['require'])
@@ -565,7 +568,7 @@ class StateAdaptor(object):
 						require.append({ next(iter(req_value)) : req_tag })
 
 			# add require in
-			utils.log("DEBUG", "Begin to generate require-in ...", ("_convert", self))
+			utils.log("INFO", "Begin to generate require-in ...", ("_convert", self))
 			require_in = []
 			if 'require_in' in self.mod_map[module]:
 				req_in_state = self.__get_require_in(self.mod_map[module]['require_in'], parameter)
@@ -575,7 +578,7 @@ class StateAdaptor(object):
 						require_in.append({ next(iter(req_in_value)) : req_in_tag })
 
 			## add watch, todo
-			utils.log("DEBUG", "Begin to generate watch ...",("_convert", self))
+			utils.log("INFO", "Begin to generate watch ...",("_convert", self))
 			watch = []
 			# if 'watch' in parameter and isinstance(parameter['watch'], list):
 			# 	watch_state = self.__add_watch(parameter['watch'], step)
@@ -597,7 +600,7 @@ class StateAdaptor(object):
 			# tag
 			#name = addin['names'] if 'names' in addin else addin['name']
 			tag = self.__get_tag(module, None, step, None, state)
-			utils.log("DEBUG", "Generated tag is %s" % tag, ("_convert", self))
+			utils.log("INFO", "Generated tag is %s" % tag, ("_convert", self))
 			salt_state[tag] = {
 				self.mod_map[module]['type'] : module_state
 			}
@@ -660,7 +663,7 @@ class StateAdaptor(object):
 
 					module_state[pkg_state]['pkgs'].append(item)
 
-		elif module in ['common.npm.package']:
+		elif module in ['common.npm.package', 'common.pip.package']:
 			module_state = {}
 
 			for item in addin['names']:
@@ -685,8 +688,13 @@ class StateAdaptor(object):
 						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
 
 						if pkg_state == default_state:
-							module_state[pkg_state]['names'].append(
-								'{0}@{1}'.format(k, v)
+							if module == 'common.npm.package':
+								module_state[pkg_state]['names'].append(
+									'{0}@{1}'.format(k, v)
+									)
+							elif module == 'common.pip.package':
+								module_state[pkg_state]['names'].append(
+								'{0}=={1}'.format(k, v)
 								)
 						else:
 							module_state[pkg_state]['names'].append(pkg_name)
@@ -694,7 +702,7 @@ class StateAdaptor(object):
 				else:	# invalid
 					continue
 
-		elif module in ['common.gem.package', 'common.pecl.package', 'common.pip.package']:
+		elif module in ['common.gem.package', 'common.pecl.package']:
 			module_state = {}
 
 			for item in addin['names']:
