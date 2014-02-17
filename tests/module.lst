@@ -45,7 +45,9 @@ linux.hosts
 #######################################
 # 2. complex test for single module
 #######################################
+linux.user.complex # detail test for user
 linux.group.complex # detail test for group
+linux.cron.complex # detail test for cron
 
 
 #######################################
