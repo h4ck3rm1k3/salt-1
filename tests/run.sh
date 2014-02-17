@@ -60,18 +60,19 @@ function do_all_module_test(){
     
       END_TIME=`date '+%s'`
       #check result
+      OUT_=`cat ./log/${JSON_TYPE}/${line}.out|wc -l`
       ERR_=`cat ./log/${JSON_TYPE}/${line}.err|wc -l`
-      OUT_=`grep "^(True" ./log/${JSON_TYPE}/${line}.out|wc -l`
       if [ ${JSON_TYPE} == "${JSON[1]}" ]
       then
         #only for basic test
-        if [ "${OUT_}" != "1" ]
+        RLT_=`grep "^(True" ./log/${JSON_TYPE}/${line}.out|wc -l`
+        if [ "${RLT_}" != "1" ]
         then
-          OUT_="!!!!"
+          RLT_="!!!!"
         else
-          OUT_="True"
+          RLT_="True"
         fi
-        echo -e `expr ${END_TIME} - ${START_TIME}`"s\tPASS: ${OUT_}\terr: ${ERR_}"
+        echo -e `expr ${END_TIME} - ${START_TIME}`"s\tPASS: ${RLT_}\tout: ${OUT_}\terr: ${ERR_}"
       else
         echo -e `expr ${END_TIME} - ${START_TIME}`"s\tout: ${OUT_}\terr: ${ERR_}"
       fi

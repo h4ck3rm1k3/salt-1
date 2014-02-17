@@ -955,7 +955,7 @@ def attr():
 		note:
 			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
-* **content** (*required*): the file content
+* **content** (*optional*): the file content
 		note:
 			If the specified file exists, the file will be reset, otherwise the file will be created with this content
 
@@ -972,7 +972,7 @@ def attr():
 					},
 					'user'	:	{
 						'type'		:	'line',
-						'required'	:	True,
+						'required'	:	False,
 					},
 					'group'	:	{
 						'type'		:	'line',
@@ -981,11 +981,11 @@ def attr():
 					'mode':	{
 						'type'		:	'line',
 						'default'	:	'0755',
-						'required'	:	True
+						'required'	:	False
 					},
 					'content'	:	{
 						'type'		:	'text',
-						'required'	:	True
+						'required'	:	False
 					},
 					'absent'	:	{
 						'type'		:	'bool',
