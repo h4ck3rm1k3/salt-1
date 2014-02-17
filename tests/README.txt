@@ -25,5 +25,5 @@ vim api.json
 
 [tips]
 to view result only:
-./step.sh 2 | grep "^(" | grep -n -E "True|False"
+./step.sh 30 | grep "^(" | grep -n -E "True|False"
 
