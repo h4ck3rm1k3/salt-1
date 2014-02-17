@@ -8,7 +8,7 @@
 linux.user.complex
 linux.group.complex
 linux.cron.complex
-#linux.file.complex
+linux.file.complex
 #linux.dir.complex
 #linux.symlink.complex
 linux.upstart.complex
