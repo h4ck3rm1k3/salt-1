@@ -1216,9 +1216,7 @@ def attr():
 	
 ### Parameters
 
-*   **username** (*optional*): the user to execute the cron job
-		note:
-			if blank, use will use root by default
+*   **user** (*optional*): the user to execute the cron job, by default: root
 
 *   **cmd** (*required*): the command to execute
 		example:
@@ -1262,9 +1260,9 @@ def attr():
 						'option'	:	['*'],
 						'required'	:	False
 					},
-					'username'	:	{
+					'user'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	False
 					},
 					'cmd'	:	{
 						'type'		:	'line',

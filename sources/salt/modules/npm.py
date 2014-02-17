@@ -92,14 +92,13 @@ def install(pkg=None,
     # npm >1.2.21 is putting the output to stderr even though retcode is 0
     npm_output = result['stdout'] or result['stderr']
     for line in npm_output.splitlines():
-        if line.find('%s@' % pkg) >= 0:
+        if line.find(pkg) >= 0:
             return [{
                 'name'		:	pkg,
-                'version'	:	line[line.find('%s@' % pkg)+len('%s@' % pkg):line.find(' ')]	#EXAMPLE: express@3.4.8 /usr/local/lib/node_modules/express
+                'version'	:	line[line.find(pkg)+len(pkg):line.find(' ')]	#EXAMPLE: express@3.4.8 /usr/local/lib/node_modules/express
             }]
 
     return npm_output
-
 
 def uninstall(pkg,
               dir=None,
