@@ -47,7 +47,10 @@ function do_all_module_test(){
   i=1
   for line in `cat json/module_${JSON_TYPE}.lst | grep -Ev "^#|^$" | awk '{print $1}'`
   do
-    echo -e -n `date '+%Y-%m-%d %H:%M:%S' `" - start test ${i}:'${line}'\t- "
+    LEN_=`expr length ${line}`
+    NSPACE_=`expr 25 - ${LEN_}`
+    SPACE_=`printf "%${NSPACE_}s"`
+    echo -e -n `date '+%Y-%m-%d %H:%M:%S' `" - start test ${i}:'${line}' ${SPACE_} - "
     START_TIME=`date '+%s'`
 
     if [ -f json/${JSON_TYPE}/${line}.json ]
@@ -57,9 +60,21 @@ function do_all_module_test(){
     
       END_TIME=`date '+%s'`
       #check result
-      OUT_=`cat ./log/${JSON_TYPE}/${line}.out|wc -l`
       ERR_=`cat ./log/${JSON_TYPE}/${line}.err|wc -l`
-      echo -e `expr ${END_TIME} - ${START_TIME}`"s\tout: ${OUT_}\t  err: ${ERR_}"
+      OUT_=`grep "^(True" ./log/${JSON_TYPE}/${line}.out|wc -l`
+      if [ ${JSON_TYPE} == "${JSON[1]}" ]
+      then
+        #only for basic test
+        if [ "${OUT_}" != "1" ]
+        then
+          OUT_="!!!!"
+        else
+          OUT_="True"
+        fi
+        echo -e `expr ${END_TIME} - ${START_TIME}`"s\tPASS: ${OUT_}\terr: ${ERR_}"
+      else
+        echo -e `expr ${END_TIME} - ${START_TIME}`"s\tout: ${OUT_}\terr: ${ERR_}"
+      fi
 
     else
       echo "!!! can not found json/${JSON_TYPE}/${line}.json !!!"
