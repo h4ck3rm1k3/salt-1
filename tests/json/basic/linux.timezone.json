@@ -1,0 +1,15 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-3A1E9311-CA09-4747-A8DD-0D616BBFCE0F",
+          "module": "common.timezone",
+          "parameter": {
+            "name": "Asia/Shanghai"
+          }
+        }
+      ]
+    }
+  }
+}

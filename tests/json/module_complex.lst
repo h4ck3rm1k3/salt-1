@@ -1,0 +1,10 @@
+####################################################
+#lines begin with "#" or blank lines will be ignored
+####################################################
+
+#######################################
+# single module complex test
+#######################################
+linux.user.complex # detail test for user
+linux.group.complex # detail test for group
+linux.cron.complex # detail test for cron
