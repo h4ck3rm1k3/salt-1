@@ -1,0 +1,22 @@
+####################################################
+#lines begin with "#" or blank lines will be ignored
+####################################################
+
+##########################################
+# multiple module complex test
+##########################################
+combo.1 #linux.yum.package git + common.git
+combo.2 #linux.apt.package git + common.git
+combo.3 #linux.yum.package hg + common.hg
+combo.4 #linux.apt.package hg + common.hg
+combo.5 #linux.yum.package svn + common.svn
+combo.6 #linux.apt.package svn + common.svn
+
+combo.7 #linux.cmd (epel repo) + linux.yum.package npm + common.npm.package
+combo.8 #linux.apt.package npm + common.npm.package
+combo.9 #linux.yum.package pip + common.pip.package
+combo.10 #linux.apt.package pip + common.pip.package
+combo.11 #linux.yum.package gem + common.gem.package
+combo.12 #linux.apt.package gem + common.gem.package
+
+combo.13 #linux.file program (foo) + conf (supervisor) + linux.yum.package python-pip + common.pip.package supervisor + linux.supervisord foo

@@ -7,7 +7,7 @@ EXE_BIN=${BASE_DIR}/adaptor.py
 
 JSON[1]=basic
 JSON[2]=complex
-JSON[3]=composition
+JSON[3]=combo
 JSON_TYPE=""
 
 
@@ -19,7 +19,7 @@ function show_usage(){
   echo "[ type ] : "
   echo -e " 1 basic	( single module with required parameter test )"
   echo -e " 2 complex	( single module complex test )"
-  echo -e " 3 composition	( multiple module complex test )"
+  echo -e " 3 combo	( multiple module complex test )"
   echo "========================================================="
   exit 1
 }

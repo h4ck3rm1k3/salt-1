@@ -1,12 +1,12 @@
 [description]
 .
 |-- json/
-|   |-- basic/			#test json for basic test
-|   |-- complex/		#test json for complex test
-|   |-- composition/		#test json for composition test
-|   |-- module_basic.lst	#config for basic test
-|   |-- module_complex.lst	#config for complex test
-|   `-- module_composition.lst	#config for composition test
+|   |-- basic/			#json for single module basic test
+|   |-- complex/		#json for single module complex test
+|   |-- combo/			#json for multiple module combo test
+|   |-- module_basic.lst	#config for single module basic test
+|   |-- module_complex.lst	#config for single module complex test
+|   `-- module_combo.lst	#config for multiple module combo test
 |-- log/	#output for run.sh
 |-- run.sh	#run all test case
 `-- step.sh	#run single test case
