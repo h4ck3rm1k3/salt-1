@@ -38,5 +38,7 @@ to test "linux.user" module, run£º
 [tips]
 
 to view result only:
+
+export GREP_OPTIONS='--color=auto' 
 ./step.sh 2 1 | grep "^(" | grep -n -E "True|False"
 
