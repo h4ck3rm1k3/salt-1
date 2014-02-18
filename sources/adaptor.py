@@ -274,7 +274,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'service',
+			'type' : 'systemd',
 		},
 		'linux.sysvinit' : {
 			'attributes' : {
@@ -282,7 +282,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'service',
+			'type' : 'sysvinit',
 		},
 		'linux.upstart' : {
 			'attributes' : {
@@ -290,7 +290,7 @@ class StateAdaptor(object):
 				# 'watch' : 'watch',
 			},
 			'states' : ['running'],
-			'type' : 'service',
+			'type' : 'upstart',
 		},
 
 		## cmd
@@ -544,21 +544,33 @@ class StateAdaptor(object):
 		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
 		parameter = utils.uni2str(parameter)
 
+		# convert to salt states
+		utils.log("INFO", "Begin to convert to salt state...", ("convert", self))
 		self.states = self.__salt(step, module, parameter)
+
+		# expand salt state
+		utils.log("INFO", "Begin to expand salt state...", ("convert", self))
+		try:
+			self.__expand()
+		except Exception as e:
+			utils.log("ERROR", "Expand salt state failed...", ("convert", self))
+			import json
+			raise StateException("Expand salt state faild: %s" % json.dumps(self.states))
+
 		return self.states
 
 	def __salt(self, step, module, parameter):
 		salt_state = {}
 
-		utils.log("INFO", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
+		utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
 		addin = self.__init_addin(module, parameter)
 
-		utils.log("INFO", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
+		utils.log("DEBUG", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
 		module_states = self.__build_up(module, addin)
 
 		for state, addin in module_states.items():
 			# add require
-			utils.log("INFO", "Begin to generate requirity ...", ("_convert", self))
+			utils.log("DEBUG", "Begin to generate requirity ...", ("_convert", self))
 			require = []
 			if 'require' in self.mod_map[module]:
 				req_state = self.__get_require(self.mod_map[module]['require'])
@@ -568,7 +580,7 @@ class StateAdaptor(object):
 						require.append({ next(iter(req_value)) : req_tag })
 
 			# add require in
-			utils.log("INFO", "Begin to generate require-in ...", ("_convert", self))
+			utils.log("DEBUG", "Begin to generate require-in ...", ("_convert", self))
 			require_in = []
 			if 'require_in' in self.mod_map[module]:
 				req_in_state = self.__get_require_in(self.mod_map[module]['require_in'], parameter)
@@ -578,7 +590,7 @@ class StateAdaptor(object):
 						require_in.append({ next(iter(req_in_value)) : req_in_tag })
 
 			## add watch, todo
-			utils.log("INFO", "Begin to generate watch ...",("_convert", self))
+			utils.log("DEBUG", "Begin to generate watch ...",("_convert", self))
 			watch = []
 			# if 'watch' in parameter and isinstance(parameter['watch'], list):
 			# 	watch_state = self.__add_watch(parameter['watch'], step)
@@ -600,7 +612,7 @@ class StateAdaptor(object):
 			# tag
 			#name = addin['names'] if 'names' in addin else addin['name']
 			tag = self.__get_tag(module, None, step, None, state)
-			utils.log("INFO", "Generated tag is %s" % tag, ("_convert", self))
+			utils.log("DEBUG", "Generated tag is %s" % tag, ("_convert", self))
 			salt_state[tag] = {
 				self.mod_map[module]['type'] : module_state
 			}
@@ -663,7 +675,7 @@ class StateAdaptor(object):
 
 					module_state[pkg_state]['pkgs'].append(item)
 
-		elif module in ['common.npm.package', 'common.pip.package']:
+		elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
 			module_state = {}
 
 			for item in addin['names']:
@@ -692,7 +704,7 @@ class StateAdaptor(object):
 								module_state[pkg_state]['names'].append(
 									'{0}@{1}'.format(k, v)
 									)
-							elif module == 'common.pip.package':
+							elif module in ['common.pip.package', 'common.gem.package']:
 								module_state[pkg_state]['names'].append(
 								'{0}=={1}'.format(k, v)
 								)
@@ -701,34 +713,6 @@ class StateAdaptor(object):
 
 				else:	# invalid
 					continue
-
-		elif module in ['common.gem.package', 'common.pecl.package']:
-			module_state = {}
-
-			for item in addin['names']:
-				pkg_name = None
-				pkg_state = None
-				if isinstance(item, dict):
-					for k, v in item.items():
-						pkg_name 	= k
-						pkg_state 	= default_state
-
-						if v in self.mod_map[module]['states']:		pkg_state = v
-						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-						if pkg_state == default_state:
-							module_state[pkg_state]['names'].append(item)
-						else:
-							module_state[pkg_state]['names'].append(pkg_name)
-
-				else:	# insert into default state
-					pkg_state	= default_state
-
-					if pkg_state not in module_state:			module_state[pkg_state] = {}
-					if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-					module_state[pkg_state]['names'].append(item)
 
 		elif module in ['common.git', 'common.svn', 'common.hg']:
 			# if 'name' in addin:
@@ -858,6 +842,60 @@ class StateAdaptor(object):
 
 		if not module_state:	raise StateException("Build up module state failed: %s" % module)
 		return module_state
+
+	def __expand(self):
+		"""
+			Expand state's requirity and require-in when special module(gem).
+		"""
+		if not self.states:	return
+
+		state_list = []
+
+		for tag, state in self.states.iteritems():
+			for module, chunk in state.iteritems():
+
+				if module == 'gem':
+					name_list = None
+					for item in chunk:
+						if isinstance(item, dict) and 'names' in item:	name_list = item['names']
+
+					if not name_list:	continue
+					for name in name_list:
+						if '==' in name:
+							the_build_up = [ i for i in chunk if 'names' not in i ]
+
+							# remove the name from origin
+							name_list.remove(name)
+
+							pkg_name, pkg_version = name.split('==')
+
+							the_build_up.append({
+								"name" 		: pkg_name,
+								"version"	: pkg_version
+							})
+
+							# build up the special package state
+							the_state = {
+								tag + '_' + name : {
+									"gem" : the_build_up
+								}
+							}
+
+							# get the state's require and require-in
+							req_list = [ item[next(iter(item))] for item in chunk if isinstance(item, dict) and any(['require' in item, 'require_in' in item]) ]
+
+							for req in req_list:
+								if isinstance(req, list):
+									for r in req:
+										for r_tag in r.values():
+											if r_tag in self.states:
+												the_state[r_tag] = self.states[r_tag]
+
+							if the_state:
+								state_list.append(the_state)
+
+		state_list.append(self.states)
+		self.states = state_list
 
 	def __get_tag(self, module, uid=None, step=None, name=None, state=None):
 		"""
@@ -1041,15 +1079,15 @@ def ut():
 
 		for p_state in com['state']:
 			step = p_state['id']
-			state = adaptor.convert(step, p_state['module'], p_state['parameter'])
-			print json.dumps(state)
+			states = adaptor.convert(step, p_state['module'], p_state['parameter'])
+			print json.dumps(states)
 
-			if not state or not isinstance(state, dict):
+			if not states or not isinstance(states, list):
 				err_log = "convert salt state failed"
 				print err_log
 				result = (False, err_log, out_log)
 			else:
-				result = runner.exec_salt(state)
+				result = runner.exec_salt(states)
 			print result
 
 	# out_states = [salt_opts] + states

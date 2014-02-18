@@ -10,11 +10,11 @@ linux.group.complex
 linux.cron.complex
 linux.file.complex
 linux.dir.complex
-#linux.symlink.complex
+linux.symlink.complex
 linux.upstart.complex
-#linux.timezone.complex
+linux.timezone.complex
 linux.systemd.complex
-#linux.cmd.complex
+linux.cmd.complex
 #linux.hostname.complex
 #linux.yum.repo
 #linux.yum.package
