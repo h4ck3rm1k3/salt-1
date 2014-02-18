@@ -6,7 +6,7 @@
           "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632ACD",
           "module": "common.virtualenv",
           "parameter": {
-            "path": "/tmp/virtualenvtest"
+            "path": "/tmp/test/virtualenvtest"
           }
         }
       ]

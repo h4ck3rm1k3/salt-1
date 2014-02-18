@@ -5,17 +5,14 @@
 #######################################
 # single module with required parameter test 
 #######################################
+linux.cmd # run first to prepare test env, all test file will be in /tmp/test/ dir
 linux.user
 linux.group
 linux.cron
 linux.file
 linux.dir
 linux.symlink
-linux.upstart
 linux.timezone
-linux.systemd
-linux.cmd
-linux.hostname
 linux.yum.repo
 linux.yum.package
 linux.apt.repo
@@ -23,20 +20,24 @@ linux.apt.package
 common.git # -> need to install git
 common.hg # -> need to install hg
 common.svn # -> need to install svn
-common.npm.package # -> need to install npm
-common.pip.package # -> need to install pip
-common.gem.package # -> need to install gem
 common.virtualenv # -> create?
 linux.supervisord # -> need to create service
-linux.sysvinit
 linux.mount
 linux.lvm.pv # TODO: set right path
 linux.lvm.vg # TODO: set right path
 linux.lvm.lv # TODO: lvname?vgname?
-linux.hosts
 
+common.npm.package # -> need to install npm
+common.pip.package # -> need to install pip
+common.gem.package # -> need to install gem
+
+#linux.systemd
+#linux.upstart
+#linux.sysvinit
+
+#linux.hosts
+#linux.hostname
 #linux.fs # Doesn't exists?
 #linux.ulimit # Doesn't exists?
-
 #internal.reboot
 #internal.wait

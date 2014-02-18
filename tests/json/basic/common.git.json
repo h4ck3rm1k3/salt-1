@@ -7,12 +7,7 @@
           "module": "common.git",
           "parameter": {
             "repo": "https://github.com/ErikDubbelboer/phpRedisAdmin.git",
-            "path": "/var/www/html/phpRedisAdmin",
-            "force": true,
-            "group": "root",
-            "user": "root",
-            "branch": "master",
-            "mode": "0755"
+            "path": "/tmp/test/git/phpRedisAdmin"
           }
         }
       ]
