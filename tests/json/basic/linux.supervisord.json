@@ -7,7 +7,7 @@
           "module": "linux.supervisord",
           "parameter": {
             "name": "foo",
-            "config": "/tmp/foo.conf"
+            "config": "/tmp/test/supervisord/foo.conf"
           }
         }
       ]

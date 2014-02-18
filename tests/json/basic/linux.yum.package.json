@@ -7,7 +7,7 @@
           "module": "linux.yum.package",
           "parameter": {
             "name": {
-              "upstart": ""
+              "expect-devel": ""
             }
           }
         }

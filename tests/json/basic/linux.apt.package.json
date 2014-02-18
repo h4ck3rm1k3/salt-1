@@ -7,7 +7,7 @@
           "module": "linux.apt.package",
           "parameter": {
             "name": {
-              "git": ""
+              "expect-dev": ""
             }
           }
         }

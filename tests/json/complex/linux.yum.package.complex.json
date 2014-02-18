@@ -2,27 +2,125 @@
   "component": {
     "init": {
       "state": [
+
+
         {
-          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D3A4186",
-          "_": "1 [test1] add mongo repo - True",
-          "module": "linux.yum.repo",
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E000",
+          "_": "1 [prepare] remove mongo-10gen-unstable-tools - True/False",
+          "module": "linux.cmd",
           "parameter": {
-            "name": "mongodb",
-            "contents": "[mongodb]\nname=MongoDB Repository\nbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/\ngpgcheck=0\nenabled=1"
+            "timeout": "1000",
+            "cmd": "yum -y remove mongo-10gen-unstable-tools"
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1E",
-          "_": "2 [test2] install mongo - True",
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E001",
+          "_": "2 [prepare] create mongodb repo ",
+          "module": "linux.yum.repo",
+          "parameter": {
+            "name": "10gen",
+            "content": "[10gen]\nname=MongoDB Repository\nbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/\ngpgcheck=0\nenabled=1"
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E100",
+          "_": "3 [test1] install package with required parameter when package not installed - True",
           "module": "linux.yum.package",
           "parameter": {
             "name": {
-              "mongo-10gen": "",
-              "mongo-10gen-server": ""
+              "mongo-10gen-unstable-tools": ""
+            }
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E101",
+          "_": "4 [test1] assert package exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "rpm -qa | grep mongo-10gen-unstable-tools"
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E200",
+          "_": "5 [test2] install package with required parameter when package already installed - True",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "mongo-10gen-unstable-tools": ""
+            }
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E300",
+          "_": "6 [test3] remove mongo-10gen-unstable-tools - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "yum -y remove mongo-10gen-unstable-tools"
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E301",
+          "_": "7 [test3] install package with disablerepo parameter when package not installed - False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "mongo-10gen-unstable-tools": ""
             },
-            "fromrepo": "mongodb"
+            "disablerepo": "10gen",
+            "verify_gpg": false
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E302",
+          "_": "8 [test3] assert package exist - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "rpm -qa | grep mongo-10gen-unstable-tools"
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E400",
+          "_": "9 [test4] remove mongo-10gen-unstable-tools - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "yum -y remove mongo-10gen-unstable-tools"
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E401",
+          "_": "10 [test4] install package with fromrepo parameter when package not installed - True",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "mongo-10gen-unstable-tools": ""
+            },
+            "fromrepo": "10gen",
+            "verify_gpg": true
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E402",
+          "_": "11 [test4] assert package exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "rpm -qa | grep mongo-10gen-unstable-tools"
           }
         }
+
+
       ]
     }
   }
