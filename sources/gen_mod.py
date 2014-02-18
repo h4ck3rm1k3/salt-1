@@ -1053,7 +1053,7 @@ def attr():
 					},
 					'user'	:	{
 						'type'		:	'line',
-						'required'	:	True,
+						'required'	:	False,
 					},
 					'group'	:	{
 						'type'		:	'line',
@@ -1062,7 +1062,7 @@ def attr():
 					'mode':	{
 						'type'		:	'line',
 						'default'	:	'0755',
-						'required'	:	True
+						'required'	:	False
 					},
 					'absent'	:	{
 						'type'		:	'bool',
@@ -1071,75 +1071,13 @@ def attr():
 					}
 				}
 			},
-			'sysvinit'	:	{
-				'module'	:	'linux.sysvinit',
+			'service'	:	{
+				'module'	:	'linux.service',
 				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-	manage sysv service
-	
-### Parameters
-
-*   **name** (*required*): the service name
-		example:
-			httpd
-
-*   **watch** (*optional*): watch a list of files or directories, restart the service if any of them is modified
-		example:
-			/etc/nginx/nginx.conf, /etc/my.cnf
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True
-					},
-					'watch'		:	{
-						'type'		:	'array',
-						'required'	:	False
-					}
-				}
-			},
-			'systemd'	:	{
-				'module'	:	'linux.systemd',
-				'distro'	:	['amazon', 'redhat', 'centos', 'debian', 'ubuntu'],
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage systemd service
-	
-### Parameters
-
-*   **name** (*required*): the service name
-		example:
-			httpd
-
-*   **watch** (*optional*): watch a list of files or directories, restart the service if any of them is modified
-		example:
-			/etc/nginx/nginx.conf, /etc/my.cnf
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True
-					},
-					'watch'		:	{
-						'type'		:	'array',
-						'required'	:	False
-					}
-				}
-			},
-			'upstart'	:	{
-				'module'	:	'linux.upstart',
-				'distro'	:	['debian', 'ubuntu', 'amazon', 'redhat', 'centos'],
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage upstart service
+	manage system service
 	
 ### Parameters
 

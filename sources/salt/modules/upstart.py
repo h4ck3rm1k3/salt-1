@@ -52,7 +52,7 @@ __func_alias__ = {
 }
 
 # Define the module's virtual name
-#__virtualname__ = 'upstart'
+__virtualname__ = 'service'
 
 
 def __virtual__():

@@ -7,7 +7,7 @@
           "module": "common.gem.package",
           "parameter": {
             "name": {
-              "a2ws": ""
+              "abcd": ""
             }
           }
         }
