@@ -274,7 +274,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'service',
+			'type' : 'systemd',
 		},
 		'linux.sysvinit' : {
 			'attributes' : {
@@ -282,7 +282,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'service',
+			'type' : 'sysvinit',
 		},
 		'linux.upstart' : {
 			'attributes' : {
@@ -290,7 +290,7 @@ class StateAdaptor(object):
 				# 'watch' : 'watch',
 			},
 			'states' : ['running'],
-			'type' : 'service',
+			'type' : 'upstart',
 		},
 
 		## cmd
