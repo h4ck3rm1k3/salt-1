@@ -55,7 +55,7 @@ def __virtual__():
                 return False
         except ValueError:
             return False
-    return 'service'
+    return 'sysvinit'
 
 
 def start(name, **kwargs):
