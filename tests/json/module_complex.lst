@@ -15,8 +15,8 @@ linux.upstart.complex
 linux.timezone.complex
 linux.systemd.complex
 linux.cmd.complex
-#linux.hostname.complex
-#linux.yum.repo.complex
+linux.hostname.complex
+linux.yum.repo.complex
 linux.yum.package.complex
 #linux.apt.repo.complex
 #linux.apt.package.complex

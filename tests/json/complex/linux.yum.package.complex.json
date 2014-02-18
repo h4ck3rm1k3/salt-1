@@ -72,10 +72,10 @@
           "module": "linux.yum.package",
           "parameter": {
             "name": {
-              "mongo-10gen-unstable-tools": "",
-              "disablerepo": "10gen",
-              "verify_gpg": false
-            }
+              "mongo-10gen-unstable-tools": ""
+            },
+            "disablerepo": "10gen",
+            "verify_gpg": false
           }
         },
         {
@@ -104,10 +104,10 @@
           "module": "linux.yum.package",
           "parameter": {
             "name": {
-              "mongo-10gen-unstable-tools": "",
-              "fromrepo": "10gen",
-              "verify_gpg": true
-            }
+              "mongo-10gen-unstable-tools": ""
+            },
+            "fromrepo": "10gen",
+            "verify_gpg": true
           }
         },
         {
