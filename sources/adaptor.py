@@ -278,7 +278,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'systemd',
+			'type' : 'service',
 		},
 		'linux.sysvinit' : {
 			'attributes' : {
@@ -286,7 +286,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'sysvinit',
+			'type' : 'service',
 		},
 		'linux.upstart' : {
 			'attributes' : {
@@ -294,7 +294,7 @@ class StateAdaptor(object):
 				# 'watch' : 'watch',
 			},
 			'states' : ['running'],
-			'type' : 'upstart',
+			'type' : 'service',
 		},
 
 		## cmd
@@ -547,7 +547,7 @@ class StateAdaptor(object):
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
 		# get agent package module
-		self.__agent_pkg_module = 'linux.apt.package' if self.os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
+		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
 		# convert from unicode to string
 		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
