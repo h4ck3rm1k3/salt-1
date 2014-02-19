@@ -56,7 +56,7 @@ function do_module_test(){
       if [ -f json/${JSON_TYPE}/${line}.json ]
       then
         echo "- test json ---------------------------------------"
-        cp json/${JSON_TYPE}/${line}.json ${BASE_DIR}/api.json
+        cp json/${JSON_TYPE}/${line}.json ./state.json
         cat json/${JSON_TYPE}/${line}.json
         echo "- result ---------------------------------------"
         ${PY_BIN} ${EXE_BIN}
