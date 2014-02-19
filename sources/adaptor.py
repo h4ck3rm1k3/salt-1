@@ -16,6 +16,7 @@ from opsagent.exception import StateException, OpsAgentException
 class StateAdaptor(object):
 
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
+	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 
 	mod_map = {
 		## package
@@ -54,6 +55,7 @@ class StateAdaptor(object):
 			'type'	: 'gem',
 			'require'	: {
 				'linux.apt.package' : { 'name' : ['rubygems'] },
+				'linux.yum.package' : { 'name' : ['rubygems'] }
 			},
 		},
 		'common.npm.package'	: {
@@ -70,18 +72,18 @@ class StateAdaptor(object):
 				'linux.apt.package' : { 'name' : ['npm'] },
 			}
 		},
-		'common.pecl.package'	: {
-			'attributes' : {
-				'name' : 'names'
-			},
-			'states' : [
-				'installed', 'removed'
-			],
-			'type'	: 'pecl',
-			'require'	: {
-				'linux.apt.package' : { 'name' : ['php-pear'] },
-			}
-		},
+		# 'common.pecl.package'	: {
+		# 	'attributes' : {
+		# 		'name' : 'names'
+		# 	},
+		# 	'states' : [
+		# 		'installed', 'removed'
+		# 	],
+		# 	'type'	: 'pecl',
+		# 	'require'	: {
+		# 		'linux.apt.package' : { 'name' : ['php-pear'] },
+		# 	}
+		# },
 		'common.pip.package'	: {
 			'attributes' : {
 				'name' : 'names'
@@ -91,7 +93,9 @@ class StateAdaptor(object):
 			],
 			'type'	: 'pip',
 			'require' : {
-				'linux.apt.package' : { 'name' : ['python-pip'] },
+				'linux.apt.package' : { 'name' : ['python-setuptools'] },
+				'linux.yum.package' : { 'name' : ['python-setuptools'] },
+				'linux.cmd' : { 'cmd' : 'easy_install pip' }
 			}
 		},
 
@@ -274,7 +278,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'systemd',
+			'type' : 'service',
 		},
 		'linux.sysvinit' : {
 			'attributes' : {
@@ -282,7 +286,7 @@ class StateAdaptor(object):
 				# 'watch' : ''
 			},
 			'states' : ['running'],
-			'type' : 'sysvinit',
+			'type' : 'service',
 		},
 		'linux.upstart' : {
 			'attributes' : {
@@ -290,7 +294,7 @@ class StateAdaptor(object):
 				# 'watch' : 'watch',
 			},
 			'states' : ['running'],
-			'type' : 'upstart',
+			'type' : 'service',
 		},
 
 		## cmd
@@ -529,7 +533,7 @@ class StateAdaptor(object):
 
 		self.states = None
 
-	def convert(self, step, module, parameter):
+	def convert(self, step, module, parameter, os_type):
 		"""
 			convert the module json data to salt states.
 		"""
@@ -539,6 +543,11 @@ class StateAdaptor(object):
 		if not isinstance(module, basestring):	raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if not isinstance(parameter, dict):		raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if module not in self.mod_map:			raise StateException("Unsupported module %s" % module)
+		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
+			raise	StateException("Invalid input parameter: %s" % os_type)
+
+		# get agent package module
+		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
 		# convert from unicode to string
 		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
@@ -636,7 +645,7 @@ class StateAdaptor(object):
 					addin[key] = [k if not v else {k:v} for k, v in value.items()]
 				else:
 					addin[key] = value
-		if not addin:	raise StateExcepttion("No addin founded: %s, %s" % (module, parameter))
+		if not addin:	raise StateException("No addin founded: %s, %s" % (module, parameter))
 		return addin
 
 	def __build_up(self, module, addin):
@@ -918,23 +927,13 @@ class StateAdaptor(object):
 		for module, parameter in require.items():
 			if module not in self.mod_map.keys():	continue
 
-			# addin = self.__init_addin(module, parameter)
-
-			# state 	= self.mod_map[module]['states'][0]
-			# tag 	= self.__get_tag(module, None, None, 'require', state)
-			# type 	= self.mod_map[module]['type']
+			# filter not current platform's package module
+			if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
 
 			the_require_state = self.__salt('require', module, parameter)
 
 			if the_require_state:
 				require_state.update(the_require_state)
-
-			# requre_state[tag] = {
-			# 	type : [
-			# 		state,
-			# 		addin
-			# 	]
-			# }
 
 		return require_state
 
@@ -946,6 +945,10 @@ class StateAdaptor(object):
 		require_in_state = {}
 
 		for module, attrs in require_in.items():
+
+			# filter not current platform's package module
+			if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
+
 			req_addin = {}
 			for k, v in attrs.items():
 				if not v or k not in parameter:	continue
@@ -1079,7 +1082,7 @@ def ut():
 
 		for p_state in com['state']:
 			step = p_state['id']
-			states = adaptor.convert(step, p_state['module'], p_state['parameter'])
+			states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
 			print json.dumps(states)
 
 			if not states or not isinstance(states, list):

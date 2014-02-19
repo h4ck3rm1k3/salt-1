@@ -86,6 +86,9 @@ function do_all_module_test(){
 
 
 #### main ###########################################
+
+export GREP_OPTIONS='--color=auto' 
+
 ## check parameter count
 if [ $# -ne 1 ]
 then

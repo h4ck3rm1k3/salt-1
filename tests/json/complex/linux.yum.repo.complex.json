@@ -17,7 +17,7 @@
           "module": "linux.yum.package",
           "parameter": {
             "name": {
-              "mongo-10gen": "",
+              "mongo-10gen": ""
             },
             "fromrepo": "mongodb"
           }

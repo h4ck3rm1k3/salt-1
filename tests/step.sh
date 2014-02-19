@@ -46,6 +46,47 @@ function show_module_list(){
   exit
 }
 
+
+function show_json(){
+  CLI=`which underscore| wc -l`
+  if [ ${CLI} -eq 1 ]
+  then
+    echo "###################################"
+    echo "pretty json"
+    echo "###################################"
+    cat $1 | underscore print --outfmt pretty | colout "True|False" red
+  else
+    install_underscore_cli
+    cat $1
+  fi
+}
+
+function install_underscore_cli(){
+  echo "#################################################################"
+  echo "to install underscore-cli, run the following two command lines:"
+  echo "  yum install nodejs"
+  echo "  npm install -g underscore-cli"
+  echo "#################################################################"
+}
+
+function show_result(){
+  CLI=`which colout| wc -l`
+  if [ ${CLI} -eq 1 ]
+  then
+    $1 $2 | colout "True|False" red
+  else
+    install_colout
+    $1 $2
+  fi
+}
+
+function install_colout(){
+  echo "#################################################################"
+  echo "to install colout, run the following command line:"
+  echo "  pip install colout"
+  echo "#################################################################"
+}
+
 function do_module_test(){
   i=1
   for line in `cat json/module_${JSON_TYPE}.lst | grep -Ev "^#|^$" | awk '{print $1}'`
@@ -57,9 +98,9 @@ function do_module_test(){
       then
         echo "- test json ---------------------------------------"
         cp json/${JSON_TYPE}/${line}.json ./state.json
-        cat json/${JSON_TYPE}/${line}.json
+        show_json json/${JSON_TYPE}/${line}.json
         echo "- result ---------------------------------------"
-        ${PY_BIN} ${EXE_BIN}
+	show_result "${PY_BIN}" "${EXE_BIN}"
       else
         echo "!!! can not found json/${JSON_TYPE}/${line}.json !!!"
       fi
@@ -69,8 +110,10 @@ function do_module_test(){
   done
 }
 
-
 #### main ###########################################
+
+export GREP_OPTIONS='--color=auto' 
+
 ## check parameter count
 if [ $# -ne 1 -a $# -ne 2 ]
 then

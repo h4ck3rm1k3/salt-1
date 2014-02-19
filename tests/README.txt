@@ -36,9 +36,18 @@ to test "linux.user" module, run£º
     /opt/madeira/env/bin/python adaptor.py
 
 [tips]
-
 to view result only:
 
 export GREP_OPTIONS='--color=auto' 
 ./step.sh 2 1 | grep "^(" | grep -n -E "True|False"
+
+
+[colorization output]
+pip install colout
+
+
+[colorization json]
+yum install nodejs"
+npm install -g underscore-cli
+
 
