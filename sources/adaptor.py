@@ -93,8 +93,17 @@ class StateAdaptor(object):
 			],
 			'type'	: 'pip',
 			'require' : {
-				'linux.apt.package' : { 'name' : ['python-pip'] },
-				'linux.yum.package' : { 'name' : ['python-pip'] },
+				'linux.cmd' : { 
+					'cmd' : 'easy_install pip', 
+					'require' : { 
+						'linux.apt.package' : { 
+							'name' : ['python-setuptools']
+						},
+						'linux.yum.package' : { 
+							'name' : ['python-setuptools'] 
+						}
+					} 
+				}
 			}
 		},
 
@@ -930,6 +939,30 @@ class StateAdaptor(object):
 			if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
 
 			the_require_state = self.__salt('require', module, parameter)
+
+			if 'require' in parameter.keys():
+				re_require_state = self.__get_require(parameter['require'])
+
+				if re_require_state:
+					# add requirity relation
+					for tag, state in the_require_state.iteritems():
+						for module, chunk in state.iteritems():
+							req_list = None
+							for item in chunk:
+								if isinstance(item, dict) and 'require' in item.keys():
+									req_list = item
+
+							if not req_list:	
+								req_list = { 'require' : [] }
+								chunk.append(req_list)
+
+							for re_req_tag, re_req_value in re_require_state.items():
+								req_list['require'].append({next(iter(re_req_value)):re_req_tag})
+
+					the_require_state
+
+					# update dict
+					require_state.update(re_require_state)
 
 			if the_require_state:
 				require_state.update(the_require_state)
