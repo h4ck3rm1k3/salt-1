@@ -93,9 +93,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'pip',
 			'require' : {
-				'linux.apt.package' : { 'name' : ['python-setuptools'] },
-				'linux.yum.package' : { 'name' : ['python-setuptools'] },
-				'linux.cmd' : { 'cmd' : 'easy_install pip' }
+				'linux.apt.package' : { 'name' : ['python-pip'] },
+				'linux.yum.package' : { 'name' : ['python-pip'] },
 			}
 		},
 
