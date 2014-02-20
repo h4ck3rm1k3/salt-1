@@ -797,6 +797,7 @@ class StateAdaptor(object):
 				}
 
 			else:
+				# set mode
 				if 'mode' in addin and addin['mode']:
 					addin['mode'] = int(addin['mode'])
 
@@ -809,6 +810,10 @@ class StateAdaptor(object):
 						addin['recurse'].append('group')
 					if 'mode' in addin and addin['mode']:
 						addin['recurse'].append('mode')
+
+				# set user
+				if 'user' not in addin:
+					addin['user'] = 'root'
 
 		elif module in ['linux.cmd']:
 			if 'onlyif' in addin:
