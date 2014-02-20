@@ -1,0 +1,15 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97614300F40",
+          "module": "linux.file",
+          "parameter": {
+            "path": "/tmp/test/file/test.sh"
+          }
+        }
+      ]
+    }
+  }
+}

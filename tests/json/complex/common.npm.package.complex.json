@@ -1,0 +1,48 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E84-15D020632F1F",
+          "_": "1 [prepare] add epel repo - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "rpm -Uvh http://download-i2.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "2 [prepare] setup npm from epel - True|False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "npm": "",
+              "enablerepo": "epel"
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "3 [prepare] setup npm from epel - True",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "npm": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
+          "_": "4 [test1] install express from npm - True",
+          "module": "common.npm.package",
+          "parameter": {
+            "name": {
+              "express": ""
+            }
+          }
+        }
+      ]
+    }
+  }
+}

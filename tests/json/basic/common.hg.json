@@ -1,0 +1,16 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-2E042A11-4697-465B-B995-5C3194145D39",
+          "module": "common.hg",
+          "parameter": {
+            "repo": "http://hg.logilab.org/hgview",
+            "path": "/tmp/test/hgview"
+          }
+        }
+      ]
+    }
+  }
+}

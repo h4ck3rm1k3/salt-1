@@ -16,6 +16,7 @@ from opsagent.exception import StateException, OpsAgentException
 class StateAdaptor(object):
 
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
+	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 
 	mod_map = {
 		## package
@@ -54,6 +55,7 @@ class StateAdaptor(object):
 			'type'	: 'gem',
 			'require'	: {
 				'linux.apt.package' : { 'name' : ['rubygems'] },
+				'linux.yum.package' : { 'name' : ['rubygems'] }
 			},
 		},
 		'common.npm.package'	: {
@@ -68,20 +70,21 @@ class StateAdaptor(object):
 			'type'	: 'npm',
 			'require'	: {
 				'linux.apt.package' : { 'name' : ['npm'] },
+				'linux.yum.package' : { 'name' : ['npm'] }
 			}
 		},
-		'common.pecl.package'	: {
-			'attributes' : {
-				'name' : 'names'
-			},
-			'states' : [
-				'installed', 'removed'
-			],
-			'type'	: 'pecl',
-			'require'	: {
-				'linux.apt.package' : { 'name' : ['php-pear'] },
-			}
-		},
+		# 'common.pecl.package'	: {
+		# 	'attributes' : {
+		# 		'name' : 'names'
+		# 	},
+		# 	'states' : [
+		# 		'installed', 'removed'
+		# 	],
+		# 	'type'	: 'pecl',
+		# 	'require'	: {
+		# 		'linux.apt.package' : { 'name' : ['php-pear'] },
+		# 	}
+		# },
 		'common.pip.package'	: {
 			'attributes' : {
 				'name' : 'names'
@@ -92,6 +95,7 @@ class StateAdaptor(object):
 			'type'	: 'pip',
 			'require' : {
 				'linux.apt.package' : { 'name' : ['python-pip'] },
+				'linux.yum.package' : { 'name' : ['python-pip'] }
 			}
 		},
 
@@ -529,28 +533,48 @@ class StateAdaptor(object):
 
 		self.states = None
 
-	def convert(self, step, module, parameter):
+	def convert(self, step, module, parameter, os_type):
 		"""
 			convert the module json data to salt states.
 		"""
 
-		utils.log("DEBUG", "Begin to convert module json data ...", ("convert", self))
+		utils.log("INFO", "Begin to convert module json data ...", ("convert", self))
 
 		if not isinstance(module, basestring):	raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if not isinstance(parameter, dict):		raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if module not in self.mod_map:			raise StateException("Unsupported module %s" % module)
+		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
+			raise	StateException("Invalid input parameter: %s" % os_type)
+
+		# get agent package module
+		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
 		# convert from unicode to string
-		utils.log("DEBUG", "Begin to convert unicode parameter to string ...", ("convert", self))
+		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
 		parameter = utils.uni2str(parameter)
 
+		# convert to salt states
+		utils.log("INFO", "Begin to convert to salt state...", ("convert", self))
 		self.states = self.__salt(step, module, parameter)
+
+		# expand salt state
+		utils.log("INFO", "Begin to expand salt state...", ("convert", self))
+		try:
+			self.__expand()
+		except Exception as e:
+			utils.log("ERROR", "Expand salt state failed...", ("convert", self))
+			import json
+			raise StateException("Expand salt state faild: %s" % json.dumps(self.states))
+
 		return self.states
 
 	def __salt(self, step, module, parameter):
 		salt_state = {}
 
+		utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
 		addin = self.__init_addin(module, parameter)
+
+		utils.log("DEBUG", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
 		module_states = self.__build_up(module, addin)
 
 		for state, addin in module_states.items():
@@ -621,7 +645,7 @@ class StateAdaptor(object):
 					addin[key] = [k if not v else {k:v} for k, v in value.items()]
 				else:
 					addin[key] = value
-		if not addin:	raise StateExcepttion("No addin founded: %s, %s" % (module, parameter))
+		if not addin:	raise StateException("No addin founded: %s, %s" % (module, parameter))
 		return addin
 
 	def __build_up(self, module, addin):
@@ -660,7 +684,7 @@ class StateAdaptor(object):
 
 					module_state[pkg_state]['pkgs'].append(item)
 
-		elif module in ['common.npm.package']:
+		elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
 			module_state = {}
 
 			for item in addin['names']:
@@ -685,42 +709,19 @@ class StateAdaptor(object):
 						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
 
 						if pkg_state == default_state:
-							module_state[pkg_state]['names'].append(
-								'{0}@{1}'.format(k, v)
+							if module == 'common.npm.package':
+								module_state[pkg_state]['names'].append(
+									'{0}@{1}'.format(k, v)
+									)
+							elif module in ['common.pip.package', 'common.gem.package']:
+								module_state[pkg_state]['names'].append(
+								'{0}=={1}'.format(k, v)
 								)
 						else:
 							module_state[pkg_state]['names'].append(pkg_name)
 
 				else:	# invalid
 					continue
-
-		elif module in ['common.gem.package', 'common.pecl.package', 'common.pip.package']:
-			module_state = {}
-
-			for item in addin['names']:
-				pkg_name = None
-				pkg_state = None
-				if isinstance(item, dict):
-					for k, v in item.items():
-						pkg_name 	= k
-						pkg_state 	= default_state
-
-						if v in self.mod_map[module]['states']:		pkg_state = v
-						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-						if pkg_state == default_state:
-							module_state[pkg_state]['names'].append(item)
-						else:
-							module_state[pkg_state]['names'].append(pkg_name)
-
-				else:	# insert into default state
-					pkg_state	= default_state
-
-					if pkg_state not in module_state:			module_state[pkg_state] = {}
-					if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-					module_state[pkg_state]['names'].append(item)
 
 		elif module in ['common.git', 'common.svn', 'common.hg']:
 			# if 'name' in addin:
@@ -851,6 +852,60 @@ class StateAdaptor(object):
 		if not module_state:	raise StateException("Build up module state failed: %s" % module)
 		return module_state
 
+	def __expand(self):
+		"""
+			Expand state's requirity and require-in when special module(gem).
+		"""
+		if not self.states:	return
+
+		state_list = []
+
+		for tag, state in self.states.iteritems():
+			for module, chunk in state.iteritems():
+
+				if module == 'gem':
+					name_list = None
+					for item in chunk:
+						if isinstance(item, dict) and 'names' in item:	name_list = item['names']
+
+					if not name_list:	continue
+					for name in name_list:
+						if '==' in name:
+							the_build_up = [ i for i in chunk if 'names' not in i ]
+
+							# remove the name from origin
+							name_list.remove(name)
+
+							pkg_name, pkg_version = name.split('==')
+
+							the_build_up.append({
+								"name" 		: pkg_name,
+								"version"	: pkg_version
+							})
+
+							# build up the special package state
+							the_state = {
+								tag + '_' + name : {
+									"gem" : the_build_up
+								}
+							}
+
+							# get the state's require and require-in
+							req_list = [ item[next(iter(item))] for item in chunk if isinstance(item, dict) and any(['require' in item, 'require_in' in item]) ]
+
+							for req in req_list:
+								if isinstance(req, list):
+									for r in req:
+										for r_tag in r.values():
+											if r_tag in self.states:
+												the_state[r_tag] = self.states[r_tag]
+
+							if the_state:
+								state_list.append(the_state)
+
+		state_list.append(self.states)
+		self.states = state_list
+
 	def __get_tag(self, module, uid=None, step=None, name=None, state=None):
 		"""
 			generate state identify tag.
@@ -872,23 +927,37 @@ class StateAdaptor(object):
 		for module, parameter in require.items():
 			if module not in self.mod_map.keys():	continue
 
-			# addin = self.__init_addin(module, parameter)
-
-			# state 	= self.mod_map[module]['states'][0]
-			# tag 	= self.__get_tag(module, None, None, 'require', state)
-			# type 	= self.mod_map[module]['type']
+			# filter not current platform's package module
+			if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
 
 			the_require_state = self.__salt('require', module, parameter)
 
+			if 'require' in parameter.keys():
+				re_require_state = self.__get_require(parameter['require'])
+
+				if re_require_state:
+					# add requirity relation
+					for tag, state in the_require_state.iteritems():
+						for module, chunk in state.iteritems():
+							req_list = None
+							for item in chunk:
+								if isinstance(item, dict) and 'require' in item.keys():
+									req_list = item
+
+							if not req_list:
+								req_list = { 'require' : [] }
+								chunk.append(req_list)
+
+							for re_req_tag, re_req_value in re_require_state.items():
+								req_list['require'].append({next(iter(re_req_value)):re_req_tag})
+
+					the_require_state
+
+					# update dict
+					require_state.update(re_require_state)
+
 			if the_require_state:
 				require_state.update(the_require_state)
-
-			# requre_state[tag] = {
-			# 	type : [
-			# 		state,
-			# 		addin
-			# 	]
-			# }
 
 		return require_state
 
@@ -900,6 +969,10 @@ class StateAdaptor(object):
 		require_in_state = {}
 
 		for module, attrs in require_in.items():
+
+			# filter not current platform's package module
+			if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
+
 			req_addin = {}
 			for k, v in attrs.items():
 				if not v or k not in parameter:	continue
@@ -996,7 +1069,7 @@ class StateAdaptor(object):
 # ===================== UT =====================
 def ut():
 	import json
-	pre_states = json.loads(open('/opt/madeira/env/lib/python2.7/site-packages/opsagent/state/api.json').read())
+	pre_states = json.loads(open('/opt/madeira/bootstrap/salt/tests/state.json').read())
 
 	# salt_opts = {
 	# 	'file_client':       'local',
@@ -1033,15 +1106,15 @@ def ut():
 
 		for p_state in com['state']:
 			step = p_state['id']
-			state = adaptor.convert(step, p_state['module'], p_state['parameter'])
-			print json.dumps(state)
+			states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+			print json.dumps(states)
 
-			if not state or not isinstance(state, dict):
+			if not states or not isinstance(states, list):
 				err_log = "convert salt state failed"
 				print err_log
 				result = (False, err_log, out_log)
 			else:
-				result = runner.exec_salt(state)
+				result = runner.exec_salt(states)
 			print result
 
 	# out_states = [salt_opts] + states

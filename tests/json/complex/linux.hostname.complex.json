@@ -1,0 +1,46 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324000",
+          "_": "1 [test1] write line to /etc/hosts",
+          "module": "linux.hosts",
+          "parameter": {
+            "content": "#generated\n127.0.0.1 localhost\n"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324001",
+          "_": "2 [test1] assert file content",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep '127.0.0.1 localhost' /etc/hosts"
+          }
+        },
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324101",
+          "_": "3 [test2] write line to /etc/hosts",
+          "module": "linux.hosts",
+          "parameter": {
+            "content": "#generated\n127.0.0.1 localhost\n\n211.98.26.9 api.madeiracloud.com\n"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324102",
+          "_": "4 [test2] assert file content",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep 'api.madeiracloud.com' /etc/hosts"
+          }
+        }
+
+      ]
+    }
+  }
+}
