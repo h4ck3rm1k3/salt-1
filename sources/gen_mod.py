@@ -119,9 +119,9 @@ def attr():
 
 	note: the specified packages will be installed as global packages (npm install --global)
 
-* **path** (*optional*): the path where the packages should be installed to
+* **path** (*optional*): the path where the packages should be installed to (***path***/node_modules)
 		note:
-			if ignored, the packages will be installed as global packages (e.g. npm install --global)
+			if ignored, the packages will be installed as global packages, usually /usr/local/lib/node_modules/ (e.g. npm install --global)
 					''',
 					'cn'	:	''''''
 				},
