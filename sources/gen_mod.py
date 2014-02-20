@@ -22,7 +22,8 @@ def attr():
 				'parameter'	:	{
 					'state'	:	{
 						'type'		:	'state',	# state is an array
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					}
 				}
 			},
@@ -61,7 +62,9 @@ def attr():
 				'parameter'	:	{
 					'name'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
+						
 					},
 					'use utc'		:	{
 						'type'		:	'bool',
@@ -93,7 +96,8 @@ def attr():
 						'type'		:	'dict',
 						'option'	:	['latest', 'removed'],	# autofill options to show in IDE
 						'default'	:	'',			# the default value to show in IDE,
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					}
 				}
 			},
@@ -122,7 +126,8 @@ def attr():
 						'type'		:	'dict',
 						'value'		:	['latest', 'removed'],	# values to show in IDE
 						'default'	:	'',						# the default value of the item,
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					}
 				}
 			},
@@ -179,7 +184,8 @@ def attr():
 						'type'	:	'dict',
 						'value'		:	['latest', 'removed'],	# values to show in IDE
 						'default'	:	'',			# the default value of the item
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					}
 				}
 			},
@@ -192,6 +198,10 @@ def attr():
 	manage a git repo
 	
 ### Parameters
+
+* **path** (*required* ): the path to clone the repo
+		example:
+			/var/www/mysite/
 
 *   **repo** (*required*): the git repository uri
 		example:
@@ -221,10 +231,6 @@ def attr():
 		example:
 			/root/.ssh/id_rsa
 
-* **path** (*required* ): the path to clone the repo
-		example:
-			/var/www/mysite/
-
 * **user** (*optional*): the user name of the file owner
 		example:
 			root
@@ -251,6 +257,11 @@ def attr():
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
 					'repo'		:	{
 						'type'		:	'line',
 						'required'	:	True
@@ -268,10 +279,6 @@ def attr():
 					'ssh key'	:	{
 						'type'		:	'line',
 						'required'	:	False
-					},
-					'path'		:	{
-						'type'		:	'line',
-						'required'	:	True
 					},
 					'user'	:	{
 						'type'		:	'line',
@@ -303,6 +310,10 @@ def attr():
 	
 ### Parameters
 
+* **path** (*required* ): the path to clone the repo
+		example:
+			/var/www/mysite/
+
 *   **repo** (*required*): the hg repository uri
 		example:
 			local - /path/to/repo
@@ -330,10 +341,6 @@ def attr():
 		example:
 			/root/.ssh/id_rsa
 
-* **path** (*required* ): the path to clone the repo
-		example:
-			/var/www/mysite/
-
 * **user** (*optional*): the user name of the file owner
 		example:
 			root
@@ -360,6 +367,11 @@ def attr():
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
 					'repo'		:	{
 						'type'		:	'line',
 						'required'	:	True
@@ -377,10 +389,6 @@ def attr():
 					'ssh key'	:	{
 						'type'		:	'line',
 						'required'	:	False
-					},
-					'path'		:	{
-						'type'		:	'line',
-						'required'	:	True
 					},
 					'user'	:	{
 						'type'		:	'line',
@@ -412,6 +420,10 @@ def attr():
 	
 ### Parameters
 
+* **path** (*required* ): the path to checkout the repo
+		example:
+			/var/www/mysite/
+
 *   **repo** (*required*): the hg repository uri
 		example:
 			local - file:///path/to/repo
@@ -441,10 +453,6 @@ def attr():
 
 * **password** (*optional*): the password of the svn user
 
-* **path** (*required* ): the path to checkout the repo
-		example:
-			/var/www/mysite/
-
 * **user** (*optional*): the user name of the file owner
 		example:
 			root
@@ -471,6 +479,11 @@ def attr():
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
 					'repo'		:	{
 						'type'		:	'line',
 						'required'	:	True
@@ -493,10 +506,6 @@ def attr():
 					'password'	:	{
 						'type'		:	'line',
 						'required'	:	False
-					},
-					'path'		:	{
-						'type'		:	'line',
-						'required'	:	True
 					},
 					'user'	:	{
 						'type'		:	'line',
@@ -557,7 +566,8 @@ def attr():
 				'parameter'	:	{
 					'path'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'python'		:	{
 						'type'		:	'line',
@@ -618,10 +628,10 @@ def attr():
 	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 
 
-* **repo** (*optional*): the APT repo name, which you want to use for installing the packages
+* **repo** (*optional*): the repo name, which you want to use for installing the packages
 		main
 
-* **debconf** (*optional*):
+* **deb conf file** (*optional*): the Deb configuration file path
 		/etc/apt/deb.conf
 	
 * **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
@@ -633,13 +643,14 @@ def attr():
 						'type'	:	'dict',
 						'option'	:	['latest', 'removed', 'purged'],	# autofill options to show in IDE
 						'default'	:	'',			# the default value to show in IDE,
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
-					'fromrepo'	:	{
+					'repo'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'debconf'	:	{
+					'deb conf file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -671,7 +682,8 @@ def attr():
 				'parameter'	:	{
 					'name'		:	{
 						'type'	:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'content'	:	{
 						'type'	:	'line',
@@ -696,13 +708,7 @@ def attr():
 	- **removed**: ensure the package is absent
 	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 
-* **fromrepo** (*optional*): an repo name, which you want to use for installing the packages
-		epel
-
-* **enablerepo** (*optional*): a disabled repo name, which you want to enable for installing the packages
-		epel
-
-* **disablerepo** (*optional*): an enabled repo name, which you want to disable for installing the packages
+* **repo** (*optional*): the repo name, which you want to use for installing the packages
 		epel
 	
 * **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
@@ -714,18 +720,11 @@ def attr():
 						'type'	:	'dict',
 						'value'		:	['latest', 'removed'],	# values to show in IDE
 						'default'	:	'',			# the default value of the item
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
-					'fromrepo'		:	{
+					'repo'		:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'enablerepo'	:	{
-						'type'	:	'line',
-						'required'	:	False
-					},
-					'disablerepo'	:	{
-						'type'	:	'line',
 						'required'	:	False
 					},
 					'verify gpg'	:	{
@@ -760,7 +759,8 @@ def attr():
 				'parameter'	:	{
 					'name'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'content'	:	{
 						'type'		:	'line',
@@ -858,26 +858,26 @@ def attr():
 		note:
 			This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified directory itself.
  
-* **user** (*optional*): the user name of the directory owner
+* **user** (*optional*): the user name of the file owner
 		example:
 			root
 	
 		note:
-			If specified, the directory owner will be set to this user. Otherwise, the result depends on whether the directory exists. If so, the directory owner will be left unchanged. If not, the directory will be created under the user name of which the Madeira agent runs.
+			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
-* **group** (*optional*): the group name of the directory owner
+* **group** (*optional*): the group name of the file owner
 		example:
 			root
 	
 		note:
-			If specified, the directory will be set to this group. Otherwise, the result depends on whether the directory exists. If so, the directory group will be left unchanged. If not, the directory will be created under the group of which the Madeira agent runs.
+			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **mode** (*optional*): the directory mode
 		example:
 			0755
 	
 		note:
-			If specified, the directory will be set to this mode. Otherwise, the result depends on whether the directory exists. If so, the directory mode will be left unchanged. If not, the directory will be created with the default mode 0755
+			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
 * **recursive** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***True***
 
@@ -939,21 +939,21 @@ def attr():
 			root
 	
 		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
+			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **group** (*optional*): the group name of the file owner
 		example:
 			root
 	
 		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
+			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **mode** (*optional*): the directory mode
 		example:
 			0755
 	
 		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
+			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
 * **content** (*optional*): the file content
 		note:
@@ -968,7 +968,8 @@ def attr():
 				'parameter'	:	{
 					'path'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'user'	:	{
 						'type'		:	'line',
@@ -990,7 +991,8 @@ def attr():
 					'absent'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True,
 					}
 				}
 			},
@@ -1020,21 +1022,21 @@ def attr():
 			root
 	
 		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
+			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **group** (*optional*): the group name of the file owner
 		example:
 			root
 	
 		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
+			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **mode** (*optional*): the directory mode
 		example:
 			0755
 	
 		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
+			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
 * **absent** (*optional*): ensure the directory is absent, by default ***False***
 		note:
@@ -1045,11 +1047,13 @@ def attr():
 				'parameter'	:	{
 					'source'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	False,
+						'visible'	:	True,
 					},
 					'target'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'user'	:	{
 						'type'		:	'line',
@@ -1067,7 +1071,8 @@ def attr():
 					'absent'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					}
 				}
 			},
@@ -1093,12 +1098,14 @@ def attr():
 				},
 				'parameter'	:	{
 					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True
+						'type'		:	'array',
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'watch'		:	{
 						'type'		:	'array',
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					}
 				}
 			},
@@ -1131,12 +1138,14 @@ def attr():
 				},
 				'parameter'	:	{
 					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True
+						'type'		:	'array',
+						'required'	:	True,
+						'visible'	:	True,
 					},
 					'watch'		:	{
 						'type'		:	'array',
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'config'	:	{
 						'type'		:	'line',
@@ -1204,55 +1213,58 @@ def attr():
 					},
 					'cmd'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					}
 				}
 			},
-			'fs'	:	{
-				'module'	:	'linux.fs',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage the filesystem
-	
-### Parameters
-
-*   **dev** (*required*): the device name
-		example:
-			/dev/sda1
-
-*   **filesystem** (*required*): the filesystem type of the device    
-
-*   **force** (*optional*): forcefully create the new filesystem, even if there is already one on the specified device, by default *False*
-
-*   **opts** (*optional*): additional options for creating the filesystem, see *MKE2FS(8)*
-			example:
-				-O journal_dev [ -b block-size ] [ -L volume-label ] [ -n ] [ -q ] [ -v ]  external-journal [ blocks-count ]
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'dev'	:	{
-						'type'		:	'line',
-						'required'	:	True
-					},
-					'filesystem':	{
-						'type'		:	'line',
-						'option'	:	['ext2', 'ext3', 'ext4', 'btrfs', 'reiserfs', 'xfs', 'zfs'],
-						'required'	:	True
-					},
-					'opts':	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'force'		:	{
-						'type'		:	'bool',
-						'default'	:	True,
-						'required'	:	False
-					}
-				}
-			},
+#			'fs'	:	{
+#				'module'	:	'linux.fs',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#	manage the filesystem
+#	
+#### Parameters
+#
+#*   **dev** (*required*): the device name
+#		example:
+#			/dev/sda1
+#
+#*   **filesystem** (*required*): the filesystem type of the device    
+#
+#*   **force** (*optional*): forcefully create the new filesystem, even if there is already one on the specified device, by default *False*
+#
+#*   **opts** (*optional*): additional options for creating the filesystem, see *MKE2FS(8)*
+#			example:
+#				-O journal_dev [ -b block-size ] [ -L volume-label ] [ -n ] [ -q ] [ -v ]  external-journal [ blocks-count ]
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'dev'	:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'filesystem':	{
+#						'type'		:	'line',
+#						'option'	:	['ext2', 'ext3', 'ext4', 'btrfs', 'reiserfs', 'xfs', 'zfs'],
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'opts':	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#					'force'		:	{
+#						'type'		:	'bool',
+#						'default'	:	True,
+#						'required'	:	False
+#					}
+#				}
+#			},
 #			'hosts'	:	{
 #				'module'	:	'linux.hosts',
 #				'distro'	:	None,
@@ -1282,27 +1294,28 @@ def attr():
 #					},
 #				}
 #			},
-			'hostname'	:	{
-				'module'	:	'linux.hostname',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage hostname
-
-### Parameters
-
-*   **hostname** (*required*): the hostname
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'hostname'	:	{
-						'type'		:	'line',
-						'required'	:	True
-					}
-				}
-			},
+#			'hostname'	:	{
+#				'module'	:	'linux.hostname',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#	manage hostname
+#
+#### Parameters
+#
+#*   **hostname** (*required*): the hostname
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'hostname'	:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					}
+#				}
+#			},
 			'mount'	:	{
 				'module'	:	'linux.mount',
 				'distro'	:	None,
@@ -1315,7 +1328,7 @@ def attr():
 
 *   **path** (*required*): the path of the mount point
 
-*   **dev** (*required*): the device name
+*   **device** (*required*): the device name
 
 *   **filesystem** (*required*): the file system type of the device
 
@@ -1332,11 +1345,13 @@ def attr():
 				'parameter'	:	{
 					'path'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
-					'dev'	:	{
+					'device'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'filesystem':	{
 						'type'		:	'line',
@@ -1400,7 +1415,8 @@ def attr():
 					},
 					'cmd'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'cwd'		:	{
 						'type'		:	'line',
@@ -1426,11 +1442,13 @@ def attr():
 					},
 					'with_path'	:	{
 						'type'		:	'line',
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'without_path'	:	{
 						'type'		:	'line',
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					}
 				}
 			},
@@ -1471,7 +1489,8 @@ def attr():
 				'parameter'	:	{
 					'username'	:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'password'	:	{
 						'type'		:	'line',
@@ -1492,7 +1511,8 @@ def attr():
 					'home'		:	{
 						'type'		:	'line',
 						'default'	:	'/home/$username',		# TODO:
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'nologin'	:	{
 						'type'		:	'bool',
@@ -1526,7 +1546,8 @@ def attr():
 				'parameter'	:	{
 					'groupname'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'gid'		:	{
 						'type'		:	'line',
@@ -1666,7 +1687,8 @@ def attr():
 				'parameter'	:	{
 					'path'		:	{
 						'type'		:	'array',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'force'		:	{
 						'type'		:	'bool',
@@ -1876,11 +1898,13 @@ def attr():
 				'parameter'	:	{
 					'name'		:	{
 						'type'		:	'line',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'path'		:	{
 						'type'		:	'array',
-						'required'	:	True
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'clustered'		:	{
 						'type'		:	'bool',
@@ -2235,6 +2259,7 @@ def attr():
 					'path'		:	{
 						'type'		:	'array',
 						'required'	:	True,
+						'visible'	:	True
 					},
 					'name'		:	{
 						'type'		:	'line',
@@ -2369,11 +2394,11 @@ def attr():
 					}
 				}
 			},
-			'ntp'	:	{},
-			'quota'	:	{},
-			'ssh'	:	{},
-			'raid'	:	{},
-			'iptables'	:	{}
+#			'ntp'	:	{},
+#			'quota'	:	{},
+#			'ssh'	:	{},
+#			'raid'	:	{},
+#			'iptables'	:	{}
 		},
 		'windows'	:	{}
 	}
