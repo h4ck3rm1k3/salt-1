@@ -70,6 +70,7 @@ class StateAdaptor(object):
 			'type'	: 'npm',
 			'require'	: {
 				'linux.apt.package' : { 'name' : ['npm'] },
+				'linux.yum.package' : { 'name' : ['npm'] }
 			}
 		},
 		# 'common.pecl.package'	: {
@@ -93,17 +94,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'pip',
 			'require' : {
-				'linux.cmd' : { 
-					'cmd' : 'easy_install pip', 
-					'require' : { 
-						'linux.apt.package' : { 
-							'name' : ['python-setuptools']
-						},
-						'linux.yum.package' : { 
-							'name' : ['python-setuptools'] 
-						}
-					} 
-				}
+				'linux.apt.package' : { 'name' : ['python-pip'] },
+				'linux.yum.package' : { 'name' : ['python-pip'] }
 			}
 		},
 
@@ -952,7 +944,7 @@ class StateAdaptor(object):
 								if isinstance(item, dict) and 'require' in item.keys():
 									req_list = item
 
-							if not req_list:	
+							if not req_list:
 								req_list = { 'require' : [] }
 								chunk.append(req_list)
 
