@@ -118,6 +118,10 @@ def attr():
 	- **removed**: ensure the package is absent
 
 	note: the specified packages will be installed as global packages (npm install --global)
+
+* **path** (*optional*): the path where the packages should be installed to
+		note:
+			if ignored, the packages will be installed as global packages (e.g. npm install --global)
 					''',
 					'cn'	:	''''''
 				},
@@ -127,6 +131,11 @@ def attr():
 						'value'		:	['latest', 'removed'],	# values to show in IDE
 						'default'	:	'',						# the default value of the item,
 						'required'	:	True,
+						'visible'	:	True
+					},
+					'path'	:	{
+						'type'		:	'line',
+						'required'	:	False,
 						'visible'	:	True
 					}
 				}
