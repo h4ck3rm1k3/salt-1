@@ -117,7 +117,12 @@ class StateAdaptor(object):
 			'states' : [
 				'managed'
 			],
-			'type' : 'file'
+			'type' : 'file',
+			'require_in' : {
+				'linux.cmd' : {
+					'yum-config-manager --enable $name' : 'name'
+				}
+			}
 		},
 		'common.gem.source' : {
 			'attributes' : {
@@ -149,10 +154,10 @@ class StateAdaptor(object):
 			},
 			'require_in' : {
 				'linux.dir' : {
-					'path' : 'name',
-					'user' : 'user',
+					'path' 	: 'name',
+					'user' 	: 'user',
 					'group' : 'group',
-					'mode' : 'mode',
+					'mode' 	: 'mode',
 				}
 			}
 		},
@@ -176,10 +181,10 @@ class StateAdaptor(object):
 			},
 			'require_in' : {
 				'linux.dir' : {
-					'path' : 'name',
-					'user' : 'user',
+					'path' 	: 'name',
+					'user' 	: 'user',
 					'group' : 'group',
-					'mode' : 'mode'
+					'mode' 	: 'mode'
 				}
 			},
 		},
@@ -202,10 +207,10 @@ class StateAdaptor(object):
 			},
 			'require_in' : {
 				'linux.dir' : {
-					'path' : 'name',
-					'user' : 'user',
+					'path' 	: 'name',
+					'user' 	: 'user',
 					'group' : 'group',
-					'mode' : 'mode'
+					'mode' 	: 'mode'
 				}
 			},
 		},
@@ -979,9 +984,17 @@ class StateAdaptor(object):
 
 			req_addin = {}
 			for k, v in attrs.items():
-				if not v or k not in parameter:	continue
+				if not v:	continue
 
-				req_addin[v] = parameter[k]
+				if k in parameter:
+					req_addin[v] = parameter[k]
+				else:
+					str_list = k.split()
+					for idx, w in enumerate(str_list):
+						if w.startswith('$'):
+							str_list[idx] = parameter[w[1:]]
+
+					req_addin[v] = ' '.join(str_list)
 
 			#addin = self.__init_addin(module, req_p)
 			state = self.mod_map[module]['states'][0]
