@@ -1,9 +1,26 @@
 #!/bin/bash
 
 ## variable ########################################
-BASE_DIR=/opt/madeira/env/lib/python2.7/site-packages/opsagent/state
-PY_BIN=/opt/madeira/env/bin/python
+ENV_DIR=/opt/madeira/env
+PY_BIN=${ENV_DIR}/bin/python
+
+LIB_DIR=${ENV_DIR}/lib
+##---------------------------------------
+if [ -d ${LIB_DIR}/python2.7 ]
+then
+  PYTHON="python2.7"
+elif [ -d ${LIB_DIR}/python2.6 ]
+then
+  PYTHON="python2.6"
+else
+  echo "Fatal: Python2 non installed"
+  exit 1
+fi
+echo "You are using ${PYTHON}"
+##---------------------------------------
+BASE_DIR=${LIB_DIR}/${PYTHON}/site-packages/opsagent/state
 EXE_BIN=${BASE_DIR}/adaptor.py
+
 
 JSON[1]=basic
 JSON[2]=complex
