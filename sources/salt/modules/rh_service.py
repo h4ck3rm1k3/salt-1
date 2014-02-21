@@ -12,6 +12,8 @@ import stat
 # Import salt libs
 import salt.utils
 
+from salt.modules import state_std
+
 log = logging.getLogger(__name__)
 
 __func_alias__ = {
@@ -331,7 +333,7 @@ def missing(name, limit=''):
             return True
 
 
-def start(name):
+def start(name, **kwargs):
     '''
     Start the specified service
 
@@ -345,10 +347,13 @@ def start(name):
         cmd = 'start {0}'.format(name)
     else:
         cmd = '/sbin/service {0} start'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def stop(name):
+def stop(name, **kwargs):
     '''
     Stop the specified service
 
@@ -362,10 +367,13 @@ def stop(name):
         cmd = 'stop {0}'.format(name)
     else:
         cmd = '/sbin/service {0} stop'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def restart(name):
+def restart(name, **kwargs):
     '''
     Restart the named service
 
@@ -379,10 +387,13 @@ def restart(name):
         cmd = 'restart {0}'.format(name)
     else:
         cmd = '/sbin/service {0} restart'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def reload_(name):
+def reload_(name, **kwargs):
     '''
     Reload the named service
 
@@ -396,7 +407,10 @@ def reload_(name):
         cmd = 'reload {0}'.format(name)
     else:
         cmd = '/sbin/service {0} reload'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
 def status(name, sig=None):

@@ -77,7 +77,7 @@ def start(name, **kwargs):
     return not result['retcode']
 
 
-def stop(name):
+def stop(name, **kwargs):
     '''
     Stop the specified service
 
@@ -96,7 +96,7 @@ def stop(name):
     return not result['retcode']
 
 
-def restart(name):
+def restart(name, **kwargs):
     '''
     Restart the specified service
 
@@ -130,7 +130,7 @@ def status(name, sig=None):
     return __salt__['status.pid'](sig if sig else name)
 
 
-def reload_(name):
+def reload_(name, **kwargs):
     '''
     Restart the specified service
 

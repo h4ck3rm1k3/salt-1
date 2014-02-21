@@ -10,6 +10,8 @@ import re
 # Import salt libs
 from .systemd import _sd_booted
 
+from salt.modules import state_std
+
 __func_alias__ = {
     'reload_': 'reload'
 }
@@ -123,7 +125,7 @@ def get_all():
     return sorted(ret | set(get_enabled()))
 
 
-def start(name):
+def start(name, **kwargs):
     '''
     Start the specified service
 
@@ -134,10 +136,13 @@ def start(name):
         salt '*' service.start <service name>
     '''
     cmd = 'service {0} start'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def stop(name):
+def stop(name, **kwargs):
     '''
     Stop the specified service
 
@@ -148,10 +153,13 @@ def stop(name):
         salt '*' service.stop <service name>
     '''
     cmd = 'service {0} stop'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def restart(name):
+def restart(name, **kwargs):
     '''
     Restart the named service
 
@@ -162,10 +170,13 @@ def restart(name):
         salt '*' service.restart <service name>
     '''
     cmd = 'service {0} restart'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def reload_(name):
+def reload_(name, **kwargs):
     '''
     Reload the named service
 
@@ -176,10 +187,13 @@ def reload_(name):
         salt '*' service.reload <service name>
     '''
     cmd = 'service {0} reload'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
-def force_reload(name):
+def force_reload(name, **kwargs):
     '''
     Force-reload the named service
 
@@ -190,7 +204,10 @@ def force_reload(name):
         salt '*' service.force_reload <service name>
     '''
     cmd = 'service {0} force-reload'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
 def status(name, sig=None):
@@ -224,7 +241,10 @@ def enable(name, **kwargs):
     osmajor = __grains__['osrelease'].split('.')[0]
     if int(osmajor) >= 6:
         cmd = 'insserv {0} && '.format(name) + cmd
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
 def disable(name, **kwargs):
@@ -238,7 +258,10 @@ def disable(name, **kwargs):
         salt '*' service.disable <service name>
     '''
     cmd = 'update-rc.d {0} disable'.format(name)
-    return not __salt__['cmd.retcode'](cmd)
+
+    result = __salt__['cmd.run_stdall'](cmd)
+    state_std(kwargs, result)
+    return not result['retcode']
 
 
 def enabled(name):
