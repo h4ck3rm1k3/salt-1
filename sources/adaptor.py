@@ -276,30 +276,38 @@ class StateAdaptor(object):
 				}
 			}
 		},
-		'linux.systemd' : {
+		'linux.service' : {
 			'attributes' : {
-				'name' : 'name',
+				'name' : 'names',
 				# 'watch' : ''
 			},
 			'states' : ['running'],
 			'type' : 'service',
 		},
-		'linux.sysvinit' : {
-			'attributes' : {
-				'name' : 'name',
-				# 'watch' : ''
-			},
-			'states' : ['running'],
-			'type' : 'service',
-		},
-		'linux.upstart' : {
-			'attributes' : {
-				'name' : 'name',
-				# 'watch' : 'watch',
-			},
-			'states' : ['running'],
-			'type' : 'service',
-		},
+		# 'linux.systemd' : {
+		# 	'attributes' : {
+		# 		'name' : 'names',
+		# 		# 'watch' : ''
+		# 	},
+		# 	'states' : ['running'],
+		# 	'type' : 'service',
+		# },
+		# 'linux.sysvinit' : {
+		# 	'attributes' : {
+		# 		'name' : 'name',
+		# 		# 'watch' : ''
+		# 	},
+		# 	'states' : ['running'],
+		# 	'type' : 'service',
+		# },
+		# 'linux.upstart' : {
+		# 	'attributes' : {
+		# 		'name' : 'name',
+		# 		# 'watch' : 'watch',
+		# 	},
+		# 	'states' : ['running'],
+		# 	'type' : 'service',
+		# },
 
 		## cmd
 		'linux.cmd' : {
