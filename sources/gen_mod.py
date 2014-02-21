@@ -700,7 +700,7 @@ def attr():
 					}
 				}
 			},
-			'yum package'	:	{
+			'yum pkg'	:	{
 				'module'	:	'linux.yum.package',
 				'distro'	:	['amazon', 'redhat', 'centos'],
 				'reference'	:	{
@@ -1409,9 +1409,9 @@ def attr():
 		note:
 			By default, a command will be terminated and taken "failed" if not finishe in 600 seconds. However you can change with    this option.
 
-*   **with_path** (*optional*): the command will not run if the specified path exists
+*   **if path present** (*optional*): the command will run only if the specified path exists
 
-*   **without_path** (*optional*): the command will not run if the specified path does not exist
+*   **if path absent** (*optional*): the command will not run if the specified path exists
 					''',
 					'cn'	:	''''''
 				},
