@@ -560,7 +560,7 @@ class StateAdaptor(object):
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
 		# filter unhandler module
-		if module in ['general.comment']:
+		if module in ['meta.comment']:
 			return None
 
 		# get agent package module
