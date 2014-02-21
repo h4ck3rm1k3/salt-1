@@ -3,6 +3,23 @@
 def attr():
 	return {
 		'general'	:	{
+			'#'	:	{
+				'module'	:	'general.comment',
+				'reference'	:	{
+					'en'	:	'''
+### Description
+	just for comments
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'comment'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					}
+				}
+			},
 			'wait'	:	{
 				'module'	:	'general.wait',
 				'reference'	:	{
