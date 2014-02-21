@@ -559,6 +559,10 @@ class StateAdaptor(object):
 		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
+		# filter unhandler module
+		if module in ['general.comment']:
+			return None
+
 		# get agent package module
 		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
