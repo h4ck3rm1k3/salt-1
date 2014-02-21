@@ -2,9 +2,9 @@
 
 def attr():
 	return {
-		'meta'	:	{
+		'general'	:	{
 			'#'	:	{
-				'module'	:	'meta.comment',
+				'module'	:	'general.comment',
 				'reference'	:	{
 					'en'	:	'''
 ### Description
@@ -21,7 +21,7 @@ def attr():
 				}
 			},
 			'wait'	:	{
-				'module'	:	'meta.wait',
+				'module'	:	'general.wait',
 				'reference'	:	{
 					'en'	:	'''
 ### Description
@@ -45,7 +45,7 @@ def attr():
 				}
 			},
 #			'reboot'	:	{
-#				'module'	:	'meta.reboot',
+#				'module'	:	'general.reboot',
 #				'reference'	:	{
 #					'en'	:	'''
 #### Description
