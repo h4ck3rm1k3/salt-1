@@ -3,6 +3,23 @@
 def attr():
 	return {
 		'general'	:	{
+			'#'	:	{
+				'module'	:	'general.comment',
+				'reference'	:	{
+					'en'	:	'''
+### Description
+	just for comments
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'comment'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					}
+				}
+			},
 			'wait'	:	{
 				'module'	:	'general.wait',
 				'reference'	:	{
@@ -2343,11 +2360,6 @@ def attr():
 						'option'	:	['r', 'rw'],
 						'required'	:	False,
 					},
-					'permission'	:	{
-						'type'		:	'line',
-						'option'	:	['r', 'rw'],
-						'required'	:	False,
-					},
 					'pool metadata size':	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2366,10 +2378,6 @@ def attr():
 						'required'	:	False,
 					},
 					'thinpool'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'type'		:	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
