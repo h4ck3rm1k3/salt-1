@@ -118,6 +118,10 @@ def attr():
 	- **removed**: ensure the package is absent
 
 	note: the specified packages will be installed as global packages (npm install --global)
+
+* **path** (*optional*): the path where the packages should be installed to (***path***/node_modules)
+		note:
+			if ignored, the packages will be installed as global packages, usually /usr/local/lib/node_modules/ (e.g. npm install --global)
 					''',
 					'cn'	:	''''''
 				},
@@ -127,6 +131,11 @@ def attr():
 						'value'		:	['latest', 'removed'],	# values to show in IDE
 						'default'	:	'',						# the default value of the item,
 						'required'	:	True,
+						'visible'	:	True
+					},
+					'path'	:	{
+						'type'		:	'line',
+						'required'	:	False,
 						'visible'	:	True
 					}
 				}
@@ -691,7 +700,7 @@ def attr():
 					}
 				}
 			},
-			'yum package'	:	{
+			'yum pkg'	:	{
 				'module'	:	'linux.yum.package',
 				'distro'	:	['amazon', 'redhat', 'centos'],
 				'reference'	:	{
@@ -1400,9 +1409,9 @@ def attr():
 		note:
 			By default, a command will be terminated and taken "failed" if not finishe in 600 seconds. However you can change with    this option.
 
-*   **with_path** (*optional*): the command will not run if the specified path exists
+*   **if path present** (*optional*): the command will run only if the specified path exists
 
-*   **without_path** (*optional*): the command will not run if the specified path does not exist
+*   **if path absent** (*optional*): the command will not run if the specified path exists
 					''',
 					'cn'	:	''''''
 				},
