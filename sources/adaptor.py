@@ -7,11 +7,10 @@ Madeira OpsAgent states adaptor
 
 # System imports
 import os
-import hashlib
 
 # Internal imports
 from opsagent import utils
-from opsagent.exception import StateException, OpsAgentException
+from opsagent.exception import StateException
 
 class StateAdaptor(object):
 
@@ -562,7 +561,7 @@ class StateAdaptor(object):
 		try:
 			self.__expand()
 		except Exception as e:
-			utils.log("ERROR", "Expand salt state failed...", ("convert", self))
+			utils.log("ERROR", "Expand salt state failed: %s."%(e), ("convert", self))
 			import json
 			raise StateException("Expand salt state faild: %s" % json.dumps(self.states))
 
@@ -841,7 +840,7 @@ class StateAdaptor(object):
 				if attr in addin:
 					try:
 						addin[attr] = int(addin['dump'])
-					except:
+					except Exception:
 						addin[attr] = 0
 
 		elif module in ['linux.hosts']:
@@ -986,12 +985,12 @@ class StateAdaptor(object):
 
 			#addin = self.__init_addin(module, req_p)
 			state = self.mod_map[module]['states'][0]
-			type = self.mod_map[module]['type']
+			stype = self.mod_map[module]['type']
 
 			tag = self.__get_tag(module, None, None, 'require_in', state)
 
 			require_in_state[tag] = {
-				type : [
+				stype : [
 					state,
 					req_addin
 				]
@@ -1006,17 +1005,17 @@ class StateAdaptor(object):
 
 		watch_state = {}
 
-		for file in watch:
+		for f in watch:
 			watch_module = 'path.dir' if os.path.isdir(file) else 'path.file'
 			state = 'directory' if watch_module == 'path.dir' else 'managed'
 
-			watch_tag = self.__get_tag(watch_module, None, step, file, state)
+			watch_tag = self.__get_tag(watch_module, None, step, f, state)
 
 			watch_state[watch_tag] = {
 				'file' : [
 					state,
 					{
-						'name' : file
+						'name' : f
 					},
 				]
 			}
