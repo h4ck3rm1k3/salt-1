@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 def _check_error(result, success_message):
     ret = {}
 
-    if 'ERROR' in result:
+    if 'ERROR' in result.upper():
         ret['comment'] = result
         ret['result'] = False
     else:
