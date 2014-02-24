@@ -322,8 +322,8 @@ def mount(name, device, mkmnt=False, fstype='', opts='defaults', **kwargs):
     cmd = 'mount {0} {1} {2} '.format(args, device, name)
     out = __salt__['cmd.run_stdall'](cmd)
     state_std(kwargs, out)
-    if out['retcode']:
-        return out['stderr']
+    if out['retcode'] != 0:
+        return out['stdout']
     return True
 
 
