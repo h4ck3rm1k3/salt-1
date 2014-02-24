@@ -871,6 +871,10 @@ class StateAdaptor(object):
 				'contents' 	: addin['contents']
 			}
 
+		elif module in ['linux.lvm.vg']:
+			if 'devices' in addin and isinstance(addin['devices'], list):
+				addin['devices'] = ','.join(addin['devices'])
+
 		if not module_state:	raise StateException("Build up module state failed: %s" % module)
 		return module_state
 

@@ -95,7 +95,7 @@ def vg_present(name, devices=None, **kwargs):
         ret['result'] = None
         return ret
     else:
-        changes = __salt__['lvm.vgcreate'](name, devices, state_ret=ret, **kwargs)
+        changes = __salt__['lvm.vgcreate'](name, devices, kwargs=kwargs, state_ret=ret)
 
         if __salt__['lvm.vgdisplay'](name):
             ret['comment'] = 'Created Volume Group {0}'.format(name)

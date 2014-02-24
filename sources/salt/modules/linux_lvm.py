@@ -224,9 +224,9 @@ def vgcreate(vgname, devices, **kwargs):
         cmd += ' {0}'.format(device)
     valid = ('clustered', 'maxlogicalvolumes', 'maxphysicalvolumes',
              'vgmetadatacopies', 'metadatacopies', 'physicalextentsize')
-    for var in kwargs.keys():
-        if kwargs[var] and var in valid:
-            cmd += ' --{0} {1}'.format(var, kwargs[var])
+    for var in kwargs['kwargs'].keys():
+        if kwargs['kwargs'][var] and var in valid:
+            cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
     out = result['stdout'].splitlines()
