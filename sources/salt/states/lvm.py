@@ -137,7 +137,7 @@ def vg_absent(name):
     return ret
 
 
-def lv_present(name, vgname=None, size=None, extents=None, pv=''):
+def lv_present(name, vgname=None, size=None, extents=None, pv='', **kwargs):
     '''
     Create a new logical volume
 
@@ -155,6 +155,10 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
 
     pv
         The physical volume to use
+
+    kwargs
+        Any supported options to lvcreate. See
+        :mod:`linux_lvm <salt.modules.linux_lvm>` for more details.
     '''
     ret = {'changes': {},
            'comment': '',
@@ -175,6 +179,7 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
                                            size=size,
                                            extents=extents,
                                            pv=pv,
+                                           kwargs=kwargs,
                                            state_ret=ret)
 
         if __salt__['lvm.lvdisplay'](lvpath):
