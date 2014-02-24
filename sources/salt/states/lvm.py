@@ -57,7 +57,7 @@ def pv_present(name, **kwargs):
         ret['result'] = None
         return ret
     else:
-        changes = __salt__['lvm.pvcreate'](name, state_ret=ret)
+        changes = __salt__['lvm.pvcreate'](name, kwargs=kwargs, state_ret=ret)
 
         if __salt__['lvm.pvdisplay'](name):
             ret['comment'] = 'Created Physical Volume {0}'.format(name)
@@ -174,7 +174,7 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
                                            vgname,
                                            size=size,
                                            extents=extents,
-                                           pv=pv, 
+                                           pv=pv,
                                            state_ret=ret)
 
         if __salt__['lvm.lvdisplay'](lvpath):

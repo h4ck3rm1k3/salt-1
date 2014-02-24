@@ -9,8 +9,8 @@ Madeira OpsAgent states adaptor
 import os
 
 # Internal imports
-from opsagent import utils
 from opsagent.exception import StateException
+from opsagent import utils
 
 class StateAdaptor(object):
 

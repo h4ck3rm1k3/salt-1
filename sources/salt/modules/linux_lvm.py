@@ -196,9 +196,9 @@ def pvcreate(devices, **kwargs):
              'pvmetadatacopies', 'metadatacopies', 'metadataignore',
              'restorefile', 'norestorefile', 'labelsector',
              'setphysicalvolumesize')
-    for var in kwargs.keys():
-        if kwargs[var] and var in valid:
-            cmd += ' --{0} {1}'.format(var, kwargs[var])
+    for var in kwargs['kwargs'].keys():
+        if kwargs['kwargs'][var] and var in valid:
+            cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
     out = result['stdout'].splitlines()
