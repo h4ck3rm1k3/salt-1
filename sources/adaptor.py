@@ -22,9 +22,9 @@ class StateAdaptor(object):
 		'linux.apt.package'	: {
 			'attributes' : {
 				'name'			: 'pkgs',
-				'fromrepo'		: 'fromrepo',
-				'debconf'		: 'debconf',
-				'verify_gpg'	: 'verify_gpg',
+				'repo'			: 'fromrepo',
+				'deb conf file'	: 'debconf',
+				'verify gpg'	: 'verify_gpg',
 			},
 			'states' : [
 				'installed', 'latest', 'removed', 'purged'
@@ -34,10 +34,10 @@ class StateAdaptor(object):
 		'linux.yum.package'	: {
 			'attributes' : {
 				'name'			: 'pkgs',
-				'fromrepo'		: 'fromrepo',
-				'enablerepo'	: 'enablerepo',
-				'disablerepo'	: 'disablerepo',
-				'verify_gpg'	: 'verify_gpg',
+				'repo'			: 'fromrepo',
+				# 'enablerepo'	: 'enablerepo',
+				# 'disablerepo'	: 'disablerepo',
+				'verify gpg'	: 'verify_gpg',
 			},
 			'states' : [
 				'installed', 'latest', 'removed', 'purged'
@@ -117,7 +117,12 @@ class StateAdaptor(object):
 			'states' : [
 				'managed'
 			],
-			'type' : 'file'
+			'type' : 'file',
+			'require_in' : {
+				'linux.cmd' : {
+					'yum-config-manager --enable $name' : 'name'
+				}
+			}
 		},
 		'common.gem.source' : {
 			'attributes' : {
@@ -135,7 +140,7 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'version'	: 'rev',
-				'ssh_key'	: 'identity',
+				'ssh key'	: 'identity',
 				'path'		: 'target',
 				'user'		: 'user',
 				'force'		: 'force',
@@ -149,10 +154,10 @@ class StateAdaptor(object):
 			},
 			'require_in' : {
 				'linux.dir' : {
-					'path' : 'name',
-					'user' : 'user',
+					'path' 	: 'name',
+					'user' 	: 'user',
 					'group' : 'group',
-					'mode' : 'mode',
+					'mode' 	: 'mode',
 				}
 			}
 		},
@@ -176,10 +181,10 @@ class StateAdaptor(object):
 			},
 			'require_in' : {
 				'linux.dir' : {
-					'path' : 'name',
-					'user' : 'user',
+					'path' 	: 'name',
+					'user' 	: 'user',
 					'group' : 'group',
-					'mode' : 'mode'
+					'mode' 	: 'mode'
 				}
 			},
 		},
@@ -188,7 +193,7 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'revision'	: 'rev',
-				#'ssh_key'	: '',
+				#'ssh key'	: '',
 				'path'		: 'target',
 				'user'		: 'user',
 				'force'		: 'force',
@@ -202,10 +207,10 @@ class StateAdaptor(object):
 			},
 			'require_in' : {
 				'linux.dir' : {
-					'path' : 'name',
-					'user' : 'user',
+					'path' 	: 'name',
+					'user' 	: 'user',
 					'group' : 'group',
-					'mode' : 'mode'
+					'mode' 	: 'mode'
 				}
 			},
 		},
@@ -213,12 +218,12 @@ class StateAdaptor(object):
 		## path
 		'linux.dir' : {
 			'attributes' : {
-				'path' : 'name',
-				'user' : 'user',
-				'group' : 'group',
-				'mode' : 'mode',
+				'path' 		: 'name',
+				'user' 		: 'user',
+				'group' 	: 'group',
+				'mode' 		: 'mode',
 				'recursive' : 'recurse',
-				'absent' : 'absent',
+				'absent' 	: 'absent',
 			},
 			'states' : [
 				'directory', 'absent'
@@ -227,12 +232,12 @@ class StateAdaptor(object):
 		},
 		'linux.file' : {
 			'attributes' : {
-				'path' : 'name',
-				'user' : 'user',
-				'group' : 'group',
-				'mode' : 'mode',
-				'content' : 'contents',
-				'absent' : 'absent',
+				'path' 		: 'name',
+				'user' 		: 'user',
+				'group' 	: 'group',
+				'mode' 		: 'mode',
+				'content' 	: 'contents',
+				'absent'	: 'absent',
 			},
 			'states' : [
 				'managed', 'absent'
@@ -271,30 +276,38 @@ class StateAdaptor(object):
 				}
 			}
 		},
-		'linux.systemd' : {
+		'linux.service' : {
 			'attributes' : {
-				'name' : 'name',
+				'name' : 'names',
 				# 'watch' : ''
 			},
 			'states' : ['running'],
 			'type' : 'service',
 		},
-		'linux.sysvinit' : {
-			'attributes' : {
-				'name' : 'name',
-				# 'watch' : ''
-			},
-			'states' : ['running'],
-			'type' : 'service',
-		},
-		'linux.upstart' : {
-			'attributes' : {
-				'name' : 'name',
-				# 'watch' : 'watch',
-			},
-			'states' : ['running'],
-			'type' : 'service',
-		},
+		# 'linux.systemd' : {
+		# 	'attributes' : {
+		# 		'name' : 'names',
+		# 		# 'watch' : ''
+		# 	},
+		# 	'states' : ['running'],
+		# 	'type' : 'service',
+		# },
+		# 'linux.sysvinit' : {
+		# 	'attributes' : {
+		# 		'name' : 'name',
+		# 		# 'watch' : ''
+		# 	},
+		# 	'states' : ['running'],
+		# 	'type' : 'service',
+		# },
+		# 'linux.upstart' : {
+		# 	'attributes' : {
+		# 		'name' : 'name',
+		# 		# 'watch' : 'watch',
+		# 	},
+		# 	'states' : ['running'],
+		# 	'type' : 'service',
+		# },
 
 		## cmd
 		'linux.cmd' : {
@@ -306,8 +319,8 @@ class StateAdaptor(object):
 				'group'			: 'group',
 				'timeout'		: 'timeout',
 				'env'			: 'env',
-				'with_path'		: 'onlyif',
-				'without_path'	: 'unless',
+				'with path'		: 'onlyif',
+				'without path'	: 'unless',
 			},
 			'states' : [
 				'run', 'call', 'wait', 'script'
@@ -323,7 +336,7 @@ class StateAdaptor(object):
 				'day of month'	:	'daymonth',
 				'month'			:	'month',
 				'day of week'	:	'dayweek',
-				'username'		:	'user',
+				'user'			:	'user',
 				'cmd'			:	'name'
 			},
 			'states' : [
@@ -363,23 +376,23 @@ class StateAdaptor(object):
 		## hostname
 
 		## hosts
-		'linux.hosts' : {
-			'attributes' : {
-				'content' : 'contents'
-			},
-			'states' : ['managed'],
-			'type' : 'file',
-		},
+		# 'linux.hosts' : {
+		# 	'attributes' : {
+		# 		'content' : 'contents'
+		# 	},
+		# 	'states' : ['managed'],
+		# 	'type' : 'file',
+		# },
 
 		## mount
 		'linux.mount' : {
 			'attributes' : {
 				'path'		:	'name',
-				'dev'		:	'device',
+				'device'	:	'device',
 				'filesystem':	'fstype',
 				'dump'		:	'dump',
 				'passno'	:	'pass_num',
-				'args'		:	'opts'
+				'opts'		:	'opts'
 			},
 			'states' : ['mounted', 'unmounted'],
 			'type' : 'mount'
@@ -400,7 +413,7 @@ class StateAdaptor(object):
 		'common.timezone' : {
 			'attributes' : {
 				'name' : 'name',
-				'use_utc' : 'utc'
+				'use utc' : 'utc'
 			},
 			'states' : ['system'],
 			'type' : 'timezone'
@@ -419,8 +432,8 @@ class StateAdaptor(object):
 				# 'metadata type'			: '',
 				'metadata copies'		: 'metadatacopies',
 				'metadata ignore'		: 'metadataignore',
-				'restore file'			: 'restorefile',
-				'no restore file'		: 'norestorefile',
+				'restorefile'			: 'restorefile',
+				'norestorefile'			: 'norestorefile',
 				'label sector'			: 'labelsector',
 				'PV size'				: 'setphysicalvolumesize',
 			},
@@ -484,13 +497,14 @@ class StateAdaptor(object):
 			'attributes' : {
 				'path'					: 'name',
 				'python'				: 'python',
-				'system-site-packages'	: 'system_site_packages',
+				'system site packages'	: 'system_site_packages',
 				# 'always-copy'			: '',
-				# 'unzip-setuptools'		: '',
-				# 'no-setuptools'			: '',
-				# 'no-pip'				: '',
-				'extra-search-dir'		: 'extra-search-dir',
-				# always-copy				: ''
+				# 'unzip setuptools'		: '',
+				# 'no setuptools'			: '',
+				# 'no pip'				: '',
+				'extra search dir'		: 'extra-search-dir',
+				# always copy				: '',
+				'requirements'			: 'requirements',
 			},
 			'states' : ['managed'],
 			'type' : 'virtualenv',
@@ -544,6 +558,10 @@ class StateAdaptor(object):
 		if module not in self.mod_map:			raise StateException("Unsupported module %s" % module)
 		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
 			raise	StateException("Invalid input parameter: %s" % os_type)
+
+		# filter unhandler module
+		if module in ['meta.comment']:
+			return None
 
 		# get agent package module
 		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
@@ -774,7 +792,7 @@ class StateAdaptor(object):
 				addin['enc'] = self.ssh_key_type[0]
 
 			if module == 'common.ssh.auth' and 'content' in addin:
-				for line in value.split('\n'):
+				for line in addin['content'].split('\n'):
 					if not line: continue
 
 					auth.append(line)
@@ -979,9 +997,17 @@ class StateAdaptor(object):
 
 			req_addin = {}
 			for k, v in attrs.items():
-				if not v or k not in parameter:	continue
+				if not v:	continue
 
-				req_addin[v] = parameter[k]
+				if k in parameter:
+					req_addin[v] = parameter[k]
+				else:
+					str_list = k.split()
+					for idx, w in enumerate(str_list):
+						if w.startswith('$'):
+							str_list[idx] = parameter[w[1:]]
+
+					req_addin[v] = ' '.join(str_list)
 
 			#addin = self.__init_addin(module, req_p)
 			state = self.mod_map[module]['states'][0]
@@ -998,7 +1024,7 @@ class StateAdaptor(object):
 
 		return require_in_state
 
-	def __add_watch(self, watch):
+	def __add_watch(self, watch, step):
 		"""
 			Generate watch state.
 		"""

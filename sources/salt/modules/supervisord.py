@@ -48,10 +48,11 @@ def _ctl_cmd(cmd, name, conf_file, bin_env):
 
 
 def _get_return(ret):
-    if ret['retcode'] == 0:
-        return ret['stdout']
-    else:
-        return ''
+    # if ret['retcode'] == 0:
+    #     return ret['stdout']
+    # else:
+    #     return ''
+    return ret['stdout']
 
 
 def start(name='all', user=None, conf_file=None, bin_env=None, **kwargs):
