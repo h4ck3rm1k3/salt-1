@@ -857,7 +857,7 @@ class StateAdaptor(object):
 			for attr in ['dump', 'pass_num']:
 				if attr in addin:
 					try:
-						addin[attr] = int(addin['dump'])
+						addin[attr] = int(addin[attr])
 					except Exception:
 						addin[attr] = 0
 
