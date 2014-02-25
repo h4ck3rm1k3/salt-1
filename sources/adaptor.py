@@ -1121,7 +1121,7 @@ def ut():
 	# }
 
 	config = {
-		'file_roots' : '/srv/salt',
+		'srv_root' : '/srv/salt',
 		'extension_modules' : '/var/cache/salt/minion/extmods',
 		'cachedir' : '/code/OpsAgent/cache'
 	}
