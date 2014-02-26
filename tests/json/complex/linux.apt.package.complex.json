@@ -1,0 +1,99 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E001",
+          "_": "1 [prepare] add opscode repo - True",
+          "module": "linux.apt.repo",
+          "parameter": {
+            "name": "opscode",
+            "content": "deb http://apt.opscode.com/ precise-0.10 main"
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E100",
+          "_": "2 [test1] install package with required parameter when package not installed (no gpg) - True",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "chef": ""
+            },
+            "fromrepo": "opscode",
+            "verify_gpg": false,
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E101",
+          "_": "2 [test1] install package with required version and required parameter when package not installed (with gpg)- True",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "chef-server": "10.18.2"
+            },
+            "fromrepo": "opscode",
+            "verify_gpg": true,
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E102",
+          "_": "4 [test1] install wrong chef version - False",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "chef": "1"
+            },
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E103",
+          "_": "5 [test1] check package exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "which chef"
+          }
+        },
+
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E200",
+          "_": "6 [test2] install package with required parameter when package already installed - True",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "chef": ""
+            }
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
+          "_": "7 [test3] create debconf file - True",
+          "module": "linux.file",
+          "parameter": {
+            "content": "mysql-server-5.5 mysql-server/root_password password foo\nmysql-server-5.5 mysql-server/root_password_again password foo\n",
+            "path": "/tmp/debconf.conf"
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E102",
+          "_": "8 [test3] install mysql with debconf file - True",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "mysql-server-5.5": ""
+            },
+            "debconf": "/tmp/debconf.conf"
+          }
+        }
+
+      ]
+    }
+  }
+}
