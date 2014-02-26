@@ -581,7 +581,7 @@ class StateAdaptor(object):
 		except StateException, e:
 			import json
 			utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
-				(step, module, json.dumps(parameter), os_type), ("convert", self))
+				(step, module, json.dumps(parameter), os_type, str(e)), ("convert", self))
 			return None
 		except Exception, e:
 			utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
@@ -974,7 +974,7 @@ class StateAdaptor(object):
 		require_state = {}
 
 		try:
-			for module, parameter in require.iteritems():
+			for module, parameter in require.items():
 				if module not in self.mod_map.keys():	continue
 
 				# filter not current platform's package module
@@ -982,35 +982,11 @@ class StateAdaptor(object):
 
 				the_require_state = self.__salt('require', module, parameter)
 
-				if 'require' in parameter.keys():
-					re_require_state = self.__get_require(parameter['require'])
-
-					if re_require_state:
-						# add requirity relation
-						for tag, state in the_require_state.iteritems():
-							for module, chunk in state.iteritems():
-								req_list = None
-								for item in chunk:
-									if isinstance(item, dict) and 'require' in item.keys():
-										req_list = item
-
-								if not req_list:
-									req_list = { 'require' : [] }
-									chunk.append(req_list)
-
-								for re_req_tag, re_req_value in re_require_state.iteritems():
-									req_list['require'].append({next(iter(re_req_value)):re_req_tag})
-
-						the_require_state
-
-						# update dict
-						require_state.update(re_require_state)
+				if the_require_state:
+					require_state.update(the_require_state)
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt requisities exception: %s" % str(e), ("__get_require", self))
 			raise StateException(str(e))
-
-		if the_require_state:
-			require_state.update(the_require_state)
 
 		return require_state
 
