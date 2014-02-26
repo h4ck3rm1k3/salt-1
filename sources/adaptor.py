@@ -1009,7 +1009,7 @@ class StateAdaptor(object):
 
 					if k in parameter:
 						req_addin[v] = parameter[k]
-					else:
+					elif k.find('$')>=0:
 						str_list = k.split()
 						for idx, w in enumerate(str_list):
 							if w.startswith('$'):
@@ -1017,18 +1017,18 @@ class StateAdaptor(object):
 
 						req_addin[v] = ' '.join(str_list)
 
-				#addin = self.__init_addin(module, req_p)
-				state = self.mod_map[module]['states'][0]
-				stype = self.mod_map[module]['type']
+				if req_addin:
+					state = self.mod_map[module]['states'][0]
+					stype = self.mod_map[module]['type']
 
-				tag = self.__get_tag(module, None, None, 'require_in', state)
+					tag = self.__get_tag(module, None, None, 'require_in', state)
 
-				require_in_state[tag] = {
-					stype : [
-						state,
-						req_addin
-					]
-				}
+					require_in_state[tag] = {
+						stype : [
+							state,
+							req_addin
+						]
+					}
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt require in exception: %s" % str(e), ("__get_require_in", self))
 			raise StateException(str(e))
