@@ -32,8 +32,8 @@ linux.supervisord.complex
 #linux.sysvinit.complex
 
 linux.mount.complex
-#linux.lvm.pv.complex
-#linux.lvm.vg.complex
+linux.lvm.pv.complex
+linux.lvm.vg.complex
 #linux.lvm.lv.complex
 #linux.fs.complex
 #linux.ulimit.complex
