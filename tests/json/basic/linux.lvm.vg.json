@@ -7,7 +7,7 @@
           "module": "linux.lvm.vg",
           "parameter": {
             "name": "vgtest",
-            "path": "/dev/xvdb"
+            "path": ["/dev/sdb1", "/dev/sdb2"]
           }
         }
       ]

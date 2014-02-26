@@ -1460,18 +1460,18 @@ def attr():
 					'timeout'	:	{
 						'type'		:	'line',
 						'default'	:	600,
-						'required'	:	True
+						'required'	:	False
 					},
 					'env'		:	{
 						'type'		:	'dict',
 						'required'	:	False
 					},
-					'with_path'	:	{
+					'if path present'	:	{
 						'type'		:	'line',
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'without_path'	:	{
+					'if path absent'	:	{
 						'type'		:	'line',
 						'required'	:	False,
 						'visible'	:	True
@@ -1490,7 +1490,7 @@ def attr():
 
 *   **username** (*required*): the user name
 
-*   **password** (*required*): the encrypted value of the password
+*   **password** (*required*): the encrypted password
 		note:
 			use "openssl passwd -salt <salt> -1 <plaintext>" to generate the passworld hash
 

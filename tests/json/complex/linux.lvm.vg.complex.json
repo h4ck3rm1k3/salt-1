@@ -1,0 +1,88 @@
+{
+    "component": {
+        "init": {
+            "state": [
+                {
+                    "_": "1 [prepare] remove vgtest  - True|False",
+                    "id": "state-7EC7BAB6-C50C-4668-BA8B-A57DF26B684A",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "vgremove -y vgtest"
+                    }
+                },
+                {
+                    "_": "2 [prepare] remove pv  - True|False",
+                    "id": "state-28DB1F7F-3669-4DDD-9498-DFC28112C5E9",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "pvremove -y /dev/sdb1 /dev/sdb2"
+                    }
+                },
+                {
+                    "_": "3 [prepare] create pv  - True",
+                    "id": "state-50636596-43A3-434B-8839-2CE45CF49E23",
+                    "module": "linux.lvm.pv",
+                    "parameter": {
+                        "path": [
+                            "/dev/sdb1",
+                            "/dev/sdb2"
+                        ]
+                    }
+                },
+                {
+                    "_": "4 [test1] vg required parameters test  - True",
+                    "id": "state-8FCD1612-D807-40A6-9329-A5BAF1C35BF9",
+                    "module": "linux.lvm.vg",
+                    "parameter": {
+                        "name": "vgtest",
+                        "path": [
+                            "/dev/sdb1",
+                            "/dev/sdb2"
+                        ]
+                    }
+                },
+                {
+                    "_": "5 [test1] assert vg existed  - True",
+                    "id": "state-DA73F025-9222-493E-BA96-5994C55D7BE2",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "vgs | grep vgtest"
+                    }
+                },
+                {
+                    "_": "6 [test2] remove vg - True",
+                    "id": "state-AD9E67DE-E925-4D39-AA85-EB3C8130EF4B",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "vgremove -y vgtest"
+                    }
+                },
+                {
+                    "_": "7 [test3] vg full parameters test - True",
+                    "id": "state-F76DE6AA-6AF2-4DDD-B59C-2673A8D3C55E",
+                    "module": "linux.lvm.vg",
+                    "parameter": {
+                        "PE size": "4M",
+                        "clustered": "n",
+                        "max LV number": 128,
+                        "max PV number": 128,
+                        "metadata copies": 1,
+                        "name": "vgtest",
+                        "path": [
+                            "/dev/sdb1",
+                            "/dev/sdb2"
+                        ]
+                    }
+                },
+                {
+                    "_": "8 [test4] assert vg existed  - True",
+                    "id": "state-7FD7C7D6-0BEA-40F3-BABE-A8FB52391EC3",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "vgs | grep vgtest"
+                    }
+                }
+            ]
+        }
+    }
+}
