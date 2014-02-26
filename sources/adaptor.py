@@ -459,8 +459,9 @@ class StateAdaptor(object):
 		},
 		'linux.lvm.lv'	: {
 			'attributes'	: {
-				'path'				: 'pv',
 				'name'				: 'name',
+				'VG name'			: 'vgname',
+				'PV'				: 'pv',
 				# 'available'			: '',
 				'chunk size'		: 'chunksize',
 				'contiguous'		: 'contiguous',
@@ -886,9 +887,11 @@ class StateAdaptor(object):
 					'contents' 	: addin['contents']
 				}
 
-			elif module in ['linux.lvm.vg']:
+			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
 					addin['devices'] = ','.join(addin['devices'])
+				if 'pv' in addin and isinstance(addin['pv'], list):
+					addin['pv'] = ','.join(addin['pv'])
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
 
