@@ -240,7 +240,7 @@ def vgcreate(vgname, devices, **kwargs):
     return vgdata
 
 
-def lvcreate(lvname, vgname, size=None, extents=None, pv='', **kwargs):
+def lvcreate(lvname, vgname, size=None, extents=None, snapshot=None, pv='', **kwargs):
     '''
     Create a new logical volume, with option for which physical volume to be used
 
@@ -253,20 +253,26 @@ def lvcreate(lvname, vgname, size=None, extents=None, pv='', **kwargs):
     '''
     if size and extents:
         return 'Error: Please specify only size or extents'
+    if snapshot and pv:
+        return 'Error: Please specify only snapshot or pv'
 
     valid = ('activate', 'chunksize', 'contiguous', 'discards', 'stripes',
              'stripesize', 'minor', 'persistent', 'mirrors', 'noudevsync',
              'monitor', 'ignoremonitoring', 'permission', 'poolmetadatasize',
              'readahead', 'regionsize', 'thin', 'thinpool', 'type', 'virtualsize',
-             'zero',)
-    no_parameter = ('noudevsync', 'ignoremonitoring', )
+             'zero', 'available', 'autobackup', 'addtag', 'alloc')
+    no_parameter = ('noudevsync', 'ignoremonitoring')
     extra_arguments = ' '.join([
         '--{0}'.format(k) if k in no_parameter else '--{0} {1}'.format(k, v)
         for k, v in kwargs['kwargs'].iteritems() if k in valid
     ])
 
+    if snapshot:
+        vgname = '-s ' + vgname + '/' + snapshot
+
     if pv:
         pv = ' '.join(pv.split(','))
+
     if size:
         cmd = 'lvcreate -n {0} {1} -L {2} {3} {4}'.format(lvname, vgname, size, extra_arguments, pv)
     elif extents:

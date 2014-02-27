@@ -10,7 +10,7 @@
             "VG name": "vgtest",
             "LE number": "200M",
             "LV size": "500M",
-            "PV": ["/dev/sdb1", "/dev/sdb2"]
+            "path": ["/dev/sdb1", "/dev/sdb2"]
           }
         }
       ]
