@@ -144,9 +144,9 @@ def latest(name,
                                                               password=password,
                                                               fmt='dict')[0]['Revision']
     
-        ret['comment'] = out
+        ret['comment'] = 'Repository %s cloned to %s' % (name, target)
     except:
-        pass
+        ret['result'] = False
     return ret
 
 
@@ -234,8 +234,9 @@ def export(name,
     try:
         out = __salt__[svn_cmd](cwd, name, basename, user, username, password, *opts, state_ret=ret)
         ret['changes'] = name + ' was Exported to ' + target
+        ret['comment'] = 'Repository %s exported to %s' % (name, target)
     except:
-        pass
+        ret['result'] = False
     return ret
 
 
