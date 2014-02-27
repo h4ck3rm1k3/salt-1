@@ -2170,12 +2170,12 @@ def attr():
 						'default'	:	False,
 						'required'	:	False,
 					},
-					'discards':	{
-						'type'		:	'line',
-						'default'	:	'passdown',
-						'option'	:	['ignore', 'nopassdown', 'passdown'],
-						'required'	:	False,
-					},
+					# 'discards':	{
+					# 	'type'		:	'line',
+					# 	'default'	:	'passdown',
+					# 	'option'	:	['ignore', 'nopassdown', 'passdown'],
+					# 	'required'	:	False,
+					# },
 					'stripe number':	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2225,10 +2225,10 @@ def attr():
 						'option'	:	['r', 'rw'],
 						'required'	:	False,
 					},
-					'pool metadata size':	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
+					# 'pool metadata size':	{
+					# 	'type'		:	'line',
+					# 	'required'	:	False,
+					# },
 					'region size'	:	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2242,10 +2242,10 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					'thinpool'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
+					# 'thinpool'	:	{
+					# 	'type'		:	'line',
+					# 	'required'	:	False,
+					# },
 					'type'		:	{
 						'type'		:	'line',
 						'option'	:	['raid1', 'raid4', 'raid5', 'raid6'],
