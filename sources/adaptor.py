@@ -560,6 +560,11 @@ class StateAdaptor(object):
 		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
+		# distro check and package manger check
+		if (os_type in ['centos', 'redhat', 'debian'] and module in ['linux.apt.package', 'linux.apt.repo']) \
+			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
+			raise StateException("Cnflict on os type %s and module %s" % (os_type, module))
+
 		# filter unhandler module
 		if module in ['meta.comment']:
 			return None
