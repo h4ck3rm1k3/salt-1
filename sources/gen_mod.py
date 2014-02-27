@@ -236,47 +236,18 @@ def attr():
 			http/https - https://example.com/gitproject.git
 			git - git://example.com/gitproject.git
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			master
-
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **version** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
 			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **ssh_key** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
-
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 					''',
@@ -292,31 +263,13 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
+					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'master',
 						'required'	:	False
 					},
-					'version'	:	{
-						'type'		:	'line',
-						'default'	:	'',
-						'required'	:	False
-					},
 					'ssh key'	:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
@@ -346,47 +299,18 @@ def attr():
 			ssh - ssh://user@server/path/to/repo
 			http/https - https://example.com/path/to/repo
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			default
-
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **revision** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
-			changeset - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **ssh_key** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
-
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 					''',
@@ -402,31 +326,13 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
+					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'default',
 						'required'	:	False
 					},
-					'revision'	:	{
-						'type'		:	'line',
-						'default'	:	'',
-						'required'	:	False
-					},
 					'ssh key'	:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
@@ -458,47 +364,18 @@ def attr():
 			svn - svn://example.com/path/to/repo
 			svn+ssh - svn+ssh://user@example.com/path/to/repo
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			master
-
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **revision** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
-			changeset - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **username** (*optional*): the username of the svn server
 
 * **password** (*optional*): the password of the svn user
-
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 					''',
@@ -514,14 +391,9 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
-						'type'		:	'line',
-						'default'	:	'master',
-						'required'	:	False
-					},
 					'revision'	:	{
 						'type'		:	'line',
-						'default'	:	'',
+						'default'	:	'trunk',
 						'required'	:	False
 
 					},
@@ -531,19 +403,6 @@ def attr():
 					},
 					'password'	:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
