@@ -195,12 +195,14 @@ def pvcreate(devices, **kwargs):
     valid = ('metadatasize', 'dataalignment', 'dataalignmentoffset',
              'pvmetadatacopies', 'metadatacopies', 'metadataignore',
              'restorefile', 'norestorefile', 'labelsector',
-             'setphysicalvolumesize')
-    for var in kwargs.keys():
-        if kwargs[var] and var in valid:
-            cmd += ' --{0} {1}'.format(var, kwargs[var])
+             'setphysicalvolumesize', 'force', 'uuid', 'zero', 'metadatatype')
+    for var in kwargs['kwargs'].keys():
+        if kwargs['kwargs'][var] and var in valid:
+            cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
+    if result['retcode'] != 0:
+        return result['stderr']
     out = result['stdout'].splitlines()
     return out[0]
 
@@ -223,12 +225,15 @@ def vgcreate(vgname, devices, **kwargs):
     for device in devices.split(','):
         cmd += ' {0}'.format(device)
     valid = ('clustered', 'maxlogicalvolumes', 'maxphysicalvolumes',
-             'vgmetadatacopies', 'metadatacopies', 'physicalextentsize')
-    for var in kwargs.keys():
-        if kwargs[var] and var in valid:
-            cmd += ' --{0} {1}'.format(var, kwargs[var])
+             'vgmetadatacopies', 'metadatacopies', 'physicalextentsize',
+             'metadatatype', 'autobackup', 'addtag', 'alloc')
+    for var in kwargs['kwargs'].keys():
+        if kwargs['kwargs'][var] and var in valid:
+            cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
+    if result['retcode'] != 0:
+        return result['stderr']
     out = result['stdout'].splitlines()
     vgdata = vgdisplay(vgname)
     vgdata['Output from vgcreate'] = out[0].strip()
@@ -249,14 +254,29 @@ def lvcreate(lvname, vgname, size=None, extents=None, pv='', **kwargs):
     if size and extents:
         return 'Error: Please specify only size or extents'
 
+    valid = ('activate', 'chunksize', 'contiguous', 'discards', 'stripes',
+             'stripesize', 'minor', 'persistent', 'mirrors', 'noudevsync',
+             'monitor', 'ignoremonitoring', 'permission', 'poolmetadatasize',
+             'readahead', 'regionsize', 'thin', 'thinpool', 'type', 'virtualsize',
+             'zero',)
+    no_parameter = ('noudevsync', 'ignoremonitoring', )
+    extra_arguments = ' '.join([
+        '--{0}'.format(k) if k in no_parameter else '--{0} {1}'.format(k, v)
+        for k, v in kwargs['kwargs'].iteritems() if k in valid
+    ])
+
+    if pv:
+        pv = ' '.join(pv.split(','))
     if size:
-        cmd = 'lvcreate -n {0} {1} -L {2} {3}'.format(lvname, vgname, size, pv)
+        cmd = 'lvcreate -n {0} {1} -L {2} {3} {4}'.format(lvname, vgname, size, extra_arguments, pv)
     elif extents:
-        cmd = 'lvcreate -n {0} {1} -l {2} {3}'.format(lvname, vgname, extents, pv)
+        cmd = 'lvcreate -n {0} {1} -l {2} {3} {4}'.format(lvname, vgname, extents, extra_arguments, pv)
     else:
         return 'Error: Either size or extents must be specified'
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
+    if result['retcode'] != 0:
+        return result['stderr']
     out = result['stdout'].splitlines()
     lvdev = '/dev/{0}/{1}'.format(vgname, lvname)
     lvdata = lvdisplay(lvdev)

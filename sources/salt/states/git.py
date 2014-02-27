@@ -237,10 +237,10 @@ def latest(name,
                 cmd = "git symbolic-ref -q HEAD > /dev/null"
                 retcode = __salt__['cmd.retcode'](cmd, cwd=target, runas=user)
                 if 0 == retcode:
-                    __salt__['git.fetch' if bare else 'git.pull'](ret, target,
+                    __salt__['git.fetch' if bare else 'git.pull'](target,
                                                                   opts=fetch_opts,
                                                                   user=user,
-                                                                  identity=identity)
+                                                                  identity=identity, state_ret=ret)
 
                 if submodules:
                     __salt__['git.submodule'](target,

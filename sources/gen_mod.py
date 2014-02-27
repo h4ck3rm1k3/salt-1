@@ -26,7 +26,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	wait for remote state(s) to complete, if anyone is not done yet, it will cause the host to block on the waiting.
-	
+
 ### Parameters
 
 *   **state** (*required*): one or multiple remote states to be waited
@@ -66,7 +66,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage the timezone
-	
+
 ### Parameters
 
 *   **name** (*required*): the timezone name
@@ -81,7 +81,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True,
 						'visible'	:	True
-						
+
 					},
 					'use utc'		:	{
 						'type'		:	'bool',
@@ -101,7 +101,7 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
@@ -129,7 +129,7 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
@@ -198,7 +198,7 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
@@ -222,7 +222,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage a git repo
-	
+
 ### Parameters
 
 * **path** (*required* ): the path to clone the repo
@@ -236,47 +236,18 @@ def attr():
 			http/https - https://example.com/gitproject.git
 			git - git://example.com/gitproject.git
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			master
-	
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **version** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
 			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
-	
+
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **ssh_key** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
-
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-	
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-	
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-	
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 					''',
@@ -292,31 +263,13 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
+					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'master',
 						'required'	:	False
 					},
-					'version'	:	{
-						'type'		:	'line',
-						'default'	:	'',
-						'required'	:	False
-					},
 					'ssh key'	:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
@@ -333,7 +286,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage a hg repo
-	
+
 ### Parameters
 
 * **path** (*required* ): the path to clone the repo
@@ -346,47 +299,18 @@ def attr():
 			ssh - ssh://user@server/path/to/repo
 			http/https - https://example.com/path/to/repo
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			default
-	
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **revision** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
-			changeset - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
-	
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **ssh_key** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
-
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-	
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-	
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-	
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 					''',
@@ -402,31 +326,13 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
+					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'default',
 						'required'	:	False
 					},
-					'revision'	:	{
-						'type'		:	'line',
-						'default'	:	'',
-						'required'	:	False
-					},
 					'ssh key'	:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
@@ -443,7 +349,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage a svn repo
-	
+
 ### Parameters
 
 * **path** (*required* ): the path to checkout the repo
@@ -458,47 +364,18 @@ def attr():
 			svn - svn://example.com/path/to/repo
 			svn+ssh - svn+ssh://user@example.com/path/to/repo
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			master
-	
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **revision** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
-			changeset - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
-	
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **username** (*optional*): the username of the svn server
 
 * **password** (*optional*): the password of the svn user
-
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-	
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-	
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-	
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 					''',
@@ -514,16 +391,11 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
-						'type'		:	'line',
-						'default'	:	'master',
-						'required'	:	False
-					},
 					'revision'	:	{
 						'type'		:	'line',
-						'default'	:	'',
+						'default'	:	'trunk',
 						'required'	:	False
-						
+
 					},
 					'username'	:	{
 						'type'		:	'line',
@@ -531,19 +403,6 @@ def attr():
 					},
 					'password'	:	{
 						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
@@ -560,13 +419,13 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage a python virtualenv
-	
+
 ### Parameters
 
 *   **path** (*required*): the environment path
 
 *   **python** (*optional*): the python interpreter to use
-		
+
 		Note:
 			python2.5 will use the python2.5 interpreter to create the new environment.
 			The default is the interpreter that virtualenv was installed with
@@ -647,7 +506,7 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
@@ -659,7 +518,7 @@ def attr():
 
 * **deb conf file** (*optional*): the Deb configuration file path
 		/etc/apt/deb.conf
-	
+
 * **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 					''',
 					'cn'	:	''''''
@@ -728,7 +587,7 @@ def attr():
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
@@ -736,7 +595,7 @@ def attr():
 
 * **repo** (*optional*): the repo name, which you want to use for installing the packages
 		epel
-	
+
 * **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 					''',
 					'cn'	:	''''''
@@ -772,8 +631,8 @@ def attr():
 
 *   **name** (*required*): the repo name
 		   epel
- 
-* **content** (*required*): the content of the repo configuration file 
+
+* **content** (*required*): the content of the repo configuration file
 		[10gen]
 		name=10gen Repository
 		baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686
@@ -805,16 +664,16 @@ def attr():
 #### Parameters
 #
 #*   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-#	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on                   
+#	- <***empty***> (*default*): ensure the package is installed. If not, will install the latest version available of all APT repos on
 #	- <***version***>: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 #	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 #	- **removed**: ensure the package is absent
 #	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
-# 
+#
 #
 #* **fromrepo** (*optional*): an repo name, which you want to use for installing the packages
 #		epel
-#	
+#
 #* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 #					''',
 #					'cn'	:	''''''
@@ -849,7 +708,7 @@ def attr():
 #
 #*   **name** (*required*): the repo name
 #		   packman
-# 
+#
 #
 #* **url** (*required*): the repo url
 #		http://ftp.gwdg.de/pub/linux/packman/suse/13.1/
@@ -883,25 +742,25 @@ def attr():
 
 		note:
 			This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified directory itself.
- 
+
 * **user** (*optional*): the user name of the file owner
 		example:
 			root
-	
+
 		note:
 			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **group** (*optional*): the group name of the file owner
 		example:
 			root
-	
+
 		note:
 			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **mode** (*optional*): the directory mode
 		example:
 			0755
-	
+
 		note:
 			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
@@ -959,25 +818,25 @@ def attr():
 
 		note:
 			This state ensures the specifed file is present with correposnding attributes and content. If the directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified file itself.
- 
+
 * **user** (*optional*): the user name of the file owner
 		example:
 			root
-	
+
 		note:
 			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **group** (*optional*): the group name of the file owner
 		example:
 			root
-	
+
 		note:
 			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **mode** (*optional*): the directory mode
 		example:
 			0755
-	
+
 		note:
 			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
@@ -1035,32 +894,32 @@ def attr():
 *   **source** (*required*): the path to link to
 		example:
 			/data/
- 
+
 * **target** (*required*): the path to the symlink
 		example:
 			/mnt/data/
-	
+
 		note:
 			If the target's parent path does not exist, this state will fail.
 
 * **user** (*optional*): the user name of the file owner
 		example:
 			root
-	
+
 		note:
 			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **group** (*optional*): the group name of the file owner
 		example:
 			root
-	
+
 		note:
 			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **mode** (*optional*): the directory mode
 		example:
 			0755
-	
+
 		note:
 			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
@@ -1109,7 +968,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage system service
-	
+
 ### Parameters
 
 *   **name** (*required*): the service name
@@ -1142,7 +1001,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage supervisord service
-	
+
 ### Parameters
 
 *   **name** (*required*): the service name
@@ -1186,7 +1045,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage cron jobs
-	
+
 ### Parameters
 
 *   **user** (*optional*): the user to execute the cron job, by default: root
@@ -1251,14 +1110,14 @@ def attr():
 #					'en'	:	'''
 #### Description
 #	manage the filesystem
-#	
+#
 #### Parameters
 #
 #*   **dev** (*required*): the device name
 #		example:
 #			/dev/sda1
 #
-#*   **filesystem** (*required*): the filesystem type of the device    
+#*   **filesystem** (*required*): the filesystem type of the device
 #
 #*   **force** (*optional*): forcefully create the new filesystem, even if there is already one on the specified device, by default *False*
 #
@@ -1298,7 +1157,7 @@ def attr():
 #					'en'	:	'''
 #### Description
 #	manage /etc/hosts
-#	
+#
 #### Parameters
 #
 #*   **ip** (*required*): the IP address
@@ -1349,7 +1208,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage mount points (/etc/fstab)
-	
+
 ### Parameters
 
 *   **path** (*required*): the path of the mount point
@@ -1407,7 +1266,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	execute a shell command
-	
+
 ### Parameters
 
 *   **cmd** (*required*): the command to execute
@@ -1460,18 +1319,18 @@ def attr():
 					'timeout'	:	{
 						'type'		:	'line',
 						'default'	:	600,
-						'required'	:	True
+						'required'	:	False
 					},
 					'env'		:	{
 						'type'		:	'dict',
 						'required'	:	False
 					},
-					'with_path'	:	{
+					'if path present'	:	{
 						'type'		:	'line',
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'without_path'	:	{
+					'if path absent'	:	{
 						'type'		:	'line',
 						'required'	:	False,
 						'visible'	:	True
@@ -1485,12 +1344,12 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage a user
-	
+
 ### Parameters
 
 *   **username** (*required*): the user name
 
-*   **password** (*required*): the encrypted value of the password
+*   **password** (*required*): the encrypted password
 		note:
 			use "openssl passwd -salt <salt> -1 <plaintext>" to generate the passworld hash
 
@@ -1558,7 +1417,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage a group
-	
+
 ### Parameters
 
 *   **groupname** (*required*): the group name
@@ -1593,7 +1452,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage LVM physical volume (PV)
-	
+
 ### Parameters
 
 *   **path** (*required*): the path of the device or partition
@@ -1604,14 +1463,14 @@ def attr():
 *   **force** (*optional*): force to create the PV without any confirmation, by default ***False***
 
 		Note:
-			You can not recreate (reinitialize) a PV belonging to an existing volume group. 
+			You can not recreate (reinitialize) a PV belonging to an existing volume group.
 
 
 *   **uuid** (*optional*): specify the uuid for the device
 
 		Note:
 			Without this option, a random uuid will be generated. All of your PVs must have unique uuids. You need to use
-			this option before restoring a backup of LVM metadata onto a replacement device - see vgcfgrestore(8). As such, 
+			this option before restoring a backup of LVM metadata onto a replacement device - see vgcfgrestore(8). As such,
 			use of ***restore file is compulsory unless the norestorefile is used.
 
 
@@ -1785,7 +1644,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage LVM volume group (VG)
-	
+
 ### Parameters
 
 
@@ -1801,7 +1660,7 @@ def attr():
 		Note:
 			If the new VG is shared with other nodes in the cluster, need to enable this option
 			If the new VG contains only local disks that are not visible on the other nodes, this option must be turned off
-			If the cluster infrastructure is unavailable on a particular node at a particular time, you may still be able to 
+			If the cluster infrastructure is unavailable on a particular node at a particular time, you may still be able to
 			use such VGs
 
 *   **max LV number** (*optional*): specify the maximum number of LVs allowed in this VG
@@ -1873,7 +1732,7 @@ def attr():
 		Note:
 			You are strongly advised not to  disable  this! See vgcfgbackup(8)
 
-*   **tag** (*optional*): add the tag to this VG 
+*   **tag** (*optional*): add the tag to this VG
 
 		Note:
 			A tag is a
@@ -1984,7 +1843,7 @@ def attr():
 					'en'	:	'''
 ### Description
 	manage LVM logical volume (LV)
-	
+
 ### Parameters
 
 *   **path** (*required*): a list of block special devices
@@ -2046,7 +1905,7 @@ def attr():
 
 		Example:
 			ignore, nopassdown, passdown
-			  
+
 
 *   **stripe number** (*optional*): specify the number of stripes
 
@@ -2085,7 +1944,7 @@ def attr():
 *   **persistent** (*optional*): whether to make the minor number specified persistent, by default ***False***
 
 		Note:
-			Set to y to 
+			Set to y to
 
 *   **mirror number** (*optional*): Create a mirrored LV with this number of copies
 
@@ -2206,7 +2065,7 @@ def attr():
 			  is available for the desired type, as is the  case  with  error,
 			  zero, raid1, raid4, raid5 or raid6
 
-*   **virtual size** (*optional*): Create  a  sparse  device  of  the given size (in MB by default) using a snapshot or thinly provisioned device when thin pool  is specified.  
+*   **virtual size** (*optional*): Create  a  sparse  device  of  the given size (in MB by default) using a snapshot or thinly provisioned device when thin pool  is specified.
 
 		Note:
 			Anything written to the device will be returned when
@@ -2233,7 +2092,7 @@ def attr():
 		Note:
 			You are strongly advised not to  disable  this! See vgcfgbackup(8)
 
-*   **tag** (*optional*): add the tag to this VG 
+*   **tag** (*optional*): add the tag to this VG
 
 		Note:
 			A tag is a
@@ -2424,4 +2283,4 @@ import json
 a=json.dumps(attr())
 with open('module.json', 'w+') as f:
 	f.write(a)
- 
+

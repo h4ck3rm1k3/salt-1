@@ -57,7 +57,7 @@ def pv_present(name, **kwargs):
         ret['result'] = None
         return ret
     else:
-        changes = __salt__['lvm.pvcreate'](name, state_ret=ret)
+        changes = __salt__['lvm.pvcreate'](name, kwargs=kwargs, state_ret=ret)
 
         if __salt__['lvm.pvdisplay'](name):
             ret['comment'] = 'Created Physical Volume {0}'.format(name)
@@ -95,7 +95,7 @@ def vg_present(name, devices=None, **kwargs):
         ret['result'] = None
         return ret
     else:
-        changes = __salt__['lvm.vgcreate'](name, devices, state_ret=ret, **kwargs)
+        changes = __salt__['lvm.vgcreate'](name, devices, kwargs=kwargs, state_ret=ret)
 
         if __salt__['lvm.vgdisplay'](name):
             ret['comment'] = 'Created Volume Group {0}'.format(name)
@@ -137,7 +137,7 @@ def vg_absent(name):
     return ret
 
 
-def lv_present(name, vgname=None, size=None, extents=None, pv=''):
+def lv_present(name, vgname=None, size=None, extents=None, pv='', **kwargs):
     '''
     Create a new logical volume
 
@@ -155,6 +155,10 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
 
     pv
         The physical volume to use
+
+    kwargs
+        Any supported options to lvcreate. See
+        :mod:`linux_lvm <salt.modules.linux_lvm>` for more details.
     '''
     ret = {'changes': {},
            'comment': '',
@@ -174,7 +178,8 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
                                            vgname,
                                            size=size,
                                            extents=extents,
-                                           pv=pv, 
+                                           pv=pv,
+                                           kwargs=kwargs,
                                            state_ret=ret)
 
         if __salt__['lvm.lvdisplay'](lvpath):

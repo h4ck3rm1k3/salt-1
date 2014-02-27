@@ -120,7 +120,7 @@ def mounted(name,
             ret['comment'] = '{0} would be mounted'.format(name)
             return ret
 
-        out = __salt__['mount.mount'](name, device, mkmnt, fstype, opts, state_ret)
+        out = __salt__['mount.mount'](name, device, mkmnt, fstype, opts, state_ret=ret)
         active = __salt__['mount.active']()
         if isinstance(out, string_types):
             # Failed to (re)mount, the state has failed!s
