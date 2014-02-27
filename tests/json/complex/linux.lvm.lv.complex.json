@@ -51,7 +51,7 @@
                         "name": "lvtest",
                         "VG name": "vgtest",
                         "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"]
+                        "path": ["/dev/sdb1", "/dev/sdb2"]
                     }
                 },
                 {
@@ -78,7 +78,7 @@
                         "name": "lvtest",
                         "VG name": "vgtest",
                         "LE number": "500",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"]
+                        "path": ["/dev/sdb1", "/dev/sdb2"]
                     }
                 },
                 {
@@ -105,12 +105,15 @@
                         "name": "lvtest",
                         "VG name": "vgtest",
                         "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "path": ["/dev/sdb1", "/dev/sdb2"],
                         "contiguous": "n",
                         "monitor": "y",
                         "permission": "rw",
                         "readahead": "auto",
-                        "zero": "y"
+                        "zero": "y",
+                        "available": "y",
+                        "autobackup": "y",
+                        "tag": "lvtag"
                     }
                 },
                 {
@@ -129,7 +132,7 @@
                         "name": "lvtest",
                         "VG name": "vgtest",
                         "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "path": ["/dev/sdb1", "/dev/sdb2"],
                         "contiguous": "n",
                         "stripe number": 2,
                         "stripe size": 64
@@ -151,7 +154,7 @@
                         "name": "lvtest",
                         "VG name": "vgtest",
                         "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "path": ["/dev/sdb1", "/dev/sdb2"],
                         "contiguous": "n",
                         "mirror number": 1,
                         "persistent": "n"
@@ -166,30 +169,48 @@
                     }
                 },
                 {
-                    "_": "18 [test6]  pool logical volume  - True",
+                    "_": "18 [test6] create pool logical volume  - True",
                     "id": "state-00B25365-0991-4664-92D2-36041D87D68D",
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
                         "VG name": "vgtest",
                         "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "path": ["/dev/sdb1", "/dev/sdb2"],
                         "contiguous": "n",
                         "stripe number": 2,
                         "stripe size": 64,
                         "thinpool": "vgtest/pool",
-                        "virtual size": "1G",
                         "type": "thin",
                         "pool metadata size": "4M",
                         "monitor": "y"
                     }
                 },
                 {
-                    "_": "19 [test6] remove lv - True",
-                    "id": "state-BF6E489C-DCB5-4212-B21B-0FF07BBF46A7",
+                    "_": "19 [test6] assert lv existed  - True",
+                    "id": "state-5660D170-43FC-4691-9463-7B4BA68BC6DB",
                     "module": "linux.cmd",
                     "parameter": {
-                        "cmd": "lvremove -f vgtest/pool"
+                        "cmd": "lvs | grep lvtest"
+                    }
+                },
+                {
+                    "_": "20 [test7] create snapshot - True",
+                    "id": "state-BF6E489C-DCB5-4212-B21B-0FF07BBF46A7",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "sstest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "snapshot": "lvtest"
+                    }
+                }
+                {
+                    "_": "21 [test7] assert lv existed  - True",
+                    "id": "state-5660D170-43FC-4691-9463-7B4BA68BC6DB",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvs | grep sstest"
                     }
                 }
             ]

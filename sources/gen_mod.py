@@ -1846,19 +1846,21 @@ def attr():
 
 ### Parameters
 
-*   **path** (*required*): a list of block special devices
+*   **name** (*required*): specify the name of the new LV
+
+		Note:
+			Without this option a default names of "lvol#" will be generated where # is the LVM internal number of the logical volume
+
+*	**VG name** (*required*): specify the volume group name which the new LV created from
+
+*   **path** (*optional*): a list of physical volume path
 
 		Example:
-			/dev/sdk1, /dev/sdl1
+			/dev/sdk1, /dev/sdk2
 
 		Note:
 		VolumeGroup{Name|Path}[/ThinPoolLogicalVolumeName]
 	   [PhysicalVolumePath[:PE[-PE]]...]
-
-*   **name** (*optional*): specify the name of the new LV
-
-		Note:
-			Without this option a default names of "lvol#" will be generated where # is the LVM internal number of the logical volume
 
 *   **available** (*optional*): specify the name of the new LV
 
@@ -2141,14 +2143,18 @@ def attr():
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'path'		:	{
-						'type'		:	'array',
-						'required'	:	True,
-						'visible'	:	True
-					},
 					'name'		:	{
 						'type'		:	'line',
-						'required'	:	False
+						'required'	:	True
+					},
+					'VG name'	:	{
+						'type'		:	'line',
+						'required'	:	True
+					},
+					'path'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'available'		:	{
 						'type'		:	'line',
