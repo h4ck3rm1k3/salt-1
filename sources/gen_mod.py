@@ -31,8 +31,8 @@ def attr():
 
 *   **state** (*required*): one or multiple remote states to be waited
 		example:
-			single - @hostname.state_id
-			barrier - @host1.state_1, @host2.state_2
+			single - @{hostname.state.1}
+			barrier - @{host1.state.1, @host2.state.2}
 					''',
 					'cn'	:	''''''
 				},

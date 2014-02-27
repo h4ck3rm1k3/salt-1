@@ -67,6 +67,50 @@ def _run_svn(cmd, cwd, user, username, password, opts, **kwargs):
         cmd += subprocess.list2cmdline(opts)
 
     result = __salt__['cmd.run_stdall'](cmd, cwd=cwd, runas=user, **kwargs)
+
+    retcode = result['retcode']
+
+    if retcode == 0:
+        return result['stdout']
+    raise exceptions.CommandExecutionError(result['stdout'] + '\n\n' + cmd)
+
+def _run_svn_stdall(cmd, cwd, user, username, password, opts, **kwargs):
+    '''
+    Execute svn
+    return the output of the command
+
+    cmd
+        The command to run.
+
+    cwd
+        The path to the Subversion repository
+
+    user
+        Run svn as a user other than what the minion runs as
+
+    username
+        Connect to the Subversion server as another user
+
+    password
+        Connect to the Subversion server with this password
+
+        .. versionadded:: 0.17.0
+
+    opts
+        Any additional options to add to the command line
+
+    kwargs
+        Additional options to pass to the run-cmd
+    '''
+    cmd = 'svn --non-interactive {0} '.format(cmd)
+    if username:
+        opts += ('--username', username)
+    if password:
+        opts += ('--password', password)
+    if opts:
+        cmd += subprocess.list2cmdline(opts)
+
+    result = __salt__['cmd.run_stdall'](cmd, cwd=cwd, runas=user, **kwargs)
     state_std(kwargs, result)
 
     retcode = result['retcode']
@@ -211,7 +255,7 @@ def switch(cwd, remote, target=None, user=None, username=None,
     opts += (remote,)
     if target:
         opts += (target,)
-    return _run_svn('switch', cwd, user, username, password, opts, **kwargs)
+    return _run_svn_stdall('switch', cwd, user, username, password, opts, **kwargs)
 
 
 def update(cwd, targets=None, user=None, username=None, password=None, *opts, **kwargs):
@@ -245,7 +289,7 @@ def update(cwd, targets=None, user=None, username=None, password=None, *opts, **
     '''
     if targets:
         opts += tuple(shlex.split(targets))
-    return _run_svn('update', cwd, user, username, password, opts, **kwargs)
+    return _run_svn_stdall('update', cwd, user, username, password, opts, **kwargs)
 
 
 def diff(cwd, targets=None, user=None, username=None, password=None, *opts, **kwargs):
@@ -324,7 +368,7 @@ def commit(cwd,
         opts += ('-m', msg)
     if targets:
         opts += tuple(shlex.split(targets))
-    return _run_svn('commit', cwd, user, username, password, opts, **kwargs)
+    return _run_svn_stdall('commit', cwd, user, username, password, opts, **kwargs)
 
 
 def add(cwd, targets, user=None, username=None, password=None, *opts, **kwargs):
@@ -356,7 +400,7 @@ def add(cwd, targets, user=None, username=None, password=None, *opts, **kwargs):
     '''
     if targets:
         opts += tuple(shlex.split(targets))
-    return _run_svn('add', cwd, user, username, password, opts, **kwargs)
+    return _run_svn_stdall('add', cwd, user, username, password, opts, **kwargs)
 
 
 def remove(cwd,
@@ -399,7 +443,7 @@ def remove(cwd,
         opts += ('-m', msg)
     if targets:
         opts += tuple(shlex.split(targets))
-    return _run_svn('remove', cwd, user, username, password, opts, **kwargs)
+    return _run_svn_stdall('remove', cwd, user, username, password, opts, **kwargs)
 
 
 def status(cwd, targets=None, user=None, username=None, password=None, *opts, **kwargs):
@@ -476,4 +520,4 @@ def export(cwd,
     opts += (remote,)
     if target:
         opts += (target,)
-    return _run_svn('export', cwd, user, username, password, opts, **kwargs)
+    return _run_svn_stdall('export', cwd, user, username, password, opts, **kwargs)
