@@ -137,12 +137,12 @@ class StateAdaptor(object):
 		## scm
 		'common.git' : {
 			'attributes' : {
-				'repo'		: 'name',
-				'branch'	: 'branch',
-				'version'	: 'rev',
-				'ssh key'	: 'identity',
 				'path'		: 'target',
-				'user'		: 'user',
+				'repo'		: 'name',
+				# 'branch'	: 'branch',
+				'revision'	: 'rev',
+				'ssh key'	: 'identity',
+				# 'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -150,26 +150,27 @@ class StateAdaptor(object):
 			],
 			'type' : 'git',
 			'require' : {
+				'linux.apt.package' : { 'name' : ['git'] },
 				'linux.yum.package' : { 'name' : ['git'] }
 			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode',
-				}
-			}
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode',
+			# 	}
+			# }
 		},
 		'common.svn' : {
 			'attributes' : {
+				'path'		: 'target',
 				'repo'		: 'name',
-				'branch'	: 'branch',
+				# 'branch'	: 'branch',
 				'revision'	: 'rev',
 				'username'	: 'username',
 				'password'	: 'password',
-				'path'		: 'target',
-				'user'		: 'user',
+				# 'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -177,25 +178,26 @@ class StateAdaptor(object):
 			],
 			'type' : 'svn',
 			'require' : {
+				'linux.apt.package' : { 'name' : ['subversion'] },
 				'linux.yum.package' : { 'name' : ['subversion'] }
 			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode'
-				}
-			},
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode'
+			# 	}
+			# },
 		},
 		'common.hg' : {
 			'attributes' : {
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'revision'	: 'rev',
-				#'ssh key'	: '',
+				# 'ssh key'	: '',
 				'path'		: 'target',
-				'user'		: 'user',
+				# 'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -203,16 +205,17 @@ class StateAdaptor(object):
 			],
 			'type' : 'hg',
 			'require' : {
+				'linux.apt.package' : { 'name' : ['mercurial'] },
 				'linux.yum.package' : { 'name' : ['mercurial'] }
 			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode'
-				}
-			},
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode'
+			# 	}
+			# },
 		},
 
 		## path
