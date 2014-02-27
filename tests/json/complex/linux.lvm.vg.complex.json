@@ -71,7 +71,11 @@
                         "path": [
                             "/dev/sdb1",
                             "/dev/sdb2"
-                        ]
+                        ],
+                        "metadata type": "lvm2",
+                        "autobackup": "y",
+                        "tag": "vgtag",
+                        "allocation policy": "contiguous"
                     }
                 },
                 {

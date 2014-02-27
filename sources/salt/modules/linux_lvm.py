@@ -225,7 +225,8 @@ def vgcreate(vgname, devices, **kwargs):
     for device in devices.split(','):
         cmd += ' {0}'.format(device)
     valid = ('clustered', 'maxlogicalvolumes', 'maxphysicalvolumes',
-             'vgmetadatacopies', 'metadatacopies', 'physicalextentsize')
+             'vgmetadatacopies', 'metadatacopies', 'physicalextentsize',
+             'metadatatype', 'autobackup', 'addtag', 'alloc')
     for var in kwargs['kwargs'].keys():
         if kwargs['kwargs'][var] and var in valid:
             cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
