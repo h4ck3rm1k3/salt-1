@@ -1,0 +1,198 @@
+{
+    "component": {
+        "init": {
+            "state": [
+                {
+                    "_": "1 [prepare] remove lv  - True|False",
+                    "id": "state-B7C928A5-78EF-4AA3-ACFD-8DC1840213BC",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "2 [prepare] remove vg  - True|False",
+                    "id": "state-01503C2E-57D9-4DAC-BE95-33CC8A47F40E",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "vgremove -f vgtest"
+                    }
+                },
+                {
+                    "_": "3 [prepare] remove pv  - True|False",
+                    "id": "state-960FDF91-C1DC-47A5-8B6E-32094DAD5A33",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "pvremove -f /dev/sdb1 /dev/sdb2"
+                    }
+                },
+                {
+                    "_": "4 [prepare] create pv  - True",
+                    "id": "state-4898B633-A457-438E-B473-842BA868B00D",
+                    "module": "linux.lvm.pv",
+                    "parameter": {
+                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                    }
+                },
+                {
+                    "_": "5 [prepare] create vg  - True",
+                    "id": "state-B71C85F2-2B54-448F-BA04-C9210A9A1025",
+                    "module": "linux.lvm.vg",
+                    "parameter": {
+                        "name": "vgtest",
+                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                    }
+                },
+                {
+                    "_": "6 [test1] lv required parameters test(specify lv size)  - True",
+                    "id": "state-F47231E2-A274-4AAB-B7A3-F1AC8094FCB9",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"]
+                    }
+                },
+                {
+                    "_": "7 [test1] assert lv existed  - True",
+                    "id": "state-5660D170-43FC-4691-9463-7B4BA68BC6DB",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvs | grep lvtest"
+                    }
+                },
+                {
+                    "_": "8 [test1] remove lv - True",
+                    "id": "state-B6F8712B-9357-4361-B463-37110262E73A",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "9 [test2] lv required parameters test(specify extents)  - True",
+                    "id": "state-4DA7F399-7A1A-4107-BE44-FF9E17C6B12F",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LE number": "500",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"]
+                    }
+                },
+                {
+                    "_": "10 [test2] assert lv existed  - True",
+                    "id": "state-621D8A45-FFDB-49CC-9042-DC22F358E2E7",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvs | grep lvtest"
+                    }
+                },
+                {
+                    "_": "11 [test2] remove lv - True",
+                    "id": "state-97C6E3E8-AEC9-4B71-AF7F-AF7EB0D54F5E",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "12 [test3] creat linear volumes  - True",
+                    "id": "state-888FD4B0-8894-43AE-95C5-A7AC3DD15E88",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "contiguous": "n",
+                        "monitor": "y",
+                        "permission": "rw",
+                        "readahead": "auto",
+                        "zero": "y"
+                    }
+                },
+                {
+                    "_": "13 [test3] remove lv - True",
+                    "id": "state-2E254AA8-25B1-4B50-9A92-FD840DBE765C",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "14 [test4] creat striped volumes  - True",
+                    "id": "state-721791BB-59C2-45CF-8900-2B8C3257E1D0",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "contiguous": "n",
+                        "stripe number": 2,
+                        "stripe size": 64
+                    }
+                },
+                {
+                    "_": "15 [test4] remove lv - True",
+                    "id": "state-B855D31B-CC49-4306-9AC8-499C935466F1",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "16 [test5] creat mirrored volumes  - True",
+                    "id": "state-77736AB4-5A5D-4E6A-8470-19E6EA36EC67",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "contiguous": "n",
+                        "mirror number": 1,
+                        "persistent": "n"
+                    }
+                },
+                {
+                    "_": "17 [test5] remove lv - True",
+                    "id": "state-3D1AD8D7-4BCD-45DD-8DD6-A7FA6F72A816",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "18 [test6]  pool logical volume  - True",
+                    "id": "state-00B25365-0991-4664-92D2-36041D87D68D",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "contiguous": "n",
+                        "stripe number": 2,
+                        "stripe size": 64,
+                        "thinpool": "vgtest/pool",
+                        "virtual size": "1G",
+                        "type": "thin",
+                        "pool metadata size": "4M",
+                        "monitor": "y"
+                    }
+                },
+                {
+                    "_": "19 [test6] remove lv - True",
+                    "id": "state-BF6E489C-DCB5-4212-B21B-0FF07BBF46A7",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/pool"
+                    }
+                }
+            ]
+        }
+    }
+}

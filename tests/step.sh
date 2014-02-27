@@ -65,17 +65,23 @@ function show_module_list(){
 
 
 function show_json(){
-  CLI=`which underscore| wc -l`
-  if [ ${CLI} -eq 1 ]
+  
+  if [ `which underscore| wc -l` -eq 1 ]
   then
     echo "###################################"
     echo "pretty json"
     echo "###################################"
-    cat $1 | underscore print --outfmt pretty | colout "True|False" red
+    if [ `which colout| wc -l` -eq 1 ]
+    then
+      cat $1 | underscore print --outfmt pretty | colout "True|False" red
+    else
+      cat $1 | underscore print --outfmt pretty
+    fi
   else
     install_underscore_cli
     cat $1
   fi
+
 }
 
 function install_underscore_cli(){
@@ -87,14 +93,15 @@ function install_underscore_cli(){
 }
 
 function show_result(){
-  CLI=`which colout| wc -l`
-  if [ ${CLI} -eq 1 ]
+
+  if [ `which colout| wc -l` -eq 1 ]
   then
     $1 $2 | colout "True|False" red
   else
     install_colout
     $1 $2
   fi
+
 }
 
 function install_colout(){
@@ -117,7 +124,7 @@ function do_module_test(){
         cp json/${JSON_TYPE}/${line}.json ./state.json
         show_json json/${JSON_TYPE}/${line}.json
         echo "- result ---------------------------------------"
-	show_result "${PY_BIN}" "${EXE_BIN}"
+        show_result "${PY_BIN}" "${EXE_BIN}"
       else
         echo "!!! can not found json/${JSON_TYPE}/${line}.json !!!"
       fi

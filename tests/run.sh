@@ -72,7 +72,7 @@ function do_all_module_test(){
 
     if [ -f json/${JSON_TYPE}/${line}.json ]
     then
-      cp json/${JSON_TYPE}/${line}.json ${BASE_DIR}/api.json
+      cp json/${JSON_TYPE}/${line}.json ./state.json
       ${PY_BIN} ${EXE_BIN} 1>./log/${JSON_TYPE}/${line}.out 2>./log/${JSON_TYPE}/${line}.err
     
       END_TIME=`date '+%s'`

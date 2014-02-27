@@ -423,13 +423,13 @@ class StateAdaptor(object):
 		'linux.lvm.pv'	: {
 			'attributes' : {
 				'path'					: 'names',
-				# 'force'					: '',
-				# 'uuid'					: '',
-				# 'zero'					: '',
+				'force'					: 'force',
+				'uuid'					: 'uuid',
+				'zero'					: 'zero',
 				'data alignment'		: 'dataalignment',
 				'data alignment offset'	: 'dataalignmentoffset',
 				'metadata size'			: 'metadatasize',
-				# 'metadata type'			: '',
+				'metadata type'			: 'metadatatype',
 				'metadata copies'		: 'metadatacopies',
 				'metadata ignore'		: 'metadataignore',
 				'restorefile'			: 'restorefile',
@@ -442,25 +442,26 @@ class StateAdaptor(object):
 		},
 		'linux.lvm.vg'	: {
 			'attributes' : {
-				'name'	: 'name',
-				'path' 	: 'devices',
-				'clustered'	: 'clustered',
-				'max LV number'	: 'maxlogicalvolumes',
-				'max PV number'	: 'maxphysicalvolumes',
-				# 'metadata type'	: '',
+				'name'				: 'name',
+				'path' 				: 'devices',
+				'clustered'			: 'clustered',
+				'max LV number'		: 'maxlogicalvolumes',
+				'max PV number'		: 'maxphysicalvolumes',
+				'metadata type'		: 'metadatatype',
 				'metadata copies'	: 'metadatacopies',
-				'PE size'	: 'physicalextentsize',
-				# 'autobackup'	: '',
-				# 'tag'	: '',
-				# 'allocation policy'	:	'',
+				'PE size'			: 'physicalextentsize',
+				'autobackup'		: 'autobackup',
+				'tag'				: 'addtag',
+				'allocation policy'	: 'alloc',
 			},
 			'states' : ['vg_present', 'vg_absent'],
 			'type' : 'lvm'
 		},
 		'linux.lvm.lv'	: {
 			'attributes'	: {
-				'path'				: 'pv',
 				'name'				: 'name',
+				'VG name'			: 'vgname',
+				'PV'				: 'pv',
 				# 'available'			: '',
 				'chunk size'		: 'chunksize',
 				'contiguous'		: 'contiguous',
@@ -581,7 +582,7 @@ class StateAdaptor(object):
 		except StateException, e:
 			import json
 			utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
-				(step, module, json.dumps(parameter), os_type), ("convert", self))
+				(step, module, json.dumps(parameter), os_type, str(e)), ("convert", self))
 			return None
 		except Exception, e:
 			utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
@@ -886,9 +887,11 @@ class StateAdaptor(object):
 					'contents' 	: addin['contents']
 				}
 
-			elif module in ['linux.lvm.vg']:
+			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
 					addin['devices'] = ','.join(addin['devices'])
+				if 'pv' in addin and isinstance(addin['pv'], list):
+					addin['pv'] = ','.join(addin['pv'])
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
 
@@ -974,7 +977,7 @@ class StateAdaptor(object):
 		require_state = {}
 
 		try:
-			for module, parameter in require.iteritems():
+			for module, parameter in require.items():
 				if module not in self.mod_map.keys():	continue
 
 				# filter not current platform's package module
@@ -982,35 +985,11 @@ class StateAdaptor(object):
 
 				the_require_state = self.__salt('require', module, parameter)
 
-				if 'require' in parameter.keys():
-					re_require_state = self.__get_require(parameter['require'])
-
-					if re_require_state:
-						# add requirity relation
-						for tag, state in the_require_state.iteritems():
-							for module, chunk in state.iteritems():
-								req_list = None
-								for item in chunk:
-									if isinstance(item, dict) and 'require' in item.keys():
-										req_list = item
-
-								if not req_list:
-									req_list = { 'require' : [] }
-									chunk.append(req_list)
-
-								for re_req_tag, re_req_value in re_require_state.iteritems():
-									req_list['require'].append({next(iter(re_req_value)):re_req_tag})
-
-						the_require_state
-
-						# update dict
-						require_state.update(re_require_state)
+				if the_require_state:
+					require_state.update(the_require_state)
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt requisities exception: %s" % str(e), ("__get_require", self))
 			raise StateException(str(e))
-
-		if the_require_state:
-			require_state.update(the_require_state)
 
 		return require_state
 
@@ -1033,7 +1012,7 @@ class StateAdaptor(object):
 
 					if k in parameter:
 						req_addin[v] = parameter[k]
-					else:
+					elif k.find('$')>=0:
 						str_list = k.split()
 						for idx, w in enumerate(str_list):
 							if w.startswith('$'):
@@ -1041,18 +1020,18 @@ class StateAdaptor(object):
 
 						req_addin[v] = ' '.join(str_list)
 
-				#addin = self.__init_addin(module, req_p)
-				state = self.mod_map[module]['states'][0]
-				stype = self.mod_map[module]['type']
+				if req_addin:
+					state = self.mod_map[module]['states'][0]
+					stype = self.mod_map[module]['type']
 
-				tag = self.__get_tag(module, None, None, 'require_in', state)
+					tag = self.__get_tag(module, None, None, 'require_in', state)
 
-				require_in_state[tag] = {
-					stype : [
-						state,
-						req_addin
-					]
-				}
+					require_in_state[tag] = {
+						stype : [
+							state,
+							req_addin
+						]
+					}
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt require in exception: %s" % str(e), ("__get_require_in", self))
 			raise StateException(str(e))

@@ -195,12 +195,14 @@ def pvcreate(devices, **kwargs):
     valid = ('metadatasize', 'dataalignment', 'dataalignmentoffset',
              'pvmetadatacopies', 'metadatacopies', 'metadataignore',
              'restorefile', 'norestorefile', 'labelsector',
-             'setphysicalvolumesize')
+             'setphysicalvolumesize', 'force', 'uuid', 'zero', 'metadatatype')
     for var in kwargs['kwargs'].keys():
         if kwargs['kwargs'][var] and var in valid:
             cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
+    if result['retcode'] != 0:
+        return result['stderr']
     out = result['stdout'].splitlines()
     return out[0]
 
@@ -223,12 +225,15 @@ def vgcreate(vgname, devices, **kwargs):
     for device in devices.split(','):
         cmd += ' {0}'.format(device)
     valid = ('clustered', 'maxlogicalvolumes', 'maxphysicalvolumes',
-             'vgmetadatacopies', 'metadatacopies', 'physicalextentsize')
+             'vgmetadatacopies', 'metadatacopies', 'physicalextentsize',
+             'metadatatype', 'autobackup', 'addtag', 'alloc')
     for var in kwargs['kwargs'].keys():
         if kwargs['kwargs'][var] and var in valid:
             cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
+    if result['retcode'] != 0:
+        return result['stderr']
     out = result['stdout'].splitlines()
     vgdata = vgdisplay(vgname)
     vgdata['Output from vgcreate'] = out[0].strip()
@@ -260,9 +265,8 @@ def lvcreate(lvname, vgname, size=None, extents=None, pv='', **kwargs):
         for k, v in kwargs['kwargs'].iteritems() if k in valid
     ])
 
-    if snapshot:
-        vgname = '-s ' + vgname + '/' + snapshot
-
+    if pv:
+        pv = ' '.join(pv.split(','))
     if size:
         cmd = 'lvcreate -n {0} {1} -L {2} {3} {4}'.format(lvname, vgname, size, extra_arguments, pv)
     elif extents:
@@ -271,6 +275,8 @@ def lvcreate(lvname, vgname, size=None, extents=None, pv='', **kwargs):
         return 'Error: Either size or extents must be specified'
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
+    if result['retcode'] != 0:
+        return result['stderr']
     out = result['stdout'].splitlines()
     lvdev = '/dev/{0}/{1}'.format(vgname, lvname)
     lvdata = lvdisplay(lvdev)
