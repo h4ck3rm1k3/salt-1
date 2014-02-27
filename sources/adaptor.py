@@ -423,13 +423,13 @@ class StateAdaptor(object):
 		'linux.lvm.pv'	: {
 			'attributes' : {
 				'path'					: 'names',
-				# 'force'					: '',
-				# 'uuid'					: '',
-				# 'zero'					: '',
+				'force'					: 'force',
+				'uuid'					: 'uuid',
+				'zero'					: 'zero',
 				'data alignment'		: 'dataalignment',
 				'data alignment offset'	: 'dataalignmentoffset',
 				'metadata size'			: 'metadatasize',
-				# 'metadata type'			: '',
+				'metadata type'			: 'metadatatype',
 				'metadata copies'		: 'metadatacopies',
 				'metadata ignore'		: 'metadataignore',
 				'restorefile'			: 'restorefile',

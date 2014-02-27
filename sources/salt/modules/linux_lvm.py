@@ -195,7 +195,7 @@ def pvcreate(devices, **kwargs):
     valid = ('metadatasize', 'dataalignment', 'dataalignmentoffset',
              'pvmetadatacopies', 'metadatacopies', 'metadataignore',
              'restorefile', 'norestorefile', 'labelsector',
-             'setphysicalvolumesize')
+             'setphysicalvolumesize', 'force', 'uuid', 'zero', 'metadatatype')
     for var in kwargs['kwargs'].keys():
         if kwargs['kwargs'][var] and var in valid:
             cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
