@@ -63,7 +63,7 @@
                     }
                 },
                 {
-                    "_": "8 [test2] remove lv - True",
+                    "_": "8 [test1] remove lv - True",
                     "id": "state-B6F8712B-9357-4361-B463-37110262E73A",
                     "module": "linux.cmd",
                     "parameter": {
@@ -71,7 +71,7 @@
                     }
                 },
                 {
-                    "_": "9 [test3] lv required parameters test(specify extents)  - True",
+                    "_": "9 [test2] lv required parameters test(specify extents)  - True",
                     "id": "state-4DA7F399-7A1A-4107-BE44-FF9E17C6B12F",
                     "module": "linux.lvm.lv",
                     "parameter": {
@@ -82,7 +82,7 @@
                     }
                 },
                 {
-                    "_": "10 [test3] assert lv existed  - True",
+                    "_": "10 [test2] assert lv existed  - True",
                     "id": "state-621D8A45-FFDB-49CC-9042-DC22F358E2E7",
                     "module": "linux.cmd",
                     "parameter": {
@@ -90,7 +90,7 @@
                     }
                 },
                 {
-                    "_": "11 [test4] remove lv - True",
+                    "_": "11 [test2] remove lv - True",
                     "id": "state-97C6E3E8-AEC9-4B71-AF7F-AF7EB0D54F5E",
                     "module": "linux.cmd",
                     "parameter": {
@@ -98,7 +98,7 @@
                     }
                 },
                 {
-                    "_": "12 [test5] creat linear volumes  - True",
+                    "_": "12 [test3] creat linear volumes  - True",
                     "id": "state-888FD4B0-8894-43AE-95C5-A7AC3DD15E88",
                     "module": "linux.lvm.lv",
                     "parameter": {
@@ -114,7 +114,7 @@
                     }
                 },
                 {
-                    "_": "13 [test4] remove lv - True",
+                    "_": "13 [test3] remove lv - True",
                     "id": "state-2E254AA8-25B1-4B50-9A92-FD840DBE765C",
                     "module": "linux.cmd",
                     "parameter": {
@@ -122,7 +122,7 @@
                     }
                 },
                 {
-                    "_": "14 [test5] creat striped volumes  - True",
+                    "_": "14 [test4] creat striped volumes  - True",
                     "id": "state-721791BB-59C2-45CF-8900-2B8C3257E1D0",
                     "module": "linux.lvm.lv",
                     "parameter": {
@@ -153,15 +153,43 @@
                         "LV size": "500M",
                         "PV": ["/dev/sdb1", "/dev/sdb2"],
                         "contiguous": "n",
-                        "mirror number": 1
+                        "mirror number": 1,
+                        "persistent": "n"
                     }
                 },
                 {
-                    "_": "17 [test4] remove lv - True",
+                    "_": "17 [test5] remove lv - True",
                     "id": "state-3D1AD8D7-4BCD-45DD-8DD6-A7FA6F72A816",
                     "module": "linux.cmd",
                     "parameter": {
                         "cmd": "lvremove -f vgtest/lvtest"
+                    }
+                },
+                {
+                    "_": "18 [test6]  pool logical volume  - True",
+                    "id": "state-00B25365-0991-4664-92D2-36041D87D68D",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "lvtest",
+                        "VG name": "vgtest",
+                        "LV size": "500M",
+                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "contiguous": "n",
+                        "stripe number": 2,
+                        "stripe size": 64,
+                        "thinpool": "vgtest/pool",
+                        "virtual size": "1G",
+                        "type": "thin",
+                        "pool metadata size": "4M",
+                        "monitor": "y"
+                    }
+                },
+                {
+                    "_": "19 [test6] remove lv - True",
+                    "id": "state-BF6E489C-DCB5-4212-B21B-0FF07BBF46A7",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvremove -f vgtest/pool"
                     }
                 }
             ]
