@@ -269,7 +269,7 @@ class StateAdaptor(object):
 				'config':	'conf_file',
 				#'watch'	:	'',
 			},
-			'states' : ['running'],
+			'states' : ['running', 'mod_watch'],
 			'type' : 'supervisord',
 			'require' : {
 				'common.pip.package' : {
@@ -281,10 +281,10 @@ class StateAdaptor(object):
 		},
 		'linux.service' : {
 			'attributes' : {
-				'name' : 'names',
+				'name' : 'name',
 				# 'watch' : ''
 			},
-			'states' : ['running'],
+			'states' : ['running', 'mod_watch'],
 			'type' : 'service',
 		},
 		# 'linux.systemd' : {
@@ -632,13 +632,9 @@ class StateAdaptor(object):
 
 				## add watch, todo
 				utils.log("DEBUG", "Begin to generate watch ...",("_convert", self))
-				watch = []
-				# if 'watch' in parameter and isinstance(parameter['watch'], list):
-				# 	watch_state = self.__add_watch(parameter['watch'], step)
-				# 	if watch_state:
-				# 		for watch_tag, watch_value in watch_state.iteritems():
-				# 			salt_state[watch_tag] = watch_value
-				# 			watch.append({file:watch_tag})
+				if 'watch' in parameter and parameter['watch']:
+					state = 'mod_watch'
+					addin['full_restart'] = True
 
 				# build up module state
 				module_state = [
@@ -648,7 +644,7 @@ class StateAdaptor(object):
 
 				if require:		module_state.append({ 'require' : require })
 				if require_in:	module_state.append({ 'require_in' : require_in })
-				if watch:		module_state.append({ 'watch' : watch })
+				# if watch:		module_state.append({ 'watch' : watch })
 
 				# tag
 				#name = addin['names'] if 'names' in addin else addin['name']
