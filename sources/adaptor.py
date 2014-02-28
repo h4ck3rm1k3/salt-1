@@ -322,8 +322,8 @@ class StateAdaptor(object):
 				'group'			: 'group',
 				'timeout'		: 'timeout',
 				'env'			: 'env',
-				'with path'		: 'onlyif',
-				'without path'	: 'unless',
+				'if path present'	: 'onlyif',
+				'if path absent'	: 'unless',
 			},
 			'states' : [
 				'run', 'call', 'wait', 'script'
@@ -533,6 +533,7 @@ class StateAdaptor(object):
 			'states' : ['present', 'absent'],
 			'type' : 'ssh_auth'
 		},
+
 		'common.ssh.known_host' : {
 			'attributes' : {
 				'hostname'	:	'name',
@@ -885,15 +886,15 @@ class StateAdaptor(object):
 						except Exception:
 							addin[attr] = 0
 
-			elif module in ['linux.hosts']:
+			# elif module in ['linux.hosts']:
 
-				module_state[default_state] = {
-					'name' 		: '/etc/hosts',
-					'user' 		: 'root',
-					'group' 	: 'root',
-					'mode' 		: '0644',
-					'contents' 	: addin['contents']
-				}
+			# 	module_state[default_state] = {
+			# 		'name' 		: '/etc/hosts',
+			# 		'user' 		: 'root',
+			# 		'group' 	: 'root',
+			# 		'mode' 		: '0644',
+			# 		'contents' 	: addin['contents']
+			# 	}
 
 			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
