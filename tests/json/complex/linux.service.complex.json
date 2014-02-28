@@ -15,9 +15,9 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632ACD",
           "_": "1 [test1] Add on startup - True",
-          "module": "linux.sysvinit",
+          "module": "linux.service",
           "parameter": {
-            "name": "mysqld"
+            "name": ["mysqld"]
           }
         },
         {

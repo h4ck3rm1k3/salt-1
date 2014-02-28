@@ -27,7 +27,7 @@
           "_": "3 [prepare] create/ensure git location directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/git",
+            "path": ["/tmp/git"],
             "absent": false,
             "recursive": true,
             "mode": "0755"

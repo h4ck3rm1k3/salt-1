@@ -27,7 +27,7 @@
           "_": "3 [prepare] create/ensure subversion location directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/svn",
+            "path": ["/tmp/svn"],
             "absent": false,
             "recursive": true,
             "mode": "0755"

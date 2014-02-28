@@ -49,7 +49,7 @@ serverurl=unix:///tmp/supervisor.sock\n\n[program:foo]\ncommand=/usr/local/bin/f
           "id": "state-7E596E8A-17CD-4578-8E85-15D020642ACC",
           "module": "linux.supervisord",
           "parameter": {
-            "name": "foo",
+            "name": ["foo"],
             "config": "/etc/supervisord.conf"
           }
         }

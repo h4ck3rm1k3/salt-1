@@ -6,7 +6,7 @@
           "id": "state-7E596E8A-17CD-4578-8E85-15D020632ACD",
           "module": "linux.supervisord",
           "parameter": {
-            "name": "foo",
+            "name": ["foo"],
             "config": "/tmp/test/supervisord/foo.conf"
           }
         }

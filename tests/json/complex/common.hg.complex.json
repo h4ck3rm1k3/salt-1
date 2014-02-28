@@ -27,7 +27,7 @@
           "_": "3 [prepare] create/ensure mercurial location directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/hg",
+            "path": ["/tmp/hg"],
             "absent": false,
             "recursive": true,
             "mode": "0755"

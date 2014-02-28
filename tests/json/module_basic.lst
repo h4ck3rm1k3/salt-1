@@ -8,7 +8,7 @@
 linux.cmd # run first to prepare test env, all test file will be in /tmp/test/ dir
 linux.user
 linux.group
-linux.cron
+linux.cronjob
 linux.file
 linux.dir
 linux.symlink
@@ -22,6 +22,7 @@ common.hg # -> need to install hg
 common.svn # -> need to install svn
 common.virtualenv # -> create?
 linux.supervisord # -> need to create service
+linux.service
 linux.mount
 linux.lvm.pv # TODO: set right path
 linux.lvm.vg # TODO: set right path
@@ -31,10 +32,7 @@ common.npm.package # -> need to install npm
 common.pip.package # -> need to install pip
 common.gem.package # -> need to install gem
 
-#linux.systemd
-#linux.upstart
-#linux.sysvinit
-
+# TODO
 #linux.hosts
 #linux.hostname
 #linux.fs # Doesn't exists?

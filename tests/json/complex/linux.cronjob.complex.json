@@ -17,9 +17,9 @@
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
           "_": "2 [test1] create crontab with required parameter - True",
-          "module": "linux.cron",
+          "module": "linux.cronjob",
           "parameter": {
-            "cmd": "/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1"
+            "cmd": ["/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1"]
           }
         },
         {
@@ -45,10 +45,10 @@
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324201",
           "_": "5 [test2] create crontab with full parameter - True",
-          "module": "linux.cron",
+          "module": "linux.cronjob",
           "parameter": {
-            "username": "root",
-            "cmd": "/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1",
+            "user": "root",
+            "cmd": ["/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1"],
             "minute": "*/1",
             "hour": "*/2",
             "day of month": "*/3",
@@ -70,7 +70,7 @@
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324300",
           "_": "7 [test3] create crontab with empty cmd parameter - False",
-          "module": "linux.cron",
+          "module": "linux.cronjob",
           "parameter": {
             "cmd": ""
           }
