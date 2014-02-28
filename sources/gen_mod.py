@@ -1124,39 +1124,39 @@ def attr():
 					}
 				}
 			},
-			'crontab'	:	{
-				'module'	:	'linux.crontab',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	manage a crontab file
-
-### Parameters
-
-*   **user** (*required*): the user to execute the cron job, by default: ***root***
-
-*   **content** (*required*): a list of command
-		example:
-			cat /proc/meminfo >> /tmp/meminfo
-			ntpdate  time.apple.com
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'user'	:	{
-						'type'		:	'line',
-						'default'	:	'root',
-						'required'	:	True,
-						'visible'	:	True
-					},
-					'content'	:	{
-						'type'		:	'content',
-						'required'	:	True,
-						'visible'	:	True
-					}
-				}
-			},
+#			'crontab'	:	{
+#				'module'	:	'linux.crontab',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#	manage a crontab file
+#
+#### Parameters
+#
+#*   **user** (*required*): the user to execute the cron job, by default: ***root***
+#
+#*   **content** (*required*): a list of command
+#		example:
+#			cat /proc/meminfo >> /tmp/meminfo
+#			ntpdate  time.apple.com
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'user'	:	{
+#						'type'		:	'line',
+#						'default'	:	'root',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'content'	:	{
+#						'type'		:	'content',
+#						'required'	:	True,
+#						'visible'	:	True
+#					}
+#				}
+#			},
 #			'fs'	:	{
 #				'module'	:	'linux.fs',
 #				'distro'	:	None,
