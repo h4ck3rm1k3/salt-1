@@ -332,7 +332,7 @@ class StateAdaptor(object):
 		},
 
 		## cron
-		'linux.cron' : {
+		'linux.cronjob' : {
 			'attributes' : {
 				'minute'		:	'minute',
 				'hour'			:	'hour',
