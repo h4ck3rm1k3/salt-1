@@ -137,12 +137,12 @@ class StateAdaptor(object):
 		## scm
 		'common.git' : {
 			'attributes' : {
-				'repo'		: 'name',
-				'branch'	: 'branch',
-				'version'	: 'rev',
-				'ssh key'	: 'identity',
 				'path'		: 'target',
-				'user'		: 'user',
+				'repo'		: 'name',
+				# 'branch'	: 'branch',
+				'revision'	: 'rev',
+				'ssh key'	: 'identity',
+				# 'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -150,26 +150,27 @@ class StateAdaptor(object):
 			],
 			'type' : 'git',
 			'require' : {
+				'linux.apt.package' : { 'name' : ['git'] },
 				'linux.yum.package' : { 'name' : ['git'] }
 			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode',
-				}
-			}
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode',
+			# 	}
+			# }
 		},
 		'common.svn' : {
 			'attributes' : {
+				'path'		: 'target',
 				'repo'		: 'name',
-				'branch'	: 'branch',
+				# 'branch'	: 'branch',
 				'revision'	: 'rev',
 				'username'	: 'username',
 				'password'	: 'password',
-				'path'		: 'target',
-				'user'		: 'user',
+				# 'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -177,25 +178,26 @@ class StateAdaptor(object):
 			],
 			'type' : 'svn',
 			'require' : {
+				'linux.apt.package' : { 'name' : ['subversion'] },
 				'linux.yum.package' : { 'name' : ['subversion'] }
 			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode'
-				}
-			},
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode'
+			# 	}
+			# },
 		},
 		'common.hg' : {
 			'attributes' : {
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'revision'	: 'rev',
-				#'ssh key'	: '',
+				# 'ssh key'	: '',
 				'path'		: 'target',
-				'user'		: 'user',
+				# 'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -203,16 +205,17 @@ class StateAdaptor(object):
 			],
 			'type' : 'hg',
 			'require' : {
+				'linux.apt.package' : { 'name' : ['mercurial'] },
 				'linux.yum.package' : { 'name' : ['mercurial'] }
 			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode'
-				}
-			},
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode'
+			# 	}
+			# },
 		},
 
 		## path
@@ -319,8 +322,8 @@ class StateAdaptor(object):
 				'group'			: 'group',
 				'timeout'		: 'timeout',
 				'env'			: 'env',
-				'with path'		: 'onlyif',
-				'without path'	: 'unless',
+				'if path present'	: 'onlyif',
+				'if path absent'	: 'unless',
 			},
 			'states' : [
 				'run', 'call', 'wait', 'script'
@@ -464,7 +467,7 @@ class StateAdaptor(object):
 				'path'				: 'pv',
 				'chunk size'		: 'chunksize',
 				'contiguous'		: 'contiguous',
-				'discards'			: 'discards',
+				# 'discards'			: 'discards',
 				'stripe number'		: 'stripes',
 				'stripe size'		: 'stripesize',
 				'LE number'			: 'extents',
@@ -476,10 +479,10 @@ class StateAdaptor(object):
 				'monitor'			: 'monitor',
 				'ignore monitoring' : 'ignoremonitoring',
 				'permission' 		: 'permission',
-				'pool metadata size': 'poolmetadatasize',
+				# 'pool metadata size': 'poolmetadatasize',
 				'region size'		: 'regionsize',
 				'readahead'			: 'readahead',
-				'thinpool'			: 'thinpool',
+				# 'thinpool'			: 'thinpool',
 				'type'				: 'type',
 				'virtual size'		: 'virtualsize',
 				'zero'				: 'zero',
@@ -530,6 +533,7 @@ class StateAdaptor(object):
 			'states' : ['present', 'absent'],
 			'type' : 'ssh_auth'
 		},
+
 		'common.ssh.known_host' : {
 			'attributes' : {
 				'hostname'	:	'name',
@@ -559,6 +563,11 @@ class StateAdaptor(object):
 		if module not in self.mod_map:			raise StateException("Unsupported module %s" % module)
 		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
 			raise	StateException("Invalid input parameter: %s" % os_type)
+
+		# distro check and package manger check
+		if (os_type in ['centos', 'redhat', 'debian'] and module in ['linux.apt.package', 'linux.apt.repo']) \
+			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
+			raise StateException("Cnflict on os type %s and module %s" % (os_type, module))
 
 		# filter unhandler module
 		if module in ['meta.comment']:
@@ -849,11 +858,22 @@ class StateAdaptor(object):
 						addin['user'] = 'root'
 
 			elif module in ['linux.cmd']:
-				if 'onlyif' in addin:
-					addin['onlyif'] = "[ -d " + addin['onlyif'] + " ]"
+				cmd = []
+				for flag in ['onlyif', 'unless']:
+					if flag in addin:
+						if isinstance(addin[flag], basestring):
+							cmd.append('{0} -e {1}'.format('' if flag=='onlyif' else '!', addin[flag]))
 
-				if 'unless' in addin:
-					addin['unless'] = "[ -d " + addin['unless'] + " ]"
+						elif isinstance(addin[flag], list):
+							for f in addin[flag]:
+								if not isinstance(f, basestring):	continue
+
+								cmd.append('{0} -e {1}'.format('' if flag=='onlyif' else '!', f))
+
+						addin.pop(flag)
+
+				if cmd:
+					addin['onlyif'] = '[ {0} ]'.format(' -a '.join(cmd))
 
 				if 'timeout' in addin:
 					addin['timeout'] = int(addin['timeout'])
@@ -877,15 +897,15 @@ class StateAdaptor(object):
 						except Exception:
 							addin[attr] = 0
 
-			elif module in ['linux.hosts']:
+			# elif module in ['linux.hosts']:
 
-				module_state[default_state] = {
-					'name' 		: '/etc/hosts',
-					'user' 		: 'root',
-					'group' 	: 'root',
-					'mode' 		: '0644',
-					'contents' 	: addin['contents']
-				}
+			# 	module_state[default_state] = {
+			# 		'name' 		: '/etc/hosts',
+			# 		'user' 		: 'root',
+			# 		'group' 	: 'root',
+			# 		'mode' 		: '0644',
+			# 		'contents' 	: addin['contents']
+			# 	}
 
 			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
