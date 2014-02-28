@@ -28,7 +28,7 @@
           "_": "3 [test1] create sub dir with required parameter(dir not exist) - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/test/subtest"
+            "path": ["/tmp/test/subtest"]
           }
         },
         {
@@ -65,7 +65,7 @@
           "_": "7 [test2] update dir with full parameter(dir existed) - True ",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/test/subtest",
+            "path": ["/tmp/test/subtest"],
             "absent": false,
             "recursive": true,
             "mode": "0777",

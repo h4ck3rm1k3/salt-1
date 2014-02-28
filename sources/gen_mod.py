@@ -31,8 +31,8 @@ def attr():
 
 *   **state** (*required*): one or multiple remote states to be waited
 		example:
-			single - @hostname.state_id
-			barrier - @host1.state_1, @host2.state_2
+			single - @{hostname.state.1}
+			barrier - @{host1.state.1, @host2.state.2}
 					''',
 					'cn'	:	''''''
 				},
@@ -236,49 +236,22 @@ def attr():
 			http/https - https://example.com/gitproject.git
 			git - git://example.com/gitproject.git
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			master
-
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **version** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
 			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
-* **ssh_key** (*optional*): the path of the ssh keypair file
+* **ssh key file** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
 
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
-
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
+
+* **user** (*optional*): the username that performs the operation, by default ***root***
 					''',
 					'cn'	:	''''''
 				},
@@ -292,38 +265,24 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
+					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'master',
 						'required'	:	False
 					},
-					'version'	:	{
+					'ssh key file'	:	{
 						'type'		:	'line',
-						'default'	:	'',
-						'required'	:	False
-					},
-					'ssh key'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
 						'required'	:	False
 					},
 					'force':	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
-					}
+					},
+					'user':	{
+						'type'		:	'line',
+						'required'	:	False
+					}					
 				}
 			},
 			'hg'	:	{
@@ -346,49 +305,22 @@ def attr():
 			ssh - ssh://user@server/path/to/repo
 			http/https - https://example.com/path/to/repo
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			default
-
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **revision** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
-			changeset - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
-* **ssh_key** (*optional*): the path of the ssh keypair file
+* **ssh key file** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
 
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
-
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
+
+* **user** (*optional*): the username that performs the operation, by default ***root***
 					''',
 					'cn'	:	''''''
 				},
@@ -402,36 +334,22 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
+					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'default',
 						'required'	:	False
 					},
-					'revision'	:	{
-						'type'		:	'line',
-						'default'	:	'',
-						'required'	:	False
-					},
-					'ssh key'	:	{
+					'ssh key file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
-						'required'	:	False
-					},
-					'force':	{
+					'force'		:	{
 						'type'		:	'bool',
 						'default'	:	False,
+						'required'	:	False
+					},
+					'user'		:	{
+						'type'		:	'line',
 						'required'	:	False
 					}
 				}
@@ -458,49 +376,22 @@ def attr():
 			svn - svn://example.com/path/to/repo
 			svn+ssh - svn+ssh://user@example.com/path/to/repo
 
-* **branch** (*optional*): the branch to checkout
+* **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
-			master
-
-		note:
-			When using <branch>, the local repo will be kept synchronized with the latest commit of the specified branch.
-			Do NOT use <branch> and <version> at the same time
-
-* **revision** (*optional*): the version to checkout
-		example:
+			branch - master, develop
 			tag name - release-1.0
-			changeset - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 		note:
-			When using <version>, the local repo will remain the specified tag or commit.
-			Do NOT use <branch> and <version> at the same time
+			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **username** (*optional*): the username of the svn server
 
 * **password** (*optional*): the password of the svn user
 
-* **user** (*optional*): the user name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If so, the file owner will be left unchanged. If not, the file will be created under the user name of which the Madeira agent runs.
-
-* **group** (*optional*): the group name of the file owner
-		example:
-			root
-
-		note:
-			If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If so, the file group will be left unchanged. If not, the file will be created under the group of which the Madeira agent runs.
-
-* **mode** (*optional*): the directory mode
-		example:
-			0755
-
-		note:
-			If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If so, the file mode will be left unchanged. If not, the file will be created with the default mode 0755
-
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
+
+* **user** (*optional*): the username that performs the operation, by default ***root***
 					''',
 					'cn'	:	''''''
 				},
@@ -514,14 +405,9 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'branch'	:	{
-						'type'		:	'line',
-						'default'	:	'master',
-						'required'	:	False
-					},
 					'revision'	:	{
 						'type'		:	'line',
-						'default'	:	'',
+						'default'	:	'trunk',
 						'required'	:	False
 
 					},
@@ -533,22 +419,13 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'user'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'group'	:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0755',
-						'required'	:	False
-					},
-					'force':	{
+					'force'		:	{
 						'type'		:	'bool',
 						'default'	:	False,
+						'required'	:	False
+					},
+					'user'		:	{
+						'type'		:	'line',
 						'required'	:	False
 					}
 				}
@@ -565,13 +442,13 @@ def attr():
 
 *   **path** (*required*): the environment path
 
-*   **python** (*optional*): the python interpreter to use
+*   **python bin** (*optional*): the path the python interpreter to use
 
 		Note:
 			python2.5 will use the python2.5 interpreter to create the new environment.
 			The default is the interpreter that virtualenv was installed with
 
-*   **requirements** (*optional*): the python requirements file path, which will be used to configure this environment
+*   **requirements file** (*optional*): the python requirements file path, which will be used to configure this environment
 
 *   **system site packages** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***True***
 
@@ -595,11 +472,11 @@ def attr():
 						'required'	:	True,
 						'visible'	:	True
 					},
-					'python'		:	{
+					'python bin'		:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'requirements'	:	{
+					'requirements file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -877,7 +754,7 @@ def attr():
 
 ### Parameters
 
-*   **path** (*required*): the directory path
+*   **path** (*required*): a list of directory paths
 		example:
 			/var/www/html
 
@@ -907,7 +784,7 @@ def attr():
 
 * **recursive** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***True***
 
-* **absent** (*optional*): ensure the directory is absent, by default ***False***
+* **absent** (*optional*): ensure all directories are absent, by default ***False***
 		note:
 			If True, all other parameters are ignored
 					''',
@@ -915,7 +792,7 @@ def attr():
 				},
 				'parameter'	:	{
 					'path'		:	{
-						'type'		:	'line',
+						'type'		:	'array',
 						'required'	:	True
 					},
 					'user'	:	{
@@ -1145,7 +1022,7 @@ def attr():
 
 ### Parameters
 
-*   **name** (*required*): the service name
+*   **name** (*required*): a list of service names
 		example:
 			httpd
 
@@ -1179,21 +1056,22 @@ def attr():
 					}
 				}
 			},
-			'cron'	:	{
-				'module'	:	'linux.cron',
+			'cronjob'	:	{
+				'module'	:	'linux.cronjob',
 				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-	manage cron jobs
+	manage a cron job
 
 ### Parameters
 
-*   **user** (*optional*): the user to execute the cron job, by default: root
+*   **user** (*required*): the user to execute the cron job, by default: root
 
-*   **cmd** (*required*): the command to execute
+*   **cmd** (*required*): a list of command
 		example:
 			cat /proc/meminfo >> /tmp/meminfo
+			ntpdate  time.apple.com
 
 *   **minute** (*optional*): 0 - 59
 
@@ -1235,15 +1113,50 @@ def attr():
 					},
 					'user'	:	{
 						'type'		:	'line',
-						'required'	:	False
+						'default'	:	'root',
+						'required'	:	True,
+						'visible'	:	True
 					},
 					'cmd'	:	{
-						'type'		:	'line',
+						'type'		:	'array',
 						'required'	:	True,
 						'visible'	:	True
 					}
 				}
 			},
+#			'crontab'	:	{
+#				'module'	:	'linux.crontab',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#	manage a crontab file
+#
+#### Parameters
+#
+#*   **user** (*required*): the user to execute the cron job, by default: ***root***
+#
+#*   **content** (*required*): a list of command
+#		example:
+#			cat /proc/meminfo >> /tmp/meminfo
+#			ntpdate  time.apple.com
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'user'	:	{
+#						'type'		:	'line',
+#						'default'	:	'root',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'content'	:	{
+#						'type'		:	'content',
+#						'required'	:	True,
+#						'visible'	:	True
+#					}
+#				}
+#			},
 #			'fs'	:	{
 #				'module'	:	'linux.fs',
 #				'distro'	:	None,
@@ -1348,7 +1261,7 @@ def attr():
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-	manage mount points (/etc/fstab)
+	manage mount points
 
 ### Parameters
 
@@ -1358,13 +1271,16 @@ def attr():
 
 *   **filesystem** (*required*): the file system type of the device
 
+*   **fstab** (*optional*): whether to save in /etc/fstab, by default ***False***
+
+*   **opts** (*optional*): a list of options for /etc/fstab, see *fstab(8)*
+		Note: this parameter applies only if "save in /etc/fstab" is True
+
 *   **dump** (*optional*): the dump value in /etc/fstab, see *fstab(8)*
+		Note: this parameter applies only if "save in /etc/fstab" is True
 
-*   **passno** (*optional*): the pass value in /etc/fstab, see *fstab(8)*
-
-*   **opts** (*optional*): a list of options for /etc/fstab
-			example:
-				noatime
+*   **pass** (*optional*): the pass value in /etc/fstab, see *fstab(8)*
+		Note: this parameter applies only if "save in /etc/fstab" is True
 					''',
 					'cn'	:	''''''
 				},
@@ -1384,18 +1300,24 @@ def attr():
 						'option'	:	['ext2', 'ext3', 'ext4', 'btrfs', 'iso9660', 'ntfs', 'reiserfs', 'xfs', 'zfs'],
 						'required'	:	True
 					},
-					'dump':	{
+					'fstab'		:	{
+						'type'		:	'bool',
+						'default'	:	'False',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'opts'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+					'dump'		:	{
 						'type'		:	'line',
 						'default'	:	'0',
 						'required'	:	False
 					},
-					'passno':	{
+					'pass'		:	{
 						'type'		:	'line',
 						'default'	:	'0',
-						'required'	:	False
-					},
-					'opts':	{
-						'type'		:	'line',
 						'required'	:	False
 					}
 				}
@@ -1426,9 +1348,9 @@ def attr():
 		note:
 			By default, a command will be terminated and taken "failed" if not finishe in 600 seconds. However you can change with    this option.
 
-*   **if path present** (*optional*): the command will run only if the specified path exists
+*   **if path present** (*optional*): the command will run only if all specified paths exists
 
-*   **if path absent** (*optional*): the command will not run if the specified path exists
+*   **if path absent** (*optional*): the command will not run if any of the specified paths exists
 					''',
 					'cn'	:	''''''
 				},
@@ -1467,12 +1389,12 @@ def attr():
 						'required'	:	False
 					},
 					'if path present'	:	{
-						'type'		:	'line',
+						'type'		:	'array',
 						'required'	:	False,
 						'visible'	:	True
 					},
 					'if path absent'	:	{
-						'type'		:	'line',
+						'type'		:	'array',
 						'required'	:	False,
 						'visible'	:	True
 					}
@@ -1494,7 +1416,7 @@ def attr():
 		note:
 			use "openssl passwd -salt <salt> -1 <plaintext>" to generate the passworld hash
 
-*   **fullname** (*optional*): the full name of the user
+*   **full name** (*optional*): the full name of the user
 
 *   **uid** (*optional*): the user id
 
@@ -1522,7 +1444,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'fullname'	:	{
+					'full name'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -1540,7 +1462,7 @@ def attr():
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'nologin'	:	{
+					'no login'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
@@ -1565,7 +1487,7 @@ def attr():
 
 *   **gid** (*optional*): the group id
 
-*   **system** (*optional*): whether this is a system group, by default *False*
+*   **system group** (*optional*): whether this is a system group, by default *False*
 					''',
 					'cn'	:	''''''
 				},
@@ -1579,7 +1501,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'system'		:	{
+					'system group'		:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
@@ -1987,19 +1909,21 @@ def attr():
 
 ### Parameters
 
-*   **path** (*required*): a list of block special devices
+*   **name** (*required*): specify the name of the new LV
+
+		Note:
+			Without this option a default names of "lvol#" will be generated where # is the LVM internal number of the logical volume
+
+*	**VG name** (*required*): specify the volume group name which the new LV created from
+
+*   **path** (*optional*): a list of physical volume path
 
 		Example:
-			/dev/sdk1, /dev/sdl1
+			/dev/sdk1, /dev/sdk2
 
 		Note:
 		VolumeGroup{Name|Path}[/ThinPoolLogicalVolumeName]
 	   [PhysicalVolumePath[:PE[-PE]]...]
-
-*   **name** (*optional*): specify the name of the new LV
-
-		Note:
-			Without this option a default names of "lvol#" will be generated where # is the LVM internal number of the logical volume
 
 *   **available** (*optional*): specify the name of the new LV
 
@@ -2282,14 +2206,18 @@ def attr():
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'path'		:	{
-						'type'		:	'array',
-						'required'	:	True,
-						'visible'	:	True
-					},
 					'name'		:	{
 						'type'		:	'line',
-						'required'	:	False
+						'required'	:	True
+					},
+					'VG name'	:	{
+						'type'		:	'line',
+						'required'	:	True
+					},
+					'path'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'available'		:	{
 						'type'		:	'line',
@@ -2305,12 +2233,12 @@ def attr():
 						'default'	:	False,
 						'required'	:	False,
 					},
-					'discards':	{
-						'type'		:	'line',
-						'default'	:	'passdown',
-						'option'	:	['ignore', 'nopassdown', 'passdown'],
-						'required'	:	False,
-					},
+					# 'discards':	{
+					# 	'type'		:	'line',
+					# 	'default'	:	'passdown',
+					# 	'option'	:	['ignore', 'nopassdown', 'passdown'],
+					# 	'required'	:	False,
+					# },
 					'stripe number':	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2360,10 +2288,10 @@ def attr():
 						'option'	:	['r', 'rw'],
 						'required'	:	False,
 					},
-					'pool metadata size':	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
+					# 'pool metadata size':	{
+					# 	'type'		:	'line',
+					# 	'required'	:	False,
+					# },
 					'region size'	:	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2377,10 +2305,10 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					'thinpool'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
+					# 'thinpool'	:	{
+					# 	'type'		:	'line',
+					# 	'required'	:	False,
+					# },
 					'type'		:	{
 						'type'		:	'line',
 						'option'	:	['raid1', 'raid4', 'raid5', 'raid6'],

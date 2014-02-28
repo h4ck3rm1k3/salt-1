@@ -27,7 +27,7 @@
           "_": "3 [prepare] create/ensure mercurial location directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/hg",
+            "path": ["/tmp/hg"],
             "absent": false,
             "recursive": true,
             "mode": "0755"
@@ -41,10 +41,7 @@
             "repo": "http://hg.logilab.org/hgview",
             "path": "/tmp/hg/test/",
             "force": true,
-            "group": "root",
-            "user": "root",
-            "branch": "master",
-            "mode": "0755"
+            "revision": "default"
           }
         }
       ]

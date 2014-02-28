@@ -137,7 +137,7 @@ def vg_absent(name):
     return ret
 
 
-def lv_present(name, vgname=None, size=None, extents=None, pv='', **kwargs):
+def lv_present(name, vgname=None, size=None, extents=None, snapshot=None, pv='', **kwargs):
     '''
     Create a new logical volume
 
@@ -179,6 +179,7 @@ def lv_present(name, vgname=None, size=None, extents=None, pv='', **kwargs):
                                            size=size,
                                            extents=extents,
                                            pv=pv,
+                                           snapshot=snapshot,
                                            kwargs=kwargs,
                                            state_ret=ret)
 

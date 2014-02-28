@@ -51,7 +51,7 @@
           "_": "5 [test2] create root directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/test"
+            "path": ["/tmp/test"]
           }
         },
         {
