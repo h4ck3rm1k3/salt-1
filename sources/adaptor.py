@@ -858,11 +858,22 @@ class StateAdaptor(object):
 						addin['user'] = 'root'
 
 			elif module in ['linux.cmd']:
-				if 'onlyif' in addin:
-					addin['onlyif'] = "[ -d " + addin['onlyif'] + " ]"
+				cmd = []
+				for flag in ['onlyif', 'unless']:
+					if flag in addin:
+						if isinstance(addin[flag], basestring):
+							cmd.append('{0} -e {1}'.format('' if flag=='onlyif' else '!', addin[flag]))
 
-				if 'unless' in addin:
-					addin['unless'] = "[ -d " + addin['unless'] + " ]"
+						elif isinstance(addin[flag], list):
+							for f in addin[flag]:
+								if not isinstance(f, basestring):	continue
+
+								cmd.append('{0} -e {1}'.format('' if flag=='onlyif' else '!', f))
+
+						addin.pop(flag)
+
+				if cmd:
+					addin['onlyif'] = '[ {0} ]'.format(' -a '.join(cmd))
 
 				if 'timeout' in addin:
 					addin['timeout'] = int(addin['timeout'])
