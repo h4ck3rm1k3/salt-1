@@ -231,10 +231,13 @@ def attr():
 
 *   **repo** (*required*): the git repository uri
 		example:
-			local - /opt/git/project.git or file:///opt/git/project.git
-			ssh - ssh://user@server/project.git
-			http/https - https://example.com/gitproject.git
-			git - git://example.com/gitproject.git
+			/path/to/repo.git/
+			file:///path/to/repo.git/
+			http[s]://host[:port][path]
+			ftp[s]://host[:port][path]
+			ssh://[user@]host[:port]/~[user][path]
+			git://[user@]host[:port]/~[user][path]
+			rsync://host[:port][path]
 
 * **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
@@ -301,9 +304,11 @@ def attr():
 
 *   **repo** (*required*): the hg repository uri
 		example:
-			local - /path/to/repo
-			ssh - ssh://user@server/path/to/repo
-			http/https - https://example.com/path/to/repo
+			local/filesystem/path
+			file://local/filesystem/path
+			http://[user@]host[:port]/[path]
+			https://[user@]host[:port]/[path]
+			ssh://[user@]host[:port]/[path]
 
 * **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
@@ -313,10 +318,6 @@ def attr():
 
 		note:
 			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
-
-* **ssh key file** (*optional*): the path of the ssh keypair file
-		example:
-			/root/.ssh/id_rsa
 
 * **force** (*optional*): force the checkout even if there is conflict, by default ***False***
 
@@ -337,10 +338,6 @@ def attr():
 					'revision'	:	{
 						'type'		:	'line',
 						'default'	:	'default',
-						'required'	:	False
-					},
-					'ssh key file'	:	{
-						'type'		:	'line',
 						'required'	:	False
 					},
 					'force'		:	{
@@ -370,11 +367,11 @@ def attr():
 
 *   **repo** (*required*): the hg repository uri
 		example:
-			local - file:///path/to/repo
-			http - http://example.com/path/to/repo
-			https - https://example.com/path/to/repo
-			svn - svn://example.com/path/to/repo
-			svn+ssh - svn+ssh://user@example.com/path/to/repo
+			file://local/filesystem/path
+			http://[user@]host[:port][path]
+			https://[user@]host[:port][path]
+			svn://[user@]host[:port][path]
+			svn+ssh://[user@]host[:port][path]
 
 * **revision** (*optional*): the branch, tag, revision IDE to checkout
 		example:
