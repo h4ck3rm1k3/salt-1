@@ -7,7 +7,7 @@
           "module": "linux.cmd",
           "_": "1 [prepare] Set run number - True",
           "parameter": {
-            "cmd": "if [ ! -f /tmp/run ]; then echo 0 > /tmp/run; else if []; then echo 0 > /tmp/run; fi; RUN=$(cat /tmp/run); RUN=$((RUN+1)); echo $RUN>/tmp/run"
+            "cmd": "if [ ! -f /tmp/run ]; then echo 0 > /tmp/run; elif [ $(cat /tmp/run) -eq 5 ]; then echo 0 > /tmp/run; fi; RUN=$(cat /tmp/run); RUN=$((RUN+1)); echo $RUN>/tmp/run"
           }
         },
         {
