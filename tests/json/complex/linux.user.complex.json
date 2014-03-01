@@ -69,13 +69,13 @@
           "parameter": {
             "password": "instant",
             "username": "InstantForge1",
-            "fullname": "Madeira username",
+            "full name": "Madeira username",
             "gid": "600",
             "groups": [
               "Dev"
             ],
             "home": "/madeira1",
-            "nologin": false,
+            "no login": false,
             "uid": "600"
           }
         },
@@ -106,7 +106,7 @@
           "parameter": {
             "password": "instant",
             "username": "InstantForge1",
-            "nologin": true
+            "no login": true
           }
         },
         {
