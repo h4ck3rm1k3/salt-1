@@ -265,7 +265,7 @@ class StateAdaptor(object):
 		## service
 		'linux.supervisord' : {
 			'attributes' : {
-				'name'	:	'name',
+				'name'	:	'names',
 				'config':	'conf_file',
 				#'watch'	:	'',
 			},
@@ -281,7 +281,7 @@ class StateAdaptor(object):
 		},
 		'linux.service' : {
 			'attributes' : {
-				'name' : 'name',
+				'name' : 'names',
 				# 'watch' : ''
 			},
 			'states' : ['running', 'mod_watch'],
