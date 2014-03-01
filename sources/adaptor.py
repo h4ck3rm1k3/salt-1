@@ -340,7 +340,7 @@ class StateAdaptor(object):
 				'month'			:	'month',
 				'day of week'	:	'dayweek',
 				'user'			:	'user',
-				'cmd'			:	'name'
+				'cmd'			:	'names'
 			},
 			'states' : [
 				'present', 'absent'
@@ -394,8 +394,9 @@ class StateAdaptor(object):
 				'device'	:	'device',
 				'filesystem':	'fstype',
 				'dump'		:	'dump',
-				'passno'	:	'pass_num',
-				'opts'		:	'opts'
+				'pass'		:	'pass_num',
+				'opts'		:	'opts',
+				'fstab'		:	'persist'
 			},
 			'states' : ['mounted', 'unmounted'],
 			'type' : 'mount'
@@ -892,6 +893,10 @@ class StateAdaptor(object):
 							addin[attr] = int(addin[attr])
 						except Exception:
 							addin[attr] = 0
+
+				# set persist
+				if 'persist' not in addin:
+					addin['persist'] = False
 
 			# elif module in ['linux.hosts']:
 
