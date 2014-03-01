@@ -85,7 +85,7 @@
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
-          "_": "9 [test2] test cmd with with_path parameter (dir exist) - True",
+          "_": "9 [test2] test cmd with 'if path present' parameter (dir exist) - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "/tmp/test/test1/test.sh",
@@ -95,12 +95,12 @@
             "env": "WORLD=test1",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "with_path": "/tmp/test/test1"
+            "if path present": "/tmp/test/test1"
           }
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324201",
-          "_": "10 [test2] test cmd with with_path parameter (dir not exist) - True",
+          "_": "10 [test2] test cmd with 'if path present' parameter (dir not exist) - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "/tmp/test/test1/test.sh",
@@ -110,14 +110,14 @@
             "env": "WORLD=test1",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "with_path": "/tmp/test/test3"
+            "if path present": "/tmp/test/test3"
           }
         },
 
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324300",
-          "_": "11 [test3] test cmd with without_path parameter (dir not exist) - False",
+          "_": "11 [test3] test cmd with 'if path absent' parameter (dir not exist) - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "/tmp/test/test2/test.sh",
@@ -127,12 +127,12 @@
             "env": "WORLD=test1",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "without_path": "/tmp/test/test3"
+            "if path absent": "/tmp/test/test3"
           }
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
-          "_": "12 [test3] test cmd with without_path parameter (dir exist) - True",
+          "_": "12 [test3] test cmd with 'if path absent' parameter (dir exist) - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "echo hello > test.log",
@@ -142,7 +142,7 @@
             "env": "WORLD=test2",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "without_path": "/tmp/test/test2"
+            "if path absent": "/tmp/test/test2"
           }
         }
 
