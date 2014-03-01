@@ -141,8 +141,8 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				# 'branch'	: 'branch',
 				'revision'	: 'rev',
-				'ssh key'	: 'identity',
-				# 'user'		: 'user',
+				'ssh key file'	: 'identity',
+				'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -170,7 +170,7 @@ class StateAdaptor(object):
 				'revision'	: 'rev',
 				'username'	: 'username',
 				'password'	: 'password',
-				# 'user'		: 'user',
+				'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -195,9 +195,9 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'revision'	: 'rev',
-				# 'ssh key'	: '',
+				# 'ssh key file'	: '',
 				'path'		: 'target',
-				# 'user'		: 'user',
+				'user'		: 'user',
 				'force'		: 'force',
 			},
 			'states' : [
@@ -221,7 +221,7 @@ class StateAdaptor(object):
 		## path
 		'linux.dir' : {
 			'attributes' : {
-				'path' 		: 'name',
+				'path' 		: 'names',
 				'user' 		: 'user',
 				'group' 	: 'group',
 				'mode' 		: 'mode',
@@ -353,12 +353,12 @@ class StateAdaptor(object):
 			'attributes' : {
 				'username'	: 'name',
 				'password'	: 'password',
-				'fullname'	: 'fullname',
+				'full name'	: 'fullname',
 				'uid'		: 'uid',
 				'gid'		: 'gid',
 				'shell'		: 'shell',
 				'home'		: 'home',
-				'nologin'	: 'nologin',
+				'no login'	: 'nologin',
 				'groups'	: 'groups',
 			},
 			'states' : [ 'present', 'absent' ],
@@ -370,7 +370,7 @@ class StateAdaptor(object):
 			'attributes' : {
 				'groupname' : 'name',
 				'gid' 		: 'gid',
-				'system' 	: 'system'
+				'system group' 	: 'system'
 			},
 			'states' : ['present', 'absent'],
 			'type' : 'group'
@@ -500,7 +500,7 @@ class StateAdaptor(object):
 		'common.virtualenv' : {
 			'attributes' : {
 				'path'					: 'name',
-				'python'				: 'python',
+				'python bin'				: 'python',
 				'system site packages'	: 'system_site_packages',
 				# 'always-copy'			: '',
 				# 'unzip setuptools'		: '',
@@ -508,7 +508,7 @@ class StateAdaptor(object):
 				# 'no pip'				: '',
 				'extra search dir'		: 'extra-search-dir',
 				# always copy				: '',
-				'requirements'			: 'requirements',
+				'requirements file'		: 'requirements',
 			},
 			'states' : ['managed'],
 			'type' : 'virtualenv',
@@ -831,7 +831,7 @@ class StateAdaptor(object):
 				if 'absent' in addin and addin['absent']:
 					module_state = {}
 					module_state['absent'] = {
-						'name' : addin['name']
+						'names' : addin['names']
 					}
 
 				else:
