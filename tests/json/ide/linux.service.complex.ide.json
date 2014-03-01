@@ -31,18 +31,18 @@
         },
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632A02",
-          "_": "4 [test1] check sshd not running - False",
+          "_": "4 [test1] check sshd not running - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "service sshd status | grep 'is running'"
+            "cmd": "service sshd status | grep 'is stopped'"
           }
         },
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632A22",
-          "_": "5 [test1] check crond not running - False",
+          "_": "5 [test1] check crond not running - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "service crond status | grep 'is running'"
+            "cmd": "service crond status | grep 'is stopped'"
           }
         },
         {

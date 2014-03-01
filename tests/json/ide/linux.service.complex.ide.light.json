@@ -21,13 +21,13 @@
     {
         "module": "linux.cmd",
         "parameter": {
-            "cmd": "service sshd status | grep 'is running'"
+            "cmd": "service sshd status | grep 'is stopped'"
         }
     },
     {
         "module": "linux.cmd",
         "parameter": {
-            "cmd": "service crond status | grep 'is running'"
+            "cmd": "service crond status | grep 'is stopped'"
         }
     },
     {
