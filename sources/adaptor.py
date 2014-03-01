@@ -567,7 +567,7 @@ class StateAdaptor(object):
 		# distro check and package manger check
 		if (os_type in ['centos', 'redhat', 'debian'] and module in ['linux.apt.package', 'linux.apt.repo']) \
 			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
-			raise StateException("Cnflict on os type %s and module %s" % (os_type, module))
+			raise StateException("Conflict on os type %s and module %s" % (os_type, module))
 
 		# filter unhandler module
 		if module in ['meta.comment']:
@@ -1171,21 +1171,21 @@ def ut():
 		states = {}
 
 		for p_state in com['state']:
-			step = p_state['id']
-			states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
-			print json.dumps(states)
+			try:
+				step = p_state['id']
+				states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+				print json.dumps(states)
 
-			if not states or not isinstance(states, list):
-				err_log = "convert salt state failed"
-				print err_log
-				result = (False, err_log, out_log)
-			else:
-				result = runner.exec_salt(states)
-			print result
-
-	# out_states = [salt_opts] + states
-	# with open('states.json', 'w') as f:
-	# 	json.dump(out_states, f)
+				if not states or not isinstance(states, list):
+					err_log = "convert salt state failed"
+					print err_log
+					result = (False, err_log, out_log)
+				else:
+					result = runner.exec_salt(states)
+				print result
+			except Exception, e:
+				print str(e)
+				continue
 
 if __name__ == '__main__':
 	ut()

@@ -33,9 +33,7 @@
               "virtualenv": ""
             }
           }
-        }
-
-
+        },
         {
           "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632100",
           "_": "4 [test1] Virtualenv in non-existing directory - False",
@@ -79,7 +77,7 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv2",
-            "python": "/usr/bin/python2.6"
+            "python bin": "/usr/bin/python2.6"
           }
         },
 
@@ -108,7 +106,7 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv3",
-            "python": "/usr/bin/python3"
+            "python bin": "/usr/bin/python3"
           }
         },
 
@@ -138,7 +136,7 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv4",
-            "system-site-packages": true
+            "system site packages": true
           }
         },
         {
@@ -156,7 +154,7 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv5",
-            "system-site-packages": false
+            "system site packages": false
           }
         },
         {
@@ -177,7 +175,7 @@
           "parameter": {
             "path": "/tmp/test/virtualenv6",
             "python": "/usr/bin/python2.7",
-            "always-copy": true
+            "always copy": true
           }
         },
         {
@@ -197,9 +195,9 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv7",
-            "python": "/usr/bin/python2.7",
-            "always-copy": false,
-            "unzip-setuptools": true,
+            "python bin": "/usr/bin/python2.7",
+            "always copy": false,
+            "unzip setuptools": true
           }
         },
         {
@@ -219,8 +217,8 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv8",
-            "python": "/usr/bin/python2.7",
-            "no-setuptools": true,
+            "python bin": "/usr/bin/python2.7",
+            "no setuptools": true
           }
         },
         {
@@ -238,8 +236,8 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv9",
-            "python": "/usr/bin/python2.7",
-            "no-setuptools": false,
+            "python bin": "/usr/bin/python2.7",
+            "no setuptools": false
           }
         },
         {
@@ -259,8 +257,8 @@
           "module": "common.virtualenv",
           "parameter": {
             "path": "/tmp/test/virtualenv10",
-            "python": "/usr/bin/python2.7",
-            "no-pip": true,
+            "python bin": "/usr/bin/python2.7",
+            "no pip": true
           }
         },
         {
@@ -279,7 +277,7 @@
           "parameter": {
             "path": "/tmp/test/virtualenv11",
             "python": "/usr/bin/python2.7",
-            "no-pip": false,
+            "no pip": false
           }
         },
         {
@@ -291,9 +289,6 @@
             "cmd": "/tmp/test/virtualenv11/python2.7/bin/pip --help"
           }
         }
-
-//TODO: extra-search-dir
-
       ]
     }
   }
