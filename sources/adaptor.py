@@ -854,6 +854,10 @@ class StateAdaptor(object):
 					if 'user' not in addin:
 						addin['user'] = 'root'
 
+					# check symlink's parent directory whether existed
+					if module == 'linux.symlink' and not os.path.isdir(os.path.dirname(os.path.abspath(addin['name']))):
+						addin['makedirs'] = True
+
 			elif module in ['linux.cmd']:
 				cmd = []
 				for flag in ['onlyif', 'unless']:
