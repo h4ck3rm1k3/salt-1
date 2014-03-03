@@ -102,7 +102,7 @@
           "_": "12 [test2] Check good status - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "if [ $RUN -eq 1 ]; then CHECK=\"start ${RUN}\"; elif [ $RUN -eq 2 ]; then CHECK=\"restart ${RUN}\"; elif [ $RUN -eq 3 ]; then CHECK=\"restart ${RUN}\"; else CHECK=\"${RUN}; fi; grep ${RUN} /tmp/food\""
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then CHECK=\"start ${RUN}\"; elif [ $RUN -eq 2 ]; then CHECK=\"restart ${RUN}\"; elif [ $RUN -eq 3 ]; then CHECK=\"restart ${RUN}\"; else CHECK=\"${RUN}\"; fi; grep ${CHECK} /tmp/food"
           }
         },
         {
