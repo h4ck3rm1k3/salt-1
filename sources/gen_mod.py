@@ -59,6 +59,65 @@ def attr():
 #			}
 		},
 		'common'	:	{
+			'archive'	:	{
+				'module'	:	'common.archive',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+	extract an archive file
+
+### Parameters
+
+*   **file** (*required*): the archive file URI
+		example:
+			/path/to/archive.tar.gz
+			file:///path/to/archive.tar.gz
+			http(s):///host/path/to/archive.tar.gz
+
+		note:
+			the archive must end with the following: tar, tgz, gz, bz, bz2, zip, rar
+
+*   **checksum** (*optional*): a MD5 checksum to verify the file integrity
+
+*   **path** (*required*): the path to extract the archive
+		note:
+			the path will be auto-created when absent
+
+*   **if-path-present** (*optional*): extract the archive only if the specified path exists
+
+*   **if-path-absent** (*optional*): extract the archive only if the specified path exists
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'file'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True,
+					},
+					'checksum'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	False
+					},
+					'path'	:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'if-path-present'	:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'if-path-absent'	:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'visible'	:	True
+					}		
+				}
+			},
 			'timezone'	:	{
 				'module'	:	'common.timezone',
 				'distro'	:	None,
@@ -972,65 +1031,6 @@ def attr():
 						'required'	:	False,
 						'visible'	:	True
 					}
-				}
-			},
-			'archive'	:	{
-				'module'	:	'linux.archive',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-	extract an archive file
-
-### Parameters
-
-*   **file** (*required*): the archive file URI
-		example:
-			/path/to/archive.tar.gz
-			file:///path/to/archive.tar.gz
-			http(s):///host/path/to/archive.tar.gz
-
-		note:
-			the archive must end with the following: tar, tgz, gz, bz, bz2, zip, rar
-
-*   **checksum** (*optional*): a MD5 checksum to verify the file integrity
-
-*   **path** (*required*): the path to extract the archive
-		note:
-			the path will be auto-created when absent
-
-*   **if-path-present** (*optional*): extract the archive only if the specified path exists
-
-*   **if-path-absent** (*optional*): extract the archive only if the specified path exists
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'file'		:	{
-						'type'		:	'line',
-						'required'	:	False,
-						'visible'	:	True,
-					},
-					'checksum'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-						'visible'	:	False
-					},
-					'path'	:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
-					'if-path-present'	:	{
-						'type'		:	'bool',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'if-path-absent'	:	{
-						'type'		:	'bool',
-						'required'	:	False,
-						'visible'	:	True
-					}		
 				}
 			},
 			'service'	:	{
