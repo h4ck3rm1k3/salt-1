@@ -16,6 +16,7 @@
           "_": "2 [prepare] set service file - True",
           "parameter": {
             "path": "/etc/init.d/food",
+            "mode": "0755",
             "content": "#!/bin/bash\n# Provides: food\n# Required-Start:\n# Should-Start:\n# Required-Stop:\n# Should-Stop:\n# Default-Start:  3 4 5\n# Default-Stop:   0 6\n# Short-Description: Foo Daemon\n# Description: Runs foo\n\nRUN=$(cat /tmp/run)\n\nif [ $RUN -eq 1 ]; then\n    echo -n > /tmp/food\nfi\n\ncase \"$1\" in\n    start)\n        echo \"start ${RUN}\" >> /tmp/food\n        ;;\n    stop)\n        echo \"stop ${RUN}\" >> /tmp/food\n        ;;\n    restart)\n        echo \"restart ${RUN}\" >> /tmp/food\n        ;;\n    status)\n        echo \"status ${RUN}\" >> /tmp/food\n        ;;\n\n    *)\n        echo \"Usage: $0 {start|stop|restart|status}\"\n        exit 1\n        ;;\nesac\n\nexit 0\n"
           }
         },
