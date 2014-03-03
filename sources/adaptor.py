@@ -944,6 +944,9 @@ class StateAdaptor(object):
 
 						addin['tar_options'] = tar_options
 
+				if 'source_hash' in addin:
+					addin['source_hash'] = 'md5={0}'.format(addin['source_hash'])
+
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
 

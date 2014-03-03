@@ -3,7 +3,7 @@
 ####################################################
 
 #######################################
-# single module with required parameter test 
+# single module with required parameter test
 #######################################
 linux.cmd # run first to prepare test env, all test file will be in /tmp/test/ dir
 linux.user
@@ -31,6 +31,8 @@ linux.lvm.lv # TODO: lvname?vgname?
 common.npm.package # -> need to install npm
 common.pip.package # -> need to install pip
 common.gem.package # -> need to install gem
+
+common.archive
 
 # TODO
 #linux.hosts
