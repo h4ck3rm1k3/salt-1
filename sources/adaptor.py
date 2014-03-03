@@ -249,8 +249,8 @@ class StateAdaptor(object):
 		},
 		'linux.symlink' : {
 			'attributes' : {
-				'source' : 'name',
-				'target' : 'target',
+				'target' : 'name',
+				'source' : 'target',
 				'user'	 : 'user',
 				'group'	 : 'group',
 				'mode'	 : 'mode',
