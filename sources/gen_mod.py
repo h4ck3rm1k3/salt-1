@@ -72,7 +72,7 @@ def attr():
 *   **name** (*required*): the timezone name
 		   Pacific/Tahiti
 
-*   **use utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
+*   **use-utc** (*optional*): whether to use UTC for the hardware clock, by default ***True***
 					''',
 					'cn'	:	''''''
 				},
@@ -83,7 +83,7 @@ def attr():
 						'visible'	:	True
 
 					},
-					'use utc'		:	{
+					'use-utc'		:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
@@ -248,7 +248,7 @@ def attr():
 		note:
 			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
-* **ssh key file** (*optional*): the path of the ssh keypair file
+* **ssh-key-file** (*optional*): the path of the ssh keypair file
 		example:
 			/root/.ssh/id_rsa
 
@@ -273,7 +273,7 @@ def attr():
 						'default'	:	'master',
 						'required'	:	False
 					},
-					'ssh key file'	:	{
+					'ssh-key-file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -439,27 +439,25 @@ def attr():
 
 *   **path** (*required*): the environment path
 
-*   **python bin** (*optional*): the path the python interpreter to use
+*   **python-bin** (*optional*): the path the python interpreter to use
 
 		Note:
 			python2.5 will use the python2.5 interpreter to create the new environment.
 			The default is the interpreter that virtualenv was installed with
 
-*   **requirements file** (*optional*): the python requirements file path, which will be used to configure this environment
+*   **requirements-file** (*optional*): the python requirements file path, which will be used to configure this environment
 
-*   **system site packages** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***True***
+*   **system-site-packages** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***True***
 
-*   **always copy** (*optional*): whether to always copy files rather than symlinking, by default ***False***
+*   **always-copy** (*optional*): whether to always copy files rather than symlinking, by default ***False***
 
-*   **unzip setuptools** (*optional*): whether to always copy files rather than symlinking, by default ***False***
+*   **unzip-setuptools** (*optional*): whether to always copy files rather than symlinking, by default ***False***
 
-*   **no setuptool** (*optional*): whether to install setuptools (or pip) in the new virtualenv, by default ***True***
+*   **no-setuptool** (*optional*): whether to install setuptools (or pip) in the new virtualenv, by default ***True***
 
-*   **no pip** (*optional*): whether to install pip in the new virtualenv, by default ***True***
+*   **no-pip** (*optional*): whether to install pip in the new virtualenv, by default ***True***
 
-*   **extra search dir** (*optional*): whether to always copy files rather than symlinking., by default ***False***
-
-*   **always copy** (*optional*): the directories to look for setuptools/pip distributions in
+*   **extra-search-dir** (*optional*): whether to always copy files rather than symlinking., by default ***False***
 					''',
 					'cn'	:	''''''
 				},
@@ -469,40 +467,40 @@ def attr():
 						'required'	:	True,
 						'visible'	:	True
 					},
-					'python bin'		:	{
+					'python-bin'		:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'requirements file'	:	{
+					'requirements-file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'system site packages'		:	{
+					'system-site-packages'		:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
 					},
-					'always copy'	:	{
+					'always-copy'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'unzip setuptools'	:	{
+					'unzip-setuptools'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'no setuptools'	:	{
+					'no-setuptools'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'no pip'	:	{
+					'no-pip'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
 					},
-					'extra search dir'	:	{
+					'extra-search-dir'	:	{
 						'type'		:	'array',
 						'required'	:	False
 					}
@@ -531,10 +529,10 @@ def attr():
 * **repo** (*optional*): the repo name, which you want to use for installing the packages
 		main
 
-* **deb conf file** (*optional*): the Deb configuration file path
+* **deb-conf-file** (*optional*): the Deb configuration file path
 		/etc/apt/deb.conf
 
-* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
+* **verify-gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 					''',
 					'cn'	:	''''''
 				},
@@ -550,11 +548,11 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'deb conf file'	:	{
+					'deb-conf-file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'verify gpg':	{
+					'verify-gpg':	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
@@ -611,7 +609,7 @@ def attr():
 * **repo** (*optional*): the repo name, which you want to use for installing the packages
 		epel
 
-* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
+* **verify-gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 					''',
 					'cn'	:	''''''
 				},
@@ -627,7 +625,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'verify gpg'	:	{
+					'verify-gpg'	:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
@@ -686,10 +684,10 @@ def attr():
 #	- **purged**: ensure the package is absent, and also delete all related configuration data of the package
 #
 #
-#* **fromrepo** (*optional*): an repo name, which you want to use for installing the packages
+#* **from-repo** (*optional*): an repo name, which you want to use for installing the packages
 #		epel
 #
-#* **verify gpg** (*optional*): verify the package's GPG siganature, by default ***True***
+#* **verify-gpg** (*optional*): verify the package's GPG siganature, by default ***True***
 #					''',
 #					'cn'	:	''''''
 #				},
@@ -700,11 +698,11 @@ def attr():
 #						'default'	:	'',			# the default value of the item
 #						'required'	:	True
 #					},
-#					'fromrepo'		:	{
+#					'from-repo'		:	{
 #						'type'		:	'line',
 #						'required'	:	False
 #					},
-#					'verify gpg'	:	{
+#					'verify-gpg'	:	{
 #						'type'		:	'bool',
 #						'default'	:	True,
 #						'required'	:	False
@@ -910,7 +908,7 @@ def attr():
 		example:
 			/data/
 
-* **target** (*required*): the path to the symlink
+* **target** (*required*): the path of the symlink
 		example:
 			/mnt/data/
 
@@ -976,6 +974,65 @@ def attr():
 					}
 				}
 			},
+#			'archive'	:	{
+#				'module'	:	'linux.archive',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#	extract an archive file
+#
+#### Parameters
+#
+#*   **file** (*required*): the archive file URI
+#		example:
+#			/path/to/archive.tar.gz
+#			file:///path/to/archive.tar.gz
+#			http(s):///host/path/to/archive.tar.gz
+#
+#		note:
+#			the archive must end with the following: tar, tgz, gz, bz, bz2, zip, rar
+#
+#*   **checksum** (*optional*): a MD5 checksum to verify the file integrity
+#
+#*   **path** (*required*): the path to extract the archive
+#		note:
+#			the path will be auto-created when absent
+#
+#*   **if-path-present** (*optional*): extract the archive only if the specified path exists
+#
+#*   **if-path-absent** (*optional*): extract the archive only if the specified path exists
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'file'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True,
+#					},
+#					'checksum'	:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	False
+#					},
+#					'path'	:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'if-path-present'	:	{
+#						'type'		:	'bool',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'if-path-absent'	:	{
+#						'type'		:	'bool',
+#						'required'	:	False,
+#						'visible'	:	True
+#					}		
+#				}
+#			},
 			'service'	:	{
 				'module'	:	'linux.service',
 				'distro'	:	None,
@@ -1074,11 +1131,11 @@ def attr():
 
 *   **hour** (*optional*): 0 - 23 (must be a valid day if a month is specified)
 
-*   **day of month** (*optional*): 1 - 31
+*   **day-of-month** (*optional*): 1 - 31
 
 *   **month** (*optional*): 1 - 12
 
-*   **day of week** (*optional*): 0 - 7, sunday is represented by 0 or 7, monday by 1
+*   **day-of-week** (*optional*): 0 - 7, sunday is represented by 0 or 7, monday by 1
 					''',
 					'cn'	:	''''''
 				},
@@ -1093,7 +1150,7 @@ def attr():
 						'option'	:	['*'],
 						'required'	:	False
 					},
-					'day of month'	:	{
+					'day-of-month'	:	{
 						'type'		:	'line',
 						'option'	:	['*'],
 						'required'	:	False
@@ -1103,7 +1160,7 @@ def attr():
 						'option'	:	['*'],
 						'required'	:	False
 					},
-					'day of week'	:	{
+					'day-of-week'	:	{
 						'type'		:	'line',
 						'option'	:	['*'],
 						'required'	:	False
@@ -1345,9 +1402,9 @@ def attr():
 		note:
 			By default, a command will be terminated and taken "failed" if not finishe in 600 seconds. However you can change with    this option.
 
-*   **if path present** (*optional*): the command will run only if all specified paths exists
+*   **if-path-present** (*optional*): the command will run only if all specified paths exist
 
-*   **if path absent** (*optional*): the command will not run if any of the specified paths exists
+*   **if-path-absent** (*optional*): the command will not run if any of the specified paths exist
 					''',
 					'cn'	:	''''''
 				},
@@ -1385,12 +1442,12 @@ def attr():
 						'type'		:	'dict',
 						'required'	:	False
 					},
-					'if path present'	:	{
+					'if-path-present'	:	{
 						'type'		:	'array',
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'if path absent'	:	{
+					'if-path-absent'	:	{
 						'type'		:	'array',
 						'required'	:	False,
 						'visible'	:	True
@@ -1413,7 +1470,7 @@ def attr():
 		note:
 			use "openssl passwd -salt <salt> -1 <plaintext>" to generate the passworld hash
 
-*   **full name** (*optional*): the full name of the user
+*   **fullname** (*optional*): the full name of the user
 
 *   **uid** (*optional*): the user id
 
@@ -1423,7 +1480,9 @@ def attr():
 		note:
 			if the directory already exists, the user and group of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the user and group of the user.
 
-*   **nologin** (*optional*): whether to allow user to login, by default *False*
+*   **system-account** (*optional*): whether to create a system account (see useradd(8)), by default: False
+
+*   **no-login** (*optional*): whether to allow user to login, by default *False*
 
 *   **groups** (*optional*): a list of groups of the user
 		note:
@@ -1441,7 +1500,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'full name'	:	{
+					'fullname'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -1459,10 +1518,17 @@ def attr():
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'no login'	:	{
+					'system-account':	{
 						'type'		:	'bool',
 						'default'	:	False,
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'no-login'	:	{
+						'type'		:	'bool',
+						'default'	:	False,
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'groups'	:	{
 						'type'		:	'array',
@@ -1484,7 +1550,7 @@ def attr():
 
 *   **gid** (*optional*): the group id
 
-*   **system group** (*optional*): whether this is a system group, by default *False*
+*   **system-group** (*optional*): whether to create a system group (see groupadd(8)), by default *False*
 					''',
 					'cn'	:	''''''
 				},
@@ -1498,7 +1564,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'system group'		:	{
+					'system-group'		:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False
@@ -1540,7 +1606,7 @@ def attr():
 			If this option is not given, the default is to wipe these sectors unless either or both of the --restorefile or
 			--uuid options were specified.
 
-*   **data alignment** (*optional*): align the start of the data to a multiple of this number
+*   **data-alignment** (*optional*): align the start of the data to a multiple of this number
 
 		Note:
 			You should also specify an appropriate "PV size" when creating the Volume Group (VG).
@@ -1550,14 +1616,14 @@ def attr():
 			alignment_offset   from   data_alignment_offset_detection    (if
 			enabled in lvm.conf(5)) or --dataalignmentoffset.
 
-*   **data alignment offset** (*optional*): shift the start of the data area by this additional number
+*   **data-alignment-offset** (*optional*): shift the start of the data area by this additional number
 
-*   **metadata size** (*optional*): the approximate amount of space to be set aside for each metadata area
+*   **metadata-size** (*optional*): the approximate amount of space to be set aside for each metadata area
 
 		Note:
 			The size you specify may get rounded
 
-*   **metadata type** (*optional*): specify which type of on-disk metadata to use, by default ***lvm2***
+*   **metadata-type** (*optional*): specify which type of on-disk metadata to use, by default ***lvm2***
 
 		Example:
 			lvm1, lvm2, 1, 2
@@ -1566,7 +1632,7 @@ def attr():
 			lvm1 or lvm2 can be abbreviated to 1 or 2 respectively. The default (lvm2) can be changed by setting format
 			in the global section of the config file.
 
-*   **metadata copies** (*optional*): the number of metadata areas to set aside on each PV
+*   **metadata-copies** (*optional*): the number of metadata areas to set aside on each PV
 
 		Example:
 			Currently this  can  be  0, 1 or 2
@@ -1582,7 +1648,7 @@ def attr():
 			after the split!
 
 
-*   **metadata ignore** (*optional*): whether to ignore metadata areas on this PV, by default ***False***
+*   **metadata-ignore** (*optional*): whether to ignore metadata areas on this PV, by default ***False***
 
 		Note:
 			This setting can be changed with pvchange.   If
@@ -1595,7 +1661,7 @@ def attr():
 			and to use this option to instruct LVM2 to ignore it.
 
 
-*   **restore file** (*optional*):
+*   **restore-file** (*optional*):
 
 		Note:
 			In conjunction with "uuid", this extracts the location and size
@@ -1607,14 +1673,14 @@ def attr():
 			format  or to add/remove metadata areas. Use with care. See also
 			vgconvert(8).
 
-*   **no restore file** (*optional*):
+*   **no-restore-file** (*optional*):
 
 		Note:
 			In conjunction with "uuid", this allows a uuid to  be  specified
 			without  also  requiring  that  a  backup  of  the  metadata  be
 			provided.
 
-*   **label sector** (*optional*):
+*   **label-sector** (*optional*):
 
 		Note:
 			By default the PV is labelled with an  LVM2  identifier  in  its
@@ -1622,7 +1688,7 @@ def attr():
 			near the start of the disk (between 0  and  3  inclusive  -  see
 			LABEL_SCAN_SECTORS in the source).  Use with care.
 
-*   **PV size** (*optional*):
+*   **pv-size** (*optional*):
 
 		Note:
 			Overrides  the  automatically-detected size of the PV, use with care
@@ -1649,49 +1715,49 @@ def attr():
 						'default'	:	True,
 						'required'	:	False
 					},
-					'data alignment'	:	{
+					'data-alignment'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'metadata size'	:	{
+					'metadata-size'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'data alignment offset'	:	{
+					'data-alignment-offset'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'metadata type'	:	{
+					'metadata-type'	:	{
 						'type'		:	'line',
 						'default'	:	'lvm2',
 						'option'	:	['lvm1', 'lvm2'],
 						'required'	:	False
 					},
-					'metadata copies'	:	{
+					'metadata-copies'	:	{
 						'type'		:	'line',
 						'option'	:	['0', '1', '2'],
 						'required'	:	False
 					},
-					'metadata ignore'	:	{
+					'metadata-ignore'	:	{
 						'type'		:	'bool',
 						'dfault'	:	False,
 						'required'	:	False
 					},
-					'restorefile'	:	{
+					'restore-file'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'norestorefile'	:	{
+					'no-restore-file'	:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False
 					},
-					'label sector'	:	{
+					'label-sector'	:	{
 						'type'		:	'line',
 						'default'	:	'LVM2',
 						'required'	:	False
 					},
-					'PV size'		:	{
+					'pv-size'		:	{
 						'type'		:	'line',
 						'required'	:	False
 					}
@@ -1723,26 +1789,19 @@ def attr():
 			If the cluster infrastructure is unavailable on a particular node at a particular time, you may still be able to
 			use such VGs
 
-*   **max LV number** (*optional*): specify the maximum number of LVs allowed in this VG
+*   **max-lv-number** (*optional*): specify the maximum number of LVs allowed in this VG
 
 		Note:
 			For VGs with  metadata in lvm1 format, the limit and default value is 255
 			If the metadata uses lvm2 format, the default value is 0 which removes this restriction: there is then no limit
 
-*   **max PV number** (*optional*): specify the maximum number of PVs that can belong to this VG
+*   **max-pv-number** (*optional*): specify the maximum number of PVs that can belong to this VG
 
 		Note:
 			For VGs with metadata in lvm1 format, the limit and default value is 255
 			If the metadata uses lvm2 format, the value 0 removes this restriction: there is then no limit
 
-
-*   **max PV number** (*optional*): specify the maximum number of PVs that can belong to this VG
-
-		Note:
-			For VGs with metadata in lvm1 format, the limit and default value is 255
-			If the metadata uses lvm2 format, the value 0 removes this restriction: there is then no limit
-
-*   **metadata type** (*optional*): specify which type of on-disk metadata to use, by default ***lvm2***
+*   **metadata-type** (*optional*): specify which type of on-disk metadata to use, by default ***lvm2***
 
 		Example:
 			lvm1, lvm2, 1, 2
@@ -1751,7 +1810,7 @@ def attr():
 			lvm1 or lvm2 can be abbreviated to 1 or 2 respectively. The default (lvm2) can be changed by setting format
 			in the global section of the config file.
 
-*   **metadata copies** (*optional*): specify the desired number of metadata copies in the VG
+*   **metadata-copies** (*optional*): specify the desired number of metadata copies in the VG
 
 		Example:
 			unmanaged, all
@@ -1760,8 +1819,7 @@ def attr():
 			If set to a non-zero value, LVM will automatically manage the 'metadata ignore' option on the PVs (see pvcreate(8) or pvchange --metadataignore) in order to achieve the copies of metadata. If set to unmanaged, LVM will not automatically manage the 'metadata ignore' option. If set to all, LVM will first clear all of the 'metadata ignore' option on all metadata areas in the VG, then set the value to unmanaged. This option is useful for VGs containing large numbers of PVs   with metadata  as  it may be used to minimize metadata read and write overhead.  The default value is unmanaged
 
 
-
-*   **PE size** (*optional*): specify the physical extent size on PVs of this VG
+*   **pe-size** (*optional*): specify the physical extent size on PVs of this VG
 
 		Example:
 			bBsSkKmMgGtTpPeE
@@ -1813,7 +1871,7 @@ def attr():
 			  . - and as of version 2.02.78 the following characters are  also
 			  accepted: / = ! : # &
 
-*   **allocation policy** (*optional*): specify the allocation policy
+*   **allocation-policy** (*optional*): specify the allocation policy
 
 		Example:
 			contiguous,  cling,  normal, anywhere or inherit
@@ -1911,7 +1969,7 @@ def attr():
 		Note:
 			Without this option a default names of "lvol#" will be generated where # is the LVM internal number of the logical volume
 
-*	**VG name** (*required*): specify the volume group name which the new LV created from
+*	**vg-name** (*required*): specify the volume group name which the new LV created from
 
 *   **path** (*optional*): a list of physical volume path
 
@@ -1943,7 +2001,7 @@ def attr():
 			  activate  exclusively on one node and -aly will activate only on
 			  the local node.
 
-*   **chunk size** (*optional*): speicy the size of chunk for snapshot and thin pool LV
+*   **chunk-size** (*optional*): speicy the size of chunk for snapshot and thin pool LV
 
 		Note:
 			For  snapshots  the  value must be power of 2 between
@@ -1969,12 +2027,12 @@ def attr():
 			ignore, nopassdown, passdown
 
 
-*   **stripe number** (*optional*): specify the number of stripes
+*   **stripe-number** (*optional*): specify the number of stripes
 
 		Note:
 			This is equal to the number of physical volumes to scatter the logical volume
 
-*   **stripe size** (*optional*): specify the  number  of  kilobytes  for  the  granularity  of  the stripes.
+*   **stripe-size** (*optional*): specify the  number  of  kilobytes  for  the  granularity  of  the stripes.
 
 		Note:
 			  size must be 2^n (n = 2 to 9) for metadata in LVM1 format.
@@ -1982,7 +2040,7 @@ def attr():
 			  power of 2 but must not exceed the physical extent size
 
 
-*   **LE number** (*optional*): specify the  number  of  logical  extents to allocate for the new LV
+*   **le-number** (*optional*): specify the  number  of  logical  extents to allocate for the new LV
 
 		Note:
 			The  number  can  also  be  expressed  as   a
@@ -1994,21 +2052,21 @@ def attr():
 			  total space  in  the  Origin  Logical  Volume  with  the  suffix
 			  %ORIGIN
 
-*   **LV size** (*optional*): specify the  size to allocate for the new LV
+*   **lv-size** (*optional*): specify the  size to allocate for the new LV
 
 		Note:
 			A size suffix of K for kilobytes, M for megabytes, G for  gigabytes,  T
 			  for terabytes, P for petabytes or E for exabytes is optional.
 			  Default unit is megabytes
 
-*   **minor number** (*optional*): specify the minor number
+*   **minor-number** (*optional*): specify the minor number
 
 *   **persistent** (*optional*): whether to make the minor number specified persistent, by default ***False***
 
 		Note:
 			Set to y to
 
-*   **mirror number** (*optional*): Create a mirrored LV with this number of copies
+*   **mirror-number** (*optional*): Create a mirrored LV with this number of copies
 
 		Note:
 			  For example, specifying "-m 1" would result in a  mirror  with  two-
@@ -2033,7 +2091,7 @@ def attr():
 			  The  optional  argument  --corelog  is equivalent to --mirrorlog
 			  core
 
-*   **no udev sync** (*optional*): whether to disable udev synchronisation, by default ***False***
+*   **no-udev-sync** (*optional*): whether to disable udev synchronisation, by default ***False***
 
 		Note:
 			The  process  will not wait for
@@ -2050,21 +2108,21 @@ def attr():
 			  according        to        mirror_image_fault_policy         and
 			  mirror_log_fault_policy set in lvm.conf
 
-*   **ignore monitoring** (*optional*): make no attempt to interact with dmeventd unless ***monitor*** is ***True*** ,by default ***False***
+*   **ignore-monitoring** (*optional*): make no attempt to interact with dmeventd unless ***monitor*** is ***True*** ,by default ***False***
 
 *   **permission** (*optional*): specify the access permissions to read only or read and write, by default ***RW***
 
 		Example:
 			r, rw
 
-*   **pool metadata size** (*optional*): specify the size of thin pool's metadata LV
+*   **pool-metadata-size** (*optional*): specify the size of thin pool's metadata LV
 
 		Note:
 			Supported value  is  in  range  between  2MiB and 16GiB.  Default value is
 			  (Pool_LV_size / Pool_LV_chunk_size  *  64b).   Default  unit  is
 			  megabytes.
 
-*   **region size** (*optional*):
+*   **region-size** (*optional*):
 
 		Note:
 			 A  mirror  is divided into regions of this size (in MB), and the
@@ -2127,7 +2185,7 @@ def attr():
 			  is available for the desired type, as is the  case  with  error,
 			  zero, raid1, raid4, raid5 or raid6
 
-*   **virtual size** (*optional*): Create  a  sparse  device  of  the given size (in MB by default) using a snapshot or thinly provisioned device when thin pool  is specified.
+*   **virtual-size** (*optional*): Create  a  sparse  device  of  the given size (in MB by default) using a snapshot or thinly provisioned device when thin pool  is specified.
 
 		Note:
 			Anything written to the device will be returned when
@@ -2136,12 +2194,6 @@ def attr():
 			  creating a hidden virtual device of the requested size using the
 			  zero target.  A suffix of _vorigin is used for this device.
 
-
-*   **zero** (*optional*): whether to set zero of the  first  KB of data in the new LV, by default ***True***
-
-		Note:
-			  Volume will not be zeroed if read only flag is set.
-			  Snapshot volumes are zeroed always.
 
 *   **zero** (*optional*): whether to set zero of the  first  KB of data in the new LV, by default ***True***
 
@@ -2175,7 +2227,7 @@ def attr():
 			  . - and as of version 2.02.78 the following characters are  also
 			  accepted: / = ! : # &
 
-*   **allocation policy** (*optional*): specify the allocation policy
+*   **allocation-policy** (*optional*): specify the allocation policy
 
 		Example:
 			contiguous,  cling,  normal, anywhere or inherit
@@ -2221,7 +2273,7 @@ def attr():
 						'option'	:	['y', 'ay' , 'n', 'ey', 'en', 'ly', 'ln'],
 						'required'	:	False,
 					},
-					'chunk size':	{
+					'chunk-size':	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
@@ -2236,23 +2288,23 @@ def attr():
 					# 	'option'	:	['ignore', 'nopassdown', 'passdown'],
 					# 	'required'	:	False,
 					# },
-					'stripe number':	{
+					'stripe-number':	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					'stripe size':	{
+					'stripe-size':	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					'LE number':	{
+					'le-number':	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					'LE size':	{
+					'le-size':	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					'minor number':	{
+					'minor-number':	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
@@ -2261,11 +2313,7 @@ def attr():
 						'default'	:	False,
 						'required'	:	False,
 					},
-					'mirror number'	:	{
-						'type'		:	'line',
-						'required'	:	False,
-					},
-					'no udev sync'	:	{
+					'no-udev-sync'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
 						'required'	:	False,
@@ -2275,7 +2323,7 @@ def attr():
 						'default'	:	False,
 						'required'	:	False,
 					},
-					'ignore monitoring'	:	{
+					'ignore-monitoring'	:	{
 						'type'		:	'bool',
 						'default'	:	True,
 						'required'	:	False,
@@ -2289,7 +2337,7 @@ def attr():
 					# 	'type'		:	'line',
 					# 	'required'	:	False,
 					# },
-					'region size'	:	{
+					'region-size'	:	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
@@ -2311,7 +2359,7 @@ def attr():
 						'option'	:	['raid1', 'raid4', 'raid5', 'raid6'],
 						'required'	:	False,
 					},
-					'virtual size'	:	{
+					'virtual-size'	:	{
 						'type'		:	'line',
 						'required'	:	False,
 					},
@@ -2324,7 +2372,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'allocation policy'		:	{
+					'allocation-policy'		:	{
 						'type'		:	'line',
 						'option'	:	['anywhere', 'contiguous', 'cling', 'inherit', 'normal'],
 						'required'	:	False
