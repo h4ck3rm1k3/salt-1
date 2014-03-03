@@ -16,6 +16,7 @@ class StateAdaptor(object):
 
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
+	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
 
 	mod_map = {
 		## package
@@ -546,6 +547,19 @@ class StateAdaptor(object):
 			'states' : ['present', 'absent'],
 			'type' : 'ssh_known_hosts'
 		},
+
+		## archive
+		'common.archive' : {
+			'attributes' : {
+				'file'				: 'source',
+				'path'				: 'name',
+				'checksum'			: 'source_hash',
+				# 'if path present'	:,
+				# 'if path absent'	:,
+			},
+			'states' : ['extracted'],
+			'type' : 'archive'
+		}
 	}
 
 	def __init__(self):
@@ -902,21 +916,34 @@ class StateAdaptor(object):
 				if 'persist' not in addin:
 					addin['persist'] = False
 
-			# elif module in ['linux.hosts']:
-
-			# 	module_state[default_state] = {
-			# 		'name' 		: '/etc/hosts',
-			# 		'user' 		: 'root',
-			# 		'group' 	: 'root',
-			# 		'mode' 		: '0644',
-			# 		'contents' 	: addin['contents']
-			# 	}
-
 			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
 					addin['devices'] = ','.join(addin['devices'])
 				if 'pv' in addin and isinstance(addin['pv'], list):
 					addin['pv'] = ','.join(addin['pv'])
+
+			elif module in ['common.archive']:
+				if 'source' in addin and addin['source'].find('.') > 0:
+					ext = addin['source'].split('.')[-1]
+					if ext not in self.supported_ext:
+						raise StateException("Not supported archive type %s" % addin['source'])
+
+					if ext == 'zip':
+						addin['archive_format'] = 'zip'
+					elif ext == 'rar':
+						addin['archive_format'] = 'rar'
+					else: # ext in ['tar', 'tgz', 'gz', 'bz', 'bz2']:
+						addin['archive_format'] = 'tar'
+						tar_options = ''
+						if ext in ['tgz', 'gz']:
+							tar_options = 'z'
+						elif ext in ['tbz', 'bz', 'bz2']:
+							tar_options = 'j'
+						elif ext in ['tlz', 'lzma']:
+							tar_options = 'J'
+
+						addin['tar_options'] = tar_options
+
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
 
