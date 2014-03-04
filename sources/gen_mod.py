@@ -71,18 +71,17 @@ def attr():
 
 *   **file** (*required*): the archive file URI
 		example:
-			/path/to/archive.tar.gz
-			file:///path/to/archive.tar.gz
 			http(s):///host/path/to/archive.tar.gz
 
 		note:
 			currently supported archive format: tar, tgz, gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)
+			local archive file (file://path/to/file) not supported in this version
 
 *   **checksum** (*optional*): a MD5 checksum to verify the file integrity
 
 *   **path** (*required*): the path to extract the archive
 		note:
-			the path will be auto-created when absent
+			the path will be auto-created if not exists
 
 *   **if-path-present** (*optional*): extract the archive only if the specified path exists
 
