@@ -553,7 +553,7 @@ class StateAdaptor(object):
 				# 'if-path-absent'	:,
 			},
 			'states' : ['extracted'],
-			'type' : 'archive'
+			'type' : 'archive',
 		}
 	}
 
@@ -705,32 +705,33 @@ class StateAdaptor(object):
 			if module in ['linux.apt.package', 'linux.yum.package']:
 				module_state = {}
 
-				for item in addin['pkgs']:
-					pkg_name = None
-					pkg_state = None
-					if isinstance(item, dict):
-						for k, v in item.iteritems():
-							pkg_name 	= k
-							pkg_state 	= default_state
+				if addin['pkgs']:
+					for item in addin['pkgs']:
+						pkg_name = None
+						pkg_state = None
+						if isinstance(item, dict):
+							for k, v in item.iteritems():
+								pkg_name 	= k
+								pkg_state 	= default_state
 
-							if v in self.mod_map[module]['states']:
-								pkg_state = v
+								if v in self.mod_map[module]['states']:
+									pkg_state = v
+
+								if pkg_state not in module_state:			module_state[pkg_state] = {}
+								if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
+
+								if pkg_state == default_state:
+									module_state[pkg_state]['pkgs'].append(item)
+								else:
+									module_state[pkg_state]['pkgs'].append(pkg_name)
+
+						else:	# insert into default state
+							pkg_state	= default_state
 
 							if pkg_state not in module_state:			module_state[pkg_state] = {}
 							if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
 
-							if pkg_state == default_state:
-								module_state[pkg_state]['pkgs'].append(item)
-							else:
-								module_state[pkg_state]['pkgs'].append(pkg_name)
-
-					else:	# insert into default state
-						pkg_state	= default_state
-
-						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
-
-						module_state[pkg_state]['pkgs'].append(item)
+							module_state[pkg_state]['pkgs'].append(item)
 
 			elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
 				module_state = {}
@@ -938,6 +939,13 @@ class StateAdaptor(object):
 							tar_options = 'J'
 
 						addin['tar_options'] = tar_options
+
+					# add require-pkg when it isnt tar
+					if ext == 'zip':
+						self.mod_map[module]['require'] = {
+							'linux.apt.package' : { 'name' : ['zip'] },
+							'linux.yum.package' : { 'name' : ['zip'] },
+						}
 
 				if 'source_hash' in addin:
 					addin['source_hash'] = 'md5={0}'.format(addin['source_hash'])

@@ -1,0 +1,28 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1E",
+          "_": "1 [test1] zip archive test - True",
+          "module": "common.archive",
+          "parameter": {
+            "file": "http://wordpress.org/latest.zip",
+            "path": "/tmp/test/wordpress/",
+            "checksum": "8133645e8820557761d7a551fea70028"
+          }
+        },
+        {
+          "id": "state-2E042A11-4697-465B-B995-5C3194145D38",
+          "_": "1 [test1] gz archive test - True",
+          "module": "common.archive",
+          "parameter": {
+            "file": "https://git-core.googlecode.com/files/git-1.8.3.2.tar.gz",
+            "path": "/tmp/test/",
+            "checksum": "83b792fd06066c77e1d4911ebba2d701"
+          }
+        }
+      ]
+    }
+  }
+}
