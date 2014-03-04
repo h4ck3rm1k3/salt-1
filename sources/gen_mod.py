@@ -76,7 +76,7 @@ def attr():
 			http(s):///host/path/to/archive.tar.gz
 
 		note:
-			the archive must end with the following: tar, tgz, gz, bz, bz2, zip, rar
+			currently supported archive format: tar, tgz, gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)
 
 *   **checksum** (*optional*): a MD5 checksum to verify the file integrity
 
