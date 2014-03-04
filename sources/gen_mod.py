@@ -115,7 +115,7 @@ def attr():
 						'type'		:	'bool',
 						'required'	:	False,
 						'visible'	:	True
-					}		
+					}
 				}
 			},
 			'timezone'	:	{
@@ -344,7 +344,7 @@ def attr():
 					'user':	{
 						'type'		:	'line',
 						'required'	:	False
-					}					
+					}
 				}
 			},
 			'hg'	:	{
@@ -1914,26 +1914,26 @@ def attr():
 						'default'	:	True,
 						'required'	:	False
 					},
-					'max LV number'		:	{
+					'max-lv-number'		:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'max PV number'		:	{
+					'max-pv-number'		:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'metadata type'	:	{
+					'metadata-type'	:	{
 						'type'		:	'line',
 						'default'	:	'lvm2',
 						'option'	:	['lvm1', 'lvm2'],
 						'required'	:	False
 					},
-					'metadata copies'		:	{
+					'metadata-copies'		:	{
 						'type'		:	'line',
 						'option'	:	['unmanaged', 'all'],
 						'required'	:	False
 					},
-					'PE size'		:	{
+					'pe-size'		:	{
 						'type'		:	'line',
 						'default'	:	'4m',
 						'required'	:	False
@@ -1942,7 +1942,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'allocation policy'		:	{
+					'allocation-policy'		:	{
 						'type'		:	'line',
 						'option'	:	['anywhere', 'contiguous', 'cling', 'inherit', 'normal'],
 						'required'	:	False
@@ -2259,7 +2259,7 @@ def attr():
 						'type'		:	'line',
 						'required'	:	True
 					},
-					'VG name'	:	{
+					'vg-name'	:	{
 						'type'		:	'line',
 						'required'	:	True
 					},

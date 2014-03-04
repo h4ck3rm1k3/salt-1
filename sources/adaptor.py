@@ -24,8 +24,8 @@ class StateAdaptor(object):
 			'attributes' : {
 				'name'			: 'pkgs',
 				'repo'			: 'fromrepo',
-				'deb conf file'	: 'debconf',
-				'verify gpg'	: 'verify_gpg',
+				'deb-conf-file'	: 'debconf',
+				'verify-gpg'	: 'verify_gpg',
 			},
 			'states' : [
 				'installed', 'latest', 'removed', 'purged'
@@ -36,9 +36,7 @@ class StateAdaptor(object):
 			'attributes' : {
 				'name'			: 'pkgs',
 				'repo'			: 'fromrepo',
-				# 'enablerepo'	: 'enablerepo',
-				# 'disablerepo'	: 'disablerepo',
-				'verify gpg'	: 'verify_gpg',
+				'verify-gpg'	: 'verify_gpg',
 			},
 			'states' : [
 				'installed', 'latest', 'removed', 'purged'
@@ -61,8 +59,7 @@ class StateAdaptor(object):
 		'common.npm.package'	: {
 			'attributes' : {
 				'name'		: 'names',
-				#'path'		: '',
-				#'index_url' : '',
+				'path'		: 'dir',
 			},
 			'states' : [
 				'installed', 'removed', 'bootstrap'
@@ -140,11 +137,10 @@ class StateAdaptor(object):
 			'attributes' : {
 				'path'		: 'target',
 				'repo'		: 'name',
-				# 'branch'	: 'branch',
 				'revision'	: 'rev',
-				'ssh key file'	: 'identity',
-				'user'		: 'user',
+				'ssh-key-file'	: 'identity',
 				'force'		: 'force',
+				'user'		: 'user',
 			},
 			'states' : [
 				'latest', 'present',
@@ -167,12 +163,11 @@ class StateAdaptor(object):
 			'attributes' : {
 				'path'		: 'target',
 				'repo'		: 'name',
-				# 'branch'	: 'branch',
 				'revision'	: 'rev',
 				'username'	: 'username',
 				'password'	: 'password',
-				'user'		: 'user',
 				'force'		: 'force',
+				'user'		: 'user',
 			},
 			'states' : [
 				'latest', 'export'
@@ -196,7 +191,6 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'revision'	: 'rev',
-				# 'ssh key file'	: '',
 				'path'		: 'target',
 				'user'		: 'user',
 				'force'		: 'force',
@@ -323,8 +317,8 @@ class StateAdaptor(object):
 				'group'			: 'group',
 				'timeout'		: 'timeout',
 				'env'			: 'env',
-				'if path present'	: 'onlyif',
-				'if path absent'	: 'unless',
+				'if-path-present'	: 'onlyif',
+				'if-path-absent'	: 'unless',
 			},
 			'states' : [
 				'run', 'call', 'wait', 'script'
@@ -335,13 +329,13 @@ class StateAdaptor(object):
 		## cron
 		'linux.cronjob' : {
 			'attributes' : {
+				'user'			:	'user',
+				'cmd'			:	'names',
 				'minute'		:	'minute',
 				'hour'			:	'hour',
-				'day of month'	:	'daymonth',
+				'day-of-month'	:	'daymonth',
 				'month'			:	'month',
-				'day of week'	:	'dayweek',
-				'user'			:	'user',
-				'cmd'			:	'names'
+				'day-of-week'	:	'dayweek',
 			},
 			'states' : [
 				'present', 'absent'
@@ -354,13 +348,14 @@ class StateAdaptor(object):
 			'attributes' : {
 				'username'	: 'name',
 				'password'	: 'password',
-				'full name'	: 'fullname',
+				'fullname'	: 'fullname',
 				'uid'		: 'uid',
 				'gid'		: 'gid',
 				'shell'		: 'shell',
 				'home'		: 'home',
-				'no login'	: 'nologin',
+				'no-login'	: 'nologin',
 				'groups'	: 'groups',
+				'system-account'	: 'system',
 			},
 			'states' : [ 'present', 'absent' ],
 			'type' : 'user'
@@ -371,7 +366,7 @@ class StateAdaptor(object):
 			'attributes' : {
 				'groupname' : 'name',
 				'gid' 		: 'gid',
-				'system group' 	: 'system'
+				'system-group' 	: 'system'
 			},
 			'states' : ['present', 'absent'],
 			'type' : 'group'
@@ -417,8 +412,8 @@ class StateAdaptor(object):
 		## timezone
 		'common.timezone' : {
 			'attributes' : {
-				'name' : 'name',
-				'use utc' : 'utc'
+				'name' 		: 'name',
+				'use-utc' 	: 'utc'
 			},
 			'states' : ['system'],
 			'type' : 'timezone'
@@ -431,16 +426,16 @@ class StateAdaptor(object):
 				'force'					: 'force',
 				'uuid'					: 'uuid',
 				'zero'					: 'zero',
-				'data alignment'		: 'dataalignment',
-				'data alignment offset'	: 'dataalignmentoffset',
-				'metadata size'			: 'metadatasize',
-				'metadata type'			: 'metadatatype',
-				'metadata copies'		: 'metadatacopies',
-				'metadata ignore'		: 'metadataignore',
-				'restorefile'			: 'restorefile',
-				'norestorefile'			: 'norestorefile',
-				'label sector'			: 'labelsector',
-				'PV size'				: 'setphysicalvolumesize',
+				'data-alignment'		: 'dataalignment',
+				'data-alignment-offset'	: 'dataalignmentoffset',
+				'metadata-size'			: 'metadatasize',
+				'metadata-type'			: 'metadatatype',
+				'metadata-copies'		: 'metadatacopies',
+				'metadata-ignore'		: 'metadataignore',
+				'restore-file'			: 'restorefile',
+				'no-restore-file'		: 'norestorefile',
+				'label-sector'			: 'labelsector',
+				'PV-size'				: 'setphysicalvolumesize',
 			},
 			'states' : ['pv_present'],
 			'type' : 'lvm'
@@ -450,14 +445,14 @@ class StateAdaptor(object):
 				'name'				: 'name',
 				'path' 				: 'devices',
 				'clustered'			: 'clustered',
-				'max LV number'		: 'maxlogicalvolumes',
-				'max PV number'		: 'maxphysicalvolumes',
-				'metadata type'		: 'metadatatype',
-				'metadata copies'	: 'metadatacopies',
-				'PE size'			: 'physicalextentsize',
+				'max-lv-number'		: 'maxlogicalvolumes',
+				'max-pv-number'		: 'maxphysicalvolumes',
+				'metadata-type'		: 'metadatatype',
+				'metadata-copies'	: 'metadatacopies',
+				'pe-size'			: 'physicalextentsize',
 				'autobackup'		: 'autobackup',
 				'tag'				: 'addtag',
-				'allocation policy'	: 'alloc',
+				'allocation-policy'	: 'alloc',
 			},
 			'states' : ['vg_present', 'vg_absent'],
 			'type' : 'lvm'
@@ -465,34 +460,34 @@ class StateAdaptor(object):
 		'linux.lvm.lv'	: {
 			'attributes'	: {
 				'name'				: 'name',
-				'VG name'			: 'vgname',
+				'vg-name'			: 'vgname',
 				'path'				: 'pv',
-				'chunk size'		: 'chunksize',
+				'chunk-size'		: 'chunksize',
 				'contiguous'		: 'contiguous',
 				# 'discards'			: 'discards',
-				'stripe number'		: 'stripes',
-				'stripe size'		: 'stripesize',
-				'LE number'			: 'extents',
-				'LV size'			: 'size',
-				'minor number'		: 'minor',
+				'stripe-number'		: 'stripes',
+				'stripe-size'		: 'stripesize',
+				'le-number'			: 'extents',
+				'lv-size'			: 'size',
+				'minor-number'		: 'minor',
 				'persistent'		: 'persistent',
-				'mirror number'		: 'mirrors',
-				'no udev sync'		: 'noudevsync',
+				'mirror-number'		: 'mirrors',
+				'no-udev-sync'		: 'noudevsync',
 				'monitor'			: 'monitor',
-				'ignore monitoring' : 'ignoremonitoring',
+				'ignore-monitoring' : 'ignoremonitoring',
 				'permission' 		: 'permission',
-				# 'pool metadata size': 'poolmetadatasize',
-				'region size'		: 'regionsize',
+				# 'pool-metadata-size': 'poolmetadatasize',
+				'region-size'		: 'regionsize',
 				'readahead'			: 'readahead',
 				# 'thinpool'			: 'thinpool',
 				'type'				: 'type',
-				'virtual size'		: 'virtualsize',
+				'virtual-size'		: 'virtualsize',
 				'zero'				: 'zero',
 				'available'			: 'available',
 				'snapshot'			: 'snapshot',
 				'autobackup'		: 'autobackup',
 				'tag'				: 'addtag',
-				'allocation policy'	: 'alloc',
+				'allocation-policy'	: 'alloc',
 			},
 			'states' : ['lv_present', 'lv_absent'],
 			'type' : 'lvm',
@@ -502,15 +497,15 @@ class StateAdaptor(object):
 		'common.virtualenv' : {
 			'attributes' : {
 				'path'					: 'name',
-				'python bin'				: 'python',
-				'system site packages'	: 'system_site_packages',
+				'python-bin'				: 'python',
+				'system-site-packages'	: 'system_site_packages',
 				# 'always-copy'			: '',
-				# 'unzip setuptools'		: '',
-				# 'no setuptools'			: '',
-				# 'no pip'				: '',
-				'extra search dir'		: 'extra-search-dir',
-				# always copy				: '',
-				'requirements file'		: 'requirements',
+				# 'unzip-setuptools'		: '',
+				# 'no-setuptools'			: '',
+				# 'no-pip'				: '',
+				'extra-search-dir'		: 'extra-search-dir',
+				# always-copy				: '',
+				'requirements-file'		: 'requirements',
 			},
 			'states' : ['managed'],
 			'type' : 'virtualenv',
@@ -554,8 +549,8 @@ class StateAdaptor(object):
 				'file'				: 'source',
 				'path'				: 'name',
 				'checksum'			: 'source_hash',
-				# 'if path present'	:,
-				# 'if path absent'	:,
+				# 'if-path-present'	:,
+				# 'if-path-absent'	:,
 			},
 			'states' : ['extracted'],
 			'type' : 'archive'
