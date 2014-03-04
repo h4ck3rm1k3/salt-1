@@ -942,6 +942,13 @@ class StateAdaptor(object):
 				if 'source_hash' in addin:
 					addin['source_hash'] = 'md5={0}'.format(addin['source_hash'])
 
+				# add the last slash when there isnt
+				addin['name'] = os.path.normpath(addin['name']) + os.sep
+
+				# check whether previously extracted
+				if os.path.isdir(addin['name']):
+					addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
+
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
 
