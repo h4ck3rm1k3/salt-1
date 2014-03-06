@@ -840,10 +840,11 @@ class StateAdaptor(object):
 
 				# set absent
 				if 'absent' in addin and addin['absent']:
-					module_state = {}
-					module_state['absent'] = {
-						'names' : addin['names']
-					}
+					module_state = {'absent':{}}
+					if 'name' in addin:
+						module_state['absent']['name'] = addin['name']
+					elif 'names' in addin:
+						module_state['absent']['names'] = addin['names']
 
 				else:
 					# set mode
