@@ -27,7 +27,7 @@
           "_": "3 [prepare] create/ensure subversion location directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": ["/tmp/svn"],
+            "path": ["/tmp/test"],
             "absent": false,
             "recursive": true,
             "mode": "0755"
@@ -39,7 +39,7 @@
           "module": "common.svn",
           "parameter": {
             "repo": "https://github.com/MadeiraCloud/pysa",
-            "path": "/tmp/svn/test",
+            "path": "/tmp/test/svn",
             "force": true,
             "revision": "trunk"
           }

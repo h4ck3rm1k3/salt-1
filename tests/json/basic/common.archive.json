@@ -6,8 +6,9 @@
           "id": "state-2E042A11-4697-465B-B995-5C3194145D36",
           "module": "common.archive",
           "parameter": {
-            "file": "/tmp/test.tar.gz",
-            "path": "/tmp/test"
+            "file": "http://wordpress.org/latest.zip",
+            "path": "/tmp/test/wordpress/",
+            "checksum": "8133645e8820557761d7a551fea70028"
           }
         }
       ]

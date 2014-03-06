@@ -90,8 +90,12 @@
           "_": "9 [test3] delete file with absent parameter - Test",
           "module": "linux.file",
           "parameter": {
+            "content": "#!/bin/sh\necho \"hello test2\"",
             "path": "/madeira/util/test.sh",
-            "absent": true
+            "mode": "0777",
+            "absent": true,
+            "user": "InstantForge1",
+            "group": "InstantForge1"
           }
         },
         {

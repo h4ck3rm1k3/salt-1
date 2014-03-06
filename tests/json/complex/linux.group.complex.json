@@ -58,7 +58,7 @@
           "parameter": {
             "groupname": "Dev",
             "gid" : "600",
-            "system" : false
+            "system-group" : true
           }
         },
         {

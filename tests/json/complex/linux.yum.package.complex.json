@@ -3,7 +3,6 @@
     "init": {
       "state": [
 
-
         {
           "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E000",
           "_": "1 [prepare] remove mongo-10gen-unstable-tools - True/False",
@@ -74,8 +73,7 @@
             "name": {
               "mongo-10gen-unstable-tools": ""
             },
-            "disablerepo": "10gen",
-            "verify_gpg": false
+            "verify-gpg": false
           }
         },
         {
@@ -106,8 +104,8 @@
             "name": {
               "mongo-10gen-unstable-tools": ""
             },
-            "fromrepo": "10gen",
-            "verify_gpg": true
+            "repo": "10gen",
+            "verify-gpg": true
           }
         },
         {

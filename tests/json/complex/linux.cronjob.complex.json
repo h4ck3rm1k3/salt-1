@@ -50,8 +50,8 @@
                         "cmd": [
                             "/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1"
                         ],
-                        "day of month": "*/3",
-                        "day of week": "*/5",
+                        "day-of-month": "*/3",
+                        "day-of-week": "*/5",
                         "hour": "*/2",
                         "minute": "*/1",
                         "month": "*/4",

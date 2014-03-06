@@ -95,7 +95,7 @@
             "env": "WORLD=test1",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "if path present": "/tmp/test/test1"
+            "if-path-present": "/tmp/test/test1"
           }
         },
         {
@@ -110,7 +110,7 @@
             "env": "WORLD=test1",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "if path present": "/tmp/test/test3"
+            "if-path-present": "/tmp/test/test3"
           }
         },
 
@@ -127,7 +127,7 @@
             "env": "WORLD=test1",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "if path absent": "/tmp/test/test3"
+            "if-path-absent": "/tmp/test/test3"
           }
         },
         {
@@ -142,7 +142,7 @@
             "env": "WORLD=test2",
             "user": "InstantForge1",
             "group": "InstantForge1",
-            "if path absent": "/tmp/test/test2"
+            "if-path-absent": "/tmp/test/test2"
           }
         }
 
