@@ -23,7 +23,7 @@
                     "id": "state-960FDF91-C1DC-47A5-8B6E-32094DAD5A33",
                     "module": "linux.cmd",
                     "parameter": {
-                        "cmd": "pvremove -f /dev/sdb1 /dev/sdb2"
+                        "cmd": "pvremove -f /dev/sdb1 /dev/sdb2 /dev/sdb3 /dev/sdb4"
                     }
                 },
                 {
@@ -31,7 +31,7 @@
                     "id": "state-4898B633-A457-438E-B473-842BA868B00D",
                     "module": "linux.lvm.pv",
                     "parameter": {
-                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -40,7 +40,7 @@
                     "module": "linux.lvm.vg",
                     "parameter": {
                         "name": "vgtest",
-                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -49,9 +49,9 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -76,9 +76,9 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LE number": "500",
-                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                        "vg-name": "vgtest",
+                        "le-number": "500",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -103,9 +103,9 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "path": ["/dev/sdb1", "/dev/sdb2"],
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
                         "monitor": "y",
                         "permission": "rw",
@@ -130,11 +130,11 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "path": ["/dev/sdb1", "/dev/sdb2"],
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
-                        "mirror number": 1,
+                        "mirror-number": 1,
                         "persistent": "n"
                     }
                 },
@@ -152,12 +152,12 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "path": ["/dev/sdb1", "/dev/sdb2"],
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
-                        "stripe number": 2,
-                        "stripe size": 64
+                        "stripe-number": 2,
+                        "stripe-size": 64
                     }
                 },
                 {
@@ -174,8 +174,8 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "sstest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
                         "snapshot": "lvtest"
                     }
                 },

@@ -6,7 +6,7 @@
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632ABE",
           "module": "linux.mount",
           "parameter": {
-            "dev": "/dev/xvdb",
+            "device": "/dev/xvdb",
             "filesystem": "ext3",
             "path": "/mnt/data"
           }

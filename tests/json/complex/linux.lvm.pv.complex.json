@@ -37,14 +37,14 @@
             "path": ["/dev/sdb1"],
             "metadata size": 8,
             "metadata copies": 1,
-            "data alignment": "256k",
-            "data alignment offset": "8k",
-            "metadata ignore": "n",
-            "label sector": 1,
-            "PV size": "500M",
+            "data-alignment": "256k",
+            "data-alignment offset": "8k",
+            "metadata-ignore": "n",
+            "label-sector": 1,
+            "PV-size": "500M",
             "force": "y",
             "zero": "y",
-            "metadata type": "lvm2"
+            "metadata-type": "lvm2"
           }
         },
         {
