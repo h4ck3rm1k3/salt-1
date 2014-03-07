@@ -74,7 +74,7 @@ def attr():
 			http(s):///host/path/to/archive.tar.gz
 
 		note:
-			currently supported archive format: tar, tgz, gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)
+			currently supported archive format: tar, tgz, tar.gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)
 			local archive file (file://path/to/file) not supported in this version
 
 *   **checksum** (*optional*): a MD5 checksum to verify the file integrity
@@ -642,7 +642,7 @@ def attr():
 						'visible'	:	True
 					},
 					'content'	:	{
-						'type'	:	'line',
+						'type'	:	'content',
 						'required'	:	True
 					}
 				}
@@ -719,7 +719,7 @@ def attr():
 						'visible'	:	True
 					},
 					'content'	:	{
-						'type'		:	'line',
+						'type'		:	'content',
 						'required'	:	True
 					}
 				}
