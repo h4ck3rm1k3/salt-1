@@ -642,7 +642,7 @@ def attr():
 						'visible'	:	True
 					},
 					'content'	:	{
-						'type'	:	'content',
+						'type'	:	'text',
 						'required'	:	True
 					}
 				}
@@ -719,7 +719,7 @@ def attr():
 						'visible'	:	True
 					},
 					'content'	:	{
-						'type'		:	'content',
+						'type'		:	'text',
 						'required'	:	True
 					}
 				}
@@ -1204,7 +1204,7 @@ def attr():
 #						'visible'	:	True
 #					},
 #					'content'	:	{
-#						'type'		:	'content',
+#						'type'		:	'text',
 #						'required'	:	True,
 #						'visible'	:	True
 #					}
