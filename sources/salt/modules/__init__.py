@@ -5,9 +5,24 @@ Execution Module Directory
 
 def state_std(kwargs, res):
 	if kwargs and kwargs.has_key('state_ret'):
-		# remove \r from stdout
-		stdout_list = res['stdout'].split('\n')
-		for idx, item in enumerate(stdout_list):
-			stdout_list[idx] = item.split('\r')[-1]
+		placeholder_list = ['.']
+		repeat_num = 10
 
-		kwargs['state_ret']['state_stdout'] += '\n'.join(stdout_list) + '\n'
+		# remove progress bar from stdout
+		ori_std_list = res['stdout'].split('\n')
+		new_std_list = []
+		for item in ori_std_list:
+			# remove \r line
+			if item.find('\r')>0:
+				new_std_list.append(item.split('\r')[-1])
+			else:
+				is_progressbar = False
+				for holder in placeholder_list:
+			 		if item.find(holder*repeat_num)>0:
+			 			is_progressbar = True
+			 			break
+
+			 	if not is_progressbar:
+			 		new_std_list.append(item)
+
+		kwargs['state_ret']['state_stdout'] += '\n'.join(new_std_list) + '\n'
