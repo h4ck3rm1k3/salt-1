@@ -51,10 +51,10 @@ class StateAdaptor(object):
 				'installed', 'removed'
 			],
 			'type'	: 'gem',
-			'require'	: {
-				'linux.apt.package' : { 'name' : ['rubygems'] },
-				'linux.yum.package' : { 'name' : ['rubygems'] }
-			},
+			'require'	: [
+				{'linux.apt.package' : { 'name' : ['rubygems'] }},
+				{'linux.yum.package' : { 'name' : ['rubygems'] }}
+			],
 		},
 		'common.npm.package'	: {
 			'attributes' : {
@@ -65,10 +65,10 @@ class StateAdaptor(object):
 				'installed', 'removed', 'bootstrap'
 			],
 			'type'	: 'npm',
-			'require'	: {
-				'linux.apt.package' : { 'name' : ['npm'] },
-				'linux.yum.package' : { 'name' : ['npm'] }
-			}
+			'require'	: [
+				{'linux.apt.package' : { 'name' : ['npm'] }},
+				{'linux.yum.package' : { 'name' : ['npm'] }}
+			]
 		},
 		# 'common.pecl.package'	: {
 		# 	'attributes' : {
@@ -90,10 +90,10 @@ class StateAdaptor(object):
 				'installed', 'removed'
 			],
 			'type'	: 'pip',
-			'require' : {
-				'linux.apt.package' : { 'name' : ['python-pip'] },
-				'linux.yum.package' : { 'name' : ['python-pip'] }
-			}
+			'require' : [
+				{'linux.apt.package' : { 'name' : ['python-pip'] }},
+				{'linux.yum.package' : { 'name' : ['python-pip'] }}
+			]
 		},
 
 		## repo
@@ -146,10 +146,10 @@ class StateAdaptor(object):
 				'latest', 'present',
 			],
 			'type' : 'git',
-			'require' : {
-				'linux.apt.package' : { 'name' : ['git'] },
-				'linux.yum.package' : { 'name' : ['git'] }
-			},
+			'require' : [
+				{'linux.apt.package' : { 'name' : ['git'] }},
+				{'linux.yum.package' : { 'name' : ['git'] }}
+			],
 			# 'require_in' : {
 			# 	'linux.dir' : {
 			# 		'path' 	: 'name',
@@ -173,10 +173,10 @@ class StateAdaptor(object):
 				'latest', 'export'
 			],
 			'type' : 'svn',
-			'require' : {
-				'linux.apt.package' : { 'name' : ['subversion'] },
-				'linux.yum.package' : { 'name' : ['subversion'] }
-			},
+			'require' : [
+				{'linux.apt.package' : { 'name' : ['subversion'] }},
+				{'linux.yum.package' : { 'name' : ['subversion'] }}
+			],
 			# 'require_in' : {
 			# 	'linux.dir' : {
 			# 		'path' 	: 'name',
@@ -199,10 +199,10 @@ class StateAdaptor(object):
 				'latest'
 			],
 			'type' : 'hg',
-			'require' : {
-				'linux.apt.package' : { 'name' : ['mercurial'] },
-				'linux.yum.package' : { 'name' : ['mercurial'] }
-			},
+			'require' : [
+				{'linux.apt.package' : { 'name' : ['mercurial'] }},
+				{'linux.yum.package' : { 'name' : ['mercurial'] }}
+			],
 			# 'require_in' : {
 			# 	'linux.dir' : {
 			# 		'path' 	: 'name',
@@ -266,13 +266,10 @@ class StateAdaptor(object):
 			},
 			'states' : ['running', 'mod_watch'],
 			'type' : 'supervisord',
-			'require' : {
-				'common.pip.package' : {
-					'name' : {
-						'supervisor' : ''
-					}
-				}
-			}
+			'require' : [
+				{'common.pip.package' : {'name' : {'supervisor' : ''}}},
+				{'linux.cmd' : { 'cmd' : 'supervisord -c $config'}}
+			]
 		},
 		'linux.service' : {
 			'attributes' : {
@@ -497,7 +494,7 @@ class StateAdaptor(object):
 		'common.virtualenv' : {
 			'attributes' : {
 				'path'					: 'name',
-				'python-bin'				: 'python',
+				'python-bin'			: 'python',
 				'system-site-packages'	: 'system_site_packages',
 				# 'always-copy'			: '',
 				# 'unzip-setuptools'		: '',
@@ -509,13 +506,9 @@ class StateAdaptor(object):
 			},
 			'states' : ['managed'],
 			'type' : 'virtualenv',
-			'require' : {
-				'common.pip.package' : {
-					'name' : {
-						'virtualenv' : ''
-					}
-				}
-			}
+			'require' : [
+				{'common.pip.package' : {'name' : {'virtualenv' : ''}}}
+			]
 		},
 
 		## ssh
@@ -598,6 +591,9 @@ class StateAdaptor(object):
 			# expand salt state
 			utils.log("INFO", "Begin to expand salt state...", ("convert", self))
 			self.__expand()
+
+			utils.log("INFO", "Begin to render salt state...", ("convert", self))
+			self.__render(parameter)
 		except StateException, e:
 			import json
 			utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
@@ -626,9 +622,10 @@ class StateAdaptor(object):
 				if 'require' in self.mod_map[module]:
 					req_state = self.__get_require(self.mod_map[module]['require'])
 					if req_state:
-						for req_tag, req_value in req_state.iteritems():
-							salt_state[req_tag] = req_value
-							require.append({ next(iter(req_value)) : req_tag })
+						for item in req_state:
+							for req_tag, req_value in item.iteritems():
+								salt_state[req_tag] = req_value
+								require.append({ next(iter(req_value)) : req_tag })
 
 				# add require in
 				utils.log("DEBUG", "Begin to generate require-in ...", ("_convert", self))
@@ -1040,19 +1037,20 @@ class StateAdaptor(object):
 			Generate require state.
 		"""
 
-		require_state = {}
+		require_state = []
 
 		try:
-			for module, parameter in require.items():
-				if module not in self.mod_map.keys():	continue
+			for item in require:
+				for module, parameter in item.iteritems():
+					if module not in self.mod_map.keys():	continue
 
-				# filter not current platform's package module
-				if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
+					# filter not current platform's package module
+					if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
 
-				the_require_state = self.__salt('require', module, parameter)
+					the_require_state = self.__salt('require', module, parameter)
 
-				if the_require_state:
-					require_state.update(the_require_state)
+					if the_require_state:
+						require_state.append(the_require_state)
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt requisities exception: %s" % str(e), ("__get_require", self))
 			raise StateException(str(e))
@@ -1133,6 +1131,31 @@ class StateAdaptor(object):
 			raise StateException(str(e))
 
 		return watch_state
+
+	def __render(self, parameter):
+		"""
+			Rendering the states.
+		"""
+		if not self.states or not isinstance(self.states, list):
+			raise StateException("Invalid state format %s" % str(states))
+
+		for idx, item in enumerate(self.states):
+			for tag, value in item.iteritems():
+				for module, state in value.iteritems():
+					for attr_idx, attributes in enumerate(state):
+						if not isinstance(attributes, dict):	continue
+
+						for attr_name, attr_value in attributes.iteritems():
+							if not isinstance(attr_value, basestring):	continue
+
+							if attr_value.find('$')>=0:
+								str_list = [ i for i in attr_value.split() ]
+
+								for str_idx, i in enumerate(str_list):
+									if i.startswith('$') and i[1:] in parameter:
+										str_list[str_idx] = parameter[i[1:]
+
+								self.states[idx][tag][module][attr_idx][attr_name] = ' '.join(str_list)
 
 	# def __check_module(self, module):
 	# 	"""
