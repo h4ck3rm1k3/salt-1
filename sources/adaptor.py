@@ -1153,7 +1153,7 @@ class StateAdaptor(object):
 
 								for str_idx, i in enumerate(str_list):
 									if i.startswith('$') and i[1:] in parameter:
-										str_list[str_idx] = parameter[i[1:]
+										str_list[str_idx] = parameter[i[1:]]
 
 								self.states[idx][tag][module][attr_idx][attr_name] = ' '.join(str_list)
 
