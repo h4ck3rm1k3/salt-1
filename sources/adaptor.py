@@ -699,75 +699,89 @@ class StateAdaptor(object):
 		}
 
 		try:
-			if module in ['linux.apt.package', 'linux.yum.package']:
+			if module in ['linux.apt.package', 'linux.yum.package', 'common.npm.package', 'common.pip.package', 'common.gem.package']:
 				module_state = {}
 
-				if addin['pkgs']:
-					for item in addin['pkgs']:
-						pkg_name = None
-						pkg_state = None
-						if isinstance(item, dict):
-							for k, v in item.iteritems():
-								pkg_name 	= k
-								pkg_state 	= default_state
+				if 'pkgs' in addin:
+					pkg_flag = 'pkgs'
+				elif 'names' in addin:
+					pkg_flag = 'names'
+				else:
+					pkg_flag = None
 
-								if v in self.mod_map[module]['states']:
-									pkg_state = v
+				if pkg_flag:
+					for item in addin[pkg_flag]:
+						if not isinstance(item, dict):	continue
 
-								if pkg_state not in module_state:			module_state[pkg_state] = {}
-								if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
+						pkg_name = item['key'] if 'key' in item else None
+						pkg_version = item['value'] if 'value' in item else None
 
-								if pkg_state == default_state:
-									module_state[pkg_state]['pkgs'].append(item)
-								else:
-									module_state[pkg_state]['pkgs'].append(pkg_name)
+						if not pkg_name:	continue
 
-						else:	# insert into default state
-							pkg_state	= default_state
-
-							if pkg_state not in module_state:			module_state[pkg_state] = {}
-							if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
-
-							module_state[pkg_state]['pkgs'].append(item)
-
-			elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
-				module_state = {}
-
-				for item in addin['names']:
-					pkg_name = None
-					pkg_state = None
-
-					if isinstance(item, basestring):	# insert into default state
-						pkg_state	= default_state
+						pkg_state = default_state
+						if pkg_version and pkg_version in self.mod_map[module]['states']:
+							pkg_state = pkg_version
 
 						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+						if pkg_flag not in module_state[pkg_state]:	module_state[pkg_state][pkg_flag] = []
 
-						module_state[pkg_state]['names'].append(item)
-
-					elif isinstance(item, dict):
-						for k, v in item.iteritems():
-							pkg_name 	= k
-							pkg_state 	= default_state
-
-							if v in self.mod_map[module]['states']:		pkg_state = v
-							if pkg_state not in module_state:			module_state[pkg_state] = {}
-							if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-							if pkg_state == default_state:
-								if module == 'common.npm.package':
-									module_state[pkg_state]['names'].append(
-										'{0}@{1}'.format(k, v)
-										)
+						if pkg_state == default_state and pkg_version != default_state:
+							if pkg_version:
+								if module in ['linux.apt.package', 'linux.yum.package']:
+									module_state[pkg_state][pkg_flag].append({pkg_name:pkg_version})
 								elif module in ['common.pip.package', 'common.gem.package']:
-									module_state[pkg_state]['names'].append(
-									'{0}=={1}'.format(k, v)
+									module_state[pkg_state][pkg_flag].append(
+										'{0}=={1}'.format(pkg_name, pkg_version)
+									)
+								elif module in ['common.npm.package']:
+									module_state[pkg_state][pkg_flag].append(
+										'{0}@{1}'.format(pkg_name, pkg_version)
 									)
 							else:
-								module_state[pkg_state]['names'].append(pkg_name)
+								module_state[pkg_state][pkg_flag].append(pkg_name)
+						else:
+							module_state[pkg_state][pkg_flag].append(pkg_name)
 
-					else:	# invalid
-						continue
+			# elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
+			# 	module_state = {}
+
+			# 	for item in addin['names']:
+			# 		if not isinstance(item, dict):	continue
+
+			# 		pkg_name = item['key'] if 'key' in item
+			# 		pkg_state = None
+
+			# 		if isinstance(item, basestring):	# insert into default state
+			# 			pkg_state	= default_state
+
+			# 			if pkg_state not in module_state:			module_state[pkg_state] = {}
+			# 			if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+
+			# 			module_state[pkg_state]['names'].append(item)
+
+			# 		elif isinstance(item, dict):
+			# 			for k, v in item.iteritems():
+			# 				pkg_name 	= k
+			# 				pkg_state 	= default_state
+
+			# 				if v in self.mod_map[module]['states']:		pkg_state = v
+			# 				if pkg_state not in module_state:			module_state[pkg_state] = {}
+			# 				if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
+
+			# 				if pkg_state == default_state:
+			# 					if module == 'common.npm.package':
+			# 						module_state[pkg_state]['names'].append(
+			# 							'{0}@{1}'.format(k, v)
+			# 							)
+			# 					elif module in ['common.pip.package', 'common.gem.package']:
+			# 						module_state[pkg_state]['names'].append(
+			# 						'{0}=={1}'.format(k, v)
+			# 						)
+			# 				else:
+			# 					module_state[pkg_state]['names'].append(pkg_name)
+
+			# 		else:	# invalid
+			# 			continue
 
 			elif module in ['common.git', 'common.svn', 'common.hg']:
 				# if 'name' in addin:
