@@ -267,8 +267,7 @@ class StateAdaptor(object):
 			'states' : ['running', 'mod_watch'],
 			'type' : 'supervisord',
 			'require' : [
-				{'common.pip.package' : {'name' : [{'key':'supervisor'}]}},
-				{'linux.cmd' : { 'cmd' : 'supervisord -c $config'}}
+				{'common.pip.package' : {'name' : [{'key':'supervisor'}]}}
 			]
 		},
 		'linux.service' : {
@@ -641,7 +640,10 @@ class StateAdaptor(object):
 				utils.log("DEBUG", "Begin to generate watch ...",("_convert", self))
 				if 'watch' in parameter and parameter['watch']:
 					state = 'mod_watch'
-					addin['full_restart'] = True
+					if module == 'linux.service':
+						addin['full_restart'] = True
+					elif module == 'linux.supervisord':
+						addin['restart'] = True
 
 				# build up module state
 				module_state = [

@@ -16,9 +16,11 @@ Interaction with the Supervisor daemon
 
 # Import python libs
 import logging
+import subprocess
 
 # Import salt libs
 import salt.utils
+from salt.exceptions import CommandExecutionError
 
 log = logging.getLogger(__name__)
 
@@ -101,6 +103,15 @@ def running(name,
         # Support old runas usage
         user = runas
         runas = None
+
+    # start supervisord
+    try:
+        cmd = ['supervisord']
+        if conf_file:
+            cmd += ['-c', conf_file]
+        __salt__['cmd.run_stdall'](' '.join(cmd), runas=user)
+    except:
+        pass
 
     all_processes = __salt__['supervisord.status'](
         user=user,
