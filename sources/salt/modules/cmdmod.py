@@ -24,7 +24,7 @@ import salt.grains.extra
 from salt._compat import string_types
 from salt.exceptions import CommandExecutionError, TimedProcTimeoutError
 from salt.log import LOG_LEVELS
-from salt.modules import state_std
+# from salt.modules import state_std
 
 # Only available on POSIX systems, nonfatal on windows
 try:
@@ -895,7 +895,7 @@ def run_stdall(cmd,
             log.log(lvl, 'stdout: {0}'.format(ret['stdout']))
         if ret['stderr']:
             log.log(lvl, 'stderr: {0}'.format(ret['stderr']))
-    state_std(kwargs, ret)
+    # state_std(kwargs, ret)
     return ret
 
 def retcode(cmd,

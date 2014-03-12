@@ -569,7 +569,7 @@ def run(name,
         if not __opts__['test']:
             try:
                 cmd_all = __salt__['cmd.run_stdall'](
-                    name, timeout=timeout, kwargs=cmd_kwargs, state_ret=ret
+                    name, timeout=timeout, **cmd_kwargs
                 )
                 # ret['state_stdout'] += cmd_all['stdout'] + '\n'
             except CommandExecutionError as err:
