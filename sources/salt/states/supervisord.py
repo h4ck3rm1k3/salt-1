@@ -20,7 +20,6 @@ import subprocess
 
 # Import salt libs
 import salt.utils
-from salt.exceptions import CommandExecutionError
 
 log = logging.getLogger(__name__)
 
@@ -106,10 +105,16 @@ def running(name,
 
     # start supervisord
     try:
-        cmd = ['supervisord']
-        if conf_file:
-            cmd += ['-c', conf_file]
-        __salt__['cmd.run_stdall'](' '.join(cmd), runas=user)
+        is_supervisord = subprocess.Popen(
+            'ps aux|grep supervisord', 
+            shell=True, 
+            stdin=subprocess.PIPE, 
+            stdout=subprocess.PIPE).communicate()[0].strip().find('python')
+        if is_supervisord < 0:
+            cmd = ['supervisord']
+            if conf_file:
+                cmd += ['-c', conf_file]
+            __salt__['cmd.run_stdall'](' '.join(cmd), runas=user)
     except:
         pass
 
