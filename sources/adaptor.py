@@ -52,8 +52,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'gem',
 			'require'	: [
-				{'linux.apt.package' : { 'name' : ['rubygems'] }},
-				{'linux.yum.package' : { 'name' : ['rubygems'] }}
+				{'linux.apt.package' : { 'name' : [{'key':'rubygems'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'rubygems'}] }}
 			],
 		},
 		'common.npm.package'	: {
@@ -66,8 +66,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'npm',
 			'require'	: [
-				{'linux.apt.package' : { 'name' : ['npm'] }},
-				{'linux.yum.package' : { 'name' : ['npm'] }}
+				{'linux.apt.package' : { 'name' : [{'key':'npm'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'npm'}] }}
 			]
 		},
 		# 'common.pecl.package'	: {
@@ -91,8 +91,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'pip',
 			'require' : [
-				{'linux.apt.package' : { 'name' : ['python-pip'] }},
-				{'linux.yum.package' : { 'name' : ['python-pip'] }}
+				{'linux.apt.package' : { 'name' : [{'key':'python-pip'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'python-pip'}] }}
 			]
 		},
 
@@ -147,8 +147,8 @@ class StateAdaptor(object):
 			],
 			'type' : 'git',
 			'require' : [
-				{'linux.apt.package' : { 'name' : ['git'] }},
-				{'linux.yum.package' : { 'name' : ['git'] }}
+				{'linux.apt.package' : { 'name' : [{'key':'git'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'git'}] }}
 			],
 			# 'require_in' : {
 			# 	'linux.dir' : {
@@ -174,8 +174,8 @@ class StateAdaptor(object):
 			],
 			'type' : 'svn',
 			'require' : [
-				{'linux.apt.package' : { 'name' : ['subversion'] }},
-				{'linux.yum.package' : { 'name' : ['subversion'] }}
+				{'linux.apt.package' : { 'name' : [{'key':'subversion'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'subversion'}] }}
 			],
 			# 'require_in' : {
 			# 	'linux.dir' : {
@@ -200,8 +200,8 @@ class StateAdaptor(object):
 			],
 			'type' : 'hg',
 			'require' : [
-				{'linux.apt.package' : { 'name' : ['mercurial'] }},
-				{'linux.yum.package' : { 'name' : ['mercurial'] }}
+				{'linux.apt.package' : { 'name' : [{'key':'mercurial'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'mercurial'}] }}
 			],
 			# 'require_in' : {
 			# 	'linux.dir' : {
@@ -267,7 +267,7 @@ class StateAdaptor(object):
 			'states' : ['running', 'mod_watch'],
 			'type' : 'supervisord',
 			'require' : [
-				{'common.pip.package' : {'name' : {'supervisor' : ''}}},
+				{'common.pip.package' : {'name' : [{'key':'supervisor'}]}},
 				{'linux.cmd' : { 'cmd' : 'supervisord -c $config'}}
 			]
 		},
@@ -507,7 +507,7 @@ class StateAdaptor(object):
 			'states' : ['managed'],
 			'type' : 'virtualenv',
 			'require' : [
-				{'common.pip.package' : {'name' : {'virtualenv' : ''}}}
+				{'common.pip.package' : {'name' : [{'key':'virtualenv'}]}}
 			]
 		},
 
@@ -955,8 +955,8 @@ class StateAdaptor(object):
 					# add require-pkg when it isnt tar
 					if ext == 'zip':
 						self.mod_map[module]['require'] = {
-							'linux.apt.package' : { 'name' : ['zip'] },
-							'linux.yum.package' : { 'name' : ['zip'] },
+							'linux.apt.package' : { 'name' : [{'key':'zip'}] },
+							'linux.yum.package' : { 'name' : [{'key':'zip'}] },
 						}
 
 				if 'source_hash' in addin:
