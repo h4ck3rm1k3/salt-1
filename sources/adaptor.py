@@ -7,6 +7,7 @@ Madeira OpsAgent states adaptor
 
 # System imports
 import os
+from string import Template
 
 # Internal imports
 from opsagent.exception import StateException
@@ -591,8 +592,8 @@ class StateAdaptor(object):
 			utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
 			self.__expand()
 
-			utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
-			self.__render(parameter)
+			# utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
+			# self.__render(parameter)
 
 			utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
 		except StateException, e:
@@ -1167,13 +1168,12 @@ class StateAdaptor(object):
 							if not isinstance(attr_value, basestring):	continue
 
 							if attr_value.find('$')>=0:
-								str_list = [ i for i in attr_value.split() ]
+								try:
+									self.states[idx][tag][module][attr_idx][attr_name] = Template(attr_value).substitute(parameter)
+								except Exception, e:
+									utils.log("WARNING", "Render module %s attribute %s value %s failed" % (module, attr_name, str(attr_value)), ("__render",self))
+									pass
 
-								for str_idx, i in enumerate(str_list):
-									if i.startswith('$') and i[1:] in parameter:
-										str_list[str_idx] = parameter[i[1:]]
-
-								self.states[idx][tag][module][attr_idx][attr_name] = ' '.join(str_list)
 
 	# def __check_module(self, module):
 	# 	"""
