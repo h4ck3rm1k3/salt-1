@@ -588,11 +588,13 @@ class StateAdaptor(object):
 			self.states = self.__salt(step, module, parameter)
 
 			# expand salt state
-			utils.log("INFO", "Begin to expand salt state...", ("convert", self))
+			utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
 			self.__expand()
 
-			utils.log("INFO", "Begin to render salt state...", ("convert", self))
+			utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
 			self.__render(parameter)
+
+			utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
 		except StateException, e:
 			import json
 			utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
