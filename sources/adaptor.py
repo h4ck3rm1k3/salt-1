@@ -592,8 +592,8 @@ class StateAdaptor(object):
 			utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
 			self.__expand()
 
-			# utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
-			# self.__render(parameter)
+			utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
+			self.__render(parameter)
 
 			utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
 		except StateException, e:
@@ -1093,15 +1093,7 @@ class StateAdaptor(object):
 				for k, v in attrs.iteritems():
 					if not v:	continue
 
-					if k in parameter:
-						req_addin[v] = parameter[k]
-					elif k.find('$')>=0:
-						str_list = k.split()
-						for idx, w in enumerate(str_list):
-							if w.startswith('$'):
-								str_list[idx] = parameter[w[1:]]
-
-						req_addin[v] = ' '.join(str_list)
+					req_addin[v] = parameter[k] if k in parameter else k
 
 				if req_addin:
 					state = self.mod_map[module]['states'][0]
