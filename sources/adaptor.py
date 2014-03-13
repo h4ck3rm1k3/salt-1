@@ -584,7 +584,7 @@ class StateAdaptor(object):
 
 		# convert to salt states
 		try:
-			utils.log("INFO", "Begin to convert to salt state...", ("convert", self))
+			utils.log("INFO", "Begin to convert module %s parameter %s" % (module, str(parameter)), ("convert", self))
 			self.states = self.__salt(step, module, parameter)
 
 			# expand salt state
