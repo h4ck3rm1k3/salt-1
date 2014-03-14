@@ -959,20 +959,23 @@ class StateAdaptor(object):
 
 					# add require-pkg when it isnt tar
 					if ext == 'zip':
-						self.mod_map[module]['require'] = {
-							'linux.apt.package' : { 'name' : [{'key':'zip'}] },
-							'linux.yum.package' : { 'name' : [{'key':'zip'}] },
-						}
+						self.mod_map[module]['require'] = [
+							{'linux.apt.package' : { 'name' : [{'key':'zip'}] }},
+							{'linux.yum.package' : { 'name' : [{'key':'zip'}] }},
+						]
 
 				if 'source_hash' in addin:
-					addin['source_hash'] = 'md5={0}'.format(addin['source_hash'])
+					addin['source_hash'] = 'md5={0}'.format(addin['source_hash'].lower())
 
 				# add the last slash when there isnt
 				addin['name'] = os.path.normpath(addin['name']) + os.sep
 
 				# check whether previously extracted
-				if os.path.isdir(addin['name']):
-					addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
+				try:
+					if os.path.isdir(addin['name']):
+						addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
+				except:
+					pass
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
