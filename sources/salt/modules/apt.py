@@ -54,10 +54,12 @@ def __virtual__():
     '''
     Confirm this module is on a Debian based system
     '''
-    if __grains__['os_family'] != 'Debian':
+    try:
+        if __grains__['os_family'] != 'Debian':
+            return False
+        return __virtualname__
+    except Exception:
         return False
-    return __virtualname__
-
 
 def __init__(opts):
     '''
