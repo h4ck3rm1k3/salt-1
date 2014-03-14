@@ -67,8 +67,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'npm',
 			'require'	: [
-				{'linux.apt.package' : { 'name' : [{'key':'npm'}] }},
-				{'linux.yum.package' : { 'name' : [{'key':'npm'}] }}
+				{'linux.apt.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }}
 			]
 		},
 		# 'common.pecl.package'	: {
@@ -583,6 +583,7 @@ class StateAdaptor(object):
 		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
 		parameter = utils.uni2str(parameter)
 		step = str(step)
+		module = str(module)
 
 		# convert to salt states
 		try:
