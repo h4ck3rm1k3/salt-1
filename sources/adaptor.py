@@ -582,6 +582,7 @@ class StateAdaptor(object):
 		# convert from unicode to string
 		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
 		parameter = utils.uni2str(parameter)
+		step = str(step)
 
 		# convert to salt states
 		try:
