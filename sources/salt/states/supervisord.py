@@ -106,9 +106,9 @@ def running(name,
     # start supervisord
     try:
         is_supervisord = subprocess.Popen(
-            'ps aux|grep supervisord', 
-            shell=True, 
-            stdin=subprocess.PIPE, 
+            'ps aux|grep supervisord',
+            shell=True,
+            stdin=subprocess.PIPE,
             stdout=subprocess.PIPE).communicate()[0].strip().find('python')
         if is_supervisord < 0:
             cmd = ['supervisord']
@@ -131,7 +131,7 @@ def running(name,
     process_groups = []
     for proc in all_processes:
         if ':' in proc:
-            process_groups.append(proc[:proc.index(':') + 1])
+            process_groups.append(proc[:proc.index(':')])
     process_groups = list(set(process_groups))
 
     # determine if this process/group needs loading
