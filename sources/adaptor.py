@@ -307,7 +307,7 @@ class StateAdaptor(object):
 		## cmd
 		'linux.cmd' : {
 			'attributes' : {
-				'bin'			: 'shell',
+				'shell'			: 'shell',
 				'cmd'			: 'name',
 				'cwd'			: 'cwd',
 				'user'			: 'user',
