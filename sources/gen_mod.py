@@ -84,8 +84,6 @@ extract an archive file
 
 	>note: the path will be auto-created if not exists
 
-*   **if-path-present** (*optional*): extract the archive only if the specified path exists
-
 *   **if-path-absent** (*optional*): extract the archive only if the specified path exists
 					''',
 					'cn'	:	''''''
@@ -93,7 +91,7 @@ extract an archive file
 				'parameter'	:	{
 					'file'		:	{
 						'type'		:	'line',
-						'required'	:	False,
+						'required'	:	True,
 						'visible'	:	True,
 					},
 					'checksum'	:	{
@@ -106,11 +104,11 @@ extract an archive file
 						'required'	:	True,
 						'visible'	:	True
 					},
-					'if-path-present'	:	{
-						'type'		:	'bool',
-						'required'	:	False,
-						'visible'	:	True
-					},
+					#'if-path-present'	:	{
+					#	'type'		:	'bool',
+					#	'required'	:	False,
+					#	'visible'	:	True
+					#},
 					'if-path-absent'	:	{
 						'type'		:	'bool',
 						'required'	:	False,
@@ -1941,7 +1939,7 @@ manage LVM logical volume (LV)
 
 	>>note: The number can also be expressed as a percentage of the total space in the Volume Group with the suffix %VG, as a percentage of the remaining free space in the Volume Group with the suffix %FREE, as a percentage of the remaining free space for the specified PhysicalVolume(s) with the suffix %PVS, or (for a snapshot) as a percentage of the total space in the Origin  Logical Volume with the suffix %ORIGIN
 
-*   **lv-size** (*optional*): specify the size to allocate for the new LV
+*   **le-size** (*optional*): specify the size to allocate for the new LV
 
 	>>note: A size suffix of K for kilobytes, M for megabytes, G for gigabytes, T for terabytes, P for petabytes or E for exabytes is optional. Default unit is megabytes
 
