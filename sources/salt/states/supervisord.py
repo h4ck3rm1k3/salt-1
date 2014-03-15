@@ -211,6 +211,11 @@ def running(name,
                 name
             )
             log.debug(comment)
+
+            # group process
+            if process_type == 'group':
+                name = '{0}:*'.format(name)
+
             result = __salt__['supervisord.restart'](
                 name,
                 user=user,
@@ -242,6 +247,11 @@ def running(name,
         )
         changes.append(comment)
         log.debug(comment)
+
+        # group process
+        if process_type == 'group':
+            name = '{0}:*'.format(name)
+
         result = __salt__['supervisord.start'](
             name,
             user=runas,
@@ -254,6 +264,9 @@ def running(name,
         log.debug(unicode(result))
 
     if ret['result'] and len(changes):
+        # remove group flag
+        if ':' in name:
+            name = name[:name.index(':')]
         ret['changes'][name] = ' '.join(changes)
     return ret
 
