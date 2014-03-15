@@ -573,7 +573,8 @@ def run(name,
                     name, timeout=timeout, **cmd_kwargs
                 )
                 # ret['state_stdout'] += cmd_all['stdout'] + '\n'
-                state_std(ret, cmd_all)
+                state_ret = {'state_ret':ret}
+                state_std(state_ret, cmd_all)
             except CommandExecutionError as err:
                 ret['comment'] = str(err)
                 return ret

@@ -13,7 +13,7 @@ def state_std(kwargs, res):
 		new_std_list = []
 		for item in ori_std_list:
 			# remove \r line
-			if item.find('\r')>0:
+			if item.find('\r')>=0:
 				new_std_list.append(item.split('\r')[-1])
 			else:
 				is_progressbar = False
