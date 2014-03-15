@@ -1413,6 +1413,7 @@ manage mount points
 execute a shell command
 
 ### Parameters
+*   **shell** (*required*): the absolute path of the shell to execute the command, by default /bin/sh
 
 *   **cmd** (*required*): the command to execute
 		
@@ -1439,10 +1440,10 @@ execute a shell command
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'bin'		:	{
+					'shell'		:	{
 						'type'		:	'line',
 						'option'	:	'',
-						'default'	:	'bin/sh',
+						'default'	:	'/bin/sh',
 						'required'	:	False
 					},
 					'cmd'		:	{
