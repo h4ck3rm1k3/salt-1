@@ -2,6 +2,7 @@
 
 def attr():
 	return {
+		'tag'	:	'v2014-03-15',
 		'meta'	:	{
 			'#'	:	{
 				'module'	:	'meta.comment',
