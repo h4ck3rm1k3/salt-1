@@ -67,8 +67,8 @@ class StateAdaptor(object):
 			],
 			'type'	: 'npm',
 			'require'	: [
-				{'linux.apt.package' : { 'name' : [{'key':'npm'}, {'key':'expect-dev'}] }},
-				{'linux.yum.package' : { 'name' : [{'key':'npm'}, {'key':'expect-dev'}] }}
+				{'linux.apt.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }}
 			]
 		},
 		# 'common.pecl.package'	: {
