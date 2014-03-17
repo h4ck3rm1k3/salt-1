@@ -33,8 +33,8 @@ wait for remote state(s) to complete, if anyone is not done yet, it will cause t
 *   **`state`** (*required*): one or multiple remote states to be waited
 		
 		example:
-			single - `@{hostname.state.1}`
-			barrier - `@{host1.state.1, @host2.state.2}`
+			single - @{hostname.state.1}
+			barrier - @{host1.state.1, @host2.state.2}
 					''',
 					'cn'	:	''''''
 				},
@@ -73,10 +73,9 @@ extract an archive file
 
 *   **`file`** (*required*): the archive file URI
 
-		example:
-			`http(s):///host/path/to/archive.tar.gz`
+		example: http(s):///host/path/to/archive.tar.gz
 
-	>note: currently supported archive format: `tar`, `tgz`, `tar.gz`, `bz`, `bz2`, `tbz`, `zip` (archive file must end with one of these extention name)
+	>note: currently supported archive format: tar, tgz, tar.gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)
 			local archive file `file://path/to/file` not supported in this version
 
 *   **`checksum`** (*optional*): a MD5 checksum to verify the file integrity
@@ -129,7 +128,7 @@ manage the timezone
 
 *   **`name`** (*required*): the timezone name
 		   
-		   example: `Pacific/Tahiti`
+		   example: Pacific/Tahiti
 
 *   **`use-utc`** (*optional*): whether to use UTC for the hardware clock, by default ***`True`***
 					''',
@@ -160,7 +159,7 @@ manage ruby gems
 ### Parameters
 
 *   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- ***`<null>`*** (*`default`*): ensure the package is installed. If not, will install the latest version available of all APT repos on
+	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **`removed`**: ensure the package is absent
@@ -188,7 +187,7 @@ manage node.js package (requires npm 1.2 or greater)
 ### Parameters
 
 *   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- ***`<null>`*** (*`default`*): ensure the package is installed. If not, will install the latest version available of all APT repos on
+	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
@@ -257,7 +256,7 @@ manage pip packages
 ### Parameters
 
 *   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- ***`<null>`*** (*`default`*): ensure the package is installed. If not, will install the latest version available of all APT repos on
+	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **`removed`**: ensure the package is absent
@@ -286,34 +285,32 @@ manage a git repo
 
 * **`path`** (*required* ): the path to clone the repo
 		
-		example:
-			`/var/www/html/mysite/`
+		example: /var/www/html/mysite/
 
 *   **`repo`** (*required*): the git repository uri
 
 		example:
-			`/path/to/repo.git/`
-			`file:///path/to/repo.git/`
-			`http[s]://host[:port][path]`
-			`ftp[s]://host[:port][path]`
-			`ssh://[user@]host[:port]/~[user][path]`
-			`git://[user@]host[:port]/~[user][path]`
-			`rsync://host[:port][path]`
+			/path/to/repo.git/
+			file:///path/to/repo.git/
+			http[s]://host[:port][path]
+			ftp[s]://host[:port][path]
+			ssh://[user@]host[:port]/~[user][path]
+			git://[user@]host[:port]/~[user][path]
+			rsync://host[:port][path]
 
 * **`revision`** (*optional*): the branch, tag, revision to checkout
 
 		example:
-			branch - `master`, `develop`
-			tag - `release-1.0`
-			commit id - `8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6`
+			branch - master, develop
+			tag - release-1.0
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 	>note:
 			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
 
 * **`ssh-key-file`** (*optional*): the path of the ssh keypair file
 
-		example:
-			`/root/.ssh/id_rsa`
+		example: /root/.ssh/id_rsa
 
 * **`force`** (*optional*): force the checkout even if there is conflict, by default ***`False`***
 
@@ -363,24 +360,23 @@ manage a hg repo
 
 * **`path`** (*required* ): the path to clone the repo
 		
-		example:
-			`/var/www/html/mysite/`
+		example: /var/www/html/mysite/
 
 *   **`repo`** (*required*): the hg repository uri
 		
 		example:
-			`local/filesystem/path`
-			`file://local/filesystem/path`
-			`http://[user@]host[:port]/[path]`
-			`https://[user@]host[:port]/[path]`
-			`ssh://[user@]host[:port]/[path]`
+			local/filesystem/path
+			file://local/filesystem/path
+			http://[user@]host[:port]/[path]
+			https://[user@]host[:port]/[path]
+			ssh://[user@]host[:port]/[path]
 
 * **`revision`** (*optional*): the branch, tag, revision to checkout
 		
 		example:
-			branch - `master`, `develop`
-			tag - `release-1.0`
-			commit id - `8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6`
+			branch - master, develop
+			tag - release-1.0
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 	>note:
 			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
@@ -429,24 +425,23 @@ manage a svn repo
 
 * **`path`** (*required* ): the path to checkout the repo
 
-		example:
-			`/var/www/html/mysite/`
+		example: /var/www/html/mysite/
 
 *   **`repo`** (*required*): the hg repository uri
 		
 		example:
-			`file://local/filesystem/path`
-			`http://[user@]host[:port][path]`
-			`https://[user@]host[:port][path]`
-			`svn://[user@]host[:port][path]`
-			`svn+ssh://[user@]host[:port][path]`
+			file://local/filesystem/path
+			http://[user@]host[:port][path]
+			https://[user@]host[:port][path]
+			svn://[user@]host[:port][path]
+			svn+ssh://[user@]host[:port][path]
 
 * **`revision`** (*optional*): the branch, tag, revision IDE to checkout
 		
 		example:
-			branch - `master`, `develop`
-			tag - `release-1.0`
-			commit id - `8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6`
+			branch - master, develop
+			tag - release-1.0
+			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 	>note:
 			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
@@ -588,7 +583,7 @@ manage apt packages
 ### Parameters
 
 *   *`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- ***`<null>`*** (*`default`*): ensure the package is installed. If not, will install the latest version available of all APT repos on
+	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **`removed`**: ensure the package is absent
@@ -597,11 +592,11 @@ manage apt packages
 
 * **`repo`** (*optional*): the repo name, which you want to use for installing the packages
 		
-		example: `main`
+		example: main
 
 * **`deb-conf-file`** (*optional*): the Deb configuration file path
 
-		example: `/etc/apt/deb.conf`
+		example: /etc/apt/deb.conf
 
 * **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`True`***
 					''',
@@ -642,11 +637,11 @@ manage apt repo
 
 *   **`name`** (*required*): the repository name (`/etc/apt/sources.list.d/$name.list` will be created)
 
-		example: `google`
+		example: google
 
 * **`content`** (*required*): the source list file content
 		
-		example: `deb http://dl.google.com/linux/deb/ stable non-free`
+		example: deb http://dl.google.com/linux/deb/ stable non-free
 					''',
 					'cn'	:	''''''
 				},
@@ -673,7 +668,7 @@ manage yum packages
 ### Parameters
 
 *   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- ***`<empty>`*** (*`default`*): ensure the package is installed. If not, will install the latest version available of all APT repos on
+	- ***`<empty>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **`removed`**: ensure the package is absent
@@ -681,7 +676,7 @@ manage yum packages
 
 * **`repo`** (*optional*): the repo name, which you want to use for installing the packages
 
-		example: `epel`
+		example: epel
 
 * **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`True`***
 					''',
@@ -718,7 +713,7 @@ manage a yum repo
 
 *   **`name`** (*required*): the repo name
 		   
-		 example: `epel`
+		 example: epel
 
 * **`content`** (*required*): the content of the repo configuration file
 		
@@ -828,26 +823,25 @@ manage a directory
 
 *   **`path`** (*required*): a list of directory paths
 		
-		example:
-			`/var/www/html`
+		example: /var/www/html
 
 	>note: This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified directory itself.
 
 * **`user`** (*optional*): the user name of the file owner
 		
-		example: `root`
+		example: root
 
 	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **`group`** (*optional*): the group name of the file owner
 		
-		example: `root`
+		example: root
 
     >note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
 		
-		example: `0755`
+		example: 0755
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
@@ -899,27 +893,27 @@ manage a file
 
 ### Parameters
 
-*   **`pat`h`** (*required*): the file path
+*   **`path`** (*required*): the file path
 		
-		example: `/root/.ssh/known_hosts`
+		example: /root/.ssh/known_hosts
 
 	>note: This state ensures the specifed file is present with correposnding attributes and content. If the directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified file itself.
 
 * **`user`** (*optional*): the user name of the file owner
 		
-		example: `root`
+		example: root
 
 	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **`group`** (*optional*): the group name of the file owner
 		
-		example: `root`
+		example: root
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
 		
-		example: `0755`
+		example: 0755
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
@@ -976,29 +970,29 @@ manage a symlink
 
 *   **`source`** (*required*): the path to link to
 		
-		example: `/data/`
+		example: /data/
 
 * **`target`** (*required*): the path of the symlink
 		
-		example: `/mnt/data/`
+		example: /mnt/data/
 
 	>note: If the target's parent path does not exist, this state will fail.
 
 * **`user`** (*optional*): the user name of the file owner
 		
-		example: `root`
+		example: root
 
 	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **`group`** (*optional*): the group name of the file owner
 		
-		example: `root`
+		example: root
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
 		
-		example: `0755`
+		example: 0755
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
@@ -1052,11 +1046,11 @@ manage system service
 
 *   **`name`** (*required*): the service name
 		
-		example: `httpd`
+		example: httpd
 
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
 		
-		example: `/etc/nginx/nginx.conf`, `/etc/my.cnf`
+		example: /etc/nginx/nginx.conf, /etc/my.cnf
 					''',
 					'cn'	:	''''''
 				},
@@ -1085,17 +1079,17 @@ manage supervisord service
 
 *   **`name`** (*required*): a list of service names
 		
-		example: `httpd`
+		example: httpd
 
 *   **`config`** (*required*): the path of supervisord configuration file
 		
-		example: `/etc/supervisord.conf`
+		example: /etc/supervisord.conf
 
 	>note: When this file is modified, supervisord will be restarted, which causes all managed services restarted
 
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
 		
-		example: `/etc/nginx/nginx.conf`, `/etc/my.cnf`
+		example: /etc/nginx/nginx.conf, /etc/my.cnf
 					''',
 					'cn'	:	''''''
 				},
@@ -1399,7 +1393,7 @@ execute a shell command
 
 *   **`cmd`** (*required*): the command to execute
 		
-		example: `find . -name *.pyc | xargs rm`
+		example: find . -name *.pyc | xargs rm
 
 *   **`cwd`** (*optional*): the current working directory to execute the command, be default `/opt/madeira/tmp/`
 
@@ -1595,7 +1589,7 @@ manage LVM physical volume (PV)
 
 *   **`path`** (*required*): the path of the device or partition
 `
-		Example: `/dev/sdc4`, `/dev/sde`
+		Example: /dev/sdc4, /dev/sde
 
 *   **`force`** (*optional*): force to create the PV without any confirmation, by default ***`False`***
 
@@ -1623,20 +1617,19 @@ manage LVM physical volume (PV)
 
 *   **`metadata-type`** (*optional*): specify which type of on-disk metadata to use, by default ***`lvm2`***
 
-		Example: `lvm1`, `lvm2`, `1`, `2`
+		Example: lvm1, lvm2, 1, 2
 
 	>>note: lvm1 or lvm2 can be abbreviated to 1 or 2 respectively. The default (lvm2) can be changed by setting format in the global section of the config file.
 
 *   **`metadata-copies`** (*optional*): the number of metadata areas to set aside on each PV
 
-		Example: currently this can be `0, 1 or 2`
+		Example: currently this can be 0, 1 or 2
 
 	>>note: If set to 2, two copies of the volume group metadata are held on the PV, one at the front of the PV and one at the end. If set to 1 (the default), one copy is kept at the front of the PV (starting in the 5th sector).  If set to 0,  no copies are kept on this PV - you might wish to use this with VGs containing large numbers of PVs.  But if you do this and then later use vgsplit(8) you must ensure that each VG is still going to have a suitable number of copies of the metadata after the split!
 
 *   **`metadata-ignore`** (*optional*): whether to ignore metadata areas on this PV, by default ***`False`***
 
 	>>note: This setting can be changed with pvchange. If metadata areas on a physical volume are ignored, LVM will not store metadata in the metadata areas present on this Physical Volume. Metadata areas cannot be created or extended after Logical Volumes have been allocated on the device. If you do not want  to  store metadata on this device, it is still wise always to allocate a metadata area in case you need it  in  the  future and to use this option to instruct LVM2 to ignore it.
-
 
 *   **`restore-file`** (*optional*):
 
@@ -1739,7 +1732,7 @@ manage LVM volume group (VG)
 
 *   **`path`** (*required*): a list of block special devices
 
-		Example: `/dev/sdk1`, `/dev/sdl1`
+		Example: /dev/sdk1, /dev/sdl1
 
 *   **`clustered`** (*optional*): whether to enable the clustered locking on the VG, by default ***`True`***
 
@@ -1755,7 +1748,7 @@ manage LVM volume group (VG)
 
 *   **`metadata-type`** (*optional*): specify which type of on-disk metadata to use, by default ***`lvm2`***
 
-		Example: `lvm1`, `lvm2`, `1`, `2`
+		Example: lvm1, lvm2, 1, 2
 
 	>>note:
 			lvm1 or lvm2 can be abbreviated to 1 or 2 respectively. The default (lvm2) can be changed by setting format
@@ -1763,13 +1756,13 @@ manage LVM volume group (VG)
 
 *   **`metadata-copies`** (*optional*): specify the desired number of metadata copies in the VG
 
-		Example: `unmanaged`, `all`
+		Example: unmanaged, all
 
 	>>note: If set to a non-zero value, LVM will automatically manage the 'metadata ignore' option on the PVs (see pvcreate(8) or pvchange --metadataignore) in order to achieve the copies of metadata. If set to unmanaged, LVM will not automatically manage the 'metadata ignore' option. If set to all, LVM will first clear all of the 'metadata ignore' option on all metadata areas in the VG, then set the value to unmanaged. This option is useful for VGs containing large numbers of PVs   with metadata  as it may be used to minimize metadata read and write overhead. The default value is unmanaged
 
 *   **`pe-size`** (*optional*): specify the physical extent size on PVs of this VG
 
-		Example: `bBsSkKmMgGtTpPeE`
+		Example: bBsSkKmMgGtTpPeE
 
    	>>note: A size suffix (k for kilobytes up to t for terabytes) is optional, megabytes is the default if no suffix is present. The default is 4 MiB and it must be at least 1 KiB and a power of 2.
 
@@ -1791,7 +1784,7 @@ manage LVM volume group (VG)
 
 *   **`allocation-policy`** (*optional*): specify the allocation policy
 
-		Example: `contiguous`, `cling`, `normal`, `anywhere` or `inherit`
+		Example: contiguous, cling, normal, anywhere or inherit
 
 	>>note: When a command needs to allocate Physical Extents from the Volume Group, the allocation policy controls how they are chosen. Each Volume Group and Logical Volume has an allocation policy defined. The default for a Volume Group is normal which applies common-sense rules such as not placing parallel stripes on the same Physical Volume. The default for a Logical Volume is inherit which applies the same policy as for the Volume Group. These policies can be changed using lvchange(8) and vgchange(8) or overridden on the command line of any command that performs allocation. The contiguous policy requires that new Physical Extents be placed adjacent to existing Physical Extents.  The cling policy places new Physical Extents on the same Physical Volume as existing Physical Extents in the same stripe of the Logical Volume. If there are sufficient free Physical  Extents to satisfy an allocation request but normal doesn't use them, anywhere will - even if that reduces performance by placing two stripes on the same Physical Volume.
 					''',
@@ -1871,14 +1864,14 @@ manage LVM logical volume (LV)
 
 *   **`path`** (*optional*): a list of physical volume path
 
-		Example: `/dev/sdk1`, `/dev/sdk2`
+		Example: /dev/sdk1, /dev/sdk2
 
 	>>note: VolumeGroup{Name|Path}[/ThinPoolLogicalVolumeName]
 	   [PhysicalVolumePath[:PE[-PE]]...]
 
 *   **`available`** (*optional*): specify the name of the new LV
 
-		Example: `y`, `ay`, `n`, `ey`, `en`, `ly`, `ln`
+		Example: y, ay, n, ey, en, ly, ln
 
 	>>note: Controls the availability of the Logical Volumes for immediate use after the command finishes running.  By default, new Logical Volumes are activated (-ay).  If it is possible technically, -an will leave the new Logical Volume inactive. But  for example, snapshots can only be created in the active state so -an cannot be used with --snapshot. Normally the --zero n argument has to be supplied too because zeroing (the default behaviour) also requires activation. If autoactivation option is  used (-aay), the logical volume is activated only if it matches an item in the activation/auto_activation_volume_list set in lvm.conf. For autoactivated logical volumes, --zero n is always assumed and it can't be overridden. If clustered locking is enabled, -aey will activate  exclusively on one node and -aly will activate only on the local node.
 
@@ -1892,7 +1885,7 @@ manage LVM logical volume (LV)
 
 *   **`discards`** (*optional*): specify the discards behavior, by default ***`passdown`***
 
-		Example: `ignore`, `nopassdown`, `passdown`
+		Example: ignore, nopassdown, passdown
 
 *   **`stripe-number`** (*optional*): specify the number of stripes
 
@@ -1936,7 +1929,7 @@ manage LVM logical volume (LV)
 
 *   **`permission`** (*optional*): specify the access permissions to read only or read and write, by default ***RW***
 
-		Example: `r`, `rw`
+		Example: r, rw
 
 *   **`pool-metadata-size`** (*optional*): specify the size of thin pool's metadata LV
 
@@ -1948,7 +1941,7 @@ manage LVM logical volume (LV)
 
 *   **`readahead`** (*optional*): set read ahead sector count of this LV
 
-		Example: `ReadAheadSectors`, `auto`, `none`
+		Example: ReadAheadSectors, auto, none
 
 	>>note: For volume groups with metadata in lvm1 format, this must be a value between 2 and 120. The default value is "auto" which allows the kernel to choose a suitable value automatically.  "None" is equivalent to specifying zero.
 
@@ -1958,7 +1951,7 @@ manage LVM logical volume (LV)
 
 *   **`thinpool`** (*optional*): create thin pool or thin logical volume or both
 
-		Example: `ReadAheadSectors`, `auto`, `none`
+		Example: ReadAheadSectors, auto, none
 
 	>>note: Specifying the optional argument --size will cause the creation of the thin pool logical volume. Specifying the optional argument --virtualsize will cause the creation of the thin logical volume from given thin pool volume. Specifying  both arguments will cause the creation of both thin pool and thin volume using this pool. Requires device mapper kernel driver for thin provisioning from kernel 3.2 or newer
 
@@ -1969,7 +1962,6 @@ manage LVM logical volume (LV)
 *   **`virtual-size`** (*optional*): Create a sparse device of the given size (in MB by default) using a snapshot or thinly provisioned device when thin pool is specified.
 
 	>>note: Anything written to the device will be returned when reading from it. Reading from other areas of the device will return blocks of zeros. Virtual snapshot is implemented by creating a hidden virtual device of the requested size using the zero target. A suffix of _vorigin is used for this device.
-
 
 *   **`zero`** (*optional*): whether to set zero of the  first  KB of data in the new LV, by default ***`True`***
 
@@ -1987,7 +1979,7 @@ manage LVM logical volume (LV)
 
 *   **`allocation-policy`** (*optional*): specify the allocation policy
 
-		Example: `contiguous`, `cling`, `normal`, `anywhere` or `inherit`
+		Example: contiguous, cling, normal, anywhere or inherit
 
 	>>note: When a command needs to allocate Physical Extents from the Volume Group, the allocation policy controls how they are chosen. Each Volume Group and Logical Volume has an allocation policy defined. The default for a Volume Group is normal which applies common-sense rules such as not placing parallel stripes on the same Physical Volume. The default for a Logical Volume is inherit which applies the same policy as for the Volume Group.  These policies can be changed using lvchange(8) and vgchange(8) or overridden on the command line of any command that performs allocation. The contiguous policy requires that new  Physical Extents be placed adjacent to existing Physical Extents. The cling policy places new Physical Extents on the same Physical Volume as existing Physical Extents in the same stripe of the Logical Volume. If there are sufficient free Physical Extents to satisfy an allocation request but normal doesn't use them, anywhere will - even if that reduces performance by placing two stripes on the same Physical Volume
 					''',
