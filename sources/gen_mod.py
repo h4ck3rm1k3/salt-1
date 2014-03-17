@@ -85,7 +85,7 @@ extract an archive file
 
 	>note: the path will be auto-created if not exists
 
-*   **if-path-absent** (*optional*): extract the archive only if the specified path exists
+*   **if-path-absent** (*optional*): extract the archive only if none of the specified paths exist
 					''',
 					'cn'	:	''''''
 				},
@@ -106,12 +106,12 @@ extract an archive file
 						'visible'	:	True
 					},
 					#'if-path-present'	:	{
-					#	'type'		:	'bool',
+					#	'type'		:	'array',
 					#	'required'	:	False,
 					#	'visible'	:	True
-					#},
+					#}
 					'if-path-absent'	:	{
-						'type'		:	'bool',
+						'type'		:	'array',
 						'required'	:	False,
 						'visible'	:	True
 					}
