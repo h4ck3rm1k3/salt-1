@@ -749,50 +749,7 @@ class StateAdaptor(object):
 						else:
 							module_state[pkg_state][pkg_flag].append(pkg_name)
 
-			# elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
-			# 	module_state = {}
-
-			# 	for item in addin['names']:
-			# 		if not isinstance(item, dict):	continue
-
-			# 		pkg_name = item['key'] if 'key' in item
-			# 		pkg_state = None
-
-			# 		if isinstance(item, basestring):	# insert into default state
-			# 			pkg_state	= default_state
-
-			# 			if pkg_state not in module_state:			module_state[pkg_state] = {}
-			# 			if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-			# 			module_state[pkg_state]['names'].append(item)
-
-			# 		elif isinstance(item, dict):
-			# 			for k, v in item.iteritems():
-			# 				pkg_name 	= k
-			# 				pkg_state 	= default_state
-
-			# 				if v in self.mod_map[module]['states']:		pkg_state = v
-			# 				if pkg_state not in module_state:			module_state[pkg_state] = {}
-			# 				if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-			# 				if pkg_state == default_state:
-			# 					if module == 'common.npm.package':
-			# 						module_state[pkg_state]['names'].append(
-			# 							'{0}@{1}'.format(k, v)
-			# 							)
-			# 					elif module in ['common.pip.package', 'common.gem.package']:
-			# 						module_state[pkg_state]['names'].append(
-			# 						'{0}=={1}'.format(k, v)
-			# 						)
-			# 				else:
-			# 					module_state[pkg_state]['names'].append(pkg_name)
-
-			# 		else:	# invalid
-			# 			continue
-
 			elif module in ['common.git', 'common.svn', 'common.hg']:
-				# if 'name' in addin:
-				# 	module_state[default_state]['name'] = addin['name'].split('-')[1].strip()
 
 				# svn target path(remove the last prefix)
 				if 'target' in addin and addin['target'][len(addin['target'])-1] == '/':
@@ -907,6 +864,19 @@ class StateAdaptor(object):
 
 				if 'timeout' in addin:
 					addin['timeout'] = int(addin['timeout'])
+
+				if 'env' in addin:
+					env = {}
+					for item in addin['env']:
+						if not isinstance(item, dict):	continue
+						if 'key' not in item or not item['key'] or \
+							'value' not in item or not item['value']:	continue
+
+						env[item['key']] = item['value']
+
+					addin.pop('env')
+					if env:
+						addin['env'] = env
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -1255,25 +1225,27 @@ def ut():
 
 	err_log = None
 	out_log = None
-	for uid, com in pre_states['component'].iteritems():
-		states = {}
 
-		for p_state in com['state']:
-			try:
-				step = p_state['id']
-				states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
-				print json.dumps(states)
+	while True:
+		for uid, com in pre_states['component'].iteritems():
+			states = {}
 
-				if not states or not isinstance(states, list):
-					err_log = "convert salt state failed"
-					print err_log
-					result = (False, err_log, out_log)
-				else:
-					result = runner.exec_salt(states)
-				print result
-			except Exception, e:
-				print str(e)
-				continue
+			for p_state in com['state']:
+				try:
+					step = p_state['id']
+					states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+					print json.dumps(states)
+
+					if not states or not isinstance(states, list):
+						err_log = "convert salt state failed"
+						print err_log
+						result = (False, err_log, out_log)
+					else:
+						result = runner.exec_salt(states)
+					print result
+				except Exception, e:
+					print str(e)
+					continue
 
 if __name__ == '__main__':
 	ut()
