@@ -105,11 +105,11 @@ class StateAdaptor(object):
 				'managed'
 			],
 			'type' : 'file',
-			'require_in' : {
-				'linux.cmd' : {
-					'yum-config-manager --enable $name' : 'name'
-				}
-			}
+			# 'require_in' : {
+			# 	'linux.cmd' : {
+			# 		'yum-config-manager --enable $name' : 'name'
+			# 	}
+			# }
 		},
 		'common.gem.source' : {
 			'attributes' : {
@@ -319,7 +319,7 @@ class StateAdaptor(object):
 				'system-account'	: 'system',
 			},
 			'states' : [ 'present', 'absent' ],
-			'type' : 'user'
+			'type' : 'user',
 		},
 
 		## group
@@ -775,9 +775,16 @@ class StateAdaptor(object):
 						module_state['absent']['names'] = addin['names']
 
 				else:
+					# set default user,group
+					if 'user' not in addin:
+						addin['user'] = 'root'
+					if 'group' not in addin:
+						addin['group'] = 'root'
 					# set mode
 					if 'mode' in addin and addin['mode']:
 						addin['mode'] = int(addin['mode'])
+					else:
+						addin['mode'] = 755
 
 					# set recurse
 					if 'recurse' in addin and addin['recurse']:
@@ -788,14 +795,6 @@ class StateAdaptor(object):
 							addin['recurse'].append('group')
 						if 'mode' in addin and addin['mode']:
 							addin['recurse'].append('mode')
-
-					# set user
-					if 'user' not in addin:
-						addin['user'] = 'root'
-
-					# check symlink's parent directory whether existed
-					if module == 'linux.symlink' and not os.path.isdir(os.path.dirname(os.path.abspath(addin['name']))):
-						addin['makedirs'] = True
 
 			elif module in ['linux.cmd']:
 				cmd = []
@@ -847,6 +846,16 @@ class StateAdaptor(object):
 				if 'nologin' in addin and addin['nologin']:
 					addin['shell'] = '/sbin/nologin'
 					addin.pop('nologin')
+
+				# set home
+				if 'home' not in addin:
+					addin['home'] = '/home/{0}'.format(addin['name'])
+				else:
+					addin['createhome'] = True
+					# add dir require
+					self.mod_map[module]['require'] = [
+						{'linux.dir':{'path':[addin['home']]}}
+					]
 
 			elif module in ['linux.mount']:
 				for attr in ['dump', 'pass_num']:
@@ -1185,26 +1194,25 @@ def ut():
 	err_log = None
 	out_log = None
 
-	while True:
-		for uid, com in pre_states['component'].iteritems():
-			states = {}
+	for uid, com in pre_states['component'].iteritems():
+		states = {}
 
-			for p_state in com['state']:
-				try:
-					step = p_state['id']
-					states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
-					print json.dumps(states)
+		for p_state in com['state']:
+			try:
+				step = p_state['id']
+				states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+				print json.dumps(states)
 
-					if not states or not isinstance(states, list):
-						err_log = "convert salt state failed"
-						print err_log
-						result = (False, err_log, out_log)
-					else:
-						result = runner.exec_salt(states)
-					print result
-				except Exception, e:
-					print str(e)
-					continue
+				if not states or not isinstance(states, list):
+					err_log = "convert salt state failed"
+					print err_log
+					result = (False, err_log, out_log)
+				else:
+					result = runner.exec_salt(states)
+				print result
+			except Exception, e:
+				print str(e)
+				continue
 
 if __name__ == '__main__':
 	ut()
