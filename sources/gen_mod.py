@@ -71,20 +71,27 @@ extract an archive file
 
 ### Parameters
 
-*   **`file`** (*required*): the archive file URI
+*   **`source`** (*required*): the archive file url
 
 		example: http(s):///host/path/to/archive.tar.gz
 
 	>note: currently supported archive format: tar, tgz, tar.gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)
 			local archive file `file://path/to/file` not supported in this version
 
-*   **`checksum`** (*optional*): a MD5 checksum to verify the file integrity
-
 *   **`path`** (*required*): the path to extract the archive
 
 	>note: the path will be auto-created if not exists
 
-*   **`if-path-absent`** (*optional*): extract the archive only if none of the specified paths exist
+*   **`checksum`** (*required*): the url of the source checksum file, whose value (content) will be used to verify the integrity of the source archive
+
+*   **`if-path-absent`** (*optional*): extract the archive only if none of the specified paths exist, see blow
+
+	> note: once the source archive is successfully extracted to the specified path, the opsagent will decide whether to re-fetch and extract the source archive depending on:
+	- when `if-path-absent` specified:
+		- if none of the specified paths exist, the archive will be re-fetched, until some paths exist
+		- if some paths exists, the archive will only be re-fetched only if the checksum value changes
+	- when `if-path-absent` not used:
+		- the archive will be re-fetched only if the checksum value changes
 					''',
 					'cn'	:	''''''
 				},
@@ -298,21 +305,18 @@ manage a git repo
 			git://[user@]host[:port]/~[user][path]
 			rsync://host[:port][path]
 
-* **`revision`** (*optional*): the branch, tag, revision to checkout
+* **`revision`** (*optional*): the revision to checkout
 
 		example:
-			branch - master, develop
-			tag - release-1.0
-			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
-
-	>note:
-			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
+			specify a branch and keep it synced: master, develop
+			specify a static tag - release-1.0
+			specify a particular revision id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
 * **`ssh-key-file`** (*optional*): the path of the ssh keypair file
 
 		example: /root/.ssh/id_rsa
 
-* **`force`** (*optional*): force the checkout even if there is conflict, by default ***`False`***
+* **`force`** (*optional*): force the checkout if there is conflict, by default ***`False`***
 
 * **`user`** (*optional*): the username that performs the operation, by default ***`root`***
 					''',
@@ -371,17 +375,14 @@ manage a hg repo
 			https://[user@]host[:port]/[path]
 			ssh://[user@]host[:port]/[path]
 
-* **`revision`** (*optional*): the branch, tag, revision to checkout
+* **`revision`** (*optional*): the revision to checkout
 		
 		example:
-			branch - master, develop
-			tag - release-1.0
-			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
+			specify a branch and keep it synced: master, develop
+			specify a static tag - release-1.0
+			specify a particular revision id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
-	>note:
-			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
-
-* **`force`** (*optional*): force the checkout even if there is conflict, by default ***`False`***
+* **`force`** (*optional*): force the checkout if there is conflict, by default ***`False`***
 
 * **`user`** (*optional*): the username that performs the operation, by default ***`root`***
 					''',
@@ -436,21 +437,15 @@ manage a svn repo
 			svn://[user@]host[:port][path]
 			svn+ssh://[user@]host[:port][path]
 
-* **`revision`** (*optional*): the branch, tag, revision IDE to checkout
+* **`revision`** (*optional*): the revision to checkout
 		
-		example:
-			branch - master, develop
-			tag - release-1.0
-			commit id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
-
-	>note:
-			By specifying a branch name, the local repo will be kept synchronized with the latest commit of that branch.
+		example: HEAD, BASE, COMMITED, PREV, etc,. (ref: [Revision Specifiers](http://svnbook.red-bean.com/en/1.7/svn.tour.revs.specifiers.html))
 
 * **`username`** (*optional*): the username of the svn server
 
 * **`password`** (*optional*): the password of the svn user
 
-* **`force`** (*optional*): force the checkout even if there is conflict, by default ***`False`***
+* **`force`** (*optional*): force the checkout if there is conflict, by default ***`False`***
 
 * **`user`** (*optional*): the username that performs the operation, by default ***`root`***
 					''',
@@ -468,7 +463,8 @@ manage a svn repo
 					},
 					'revision'	:	{
 						'type'		:	'line',
-						'default'	:	'trunk',
+						'options'	:	['HEAD', 'BASE', 'COMMITED', 'PREV'],
+						'default'	:	'HEAD',
 						'required'	:	False
 
 					},
@@ -637,11 +633,9 @@ manage apt repo
 
 *   **`name`** (*required*): the repository name (`/etc/apt/sources.list.d/$name.list` will be created)
 
-		example: google
-
 * **`content`** (*required*): the source list file content
 		
-		example: deb http://dl.google.com/linux/deb/ stable non-free
+		example: deb http://www.rabbitmq.com/debian/ testing main
 					''',
 					'cn'	:	''''''
 				},
@@ -657,6 +651,42 @@ manage apt repo
 					}
 				}
 			},
+			'apt ppa'	:	{
+				'module'	:	'linux.apt.ppa',
+				'distro'	:	['debian', 'ubuntu'],
+				'reference'	:	{
+					'en'	:	'''
+### Description
+manage apt ppa
+
+### Parameters
+
+*   **`name`** (*required*): the ppa user/acrhive name, please don't add `ppa:`
+
+		example: chromium-daily/stable
+
+* **`username`** (*optional*): the ppa account's username, for auth only
+
+* **`password`** (*optional*): the ppa account's password, for auth only
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'	:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'username'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+					},
+					'password'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+					}
+				}
+			},
 			'yum pkg'	:	{
 				'module'	:	'linux.yum.package',
 				'distro'	:	['amazon', 'redhat', 'centos'],
@@ -668,7 +698,7 @@ manage yum packages
 ### Parameters
 
 *   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
-	- ***`<empty>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
+	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **`removed`**: ensure the package is absent
@@ -715,7 +745,7 @@ manage a yum repo
 		   
 		 example: epel
 
-* **`content`** (*required*): the content of the repo configuration file
+* **`content`** (*optional*): the content of the repo configuration file
 		
 		example:
 			[10gen]
@@ -723,6 +753,10 @@ manage a yum repo
 			baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686
 			gpgcheck=0
 			enabled=1
+
+* **`rpm-url`** (*optional*): the repo rpm url
+		
+		example: http://mirrors.hustunique.com/epel/6/i386/epel-release-6-8.noarch.rpm
 					''',
 					'cn'	:	''''''
 				},
@@ -734,7 +768,12 @@ manage a yum repo
 					},
 					'content'	:	{
 						'type'		:	'text',
-						'required'	:	True
+						'required'	:	False,
+					},
+					'rpm-url'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
 					}
 				}
 			},
@@ -919,7 +958,7 @@ manage a file
 
 * **`content`** (*optional*): the file content
 	
-	>note: If the specified file exists, the file will be reset, otherwise the file will be created with this content
+	>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten
 
 * **`absent`** (*optional*): ensure the directory is absent, by default ***`False`***
 		
@@ -950,6 +989,14 @@ manage a file
 						'type'		:	'text',
 						'required'	:	False
 					},
+					#'source-url'	:	{
+					#	'type'		:	'line',
+					#	'required'	:	False
+					#},
+					#'source-checksum'	:	{
+					#	'type'		:	'line',
+					#	'required'	:	False
+					#},
 					'absent'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
@@ -974,7 +1021,7 @@ manage a symlink
 
 * **`target`** (*required*): the path of the symlink
 		
-		example: /mnt/data/
+		example: /mnt/data
 
 	>note: If the target's parent path does not exist, this state will fail.
 
@@ -1040,13 +1087,13 @@ manage a symlink
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-manage system service
+ensure the specified services are running, and trigger service restart if necessary
 
 ### Parameters
 
-*   **`name`** (*required*): the service name
+*   **`name`** (*required*): the list of the service names to be running
 		
-		example: httpd
+		example: httpd, mysqld
 
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
 		
@@ -1073,20 +1120,20 @@ manage system service
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-manage supervisord service
+ensure supervisord and the specified services are running, and trigger supervisord to restart the services if necessary
 
 ### Parameters
-
-*   **`name`** (*required*): a list of service names
-		
-		example: httpd
 
 *   **`config`** (*required*): the path of supervisord configuration file
 		
 		example: /etc/supervisord.conf
 
-	>note: When this file is modified, supervisord will be restarted, which causes all managed services restarted
+		>note: When this file is modified, supervisord will be restarted, which causes all managed services restarted
 
+*   **`name`** (*required*): the name list of the services to be running (see below)
+		
+		example: httpd, mysqld
+	
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
 		
 		example: /etc/nginx/nginx.conf, /etc/my.cnf
@@ -1484,7 +1531,7 @@ manage a user
 
 *   **`home`** (*optional*): the home directory of the user, by default `/home/$username`
 		
-	>note: if the directory already exists, the user and group of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the user and group of the user.
+	>note: if the directory already exists, the uid and gid of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the uid and gid
 
 *   **`system-account`** (*optional*): whether to create a system account (see `useradd(8)`), by default: `False`
 
