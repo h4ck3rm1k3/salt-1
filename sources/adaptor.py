@@ -71,18 +71,6 @@ class StateAdaptor(object):
 				{'linux.yum.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }}
 			]
 		},
-		# 'common.pecl.package'	: {
-		# 	'attributes' : {
-		# 		'name' : 'names'
-		# 	},
-		# 	'states' : [
-		# 		'installed', 'removed'
-		# 	],
-		# 	'type'	: 'pecl',
-		# 	'require'	: {
-		# 		'linux.apt.package' : { 'name' : ['php-pear'] },
-		# 	}
-		# },
 		'common.pip.package'	: {
 			'attributes' : {
 				'name' : 'names'
@@ -140,7 +128,7 @@ class StateAdaptor(object):
 				'repo'		: 'name',
 				'revision'	: 'rev',
 				'ssh-key-file'	: 'identity',
-				'force'		: 'force',
+				'force'		: 'force_checkout',
 				'user'		: 'user',
 			},
 			'states' : [
@@ -279,30 +267,6 @@ class StateAdaptor(object):
 			'states' : ['running', 'mod_watch'],
 			'type' : 'service',
 		},
-		# 'linux.systemd' : {
-		# 	'attributes' : {
-		# 		'name' : 'names',
-		# 		# 'watch' : ''
-		# 	},
-		# 	'states' : ['running'],
-		# 	'type' : 'service',
-		# },
-		# 'linux.sysvinit' : {
-		# 	'attributes' : {
-		# 		'name' : 'name',
-		# 		# 'watch' : ''
-		# 	},
-		# 	'states' : ['running'],
-		# 	'type' : 'service',
-		# },
-		# 'linux.upstart' : {
-		# 	'attributes' : {
-		# 		'name' : 'name',
-		# 		# 'watch' : 'watch',
-		# 	},
-		# 	'states' : ['running'],
-		# 	'type' : 'service',
-		# },
 
 		## cmd
 		'linux.cmd' : {
@@ -368,17 +332,6 @@ class StateAdaptor(object):
 			'states' : ['present', 'absent'],
 			'type' : 'group'
 		},
-
-		## hostname
-
-		## hosts
-		# 'linux.hosts' : {
-		# 	'attributes' : {
-		# 		'content' : 'contents'
-		# 	},
-		# 	'states' : ['managed'],
-		# 	'type' : 'file',
-		# },
 
 		## mount
 		'linux.mount' : {
@@ -762,8 +715,8 @@ class StateAdaptor(object):
 					addin.pop('branch')
 
 				#
-				if module == 'common.git' and 'force' in addin and addin['force']:
-					addin['force_checkout'] = True
+				# if module == 'common.git' and 'force' in addin and addin['force']:
+				# 	addin['force_checkout'] = True
 
 			elif module in ['linux.apt.repo', 'linux.yum.repo']:
 				if 'name' in addin:
@@ -864,6 +817,8 @@ class StateAdaptor(object):
 
 				if 'timeout' in addin:
 					addin['timeout'] = int(addin['timeout'])
+				else:
+					addin['timeout'] = 600
 
 				if 'env' in addin:
 					env = {}
@@ -877,6 +832,10 @@ class StateAdaptor(object):
 					addin.pop('env')
 					if env:
 						addin['env'] = env
+
+				# default cwd
+				if 'cwd' not in addin:
+					addin['cwd'] = '/opt/madeira/tmp/'
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
