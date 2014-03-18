@@ -96,10 +96,24 @@ class StateAdaptor(object):
 			],
 			'type' : 'file',
 		},
+		'linux.apt.ppa'		: {
+			'attributes' : {
+				'name'		: 'ppa',
+				'username'	: 'username',
+				'password'	: 'password'
+			},
+			'states' : ['managed'],
+			'type' : 'pkgrepo',
+			# 'require' : [
+			# 	{'linux.apt.package' : { 'name' : [{'key':'python-dev'}, {'key':'libapt-pkg-dev'}] }},
+			# 	{'common.pip.package' : {'name' : [{'key':'python-apt'}]}}
+			# ]
+		},
 		'linux.yum.repo' : {
 			'attributes' : {
 				'name' 		: 'name',
-				'content' 	: 'contents'
+				'content' 	: 'contents',
+				'rpm-url'	: 'rpm-url'
 			},
 			'states' : [
 				'managed'
@@ -734,6 +748,28 @@ class StateAdaptor(object):
 
 					if filename and obj_dir:
 						addin['name'] = obj_dir + filename
+
+				if 'contents' in addin and 'rpm-url' in addin:
+					addin.pop('rpm-url')
+
+				# if 'rpm-url' in addin:
+				# 	module_state = {
+				# 		self.mod_map['linux.cmd']['states'][0] : {
+				# 			'name' : 'rpm -iU {0}'.format(addin['rpm-url']),
+				# 			'timeout' : 600
+				# 		}
+				# 	}
+
+			elif module in ['linux.apt.ppa']:
+
+				if 'username' in addin and addin['username'] and \
+					'password' in addin and addin['password']:
+					addin['ppa_auth'] = '{0}:{1}'.format(addin['username'], addin['password'])
+
+				if 'username' in addin:
+					addin.pop('username')
+				if 'password' in addin:
+					addin.pop('password')
 
 			elif module in ['common.gem.source']:
 				addin.update(

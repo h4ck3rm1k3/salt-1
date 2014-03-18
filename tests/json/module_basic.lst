@@ -16,6 +16,7 @@ linux.timezone
 linux.yum.repo
 linux.yum.package
 linux.apt.repo
+linux.apt.ppa
 linux.apt.package
 common.git # -> need to install git
 common.hg # -> need to install hg

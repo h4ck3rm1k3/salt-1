@@ -1,0 +1,15 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "1",
+          "module": "linux.apt.ppa",
+          "parameter": {
+            "name": "chromium-daily/stable"
+          }
+        }
+      ]
+    }
+  }
+}
