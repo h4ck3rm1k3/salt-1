@@ -1386,6 +1386,9 @@ def directory(name,
             for root, dirs, files in os.walk(name):
                 for fn_ in files:
                     full = os.path.join(root, fn_)
+                    ## deal with regaler file
+                    if not os.path.isfile(full):    continue
+
                     ret, perms = __salt__['file.check_perms'](
                         full,
                         ret,
@@ -1394,6 +1397,9 @@ def directory(name,
                         file_mode)
                 for dir_ in dirs:
                     full = os.path.join(root, dir_)
+                    ## deal with regaler dirctory
+                    if not os.path.isdir(full):    continue
+
                     ret, perms = __salt__['file.check_perms'](
                         full,
                         ret,
