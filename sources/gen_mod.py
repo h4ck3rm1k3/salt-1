@@ -82,16 +82,17 @@ extract an archive file
 
 	>note: the path will be auto-created if not exists
 
-*   **`checksum`** (*required*): the url of the source checksum file, whose value (content) will be used to verify the integrity of the source archive
+*   **`checksum`** (*optional*): the url of the source checksum file, whose value (content) will be used to verify the integrity of the source archive
 
 *   **`if-path-absent`** (*optional*): extract the archive only if none of the specified paths exist, see blow
 
 	> note: once the source archive is successfully extracted to the specified path, the opsagent will decide whether to re-fetch and extract the source archive depending on:
 	- when `if-path-absent` specified:
 		- if none of the specified paths exist, the archive will be re-fetched, until some paths exist
-		- if some paths exists, the archive will only be re-fetched only if the checksum value changes
+		- if some paths exists, the archive will only be re-fetched only if `checksum` is used and its value changes between rounds
 	- when `if-path-absent` not used:
-		- the archive will be re-fetched only if the checksum value changes
+		- if `checksum` not used, the archive will be re-fetched in every round
+		- if `checksum` used, thhe archive will be re-fetched if the checksum value changes between rounds
 					''',
 					'cn'	:	''''''
 				},
