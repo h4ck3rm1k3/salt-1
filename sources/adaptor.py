@@ -517,7 +517,9 @@ class StateAdaptor(object):
 		}
 	}
 
-	def __init__(self):
+	def __init__(self, config):
+
+		self.__tmp_dir = config['tmpdir'] if config and 'tmpdir' in config else '/tmp'
 
 		self.states = None
 
@@ -870,7 +872,7 @@ class StateAdaptor(object):
 
 				# default cwd
 				if 'cwd' not in addin:
-					addin['cwd'] = '/opt/madeira/tmp/'
+					addin['cwd'] = self.__tmp_dir
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -1217,11 +1219,12 @@ def ut():
 	config = {
 		'srv_root' : '/srv/salt',
 		'extension_modules' : '/var/cache/salt/minion/extmods',
-		'cachedir' : '/code/OpsAgent/cache'
+		'cachedir' : '/code/OpsAgent/cache',
+		'tmpdir' : '/opt/madeira/tmp'
 	}
 
 	from opsagent.state.runner import StateRunner
-	adaptor = StateAdaptor()
+	adaptor = StateAdaptor(config)
 	runner = StateRunner(config)
 
 	# print json.dumps(adaptor._salt_opts, sort_keys=True,
