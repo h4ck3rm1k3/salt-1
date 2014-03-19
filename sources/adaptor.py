@@ -96,20 +96,34 @@ class StateAdaptor(object):
 			],
 			'type' : 'file',
 		},
+		'linux.apt.ppa'		: {
+			'attributes' : {
+				'name'		: 'ppa',
+				'username'	: 'username',
+				'password'	: 'password'
+			},
+			'states' : ['managed'],
+			'type' : 'pkgrepo',
+			# 'require' : [
+			# 	{'linux.apt.package' : { 'name' : [{'key':'python-dev'}, {'key':'libapt-pkg-dev'}] }},
+			# 	{'common.pip.package' : {'name' : [{'key':'python-apt'}]}}
+			# ]
+		},
 		'linux.yum.repo' : {
 			'attributes' : {
 				'name' 		: 'name',
-				'content' 	: 'contents'
+				'content' 	: 'contents',
+				'rpm-url'	: 'rpm-url'
 			},
 			'states' : [
 				'managed'
 			],
 			'type' : 'file',
-			'require_in' : {
-				'linux.cmd' : {
-					'yum-config-manager --enable $name' : 'name'
-				}
-			}
+			# 'require_in' : {
+			# 	'linux.cmd' : {
+			# 		'yum-config-manager --enable $name' : 'name'
+			# 	}
+			# }
 		},
 		'common.gem.source' : {
 			'attributes' : {
@@ -319,7 +333,7 @@ class StateAdaptor(object):
 				'system-account'	: 'system',
 			},
 			'states' : [ 'present', 'absent' ],
-			'type' : 'user'
+			'type' : 'user',
 		},
 
 		## group
@@ -503,7 +517,9 @@ class StateAdaptor(object):
 		}
 	}
 
-	def __init__(self):
+	def __init__(self, config):
+
+		self.__tmp_dir = config['tmpdir'] if config and 'tmpdir' in config else '/tmp'
 
 		self.states = None
 
@@ -540,7 +556,10 @@ class StateAdaptor(object):
 
 		# convert to salt states
 		try:
-			utils.log("INFO", "Begin to convert module %s parameter %s" % (module, str(parameter)), ("convert", self))
+			utils.log("INFO", "Begin to check module %s parameter %s" % (module, str(parameter)), ("convert", self))
+			module, parameter = self.__check_module(module, parameter)
+
+			utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
 			self.states = self.__salt(step, module, parameter)
 
 			# expand salt state
@@ -735,6 +754,29 @@ class StateAdaptor(object):
 					if filename and obj_dir:
 						addin['name'] = obj_dir + filename
 
+				# priority contents
+				# if 'contents' in addin and 'rpm-url' in addin:
+				# 	addin.pop('rpm-url')
+
+				# if 'rpm-url' in addin:
+				# 	module_state = {
+				# 		self.mod_map['linux.cmd']['states'][0] : {
+				# 			'name' : 'rpm -iU {0}'.format(addin['rpm-url']),
+				# 			'timeout' : 600
+				# 		}
+				# 	}
+
+			elif module in ['linux.apt.ppa']:
+
+				if 'username' in addin and addin['username'] and \
+					'password' in addin and addin['password']:
+					addin['ppa_auth'] = '{0}:{1}'.format(addin['username'], addin['password'])
+
+				if 'username' in addin:
+					addin.pop('username')
+				if 'password' in addin:
+					addin.pop('password')
+
 			elif module in ['common.gem.source']:
 				addin.update(
 					{
@@ -775,9 +817,16 @@ class StateAdaptor(object):
 						module_state['absent']['names'] = addin['names']
 
 				else:
+					# set default user,group
+					if 'user' not in addin:
+						addin['user'] = 'root'
+					if 'group' not in addin:
+						addin['group'] = 'root'
 					# set mode
 					if 'mode' in addin and addin['mode']:
 						addin['mode'] = int(addin['mode'])
+					else:
+						addin['mode'] = 755
 
 					# set recurse
 					if 'recurse' in addin and addin['recurse']:
@@ -788,14 +837,6 @@ class StateAdaptor(object):
 							addin['recurse'].append('group')
 						if 'mode' in addin and addin['mode']:
 							addin['recurse'].append('mode')
-
-					# set user
-					if 'user' not in addin:
-						addin['user'] = 'root'
-
-					# check symlink's parent directory whether existed
-					if module == 'linux.symlink' and not os.path.isdir(os.path.dirname(os.path.abspath(addin['name']))):
-						addin['makedirs'] = True
 
 			elif module in ['linux.cmd']:
 				cmd = []
@@ -835,7 +876,7 @@ class StateAdaptor(object):
 
 				# default cwd
 				if 'cwd' not in addin:
-					addin['cwd'] = '/opt/madeira/tmp/'
+					addin['cwd'] = self.__tmp_dir
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -847,6 +888,16 @@ class StateAdaptor(object):
 				if 'nologin' in addin and addin['nologin']:
 					addin['shell'] = '/sbin/nologin'
 					addin.pop('nologin')
+
+				# set home
+				if 'home' not in addin:
+					addin['home'] = '/home/{0}'.format(addin['name'])
+				else:
+					addin['createhome'] = True
+					# add dir require
+					self.mod_map[module]['require'] = [
+						{'linux.dir':{'path':[addin['home']]}}
+					]
 
 			elif module in ['linux.mount']:
 				for attr in ['dump', 'pass_num']:
@@ -1101,42 +1152,29 @@ class StateAdaptor(object):
 									pass
 
 
-	# def __check_module(self, module):
-	# 	"""
-	# 		Check format of module.
-	# 	"""
+	def __check_module(self, module, parameter):
+		"""
+			Check format of module parameters.
+		"""
+		## valid parameters check
 
-	# 	module_map = {
-	# 		'package'		: ['pkg', 'apt', 'yum', 'gem', 'npm', 'pecl', 'pip'],
-	# 		'repo'			: ['apt', 'yum', 'zypper'],
-	# 		'source'		: ['gem'],
-	# 		'path'			: ['file', 'dir', 'symlink'],
-	# 		'scm' 			: ['git', 'svn', 'hg'],
-	# 		'service'		: ['supervisord', 'sysvinit', 'upstart'],
-	# 		'sys'			: ['cmd', 'cron', 'group', 'host', 'mount', 'ntp', 'selinux', 'user', 'timezone'],
-	# 		'system'		: ['ssh_auth', 'ssh_known_host']
-	# 	}
+		## required parameters check
 
-	# 	m_list = module.split('.')
+		## optional parameters check
+		if module == 'linux.yum.repo':
+			# priority content
+			if 'content' in parameter and 'rpm-url' in parameter:
+				parameter.pop('rpm-url')
 
-	# 	if len(m_list) <= 1:
-	# 		print "invalib module format"
-	# 		return 1
+			# change module when rpm-url
+			if 'rpm-url' in parameter:
 
-	# 	p_module = m_list[0]
-	# 	s_module = m_list[1]
+				parameter['cmd'] = 'rpm -iU {0}'.format(parameter['rpm-url'])
+				parameter.pop('rpm-url')
 
-	# 	if m_list[0] == 'package':
-	# 		p_module = m_list[2]
+				module = 'linux.cmd'
 
-	# 	elif m_list[0] == 'system':
-	# 		s_module = module.split('.', 1)[1].replace('.', '_')
-
-	# 	if p_module not in module_map.keys() or s_module not in module_map[p_module]:
-	# 		print "not supported module: %s, %s" % (p_module, s_module)
-	# 		return 2
-
-	# 	return 0
+		return (module, parameter)
 
 	# def __check_state(self, module, state):
 	# 	"""
@@ -1172,11 +1210,12 @@ def ut():
 	config = {
 		'srv_root' : '/srv/salt',
 		'extension_modules' : '/var/cache/salt/minion/extmods',
-		'cachedir' : '/code/OpsAgent/cache'
+		'cachedir' : '/code/OpsAgent/cache',
+		'tmpdir' : '/opt/madeira/tmp'
 	}
 
 	from opsagent.state.runner import StateRunner
-	adaptor = StateAdaptor()
+	adaptor = StateAdaptor(config)
 	runner = StateRunner(config)
 
 	# print json.dumps(adaptor._salt_opts, sort_keys=True,
@@ -1185,26 +1224,25 @@ def ut():
 	err_log = None
 	out_log = None
 
-	while True:
-		for uid, com in pre_states['component'].iteritems():
-			states = {}
+	for uid, com in pre_states['component'].iteritems():
+		states = {}
 
-			for p_state in com['state']:
-				try:
-					step = p_state['id']
-					states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
-					print json.dumps(states)
+		for p_state in com['state']:
+			try:
+				step = p_state['id']
+				states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+				print json.dumps(states)
 
-					if not states or not isinstance(states, list):
-						err_log = "convert salt state failed"
-						print err_log
-						result = (False, err_log, out_log)
-					else:
-						result = runner.exec_salt(states)
-					print result
-				except Exception, e:
-					print str(e)
-					continue
+				if not states or not isinstance(states, list):
+					err_log = "convert salt state failed"
+					print err_log
+					result = (False, err_log, out_log)
+				else:
+					result = runner.exec_salt(states)
+				print result
+			except Exception, e:
+				print str(e)
+				continue
 
 if __name__ == '__main__':
 	ut()

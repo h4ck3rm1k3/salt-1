@@ -136,7 +136,7 @@ manage the timezone
 
 *   **`name`** (*required*): the timezone name
 		   
-		   example: Pacific/Tahiti
+	example: Pacific/Tahiti
 
 *   **`use-utc`** (*optional*): whether to use UTC for the hardware clock, by default ***`True`***
 					''',
@@ -166,7 +166,7 @@ manage ruby gems
 
 ### Parameters
 
-*   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
+*	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
@@ -194,14 +194,14 @@ manage node.js package (requires npm 1.2 or greater)
 
 ### Parameters
 
-*   **name** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
+*	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **latest**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
 	- **removed**: ensure the package is absent
 
 	>note: the specified packages will be installed as global packages (npm install --global)
-
+	
 * **`path`** (*optional*): the path where the packages should be installed to `$path/node_modules`
 		>note:
 			if ignored, the packages will be installed as global packages, usually `/usr/local/lib/node_modules/` (e.g. npm install --global)
@@ -263,7 +263,7 @@ manage pip packages
 
 ### Parameters
 
-*   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
+*	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
@@ -698,7 +698,7 @@ manage yum packages
 
 ### Parameters
 
-*   **`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
+*	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, will install the latest version available of all APT repos on
 	- ***`<version>`***: ensure the package is installed, with the version specified. If the version in unavailable of all APT repos on the host, the state will fail
 	- **`latest`**: ensure the package is installed with the latest version. If a newer version is available of all APT repos on the host, will do a auto-upgrade
@@ -1458,7 +1458,6 @@ execute a shell command
 *   **`if-path-present`** (*optional*): the command will run only if all specified paths exist
 
 *   **`if-path-absent`** (*optional*): the command will not run if any of the specified paths exist
-
 					''',
 					'cn'	:	''''''
 				},
