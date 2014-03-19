@@ -556,7 +556,10 @@ class StateAdaptor(object):
 
 		# convert to salt states
 		try:
-			utils.log("INFO", "Begin to convert module %s parameter %s" % (module, str(parameter)), ("convert", self))
+			utils.log("INFO", "Begin to check module %s parameter %s" % (module, str(parameter)), ("convert", self))
+			module, parameter = self.__check_module(module, parameter)
+
+			utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
 			self.states = self.__salt(step, module, parameter)
 
 			# expand salt state
@@ -751,8 +754,9 @@ class StateAdaptor(object):
 					if filename and obj_dir:
 						addin['name'] = obj_dir + filename
 
-				if 'contents' in addin and 'rpm-url' in addin:
-					addin.pop('rpm-url')
+				# priority contents
+				# if 'contents' in addin and 'rpm-url' in addin:
+				# 	addin.pop('rpm-url')
 
 				# if 'rpm-url' in addin:
 				# 	module_state = {
@@ -1148,42 +1152,29 @@ class StateAdaptor(object):
 									pass
 
 
-	# def __check_module(self, module):
-	# 	"""
-	# 		Check format of module.
-	# 	"""
+	def __check_module(self, module, parameter):
+		"""
+			Check format of module parameters.
+		"""
+		## valid parameters check
 
-	# 	module_map = {
-	# 		'package'		: ['pkg', 'apt', 'yum', 'gem', 'npm', 'pecl', 'pip'],
-	# 		'repo'			: ['apt', 'yum', 'zypper'],
-	# 		'source'		: ['gem'],
-	# 		'path'			: ['file', 'dir', 'symlink'],
-	# 		'scm' 			: ['git', 'svn', 'hg'],
-	# 		'service'		: ['supervisord', 'sysvinit', 'upstart'],
-	# 		'sys'			: ['cmd', 'cron', 'group', 'host', 'mount', 'ntp', 'selinux', 'user', 'timezone'],
-	# 		'system'		: ['ssh_auth', 'ssh_known_host']
-	# 	}
+		## required parameters check
 
-	# 	m_list = module.split('.')
+		## optional parameters check
+		if module == 'linux.yum.repo':
+			# priority content
+			if 'content' in parameter and 'rpm-url' in parameter:
+				parameter.pop('rpm-url')
 
-	# 	if len(m_list) <= 1:
-	# 		print "invalib module format"
-	# 		return 1
+			# change module when rpm-url
+			if 'rpm-url' in parameter:
 
-	# 	p_module = m_list[0]
-	# 	s_module = m_list[1]
+				parameter['cmd'] = 'rpm -iU {0}'.format(parameter['rpm-url'])
+				parameter.pop('rpm-url')
 
-	# 	if m_list[0] == 'package':
-	# 		p_module = m_list[2]
+				module = 'linux.cmd'
 
-	# 	elif m_list[0] == 'system':
-	# 		s_module = module.split('.', 1)[1].replace('.', '_')
-
-	# 	if p_module not in module_map.keys() or s_module not in module_map[p_module]:
-	# 		print "not supported module: %s, %s" % (p_module, s_module)
-	# 		return 2
-
-	# 	return 0
+		return (module, parameter)
 
 	# def __check_state(self, module, state):
 	# 	"""
