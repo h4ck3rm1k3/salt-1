@@ -299,6 +299,9 @@ class StateAdaptor(object):
 				'run', 'call', 'wait', 'script'
 			],
 			'type' : 'cmd',
+			'require' : [
+				{'linux.dir' : { 'path' : ['/opt/madeira/tmp'] }}
+			]
 		},
 
 		## cron
