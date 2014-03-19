@@ -1137,7 +1137,7 @@ ensure supervisord and the specified services are running, and trigger superviso
 	
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
 		
-		example: /etc/nginx/nginx.conf, /etc/my.cnf
+		example: /etc/nginx/nginx.conf
 					''',
 					'cn'	:	''''''
 				},
