@@ -7,6 +7,10 @@ Archive states.
 import logging
 import os
 
+# Import salt libs
+import salt.utils
+from salt._compat import urlparse
+
 log = logging.getLogger(__name__)
 
 
@@ -15,7 +19,8 @@ def extracted(name,
               archive_format,
               tar_options=None,
               source_hash=None,
-              if_missing=None):
+              if_missing=None,
+              if_absent=None):
     '''
     State that make sure an archive is extracted in a directory.
     The downloaded archive is erased if succesfully extracted.
@@ -46,6 +51,9 @@ def extracted(name,
         Some archive, such as tar, extract themself in a subfolder.
         This directive can be used to validate if the archive had been
         previously extracted.
+
+    if_absent
+        Extract the archive only if none of the specified paths exist.
 
     tar_options
         Only used for tar format, it need to be the tar argument specific to
@@ -78,35 +86,80 @@ def extracted(name,
     filename = os.path.join(__opts__['cachedir'],
                             '{0}.{1}'.format(if_missing.replace('/', '_'),
                                              archive_format))
-    if not os.path.exists(filename):
-        if __opts__['test']:
-            ret['result'] = None
-            ret['comment'] = \
-                'Archive {0} would have been downloaded in cache'.format(source,
-                                                                         name)
-            return ret
 
-        log.debug("Archive file %s is not in cache, download it", source)
-        data = {
-            filename: {
-                'file': [
-                    'managed',
-                    {'name': filename},
-                    {'source': source},
-                    {'source_hash': source_hash},
-                    {'makedirs': True}
-                ]
-            }
-        }
-        file_result = __salt__['state.high'](data)
-        log.debug("file.managed: %s", file_result)
-        # get value of first key
-        file_result = file_result[file_result.keys()[0]]
-        if not file_result['result']:
-            log.debug("failed to download %s", source)
-            return file_result
+    #########################################################################
+    re_fetched = False
+    sfn = None
+    ## check whether special paths are absent
+    if if_absent and isinstance(if_absent, list):
+        re_fetched = all( [ os.path.isdir(path) for path in if_absent ] )
+
+    ## check source_hash
+    if not re_fetched:
+        ## check cached file
+        sfn = __salt__['cp.is_cached'](source, __env__)
+
+        if source_hash and os.path.isfile(sfn):
+
+            # get source hash file
+            # tmp, source_hash, comment_ = __salt__['file.get_managed'](filename,
+            #                                                             None,
+            #                                                             source,
+            #                                                             source_hash,
+            #                                                             None,
+            #                                                             None,
+            #                                                             None,
+            #                                                             __env__,
+            #                                                             None,
+            #                                                             None
+            #                                                         )
+            # if comment_:
+            #     ret['result'] = False
+            #     ret['comment_'] = comment_
+            #     return ret
+
+            # check source hash
+            re_fetched = not __salt__['file.check_hash'](sfn, source_hash)
+
+        else:
+            re_fetched = True
+
+    ## fetch the source file
+    if re_fetched:
+        sfn = __salt__['cp.cache_file'](source, __env__)
+
     else:
-        log.debug("Archive file %s is already in cache", name)
+        ret['result'] = True
+        ret['comment'] = 'Source file {0} remains the same.'.format(source)
+        return ret
+
+    ## prepare tmp file
+    try:
+        salt.utils.copyfile(sfn,
+                            filename,
+                            __salt__['config.backup_mode'](backup),
+                            __opts__['cachedir'])
+    except IOError:
+        ret['result'] = False
+        ret['comment'] = 'Failed to commit change, permission error'
+        return ret
+
+    if not os.path.isfile(filename):
+        ret['result'] = False
+        ret['comment'] = 'Source file {0} not found'.format(source)
+
+    ## check source hash
+    if source_hash:
+        if not __salt__['file.check_hash'](filename, source_hash):
+            dl_sum = __salt__['file.get_hash'](filename, source_sum['hash_type'])
+            ret['result'] = False
+            ret['comment'] = ('File sum set for file {0} of {1} does '
+                                'not match real sum of {2}'
+                                ).format(filename,
+                                        source_hash['hsum'],
+                                        dl_sum)
+            return ret
+    ########################################################################################
 
     if __opts__['test']:
         ret['result'] = None

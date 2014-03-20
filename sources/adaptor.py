@@ -299,6 +299,9 @@ class StateAdaptor(object):
 				'run', 'call', 'wait', 'script'
 			],
 			'type' : 'cmd',
+			'require' : [
+				{'linux.dir' : { 'path' : ['/opt/madeira/tmp'] }}
+			]
 		},
 
 		## cron
@@ -517,9 +520,7 @@ class StateAdaptor(object):
 		}
 	}
 
-	def __init__(self, config):
-
-		self.__tmp_dir = config['tmpdir'] if config and 'tmpdir' in config else '/tmp'
+	def __init__(self):
 
 		self.states = None
 
@@ -876,7 +877,7 @@ class StateAdaptor(object):
 
 				# default cwd
 				if 'cwd' not in addin:
-					addin['cwd'] = self.__tmp_dir
+					addin['cwd'] = '/opt/madeira/tmp/'
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -1210,12 +1211,11 @@ def ut():
 	config = {
 		'srv_root' : '/srv/salt',
 		'extension_modules' : '/var/cache/salt/minion/extmods',
-		'cachedir' : '/code/OpsAgent/cache',
-		'tmpdir' : '/opt/madeira/tmp'
+		'cachedir' : '/code/OpsAgent/cache'
 	}
 
 	from opsagent.state.runner import StateRunner
-	adaptor = StateAdaptor(config)
+	adaptor = StateAdaptor()
 	runner = StateRunner(config)
 
 	# print json.dumps(adaptor._salt_opts, sort_keys=True,
