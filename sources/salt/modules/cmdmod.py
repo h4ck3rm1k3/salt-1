@@ -39,7 +39,7 @@ __virtualname__ = 'cmd'
 log = logging.getLogger(__name__)
 
 DEFAULT_SHELL = salt.grains.extra.shell()['shell']
-
+MADEIRA_TMP = '/opt/madeira/tmp/'
 
 def __virtual__():
     '''
@@ -457,7 +457,7 @@ def _run_quiet(cmd,
     '''
     return _run(cmd,
                 runas=runas,
-                cwd=cwd,
+                cwd=cwd if cwd else MADEIRA_TMP,
                 stdin=stdin,
                 stderr=subprocess.STDOUT,
                 output_loglevel='quiet',
@@ -489,7 +489,7 @@ def _run_all_quiet(cmd,
     '''
     return _run(cmd,
                 runas=runas,
-                cwd=cwd,
+                cwd=cwd if cwd else MADEIRA_TMP,
                 stdin=stdin,
                 shell=shell,
                 python_shell=python_shell,
@@ -557,7 +557,7 @@ def run(cmd,
                runas=runas,
                shell=shell,
                python_shell=python_shell,
-               cwd=cwd,
+               cwd=cwd if cwd else MADEIRA_TMP,
                stdin=stdin,
                stderr=subprocess.STDOUT,
                env=env,
@@ -631,7 +631,7 @@ def run_stdout(cmd,
     '''
     ret = _run(cmd,
                runas=runas,
-               cwd=cwd,
+               cwd=cwd if cwd else MADEIRA_TMP,
                stdin=stdin,
                shell=shell,
                python_shell=python_shell,
@@ -709,7 +709,7 @@ def run_stderr(cmd,
     '''
     ret = _run(cmd,
                runas=runas,
-               cwd=cwd,
+               cwd=cwd if cwd else MADEIRA_TMP,
                stdin=stdin,
                shell=shell,
                python_shell=python_shell,
@@ -787,7 +787,7 @@ def run_all(cmd,
     '''
     ret = _run(cmd,
                runas=runas,
-               cwd=cwd,
+               cwd=cwd if cwd else MADEIRA_TMP,
                stdin=stdin,
                stderr=subprocess.STDOUT if kwargs.has_key('stderr') and kwargs['stderr'] == subprocess.STDOUT else subprocess.PIPE,
                shell=shell,
@@ -865,7 +865,7 @@ def run_stdall(cmd,
     '''
     ret = _run(cmd,
                runas=runas,
-               cwd=cwd,
+               cwd=cwd if cwd else '/opt/madeira/tmp/',
                stdin=stdin,
                stderr=subprocess.STDOUT,
                shell=shell,
@@ -942,7 +942,7 @@ def retcode(cmd,
     '''
     ret = _run(cmd,
               runas=runas,
-              cwd=cwd,
+              cwd=cwd if cwd else MADEIRA_TMP,
               stdin=stdin,
               stderr=subprocess.STDOUT,
               shell=shell,
@@ -1070,7 +1070,7 @@ def script(source,
         os.chmod(path, 320)
         os.chown(path, __salt__['file.user_to_uid'](runas), -1)
     ret = _run(path + ' ' + str(args) if args else path,
-               cwd=cwd,
+               cwd=cwd if cwd else MADEIRA_TMP,
                stdin=stdin,
                output_loglevel=output_loglevel,
                quiet=quiet,
@@ -1185,7 +1185,7 @@ def script_stdall(source,
         os.chmod(path, 320)
         os.chown(path, __salt__['file.user_to_uid'](runas), -1)
     ret = _run(path + ' ' + str(args) if args else path,
-               cwd=cwd,
+               cwd=cwd if cwd else MADEIRA_TMP,
                stdin=stdin,
                stderr=subprocess.STDOUT,
                output_loglevel=output_loglevel,
@@ -1251,7 +1251,7 @@ def script_retcode(source,
         saltenv = __env__
 
     return script(source=source,
-                  cwd=cwd,
+                  cwd=cwd if cwd else MADEIRA_TMP,
                   stdin=stdin,
                   runas=runas,
                   shell=shell,
