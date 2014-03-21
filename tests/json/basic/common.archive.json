@@ -6,7 +6,7 @@
           "id": "state-2E042A11-4697-465B-B995-5C3194145D36",
           "module": "common.archive",
           "parameter": {
-            "file": "http://wordpress.org/latest.zip",
+            "source": "http://wordpress.org/latest.zip",
             "path": "/tmp/test/wordpress/",
             "checksum": "md5=8133645e8820557761d7a551fea70028"
           }
