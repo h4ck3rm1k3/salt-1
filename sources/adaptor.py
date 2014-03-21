@@ -509,7 +509,7 @@ class StateAdaptor(object):
 		## archive
 		'common.archive' : {
 			'attributes' : {
-				'file'				: 'source',
+				'source'			: 'source',
 				'path'				: 'name',
 				'checksum'			: 'source_hash',
 				# 'if-path-present'	:,
