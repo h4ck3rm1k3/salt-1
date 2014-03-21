@@ -37,7 +37,8 @@ def __virtual__():
     '''
     Confine this module to Debian based distros
     '''
-    if __grains__['os_family'] == 'Debian':
+    if 'os_family' in __grains__ and \
+        __grains__['os_family'] == 'Debian':
         return __virtualname__
     return False
 

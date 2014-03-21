@@ -27,7 +27,8 @@ def __virtual__():
     '''
     Only work on systems that have been booted with systemd
     '''
-    if __grains__['kernel'] == 'Linux' and _sd_booted():
+    if 'kernel' in __grains__ and \
+        __grains__['kernel'] == 'Linux' and _sd_booted():
         return __virtualname__
     return False
 

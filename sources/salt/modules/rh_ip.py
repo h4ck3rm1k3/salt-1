@@ -36,7 +36,7 @@ def __virtual__():
     '''
     Confine this module to RHEL/Fedora based distros
     '''
-    if __grains__['os_family'] == 'RedHat':
+    if 'os_family' in __grains__ and __grains__['os_family'] == 'RedHat':
         return __virtualname__
     return False
 

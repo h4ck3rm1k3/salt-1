@@ -43,6 +43,8 @@ def __virtual__():
         'elementary OS',
         'McAfee  OS Server'
     ))
+    if 'os' not in __grains__ or 'kernel' not in __grains__:
+        return False
     if __grains__.get('os', '') in disable:
         return False
     # Disable on all non-Linux OSes as well
