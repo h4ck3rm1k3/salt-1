@@ -549,10 +549,10 @@ class StateAdaptor(object):
 		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
 		# convert from unicode to string
-		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
-		parameter = utils.uni2str(parameter)
-		step = str(step)
-		module = str(module)
+		# utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
+		# parameter = utils.uni2str(parameter)
+		# step = str(step)
+		# module = str(module)
 
 		# convert to salt states
 		try:
