@@ -23,7 +23,7 @@ in brwoser console, run:
     curl -sSL -o /tmp/clean.sh  https://s3.amazonaws.com/visualops/clean.sh && bash /tmp/clean.sh reinstall debug
 
 #Test module
-    cd /opt/madeira/bootstrap/salt/tests
+    cd /opt/visualops/bootstrap/salt/tests
     ./step.sh #run single testcase
     ./run.sh #run all testcase
 
@@ -31,9 +31,9 @@ in brwoser console, run:
 to test "linux.user" module, run£º
     ./step.sh 0
 
-##test module with custom api.json (/opt/madeira/env/lib/python2.7/site-packages/opsagent/state/api.json)
-    cd /opt/madeira/env/lib/python2.7/site-packages/opsagent/state
-    /opt/madeira/env/bin/python adaptor.py
+##test module with custom api.json (/opt/visualops/env/lib/python2.7/site-packages/opsagent/state/api.json)
+    cd /opt/visualops/env/lib/python2.7/site-packages/opsagent/state
+    /opt/visualops/env/bin/python adaptor.py
 
 [tips]
 to view result only:

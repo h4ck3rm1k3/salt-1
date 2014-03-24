@@ -1,5 +1,5 @@
 '''
-Madeira OpsAgent states adaptor
+VisualOps agent states adaptor
 
 @author: Michael (michael@mc2.io)
 '''
@@ -300,7 +300,7 @@ class StateAdaptor(object):
 			],
 			'type' : 'cmd',
 			'require' : [
-				{'linux.dir' : { 'path' : ['/opt/madeira/tmp'] }}
+				{'linux.dir' : { 'path' : ['/opt/visualops/tmp'] }}
 			]
 		},
 
@@ -643,7 +643,7 @@ class StateAdaptor(object):
 				# add env and sls
 				if 'require_in' in self.mod_map[module]:
 					salt_state[tag]['__env__'] = 'base'
-					salt_state[tag]['__sls__'] = 'madeira'
+					salt_state[tag]['__sls__'] = 'visualops'
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt states of id %s module %s exception:%s" % (step, module, str(e)), ("__salt", self))
 			raise StateException("Generate salt states exception")
@@ -876,7 +876,7 @@ class StateAdaptor(object):
 
 				# default cwd
 				if 'cwd' not in addin:
-					addin['cwd'] = '/opt/madeira/tmp/'
+					addin['cwd'] = '/opt/visualops/tmp/'
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -1190,7 +1190,7 @@ class StateAdaptor(object):
 # ===================== UT =====================
 def ut():
 	import json
-	pre_states = json.loads(open('/opt/madeira/bootstrap/salt/tests/state.json').read())
+	pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
 
 	# salt_opts = {
 	# 	'file_client':       'local',

@@ -19,7 +19,7 @@
                     "module": "linux.cronjob",
                     "parameter": {
                         "cmd": [
-                            "/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1"
+                            "echo tata >> /tmp/tata.cron 2>&1"
                         ],
                         "user": "root"
                     }
@@ -48,7 +48,7 @@
                     "module": "linux.cronjob",
                     "parameter": {
                         "cmd": [
-                            "/etc/opsagent.d/bootstrap.sh >> /var/log/madeira/bootstrap.log 2>&1"
+                            "echo toto >> /tmp/toto.cron 2>&1"
                         ],
                         "day-of-month": "*/3",
                         "day-of-week": "*/5",

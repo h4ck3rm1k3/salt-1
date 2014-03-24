@@ -1443,7 +1443,7 @@ execute a shell command
 
 		example: find . -name *.pyc | xargs rm
 
-*   **`cwd`** (*optional*): the current working directory to execute the command, be default `/opt/madeira/tmp/`
+*   **`cwd`** (*optional*): the current working directory to execute the command, be default `/opt/visualops/tmp/`
 
 *   **`user`** (*optional*): the user to execute the command, by default the user which the agent runs as
 
@@ -1475,7 +1475,7 @@ execute a shell command
 					},
 					'cwd'		:	{
 						'type'		:	'line',
-						'default'	:	'/madeira/tmp/',
+						'default'	:	'/opt/visualops/tmp/',
 						'required'	:	False
 					},
 					'user'		:	{
