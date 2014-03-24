@@ -38,7 +38,7 @@
           "_": "4 [test1] clone pyse with subversion - True",
           "module": "common.svn",
           "parameter": {
-            "repo": "https://github.com/MadeiraCloud/pysa",
+            "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/test/svn",
             "force": true,
             "revision": "trunk"

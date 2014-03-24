@@ -67,7 +67,7 @@
           "module": "linux.file",
           "parameter": {
             "content": "#!/bin/sh\necho \"hello test2\"",
-            "path": "/madeira/util/test.sh",
+            "path": "/visualops/util/test.sh",
             "mode": "0777",
             "absent": false,
             "user": "InstantForge1",
@@ -91,7 +91,7 @@
           "module": "linux.file",
           "parameter": {
             "content": "#!/bin/sh\necho \"hello test2\"",
-            "path": "/madeira/util/test.sh",
+            "path": "/visualops/util/test.sh",
             "mode": "0777",
             "absent": true,
             "user": "InstantForge1",
