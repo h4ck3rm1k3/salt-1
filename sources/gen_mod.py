@@ -2,7 +2,7 @@
 
 def attr():
 	return {
-		'tag'	:	'v2014-03-15',
+		'tag'	:	'v2014-03-21',
 		'meta'	:	{
 			'#'	:	{
 				'module'	:	'meta.comment',
@@ -31,7 +31,7 @@ wait for remote state(s) to complete, if anyone is not done yet, it will cause t
 ### Parameters
 
 *   **`state`** (*required*): one or multiple remote states to be waited
-		
+
 		example:
 			single - @{hostname.state.1}
 			barrier - @{host1.state.1, @host2.state.2}
@@ -97,7 +97,7 @@ extract an archive file
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'file'		:	{
+					'source'		:	{
 						'type'		:	'line',
 						'required'	:	True,
 						'visible'	:	True,
@@ -135,7 +135,7 @@ manage the timezone
 ### Parameters
 
 *   **`name`** (*required*): the timezone name
-		   
+
 	example: Pacific/Tahiti
 
 *   **`use-utc`** (*optional*): whether to use UTC for the hardware clock, by default ***`True`***
@@ -201,7 +201,7 @@ manage node.js package (requires npm 1.2 or greater)
 	- **removed**: ensure the package is absent
 
 	>note: the specified packages will be installed as global packages (npm install --global)
-	
+
 * **`path`** (*optional*): the path where the packages should be installed to `$path/node_modules`
 		>note:
 			if ignored, the packages will be installed as global packages, usually `/usr/local/lib/node_modules/` (e.g. npm install --global)
@@ -292,7 +292,7 @@ manage a git repo
 ### Parameters
 
 * **`path`** (*required* ): the path to clone the repo
-		
+
 		example: /var/www/html/mysite/
 
 *   **`repo`** (*required*): the git repository uri
@@ -364,11 +364,11 @@ manage a hg repo
 ### Parameters
 
 * **`path`** (*required* ): the path to clone the repo
-		
+
 		example: /var/www/html/mysite/
 
 *   **`repo`** (*required*): the hg repository uri
-		
+
 		example:
 			local/filesystem/path
 			file://local/filesystem/path
@@ -377,7 +377,7 @@ manage a hg repo
 			ssh://[user@]host[:port]/[path]
 
 * **`revision`** (*optional*): the revision to checkout
-		
+
 		example:
 			specify a branch and keep it synced: master, develop
 			specify a static tag - release-1.0
@@ -430,7 +430,7 @@ manage a svn repo
 		example: /var/www/html/mysite/
 
 *   **`repo`** (*required*): the hg repository uri
-		
+
 		example:
 			file://local/filesystem/path
 			http://[user@]host[:port][path]
@@ -439,7 +439,7 @@ manage a svn repo
 			svn+ssh://[user@]host[:port][path]
 
 * **`revision`** (*optional*): the revision to checkout
-		
+
 		example: HEAD, BASE, COMMITED, PREV, etc,. (ref: [Revision Specifiers](http://svnbook.red-bean.com/en/1.7/svn.tour.revs.specifiers.html))
 
 * **`username`** (*optional*): the username of the svn server
@@ -588,7 +588,7 @@ manage apt packages
 
 
 * **`repo`** (*optional*): the repo name, which you want to use for installing the packages
-		
+
 		example: main
 
 * **`deb-conf-file`** (*optional*): the Deb configuration file path
@@ -635,7 +635,7 @@ manage apt repo
 *   **`name`** (*required*): the repository name (`/etc/apt/sources.list.d/$name.list` will be created)
 
 * **`content`** (*required*): the source list file content
-		
+
 		example: deb http://www.rabbitmq.com/debian/ testing main
 					''',
 					'cn'	:	''''''
@@ -743,11 +743,11 @@ manage a yum repo
 ### Parameters
 
 *   **`name`** (*required*): the repo name
-		   
+
 		 example: epel
 
 * **`content`** (*optional*): the content of the repo configuration file
-		
+
 		example:
 			[10gen]
 			name=10gen Repository
@@ -756,7 +756,7 @@ manage a yum repo
 			enabled=1
 
 * **`rpm-url`** (*optional*): the repo rpm url
-		
+
 		example: http://mirrors.hustunique.com/epel/6/i386/epel-release-6-8.noarch.rpm
 					''',
 					'cn'	:	''''''
@@ -862,25 +862,25 @@ manage a directory
 ### Parameters
 
 *   **`path`** (*required*): a list of directory paths
-		
+
 		example: /var/www/html
 
 	>note: This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified directory itself.
 
 * **`user`** (*optional*): the user name of the file owner
-		
+
 		example: root
 
 	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **`group`** (*optional*): the group name of the file owner
-		
+
 		example: root
 
     >note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
-		
+
 		example: 0755
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
@@ -888,7 +888,7 @@ manage a directory
 * **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`True`***
 
 * **`absent`** (*optional*): ensure all directories are absent, by default ***`False`***
-		
+
 	>note: If True, all other parameters are ignored
 					''',
 					'cn'	:	''''''
@@ -934,35 +934,35 @@ manage a file
 ### Parameters
 
 *   **`path`** (*required*): the file path
-		
+
 		example: /root/.ssh/known_hosts
 
 	>note: This state ensures the specifed file is present with correposnding attributes and content. If the directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified file itself.
 
 * **`user`** (*optional*): the user name of the file owner
-		
+
 		example: root
 
 	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **`group`** (*optional*): the group name of the file owner
-		
+
 		example: root
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
-		
+
 		example: 0755
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
 * **`content`** (*optional*): the file content
-	
+
 	>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten
 
 * **`absent`** (*optional*): ensure the directory is absent, by default ***`False`***
-		
+
 	>note: If True, all other parameters are ignored
 					''',
 					'cn'	:	''''''
@@ -1017,35 +1017,35 @@ manage a symlink
 ### Parameters
 
 *   **`source`** (*required*): the path to link to
-		
+
 		example: /data/
 
 * **`target`** (*required*): the path of the symlink
-		
+
 		example: /mnt/data
 
 	>note: If the target's parent path does not exist, this state will fail.
 
 * **`user`** (*optional*): the user name of the file owner
-		
+
 		example: root
 
 	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
 
 * **`group`** (*optional*): the group name of the file owner
-		
+
 		example: root
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
-		
+
 		example: 0755
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
 * **`absent`** (*optional*): ensure the directory is absent, by default ***`False`***
-		
+
 	>note: If True, all other parameters are ignored
 					''',
 					'cn'	:	''''''
@@ -1093,11 +1093,11 @@ ensure the specified services are running, and trigger service restart if necess
 ### Parameters
 
 *   **`name`** (*required*): the list of the service names to be running
-		
+
 		example: httpd, mysqld
 
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
-		
+
 		example: /etc/nginx/nginx.conf, /etc/my.cnf
 					''',
 					'cn'	:	''''''
@@ -1126,17 +1126,17 @@ ensure supervisord and the specified services are running, and trigger superviso
 ### Parameters
 
 *   **`config`** (*required*): the path of supervisord configuration file
-		
+
 		example: /etc/supervisord.conf
 
 		>note: When this file is modified, supervisord will be restarted, which causes all managed services restarted
 
 *   **`name`** (*required*): the name list of the services to be running (see below)
-		
+
 		example: httpd, mysqld
-	
+
 *   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
-		
+
 		example: /etc/nginx/nginx.conf
 					''',
 					'cn'	:	''''''
@@ -1171,7 +1171,7 @@ manage a cron job
 *   **`user`** (*required*): the user to execute the cron job, by default: root
 
 *   **`cmd`** (*required*): a list of command
-		
+
 		example:
 			cat /proc/meminfo >> /tmp/meminfo
 			ntpdate  time.apple.com
@@ -1377,15 +1377,15 @@ manage mount points
 *   **`fstab`** (*optional*): whether to save in /etc/fstab, by default ***`False`***
 
 *   **`opts`** (*optional*): a list of options for /etc/fstab, see *`fstab(8)`*
-		
+
 	>note: this parameter applies only if `fstab is `True`
 
 *   **`dump`** (*optional*): the dump value in /etc/fstab, see *`fstab(8)`*
-		
+
 	>note: this parameter applies only if `fstab` is `True`
 
 *   **`pass`** (*optional*): the pass value in /etc/fstab, see *`fstab(8)`*
-		
+
 	>note: this parameter applies only if `fstab` is `True`
 					''',
 					'cn'	:	''''''
@@ -1440,7 +1440,7 @@ execute a shell command
 *   **`shell`** (*required*): the absolute path of the shell to execute the command, by default `/bin/sh`
 
 *   **`cmd`** (*required*): the command to execute
-		
+
 		example: find . -name *.pyc | xargs rm
 
 *   **`cwd`** (*optional*): the current working directory to execute the command, be default `/opt/madeira/tmp/`
@@ -1452,7 +1452,7 @@ execute a shell command
 *   **`env`** (*optional*): environment variables for the command
 
 *   **`timeout`** (*optional*): command timeout, by default `600` (in seconds)
-		
+
 	>note: By default, a command will be terminated and taken "failed" if not finishe in 600 seconds. However you can change with this option.
 
 *   **`if-path-present`** (*optional*): the command will run only if all specified paths exist
@@ -1520,7 +1520,7 @@ manage a user
 *   **`username`** (*required*): the user name
 
 *   **`password`** (*required*): the encrypted password
-		
+
 	>note: use `openssl passwd -salt &lt;salt&gt; -1 &lt;plaintext&gt;` to generate the passworld hash
 
 *   **`fullname`** (*optional*): the full name of the user
@@ -1530,7 +1530,7 @@ manage a user
 *   **`gid`** (*optional*): the group id
 
 *   **`home`** (*optional*): the home directory of the user, by default `/home/$username`
-		
+
 	>note: if the directory already exists, the uid and gid of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the uid and gid
 
 *   **`system-account`** (*optional*): whether to create a system account (see `useradd(8)`), by default: `False`
@@ -1538,7 +1538,7 @@ manage a user
 *   **`no-login`** (*optional*): whether to allow user to login, by default `False`
 
 *   **`groups`** (*optional*): a list of groups of the user
-		
+
 	>note: if pass in an empty list, all groups of the user will be removed except the defaut one
 					''',
 					'cn'	:	''''''
@@ -2013,7 +2013,7 @@ manage LVM logical volume (LV)
 *   **`zero`** (*optional*): whether to set zero of the  first  KB of data in the new LV, by default ***`True`***
 
 	>>note: Volume will not be zeroed if read only flag is set.
-	
+
 	>Snapshot volumes are zeroed always.
 
 *   **`autobackup`** (*optional*): whether to metadata should be backed up automatically after a change, by default ***`True`***

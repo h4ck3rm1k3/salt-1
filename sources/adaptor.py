@@ -509,11 +509,10 @@ class StateAdaptor(object):
 		## archive
 		'common.archive' : {
 			'attributes' : {
-				'file'				: 'source',
+				'source'			: 'source',
 				'path'				: 'name',
 				'checksum'			: 'source_hash',
-				# 'if-path-present'	:,
-				# 'if-path-absent'	:,
+				'if-path-absent'	: 'if_absent',
 			},
 			'states' : ['extracted'],
 			'type' : 'archive',
@@ -947,8 +946,8 @@ class StateAdaptor(object):
 							{'linux.yum.package' : { 'name' : [{'key':'zip'}] }},
 						]
 
-				if 'source_hash' in addin:
-					addin['source_hash'] = 'md5={0}'.format(addin['source_hash'].lower())
+				# if 'source_hash' in addin and addin['source_hash'].startswith('md5='):
+				# 	addin['source_hash'] = 'md5={0}'.format(addin['source_hash'].lower())
 
 				# add the last slash when there isnt
 				addin['name'] = os.path.normpath(addin['name']) + os.sep

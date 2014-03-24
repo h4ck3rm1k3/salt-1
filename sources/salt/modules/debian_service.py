@@ -24,10 +24,10 @@ def __virtual__():
     '''
     Only work on Debian and when systemd isn't running
     '''
-    if __grains__['os'] in ('Debian', 'Raspbian') and not _sd_booted():
+    if 'os' in __grains__ and \
+        __grains__['os'] in ('Debian', 'Raspbian') and not _sd_booted():
         return __virtualname__
     return False
-
 
 def _get_runlevel():
     '''

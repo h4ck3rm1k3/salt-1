@@ -19,7 +19,8 @@ def __virtual__():
     '''
     Confine this module to rpm based systems
     '''
-    if not salt.utils.which('rpm'):
+    if not salt.utils.which('rpm') or \
+        'os' not in __grains__ or 'os_family' not in __grains__:
         return False
 
     # Work only on RHEL/Fedora based distros with python 2.6 or greater

@@ -94,32 +94,29 @@ def extracted(name,
     if if_absent and isinstance(if_absent, list):
         re_fetched = all( [ os.path.isdir(path) for path in if_absent ] )
 
+    ## get source hash file
+    if source_hash:
+        try:
+            tmp, source_hash, comment_ = __salt__['file.get_managed'](filename,
+                None, source, source_hash, None, None, None, __env__, None, None)
+            if comment_:
+                ret['result'] = False
+                ret['comment_'] = comment_
+                return ret
+        except Exception, e:
+            ret['result'] = False
+            ret['comment'] = 'Parse source hash %s failed' % str(source_hash)
+            ret['stdout'] = str(e)
+            return ret
+
     ## check source_hash
     if not re_fetched:
         ## check cached file
         sfn = __salt__['cp.is_cached'](source, __env__)
 
         if source_hash and os.path.isfile(sfn):
-
-            # get source hash file
-            # tmp, source_hash, comment_ = __salt__['file.get_managed'](filename,
-            #                                                             None,
-            #                                                             source,
-            #                                                             source_hash,
-            #                                                             None,
-            #                                                             None,
-            #                                                             None,
-            #                                                             __env__,
-            #                                                             None,
-            #                                                             None
-            #                                                         )
-            # if comment_:
-            #     ret['result'] = False
-            #     ret['comment_'] = comment_
-            #     return ret
-
-            # check source hash
-            re_fetched = not __salt__['file.check_hash'](sfn, source_hash)
+            hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum'])
+            re_fetched = not __salt__['file.check_hash'](sfn, hash_value)
 
         else:
             re_fetched = True
@@ -128,16 +125,11 @@ def extracted(name,
     if re_fetched:
         sfn = __salt__['cp.cache_file'](source, __env__)
 
-    else:
-        ret['result'] = True
-        ret['comment'] = 'Source file {0} remains the same.'.format(source)
-        return ret
-
     ## prepare tmp file
     try:
         salt.utils.copyfile(sfn,
                             filename,
-                            __salt__['config.backup_mode'](backup),
+                            __salt__['config.backup_mode'](''),
                             __opts__['cachedir'])
     except IOError:
         ret['result'] = False
@@ -150,7 +142,8 @@ def extracted(name,
 
     ## check source hash
     if source_hash:
-        if not __salt__['file.check_hash'](filename, source_hash):
+        hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum'])
+        if not __salt__['file.check_hash'](filename, hash_value):
             dl_sum = __salt__['file.get_hash'](filename, source_sum['hash_type'])
             ret['result'] = False
             ret['comment'] = ('File sum set for file {0} of {1} does '
