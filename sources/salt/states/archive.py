@@ -96,11 +96,17 @@ def extracted(name,
 
     ## get source hash file
     if source_hash:
-        tmp, source_hash, comment_ = __salt__['file.get_managed'](filename,
-            None, source, source_hash, None, None, None, __env__, None, None)
-        if comment_:
+        try:
+            tmp, source_hash, comment_ = __salt__['file.get_managed'](filename,
+                None, source, source_hash, None, None, None, __env__, None, None)
+            if comment_:
+                ret['result'] = False
+                ret['comment_'] = comment_
+                return ret
+        except Exception, e:
             ret['result'] = False
-            ret['comment_'] = comment_
+            ret['comment'] = 'Parse source hash %s failed' % str(source_hash)
+            ret['stdout'] = str(e)
             return ret
 
     ## check source_hash
