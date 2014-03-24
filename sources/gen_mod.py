@@ -1437,7 +1437,7 @@ manage mount points
 execute a shell command
 
 ### Parameters
-*   **`shell`** (*required*): the absolute path of the shell to execute the command, by default `/bin/sh`
+*   **`shell`** (*optional*): the absolute path of the shell to execute the command, by default `/bin/sh`
 
 *   **`cmd`** (*required*): the command to execute
 
