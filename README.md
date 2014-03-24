@@ -1,4 +1,4 @@
 salt
 ====
 
-SaltStack integration with MadeiraCloud
+SaltStack integration with [VisualOps](www.visualops.com)
