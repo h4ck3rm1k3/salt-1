@@ -38,7 +38,7 @@
           "_": "4 [test1] clone pysa with git - True",
           "module": "common.git",
           "parameter": {
-            "repo": "https://github.com/MadeiraCloud/pysa",
+            "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/git/test/",
             "force": true,
             "revision": "master"
