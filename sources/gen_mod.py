@@ -1475,7 +1475,7 @@ execute a shell command
 					},
 					'cwd'		:	{
 						'type'		:	'line',
-						'default'	:	'/visualops/tmp/',
+						'default'	:	'/opt/visualops/tmp/',
 						'required'	:	False
 					},
 					'user'		:	{
