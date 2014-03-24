@@ -124,6 +124,11 @@ def extracted(name,
     ## fetch the source file
     if re_fetched:
         sfn = __salt__['cp.cache_file'](source, __env__)
+    else:
+        ret['result'] = True
+        ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
+            ).format(filename, source_hash['hsum'])
+        return ret
 
     ## prepare tmp file
     try:
