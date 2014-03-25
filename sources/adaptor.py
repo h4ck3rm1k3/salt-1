@@ -945,8 +945,14 @@ class StateAdaptor(object):
 							{'linux.yum.package' : { 'name' : [{'key':'zip'}] }},
 						]
 
-				# if 'source_hash' in addin and addin['source_hash'].startswith('md5='):
-				# 	addin['source_hash'] = 'md5={0}'.format(addin['source_hash'].lower())
+				if 'source_hash' in addin:
+					hash_list = addin['source_hash'].split(':')
+					if len(hash_list) == 2 and hash_list[0] in ['http', 'md5', 'sha1']:
+						if hash_list[0] != 'http':
+							addin['source_hash'] = '{0}={1}'.format(hash_list[0].lower(), hash_list[1].lower())
+					else:
+						utils.log("WARNING", "Invalid source hash format: %s" % addin['source_hash'], ("__build_up", self))
+						addin.pip('source_hash')
 
 				# add the last slash when there isnt
 				addin['name'] = os.path.normpath(addin['name']) + os.sep

@@ -101,7 +101,7 @@ def extracted(name,
                 None, source, source_hash, None, None, None, __env__, None, None)
             if comment_:
                 ret['result'] = False
-                ret['comment_'] = comment_
+                ret['comment'] = comment_
                 return ret
         except Exception, e:
             ret['result'] = False
@@ -115,7 +115,7 @@ def extracted(name,
         sfn = __salt__['cp.is_cached'](source, __env__)
 
         if source_hash and os.path.isfile(sfn):
-            hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum'])
+            hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
             re_fetched = not __salt__['file.check_hash'](sfn, hash_value)
 
         else:
@@ -147,9 +147,9 @@ def extracted(name,
 
     ## check source hash
     if source_hash:
-        hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum'])
+        hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
         if not __salt__['file.check_hash'](filename, hash_value):
-            dl_sum = __salt__['file.get_hash'](filename, source_sum['hash_type'])
+            dl_sum = __salt__['file.get_hash'](filename, source_hash['hash_type'])
             ret['result'] = False
             ret['comment'] = ('File sum set for file {0} of {1} does '
                                 'not match real sum of {2}'
