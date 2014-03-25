@@ -952,7 +952,7 @@ class StateAdaptor(object):
 							addin['source_hash'] = '{0}={1}'.format(hash_list[0].lower(), hash_list[1].lower())
 					else:
 						utils.log("WARNING", "Invalid source hash format: %s" % addin['source_hash'], ("__build_up", self))
-						addin.pip('source_hash')
+						addin.pop('source_hash')
 
 				# add the last slash when there isnt
 				addin['name'] = os.path.normpath(addin['name']) + os.sep

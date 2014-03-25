@@ -175,8 +175,12 @@ def extracted(name,
         __salt__['file.makedirs'](name)
         # check dir
         if not os.path.isdir(name):
+            # remove cached file
+            if sfn:
+                __salt__['file.remove'](sfn)
             ret['result'] = False
-            ret['comment'] = 'Make directory {0} failed.'.format()
+            ret['comment'] = 'Make directory {0} failed.'.format(name)
+            return ret
 
         if archive_format in ('zip', 'rar'):
             log.debug("Extract %s in %s", filename, name)
