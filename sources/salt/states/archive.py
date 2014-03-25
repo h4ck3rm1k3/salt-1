@@ -118,17 +118,23 @@ def extracted(name,
             hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
             re_fetched = not __salt__['file.check_hash'](sfn, hash_value)
 
+            if not re_fetched:
+                ret['result'] = True
+                ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
+                    ).format(filename, source_hash['hsum'])
+                return ret
+
         else:
             re_fetched = True
 
     ## fetch the source file
     if re_fetched:
         sfn = __salt__['cp.cache_file'](source, __env__)
-    else:
-        ret['result'] = True
-        ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
-            ).format(filename, source_hash['hsum'])
-        return ret
+    # else:
+    #     ret['result'] = True
+    #     ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
+    #         ).format(filename, source_hash['hsum'])
+    #     return ret
 
     ## prepare tmp file
     try:
@@ -165,30 +171,43 @@ def extracted(name,
             source, name)
         return ret
 
-    __salt__['file.makedirs'](name)
+    try:
+        __salt__['file.makedirs'](name)
+        # check dir
+        if not os.path.isdir(name):
+            ret['result'] = False
+            ret['comment'] = 'Make directory {0} failed.'.format()
 
-    if archive_format in ('zip', 'rar'):
-        log.debug("Extract %s in %s", filename, name)
-        files = __salt__['archive.un{0}'.format(archive_format)](filename, name)
-    else:
-        # this is needed until merging PR 2651
-        log.debug("Untar %s in %s", filename, name)
-        results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,
-                                                             filename),
-                                          cwd=name)
-        if results['retcode'] != 0:
-            return results
-        files = results['stdout']
-    if len(files) > 0:
-        ret['result'] = True
-        ret['changes']['directories_created'] = [name]
-        if if_missing != name:
-            ret['changes']['directories_created'].append(if_missing)
-        ret['changes']['extracted_files'] = files
-        ret['comment'] = "{0} extracted in {1}".format(source, name)
-        os.unlink(filename)
-    else:
-        __salt__['file.remove'](if_missing)
+        if archive_format in ('zip', 'rar'):
+            log.debug("Extract %s in %s", filename, name)
+            files = __salt__['archive.un{0}'.format(archive_format)](filename, name)
+        else:
+            # this is needed until merging PR 2651
+            log.debug("Untar %s in %s", filename, name)
+            results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,
+                                                                 filename),
+                                              cwd=name)
+            if results['retcode'] != 0:
+                return results
+            files = results['stdout']
+        if len(files) > 0:
+            ret['result'] = True
+            ret['changes']['directories_created'] = [name]
+            if if_missing != name:
+                ret['changes']['directories_created'].append(if_missing)
+            ret['changes']['extracted_files'] = files
+            ret['comment'] = "{0} extracted in {1}".format(source, name)
+            os.unlink(filename)
+        else:
+            __salt__['file.remove'](if_missing)
+            # remove the cached file
+            if sfn:
+                __salt__['file.remove'](sfn)
+            ret['result'] = False
+            ret['comment'] = "Can't extract content of {0}".format(source)
+        return ret
+    except Exception, e:
         ret['result'] = False
-        ret['comment'] = "Can't extract content of {0}".format(source)
-    return ret
+        ret['comment'] = 'Extract file {0} to directory {1} failed'.format(filename, name)
+        ret['stdout'] = str(e)
+        return ret
