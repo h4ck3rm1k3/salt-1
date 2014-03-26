@@ -69,12 +69,12 @@
           "parameter": {
             "password": "instant",
             "username": "InstantForge1",
-            "fullname": "Madeira username",
+            "fullname": "visualops username",
             "gid": "600",
             "groups": [
               "Dev"
             ],
-            "home": "/tmp/test/user/madeira1",
+            "home": "/tmp/test/user/visualops1",
             "no-login": false,
             "uid": "600",
             "system-account": true
@@ -148,7 +148,7 @@
             "groups": [
               "Dev"
             ],
-            "home": "/tmp/test/user/madeira2"
+            "home": "/tmp/test/user/visualops2"
           }
         },
         {
@@ -176,7 +176,7 @@
           "_": "17 [test5] create diretory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": ["/tmp/test/user/madeira3/test/dir"],
+            "path": ["/tmp/test/user/visualops3/test/dir"],
             "user": "InstantForge1",
             "group": "Dev",
             "mode": "0600"
@@ -192,7 +192,7 @@
             "groups": [
               "Dev"
             ],
-            "home": "/tmp/test/user/madeira3"
+            "home": "/tmp/test/user/visualops3"
           }
         },
         {

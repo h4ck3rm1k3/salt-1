@@ -1,6 +1,5 @@
 '''
-Madeira OpsAgent states adaptor
-
+VisualOps OpsAgent states adaptor
 @author: Michael (michael@mc2.io)
 '''
 
@@ -300,7 +299,7 @@ class StateAdaptor(object):
 			],
 			'type' : 'cmd',
 			'require' : [
-				{'linux.dir' : { 'path' : ['/opt/madeira/tmp'] }}
+				{'linux.dir' : { 'path' : ['/opt/visualops/tmp'] }}
 			]
 		},
 
@@ -512,8 +511,7 @@ class StateAdaptor(object):
 				'source'			: 'source',
 				'path'				: 'name',
 				'checksum'			: 'source_hash',
-				# 'if-path-present'	:,
-				# 'if-path-absent'	:,
+				'if-path-absent'	: 'if_absent',
 			},
 			'states' : ['extracted'],
 			'type' : 'archive',
@@ -550,10 +548,10 @@ class StateAdaptor(object):
 		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
 		# convert from unicode to string
-		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
-		parameter = utils.uni2str(parameter)
-		step = str(step)
-		module = str(module)
+		# utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
+		# parameter = utils.uni2str(parameter)
+		# step = str(step)
+		# module = str(module)
 
 		# convert to salt states
 		try:
@@ -644,7 +642,7 @@ class StateAdaptor(object):
 				# add env and sls
 				if 'require_in' in self.mod_map[module]:
 					salt_state[tag]['__env__'] = 'base'
-					salt_state[tag]['__sls__'] = 'madeira'
+					salt_state[tag]['__sls__'] = 'visualops'
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt states of id %s module %s exception:%s" % (step, module, str(e)), ("__salt", self))
 			raise StateException("Generate salt states exception")
@@ -877,7 +875,7 @@ class StateAdaptor(object):
 
 				# default cwd
 				if 'cwd' not in addin:
-					addin['cwd'] = '/opt/madeira/tmp/'
+					addin['cwd'] = '/opt/visualops/tmp/'
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -947,8 +945,14 @@ class StateAdaptor(object):
 							{'linux.yum.package' : { 'name' : [{'key':'zip'}] }},
 						]
 
-				# if 'source_hash' in addin and addin['source_hash'].startswith('md5='):
-				# 	addin['source_hash'] = 'md5={0}'.format(addin['source_hash'].lower())
+				if 'source_hash' in addin:
+					hash_list = addin['source_hash'].split(':')
+					if len(hash_list) == 2 and hash_list[0] in ['http', 'md5', 'sha1']:
+						if hash_list[0] != 'http':
+							addin['source_hash'] = '{0}={1}'.format(hash_list[0].lower(), hash_list[1].lower())
+					else:
+						utils.log("WARNING", "Invalid source hash format: %s" % addin['source_hash'], ("__build_up", self))
+						addin.pop('source_hash')
 
 				# add the last slash when there isnt
 				addin['name'] = os.path.normpath(addin['name']) + os.sep
@@ -1191,7 +1195,7 @@ class StateAdaptor(object):
 # ===================== UT =====================
 def ut():
 	import json
-	pre_states = json.loads(open('/opt/madeira/bootstrap/salt/tests/state.json').read())
+	pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
 
 	# salt_opts = {
 	# 	'file_client':       'local',
