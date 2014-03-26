@@ -8,7 +8,7 @@
           "parameter": {
             "source": "http://wordpress.org/latest.zip",
             "path": "/tmp/test/wordpress/",
-            "checksum": "md5=8133645e8820557761d7a551fea70028"
+            "checksum": "md5:8133645e8820557761d7a551fea70028"
           }
         }
       ]
