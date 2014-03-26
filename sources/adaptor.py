@@ -1170,7 +1170,7 @@ class StateAdaptor(object):
 			# change module when rpm-url
 			if 'rpm-url' in parameter:
 
-				parameter['cmd'] = 'rpm -iU {0}'.format(parameter['rpm-url'])
+				parameter['cmd'] = 'rpm -U {0}'.format(parameter['rpm-url'])
 				parameter.pop('rpm-url')
 
 				module = 'linux.cmd'
