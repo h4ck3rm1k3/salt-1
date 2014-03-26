@@ -1,4 +1,4 @@
 salt
 ====
 
-SaltStack integration with [VisualOps](www.visualops.com)
+SaltStack integration with [VisualOps](www.visualops.io)
