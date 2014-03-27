@@ -75,11 +75,11 @@ def extracted(name,
 
     if if_missing is None:
         if_missing = name
-    if (__salt__['file.directory_exists'](if_missing) or
-        __salt__['file.file_exists'](if_missing)):
-        ret['result'] = True
-        ret['comment'] = '{0} already exists'.format(if_missing)
-        return ret
+    # if (__salt__['file.directory_exists'](if_missing) or
+    #     __salt__['file.file_exists'](if_missing)):
+    #     ret['result'] = True
+    #     ret['comment'] = '{0} already exists'.format(if_missing)
+    #     return ret
 
     log.debug("Input seem valid so far")
     filename = os.path.join(__opts__['cachedir'],
@@ -187,9 +187,7 @@ def extracted(name,
         else:
             # this is needed until merging PR 2651
             log.debug("Untar %s in %s", filename, name)
-            results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,
-                                                                 filename),
-                                              cwd=name)
+            results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,filename),cwd=name)
             if results['retcode'] != 0:
                 return results
             files = results['stdout']
