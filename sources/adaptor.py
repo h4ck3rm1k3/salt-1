@@ -958,11 +958,11 @@ class StateAdaptor(object):
 				addin['name'] = os.path.normpath(addin['name']) + os.sep
 
 				# check whether previously extracted
-				try:
-					if os.path.isdir(addin['name']):
-						addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
-				except:
-					pass
+				# try:
+				# 	if os.path.isdir(addin['name']):
+				# 		addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
+				# except:
+				# 	pass
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
@@ -1156,7 +1156,6 @@ class StateAdaptor(object):
 									utils.log("WARNING", "Render module %s attribute %s value %s failed" % (module, attr_name, str(attr_value)), ("__render",self))
 									pass
 
-
 	def __check_module(self, module, parameter):
 		"""
 			Check format of module parameters.
@@ -1174,7 +1173,19 @@ class StateAdaptor(object):
 			# change module when rpm-url
 			if 'rpm-url' in parameter:
 
+				# get and check package name
+				# pkg_name = parameter['rpm-url'][parameter['rpm-url'].rfind('/')+1:]
+				# if not pkg_name:
+				# 	raise StateException("Invalid module %s rpm url %s" % (module, parameter['rpm-url']))
+
+				# try:
+				# 	import subprocess
+
+				# except Exception, e:
+				# 	utils.log("DEBUG", "Check package %s installation ")
+
 				parameter['cmd'] = 'rpm -U {0}'.format(parameter['rpm-url'])
+
 				parameter.pop('rpm-url')
 
 				module = 'linux.cmd'

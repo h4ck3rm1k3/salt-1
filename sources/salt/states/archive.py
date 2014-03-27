@@ -9,7 +9,6 @@ import os
 
 # Import salt libs
 import salt.utils
-from salt._compat import urlparse
 
 log = logging.getLogger(__name__)
 
@@ -204,9 +203,6 @@ def extracted(name,
             os.unlink(filename)
         else:
             __salt__['file.remove'](if_missing)
-            # remove the cached file
-            if sfn:
-                __salt__['file.remove'](sfn)
             ret['result'] = False
             ret['comment'] = "Can't extract content of {0}".format(source)
         return ret
