@@ -434,7 +434,7 @@ class StateAdaptor(object):
 				'stripe-number'		: 'stripes',
 				'stripe-size'		: 'stripesize',
 				'le-number'			: 'extents',
-				'lv-size'			: 'size',
+				'le-size'			: 'size',
 				'minor-number'		: 'minor',
 				'persistent'		: 'persistent',
 				'mirror-number'		: 'mirrors',
