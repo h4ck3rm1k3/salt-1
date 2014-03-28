@@ -9,7 +9,6 @@ import os
 
 # Import salt libs
 import salt.utils
-from salt._compat import urlparse
 
 log = logging.getLogger(__name__)
 
@@ -76,11 +75,11 @@ def extracted(name,
 
     if if_missing is None:
         if_missing = name
-    if (__salt__['file.directory_exists'](if_missing) or
-        __salt__['file.file_exists'](if_missing)):
-        ret['result'] = True
-        ret['comment'] = '{0} already exists'.format(if_missing)
-        return ret
+    # if (__salt__['file.directory_exists'](if_missing) or
+    #     __salt__['file.file_exists'](if_missing)):
+    #     ret['result'] = True
+    #     ret['comment'] = '{0} already exists'.format(if_missing)
+    #     return ret
 
     log.debug("Input seem valid so far")
     filename = os.path.join(__opts__['cachedir'],
@@ -129,7 +128,13 @@ def extracted(name,
 
     ## fetch the source file
     if re_fetched:
-        sfn = __salt__['cp.cache_file'](source, __env__)
+        try:
+            sfn = __salt__['cp.cache_file'](source, __env__)
+        except Exception, e:
+            ret['result'] = False
+            ret['comment'] = 'Download source file %s failed.' % source
+            ret['stdout'] = str(e)
+            return ret
     # else:
     #     ret['result'] = True
     #     ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
@@ -188,9 +193,7 @@ def extracted(name,
         else:
             # this is needed until merging PR 2651
             log.debug("Untar %s in %s", filename, name)
-            results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,
-                                                                 filename),
-                                              cwd=name)
+            results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,filename),cwd=name)
             if results['retcode'] != 0:
                 return results
             files = results['stdout']
@@ -204,9 +207,6 @@ def extracted(name,
             os.unlink(filename)
         else:
             __salt__['file.remove'](if_missing)
-            # remove the cached file
-            if sfn:
-                __salt__['file.remove'](sfn)
             ret['result'] = False
             ret['comment'] = "Can't extract content of {0}".format(source)
         return ret
