@@ -128,7 +128,13 @@ def extracted(name,
 
     ## fetch the source file
     if re_fetched:
-        sfn = __salt__['cp.cache_file'](source, __env__)
+        try:
+            sfn = __salt__['cp.cache_file'](source, __env__)
+        except Exception, e:
+            ret['result'] = False
+            ret['comment'] = 'Download source file %s failed.' % source
+            ret['stdout'] = str(e)
+            return ret
     # else:
     #     ret['result'] = True
     #     ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
