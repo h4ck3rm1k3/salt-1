@@ -30,11 +30,10 @@ wait for remote state(s) to complete, if anyone is not done yet, it will cause t
 
 ### Parameters
 
-*   **`state`** (*required*): one or multiple remote states to be waited
+*   **`state`** (*required*): one or multiple of remote states to be waited
 
 		example:
-			single - @{hostname.state.1}
-			barrier - @{host1.state.1, @host2.state.2}
+			@{host.state.1}
 					''',
 					'cn'	:	''''''
 				},
