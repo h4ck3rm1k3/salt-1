@@ -65,6 +65,7 @@ def pv_present(name, **kwargs):
         else:
             ret['comment'] = 'Failed to create Physical Volume {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = chages
     return ret
 
 
@@ -103,6 +104,7 @@ def vg_present(name, devices=None, **kwargs):
         else:
             ret['comment'] = 'Failed to create Volume Group {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = chages
     return ret
 
 
@@ -134,6 +136,7 @@ def vg_absent(name):
         else:
             ret['comment'] = 'Failed to remove Volume Group {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = chages
     return ret
 
 
@@ -189,6 +192,7 @@ def lv_present(name, vgname=None, size=None, extents=None, snapshot=None, pv='',
         else:
             ret['comment'] = 'Failed to create Logical Volume {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = chages
     return ret
 
 
@@ -224,4 +228,5 @@ def lv_absent(name, vgname=None):
         else:
             ret['comment'] = 'Failed to remove Logical Volume {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = chages
     return ret

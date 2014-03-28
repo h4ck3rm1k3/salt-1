@@ -105,7 +105,7 @@ def extracted(name,
         except Exception, e:
             ret['result'] = False
             ret['comment'] = 'Parse source hash %s failed' % str(source_hash)
-            ret['stdout'] = str(e)
+            ret['state_stdout'] = str(e)
             return ret
 
     ## check source_hash
@@ -133,7 +133,7 @@ def extracted(name,
         except Exception, e:
             ret['result'] = False
             ret['comment'] = 'Download source file %s failed.' % source
-            ret['stdout'] = str(e)
+            ret['state_stdout'] = str(e)
             return ret
     # else:
     #     ret['result'] = True
@@ -213,5 +213,5 @@ def extracted(name,
     except Exception, e:
         ret['result'] = False
         ret['comment'] = 'Extract file {0} to directory {1} failed'.format(filename, name)
-        ret['stdout'] = str(e)
+        ret['state_stdout'] = str(e)
         return ret
