@@ -107,6 +107,11 @@ class StateAdaptor(object):
 			# 	{'linux.apt.package' : { 'name' : [{'key':'python-dev'}, {'key':'libapt-pkg-dev'}] }},
 			# 	{'common.pip.package' : {'name' : [{'key':'python-apt'}]}}
 			# ]
+			'require_in' : {
+				'linux.cmd' : {
+					'apt-get update' : 'name'
+				}
+			}
 		},
 		'linux.yum.repo' : {
 			'attributes' : {
@@ -1180,6 +1185,7 @@ class StateAdaptor(object):
 
 				try:
 					import subprocess
+
 
 				except Exception, e:
 					utils.log("DEBUG", "Check package %s installation ")
