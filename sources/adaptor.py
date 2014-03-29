@@ -1178,18 +1178,6 @@ class StateAdaptor(object):
 			# change module when rpm-url
 			if 'rpm-url' in parameter:
 
-				# get and check package name
-				pkg_name = parameter['rpm-url'][parameter['rpm-url'].rfind('/')+1:]
-				if not pkg_name:
-					raise StateException("Invalid module %s rpm url %s" % (module, parameter['rpm-url']))
-
-				try:
-					import subprocess
-
-
-				except Exception, e:
-					utils.log("DEBUG", "Check package %s installation ")
-
 				parameter['cmd'] = 'rpm -U --force {0}'.format(parameter['rpm-url'])
 
 				parameter.pop('rpm-url')
