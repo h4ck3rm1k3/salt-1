@@ -1190,7 +1190,7 @@ class StateAdaptor(object):
 				except Exception, e:
 					utils.log("DEBUG", "Check package %s installation ")
 
-				parameter['cmd'] = 'rpm -U {0}'.format(parameter['rpm-url'])
+				parameter['cmd'] = 'rpm -U --force {0}'.format(parameter['rpm-url'])
 
 				parameter.pop('rpm-url')
 
