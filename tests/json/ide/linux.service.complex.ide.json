@@ -1,0 +1,121 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A00",
+          "_": "1 [prepare] Set run number - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "if [ ! -f /tmp/run ]; then echo 0 > /tmp/run; elif [ $(cat /tmp/run) -eq 5 ]; then echo 0 > /tmp/run; fi; RUN=$(cat /tmp/run); RUN=$((RUN+1)); echo $RUN>/tmp/run"
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "2 [prepare] set service file - True",
+          "module": "linux.file",
+          "parameter": {
+            "path": "/etc/init.d/food",
+            "mode": "0755",
+            "content": "#!/bin/bash\n# Provides: food\n# Required-Start:\n# Should-Start:\n# Required-Stop:\n# Should-Stop:\n# Default-Start:  3 4 5\n# Default-Stop:   0 6\n# Short-Description: Foo Daemon\n# Description: Runs foo\n\nRUN=$(cat /tmp/run)\n\nif [ $RUN -eq 1 ]; then\n    echo -n > /tmp/food\nfi\n\ncase \"$1\" in\n    start)\n        echo \"start ${RUN}\" >> /tmp/food\n        touch /tmp/food.status\n        ;;\n    stop)\n        echo \"stop ${RUN}\" >> /tmp/food\n        rm -f /tmp/food.status\n        ;;\n    restart)\n        echo \"restart ${RUN}\" >> /tmp/food\n        ;;\n    status)\n        echo \"status ${RUN}\" >> /tmp/food\n        if [ -f /tmp/food.status ]; then\n            exit 0\n        else\n            exit 1\n        fi\n        ;;\n\n    *)\n        echo \"Usage: $0 {start|stop|restart|status}\"\n        exit 1\n        ;;\nesac\n\nexit 0"
+          }
+        },
+
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A01",
+          "_": "3 [test1] stop sshd service - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "service sshd stop ; service crond stop"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A02",
+          "_": "4 [test1] check sshd not running - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "service sshd status | grep 'is stopped'"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A22",
+          "_": "5 [test1] check crond not running - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "service crond status | grep 'is stopped'"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A03",
+          "_": "6 [test1] set sshd as running - True",
+          "module": "linux.service",
+          "parameter": {
+            "name": ["sshd","crond"]
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A04",
+          "_": "7 [test1] check sshd running - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "service sshd status | grep 'is running'"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A44",
+          "_": "8 [test1] check crond running - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "service crond status | grep 'is running'"
+          }
+        },
+
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A05",
+          "_": "9 [test2] Create file test 1 for watch - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then echo foo > /tmp/foo1; elif [ $RUN -eq 2 ]; then echo foo_mod > /tmp/foo1; fi;"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A06",
+          "_": "10 [test2] Create file test 2 for watch - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then echo foo > /tmp/foo2; elif [ $RUN -eq 3 ]; then echo foo_mod > /tmp/foo2; fi;"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A07",
+          "_": "11 [test2] set food watched - True",
+          "module": "linux.service",
+          "parameter": {
+            "name": ["food"],
+            "watch": ["/tmp/foo1","/tmp/foo2"]
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A08",
+          "_": "12 [test2] Check good status - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then CHECK=\"start ${RUN}\"; elif [ $RUN -eq 2 ]; then CHECK=\"restart ${RUN}\"; elif [ $RUN -eq 3 ]; then CHECK=\"restart ${RUN}\"; else CHECK=\"${RUN}\"; fi; grep \"${CHECK}\" /tmp/food"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A09",
+          "_": "13 [test2] Display log file - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "cat /tmp/food"
+          }
+        }
+
+
+      ]
+    }
+  }
+}

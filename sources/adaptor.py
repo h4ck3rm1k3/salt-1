@@ -1,12 +1,12 @@
 '''
-Madeira OpsAgent states adaptor
-
+VisualOps OpsAgent states adaptor
 @author: Michael (michael@mc2.io)
 '''
 
 
 # System imports
 import os
+from string import Template
 
 # Internal imports
 from opsagent.exception import StateException
@@ -16,6 +16,7 @@ class StateAdaptor(object):
 
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
+	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
 
 	mod_map = {
 		## package
@@ -23,8 +24,8 @@ class StateAdaptor(object):
 			'attributes' : {
 				'name'			: 'pkgs',
 				'repo'			: 'fromrepo',
-				'deb conf file'	: 'debconf',
-				'verify gpg'	: 'verify_gpg',
+				'deb-conf-file'	: 'debconf',
+				'verify-gpg'	: 'verify_gpg',
 			},
 			'states' : [
 				'installed', 'latest', 'removed', 'purged'
@@ -35,9 +36,7 @@ class StateAdaptor(object):
 			'attributes' : {
 				'name'			: 'pkgs',
 				'repo'			: 'fromrepo',
-				# 'enablerepo'	: 'enablerepo',
-				# 'disablerepo'	: 'disablerepo',
-				'verify gpg'	: 'verify_gpg',
+				'verify-gpg'	: 'verify_gpg',
 			},
 			'states' : [
 				'installed', 'latest', 'removed', 'purged'
@@ -52,38 +51,25 @@ class StateAdaptor(object):
 				'installed', 'removed'
 			],
 			'type'	: 'gem',
-			'require'	: {
-				'linux.apt.package' : { 'name' : ['rubygems'] },
-				'linux.yum.package' : { 'name' : ['rubygems'] }
-			},
+			'require'	: [
+				{'linux.apt.package' : { 'name' : [{'key':'rubygems'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'rubygems'}] }}
+			],
 		},
 		'common.npm.package'	: {
 			'attributes' : {
 				'name'		: 'names',
-				#'path'		: '',
-				#'index_url' : '',
+				'path'		: 'dir',
 			},
 			'states' : [
 				'installed', 'removed', 'bootstrap'
 			],
 			'type'	: 'npm',
-			'require'	: {
-				'linux.apt.package' : { 'name' : ['npm'] },
-				'linux.yum.package' : { 'name' : ['npm'] }
-			}
+			'require'	: [
+				{'linux.apt.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'npm'}, {'key':'expect'}] }}
+			]
 		},
-		# 'common.pecl.package'	: {
-		# 	'attributes' : {
-		# 		'name' : 'names'
-		# 	},
-		# 	'states' : [
-		# 		'installed', 'removed'
-		# 	],
-		# 	'type'	: 'pecl',
-		# 	'require'	: {
-		# 		'linux.apt.package' : { 'name' : ['php-pear'] },
-		# 	}
-		# },
 		'common.pip.package'	: {
 			'attributes' : {
 				'name' : 'names'
@@ -92,10 +78,10 @@ class StateAdaptor(object):
 				'installed', 'removed'
 			],
 			'type'	: 'pip',
-			'require' : {
-				'linux.apt.package' : { 'name' : ['python-pip'] },
-				'linux.yum.package' : { 'name' : ['python-pip'] }
-			}
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'python-pip'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'python-pip'}] }}
+			]
 		},
 
 		## repo
@@ -109,20 +95,39 @@ class StateAdaptor(object):
 			],
 			'type' : 'file',
 		},
+		'linux.apt.ppa'		: {
+			'attributes' : {
+				'name'		: 'ppa',
+				'username'	: 'username',
+				'password'	: 'password'
+			},
+			'states' : ['managed'],
+			'type' : 'pkgrepo',
+			# 'require' : [
+			# 	{'linux.apt.package' : { 'name' : [{'key':'python-dev'}, {'key':'libapt-pkg-dev'}] }},
+			# 	{'common.pip.package' : {'name' : [{'key':'python-apt'}]}}
+			# ]
+			'require_in' : {
+				'linux.cmd' : {
+					'apt-get update' : 'name'
+				}
+			}
+		},
 		'linux.yum.repo' : {
 			'attributes' : {
 				'name' 		: 'name',
-				'content' 	: 'contents'
+				'content' 	: 'contents',
+				'rpm-url'	: 'rpm-url'
 			},
 			'states' : [
 				'managed'
 			],
 			'type' : 'file',
-			'require_in' : {
-				'linux.cmd' : {
-					'yum-config-manager --enable $name' : 'name'
-				}
-			}
+			# 'require_in' : {
+			# 	'linux.cmd' : {
+			# 		'yum-config-manager --enable $name' : 'name'
+			# 	}
+			# }
 		},
 		'common.gem.source' : {
 			'attributes' : {
@@ -137,63 +142,62 @@ class StateAdaptor(object):
 		## scm
 		'common.git' : {
 			'attributes' : {
-				'repo'		: 'name',
-				'branch'	: 'branch',
-				'version'	: 'rev',
-				'ssh key'	: 'identity',
 				'path'		: 'target',
+				'repo'		: 'name',
+				'revision'	: 'rev',
+				'ssh-key-file'	: 'identity',
+				'force'		: 'force_checkout',
 				'user'		: 'user',
-				'force'		: 'force',
 			},
 			'states' : [
 				'latest', 'present',
 			],
 			'type' : 'git',
-			'require' : {
-				'linux.yum.package' : { 'name' : ['git'] }
-			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode',
-				}
-			}
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'git'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'git'}] }}
+			],
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode',
+			# 	}
+			# }
 		},
 		'common.svn' : {
 			'attributes' : {
+				'path'		: 'target',
 				'repo'		: 'name',
-				'branch'	: 'branch',
 				'revision'	: 'rev',
 				'username'	: 'username',
 				'password'	: 'password',
-				'path'		: 'target',
-				'user'		: 'user',
 				'force'		: 'force',
+				'user'		: 'user',
 			},
 			'states' : [
 				'latest', 'export'
 			],
 			'type' : 'svn',
-			'require' : {
-				'linux.yum.package' : { 'name' : ['subversion'] }
-			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode'
-				}
-			},
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'subversion'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'subversion'}] }}
+			],
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode'
+			# 	}
+			# },
 		},
 		'common.hg' : {
 			'attributes' : {
 				'repo'		: 'name',
 				'branch'	: 'branch',
 				'revision'	: 'rev',
-				#'ssh key'	: '',
 				'path'		: 'target',
 				'user'		: 'user',
 				'force'		: 'force',
@@ -202,23 +206,24 @@ class StateAdaptor(object):
 				'latest'
 			],
 			'type' : 'hg',
-			'require' : {
-				'linux.yum.package' : { 'name' : ['mercurial'] }
-			},
-			'require_in' : {
-				'linux.dir' : {
-					'path' 	: 'name',
-					'user' 	: 'user',
-					'group' : 'group',
-					'mode' 	: 'mode'
-				}
-			},
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'mercurial'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'mercurial'}] }}
+			],
+			# 'require_in' : {
+			# 	'linux.dir' : {
+			# 		'path' 	: 'name',
+			# 		'user' 	: 'user',
+			# 		'group' : 'group',
+			# 		'mode' 	: 'mode'
+			# 	}
+			# },
 		},
 
 		## path
 		'linux.dir' : {
 			'attributes' : {
-				'path' 		: 'name',
+				'path' 		: 'names',
 				'user' 		: 'user',
 				'group' 	: 'group',
 				'mode' 		: 'mode',
@@ -246,8 +251,8 @@ class StateAdaptor(object):
 		},
 		'linux.symlink' : {
 			'attributes' : {
-				'source' : 'name',
-				'target' : 'target',
+				'target' : 'name',
+				'source' : 'target',
 				'user'	 : 'user',
 				'group'	 : 'group',
 				'mode'	 : 'mode',
@@ -262,82 +267,57 @@ class StateAdaptor(object):
 		## service
 		'linux.supervisord' : {
 			'attributes' : {
-				'name'	:	'name',
+				'name'	:	'names',
 				'config':	'conf_file',
 				#'watch'	:	'',
 			},
-			'states' : ['running'],
+			'states' : ['running', 'mod_watch'],
 			'type' : 'supervisord',
-			'require' : {
-				'common.pip.package' : {
-					'name' : {
-						'supervisor' : ''
-					}
-				}
-			}
+			'require' : [
+				{'common.pip.package' : {'name' : [{'key':'supervisor'}]}}
+			]
 		},
 		'linux.service' : {
 			'attributes' : {
 				'name' : 'names',
 				# 'watch' : ''
 			},
-			'states' : ['running'],
+			'states' : ['running', 'mod_watch'],
 			'type' : 'service',
 		},
-		# 'linux.systemd' : {
-		# 	'attributes' : {
-		# 		'name' : 'names',
-		# 		# 'watch' : ''
-		# 	},
-		# 	'states' : ['running'],
-		# 	'type' : 'service',
-		# },
-		# 'linux.sysvinit' : {
-		# 	'attributes' : {
-		# 		'name' : 'name',
-		# 		# 'watch' : ''
-		# 	},
-		# 	'states' : ['running'],
-		# 	'type' : 'service',
-		# },
-		# 'linux.upstart' : {
-		# 	'attributes' : {
-		# 		'name' : 'name',
-		# 		# 'watch' : 'watch',
-		# 	},
-		# 	'states' : ['running'],
-		# 	'type' : 'service',
-		# },
 
 		## cmd
 		'linux.cmd' : {
 			'attributes' : {
-				'bin'			: 'shell',
+				'shell'			: 'shell',
 				'cmd'			: 'name',
 				'cwd'			: 'cwd',
 				'user'			: 'user',
 				'group'			: 'group',
 				'timeout'		: 'timeout',
 				'env'			: 'env',
-				'with path'		: 'onlyif',
-				'without path'	: 'unless',
+				'if-path-present'	: 'onlyif',
+				'if-path-absent'	: 'unless',
 			},
 			'states' : [
 				'run', 'call', 'wait', 'script'
 			],
 			'type' : 'cmd',
+			'require' : [
+				{'linux.dir' : { 'path' : ['/opt/visualops/tmp'] }}
+			]
 		},
 
 		## cron
-		'linux.cron' : {
+		'linux.cronjob' : {
 			'attributes' : {
+				'user'			:	'user',
+				'cmd'			:	'names',
 				'minute'		:	'minute',
 				'hour'			:	'hour',
-				'day of month'	:	'daymonth',
+				'day-of-month'	:	'daymonth',
 				'month'			:	'month',
-				'day of week'	:	'dayweek',
-				'user'			:	'user',
-				'cmd'			:	'name'
+				'day-of-week'	:	'dayweek',
 			},
 			'states' : [
 				'present', 'absent'
@@ -355,11 +335,12 @@ class StateAdaptor(object):
 				'gid'		: 'gid',
 				'shell'		: 'shell',
 				'home'		: 'home',
-				'nologin'	: 'nologin',
+				'no-login'	: 'nologin',
 				'groups'	: 'groups',
+				'system-account'	: 'system',
 			},
 			'states' : [ 'present', 'absent' ],
-			'type' : 'user'
+			'type' : 'user',
 		},
 
 		## group
@@ -367,22 +348,11 @@ class StateAdaptor(object):
 			'attributes' : {
 				'groupname' : 'name',
 				'gid' 		: 'gid',
-				'system' 	: 'system'
+				'system-group' 	: 'system'
 			},
 			'states' : ['present', 'absent'],
 			'type' : 'group'
 		},
-
-		## hostname
-
-		## hosts
-		# 'linux.hosts' : {
-		# 	'attributes' : {
-		# 		'content' : 'contents'
-		# 	},
-		# 	'states' : ['managed'],
-		# 	'type' : 'file',
-		# },
 
 		## mount
 		'linux.mount' : {
@@ -391,8 +361,9 @@ class StateAdaptor(object):
 				'device'	:	'device',
 				'filesystem':	'fstype',
 				'dump'		:	'dump',
-				'passno'	:	'pass_num',
-				'opts'		:	'opts'
+				'pass'		:	'pass_num',
+				'opts'		:	'opts',
+				'fstab'		:	'persist'
 			},
 			'states' : ['mounted', 'unmounted'],
 			'type' : 'mount'
@@ -412,8 +383,8 @@ class StateAdaptor(object):
 		## timezone
 		'common.timezone' : {
 			'attributes' : {
-				'name' : 'name',
-				'use utc' : 'utc'
+				'name' 		: 'name',
+				'use-utc' 	: 'utc'
 			},
 			'states' : ['system'],
 			'type' : 'timezone'
@@ -426,16 +397,16 @@ class StateAdaptor(object):
 				'force'					: 'force',
 				'uuid'					: 'uuid',
 				'zero'					: 'zero',
-				'data alignment'		: 'dataalignment',
-				'data alignment offset'	: 'dataalignmentoffset',
-				'metadata size'			: 'metadatasize',
-				'metadata type'			: 'metadatatype',
-				'metadata copies'		: 'metadatacopies',
-				'metadata ignore'		: 'metadataignore',
-				'restorefile'			: 'restorefile',
-				'norestorefile'			: 'norestorefile',
-				'label sector'			: 'labelsector',
-				'PV size'				: 'setphysicalvolumesize',
+				'data-alignment'		: 'dataalignment',
+				'data-alignment-offset'	: 'dataalignmentoffset',
+				'metadata-size'			: 'metadatasize',
+				'metadata-type'			: 'metadatatype',
+				'metadata-copies'		: 'metadatacopies',
+				'metadata-ignore'		: 'metadataignore',
+				'restore-file'			: 'restorefile',
+				'no-restore-file'		: 'norestorefile',
+				'label-sector'			: 'labelsector',
+				'PV-size'				: 'setphysicalvolumesize',
 			},
 			'states' : ['pv_present'],
 			'type' : 'lvm'
@@ -445,14 +416,14 @@ class StateAdaptor(object):
 				'name'				: 'name',
 				'path' 				: 'devices',
 				'clustered'			: 'clustered',
-				'max LV number'		: 'maxlogicalvolumes',
-				'max PV number'		: 'maxphysicalvolumes',
-				'metadata type'		: 'metadatatype',
-				'metadata copies'	: 'metadatacopies',
-				'PE size'			: 'physicalextentsize',
+				'max-lv-number'		: 'maxlogicalvolumes',
+				'max-pv-number'		: 'maxphysicalvolumes',
+				'metadata-type'		: 'metadatatype',
+				'metadata-copies'	: 'metadatacopies',
+				'pe-size'			: 'physicalextentsize',
 				'autobackup'		: 'autobackup',
 				'tag'				: 'addtag',
-				'allocation policy'	: 'alloc',
+				'allocation-policy'	: 'alloc',
 			},
 			'states' : ['vg_present', 'vg_absent'],
 			'type' : 'lvm'
@@ -460,34 +431,34 @@ class StateAdaptor(object):
 		'linux.lvm.lv'	: {
 			'attributes'	: {
 				'name'				: 'name',
-				'VG name'			: 'vgname',
-				'PV'				: 'pv',
-				# 'available'			: '',
-				'chunk size'		: 'chunksize',
+				'vg-name'			: 'vgname',
+				'path'				: 'pv',
+				'chunk-size'		: 'chunksize',
 				'contiguous'		: 'contiguous',
-				'discards'			: 'discards',
-				'stripe number'		: 'stripes',
-				'stripe size'		: 'stripesize',
-				'LE number'			: 'extents',
-				'LV size'			: 'size',
-				'minor number'		: 'minor',
+				# 'discards'			: 'discards',
+				'stripe-number'		: 'stripes',
+				'stripe-size'		: 'stripesize',
+				'le-number'			: 'extents',
+				'le-size'			: 'size',
+				'minor-number'		: 'minor',
 				'persistent'		: 'persistent',
-				'mirror number'		: 'mirrors',
-				'no udev sync'		: 'noudevsync',
+				'mirror-number'		: 'mirrors',
+				'no-udev-sync'		: 'noudevsync',
 				'monitor'			: 'monitor',
-				'ignore monitoring' : 'ignoremonitoring',
+				'ignore-monitoring' : 'ignoremonitoring',
 				'permission' 		: 'permission',
-				'pool metadata size': 'poolmetadatasize',
-				'region size'		: 'regionsize',
+				# 'pool-metadata-size': 'poolmetadatasize',
+				'region-size'		: 'regionsize',
 				'readahead'			: 'readahead',
-				# 'snapshot'			: '',
-				'thinpool'			: 'thinpool',
+				# 'thinpool'			: 'thinpool',
 				'type'				: 'type',
-				'virtual size'		: 'virtualsize',
+				'virtual-size'		: 'virtualsize',
 				'zero'				: 'zero',
-				# 'autobackup'		: '',
-				# 'tag'				: '',
-				# 'allocation policy'	: '',
+				'available'			: 'available',
+				'snapshot'			: 'snapshot',
+				'autobackup'		: 'autobackup',
+				'tag'				: 'addtag',
+				'allocation-policy'	: 'alloc',
 			},
 			'states' : ['lv_present', 'lv_absent'],
 			'type' : 'lvm',
@@ -497,25 +468,21 @@ class StateAdaptor(object):
 		'common.virtualenv' : {
 			'attributes' : {
 				'path'					: 'name',
-				'python'				: 'python',
-				'system site packages'	: 'system_site_packages',
+				'python-bin'			: 'python',
+				'system-site-packages'	: 'system_site_packages',
 				# 'always-copy'			: '',
-				# 'unzip setuptools'		: '',
-				# 'no setuptools'			: '',
-				# 'no pip'				: '',
-				'extra search dir'		: 'extra-search-dir',
-				# always copy				: '',
-				'requirements'			: 'requirements',
+				# 'unzip-setuptools'		: '',
+				# 'no-setuptools'			: '',
+				# 'no-pip'				: '',
+				'extra-search-dir'		: 'extra-search-dir',
+				# always-copy				: '',
+				'requirements-file'		: 'requirements',
 			},
 			'states' : ['managed'],
 			'type' : 'virtualenv',
-			'require' : {
-				'common.pip.package' : {
-					'name' : {
-						'virtualenv' : ''
-					}
-				}
-			}
+			'require' : [
+				{'common.pip.package' : {'name' : [{'key':'virtualenv'}]}}
+			]
 		},
 
 		## ssh
@@ -530,6 +497,7 @@ class StateAdaptor(object):
 			'states' : ['present', 'absent'],
 			'type' : 'ssh_auth'
 		},
+
 		'common.ssh.known_host' : {
 			'attributes' : {
 				'hostname'	:	'name',
@@ -541,6 +509,18 @@ class StateAdaptor(object):
 			'states' : ['present', 'absent'],
 			'type' : 'ssh_known_hosts'
 		},
+
+		## archive
+		'common.archive' : {
+			'attributes' : {
+				'source'			: 'source',
+				'path'				: 'name',
+				'checksum'			: 'source_hash',
+				'if-path-absent'	: 'if_absent',
+			},
+			'states' : ['extracted'],
+			'type' : 'archive',
+		}
 	}
 
 	def __init__(self):
@@ -560,6 +540,11 @@ class StateAdaptor(object):
 		if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
+		# distro check and package manger check
+		if (os_type in ['centos', 'redhat', 'debian'] and module in ['linux.apt.package', 'linux.apt.repo']) \
+			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
+			raise StateException("Conflict on os type %s and module %s" % (os_type, module))
+
 		# filter unhandler module
 		if module in ['meta.comment']:
 			return None
@@ -568,17 +553,27 @@ class StateAdaptor(object):
 		self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
 		# convert from unicode to string
-		utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
-		parameter = utils.uni2str(parameter)
+		# utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
+		# parameter = utils.uni2str(parameter)
+		# step = str(step)
+		# module = str(module)
 
 		# convert to salt states
 		try:
-			utils.log("INFO", "Begin to convert to salt state...", ("convert", self))
+			utils.log("INFO", "Begin to check module %s parameter %s" % (module, str(parameter)), ("convert", self))
+			module, parameter = self.__check_module(module, parameter)
+
+			utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
 			self.states = self.__salt(step, module, parameter)
 
 			# expand salt state
-			utils.log("INFO", "Begin to expand salt state...", ("convert", self))
+			utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
 			self.__expand()
+
+			utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
+			self.__render(parameter)
+
+			utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
 		except StateException, e:
 			import json
 			utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
@@ -607,9 +602,10 @@ class StateAdaptor(object):
 				if 'require' in self.mod_map[module]:
 					req_state = self.__get_require(self.mod_map[module]['require'])
 					if req_state:
-						for req_tag, req_value in req_state.iteritems():
-							salt_state[req_tag] = req_value
-							require.append({ next(iter(req_value)) : req_tag })
+						for item in req_state:
+							for req_tag, req_value in item.iteritems():
+								salt_state[req_tag] = req_value
+								require.append({ next(iter(req_value)) : req_tag })
 
 				# add require in
 				utils.log("DEBUG", "Begin to generate require-in ...", ("_convert", self))
@@ -623,13 +619,12 @@ class StateAdaptor(object):
 
 				## add watch, todo
 				utils.log("DEBUG", "Begin to generate watch ...",("_convert", self))
-				watch = []
-				# if 'watch' in parameter and isinstance(parameter['watch'], list):
-				# 	watch_state = self.__add_watch(parameter['watch'], step)
-				# 	if watch_state:
-				# 		for watch_tag, watch_value in watch_state.iteritems():
-				# 			salt_state[watch_tag] = watch_value
-				# 			watch.append({file:watch_tag})
+				if 'watch' in parameter and parameter['watch']:
+					state = 'mod_watch'
+					if module == 'linux.service':
+						addin['full_restart'] = True
+					elif module == 'linux.supervisord':
+						addin['restart'] = True
 
 				# build up module state
 				module_state = [
@@ -639,7 +634,7 @@ class StateAdaptor(object):
 
 				if require:		module_state.append({ 'require' : require })
 				if require_in:	module_state.append({ 'require_in' : require_in })
-				if watch:		module_state.append({ 'watch' : watch })
+				# if watch:		module_state.append({ 'watch' : watch })
 
 				# tag
 				#name = addin['names'] if 'names' in addin else addin['name']
@@ -652,7 +647,7 @@ class StateAdaptor(object):
 				# add env and sls
 				if 'require_in' in self.mod_map[module]:
 					salt_state[tag]['__env__'] = 'base'
-					salt_state[tag]['__sls__'] = 'madeira'
+					salt_state[tag]['__sls__'] = 'visualops'
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt states of id %s module %s exception:%s" % (step, module, str(e)), ("__salt", self))
 			raise StateException("Generate salt states exception")
@@ -687,78 +682,50 @@ class StateAdaptor(object):
 		}
 
 		try:
-			if module in ['linux.apt.package', 'linux.yum.package']:
+			if module in ['linux.apt.package', 'linux.yum.package', 'common.npm.package', 'common.pip.package', 'common.gem.package']:
 				module_state = {}
 
-				for item in addin['pkgs']:
-					pkg_name = None
-					pkg_state = None
-					if isinstance(item, dict):
-						for k, v in item.iteritems():
-							pkg_name 	= k
-							pkg_state 	= default_state
+				if 'pkgs' in addin:
+					pkg_flag = 'pkgs'
+				elif 'names' in addin:
+					pkg_flag = 'names'
+				else:
+					pkg_flag = None
 
-							if v in self.mod_map[module]['states']:
-								pkg_state = v
+				if pkg_flag:
+					for item in addin[pkg_flag]:
+						if not isinstance(item, dict):	continue
 
-							if pkg_state not in module_state:			module_state[pkg_state] = {}
-							if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
+						pkg_name = item['key'] if 'key' in item else None
+						pkg_version = item['value'] if 'value' in item else None
 
-							if pkg_state == default_state:
-								module_state[pkg_state]['pkgs'].append(item)
-							else:
-								module_state[pkg_state]['pkgs'].append(pkg_name)
+						if not pkg_name:	continue
 
-					else:	# insert into default state
-						pkg_state	= default_state
+						pkg_state = default_state
+						if pkg_version and pkg_version in self.mod_map[module]['states']:
+							pkg_state = pkg_version
 
 						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'pkgs' not in module_state[pkg_state]:	module_state[pkg_state]['pkgs'] = []
+						if pkg_flag not in module_state[pkg_state]:	module_state[pkg_state][pkg_flag] = []
 
-						module_state[pkg_state]['pkgs'].append(item)
-
-			elif module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
-				module_state = {}
-
-				for item in addin['names']:
-					pkg_name = None
-					pkg_state = None
-
-					if isinstance(item, basestring):	# insert into default state
-						pkg_state	= default_state
-
-						if pkg_state not in module_state:			module_state[pkg_state] = {}
-						if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-						module_state[pkg_state]['names'].append(item)
-
-					elif isinstance(item, dict):
-						for k, v in item.iteritems():
-							pkg_name 	= k
-							pkg_state 	= default_state
-
-							if v in self.mod_map[module]['states']:		pkg_state = v
-							if pkg_state not in module_state:			module_state[pkg_state] = {}
-							if 'names' not in module_state[pkg_state]:	module_state[pkg_state]['names'] = []
-
-							if pkg_state == default_state:
-								if module == 'common.npm.package':
-									module_state[pkg_state]['names'].append(
-										'{0}@{1}'.format(k, v)
-										)
+						if pkg_state == default_state and pkg_version != default_state:
+							if pkg_version:
+								if module in ['linux.apt.package', 'linux.yum.package']:
+									module_state[pkg_state][pkg_flag].append({pkg_name:pkg_version})
 								elif module in ['common.pip.package', 'common.gem.package']:
-									module_state[pkg_state]['names'].append(
-									'{0}=={1}'.format(k, v)
+									module_state[pkg_state][pkg_flag].append(
+										'{0}=={1}'.format(pkg_name, pkg_version)
+									)
+								elif module in ['common.npm.package']:
+									module_state[pkg_state][pkg_flag].append(
+										'{0}@{1}'.format(pkg_name, pkg_version)
 									)
 							else:
-								module_state[pkg_state]['names'].append(pkg_name)
-
-					else:	# invalid
-						continue
+								module_state[pkg_state][pkg_flag].append(pkg_name)
+						else:
+							module_state[pkg_state][pkg_flag].append(pkg_name)
 
 			elif module in ['common.git', 'common.svn', 'common.hg']:
-				# if 'name' in addin:
-				# 	module_state[default_state]['name'] = addin['name'].split('-')[1].strip()
 
 				# svn target path(remove the last prefix)
 				if 'target' in addin and addin['target'][len(addin['target'])-1] == '/':
@@ -771,8 +738,8 @@ class StateAdaptor(object):
 					addin.pop('branch')
 
 				#
-				if module == 'common.git' and 'force' in addin and addin['force']:
-					addin['force_checkout'] = True
+				# if module == 'common.git' and 'force' in addin and addin['force']:
+				# 	addin['force_checkout'] = True
 
 			elif module in ['linux.apt.repo', 'linux.yum.repo']:
 				if 'name' in addin:
@@ -790,6 +757,29 @@ class StateAdaptor(object):
 
 					if filename and obj_dir:
 						addin['name'] = obj_dir + filename
+
+				# priority contents
+				# if 'contents' in addin and 'rpm-url' in addin:
+				# 	addin.pop('rpm-url')
+
+				# if 'rpm-url' in addin:
+				# 	module_state = {
+				# 		self.mod_map['linux.cmd']['states'][0] : {
+				# 			'name' : 'rpm -iU {0}'.format(addin['rpm-url']),
+				# 			'timeout' : 600
+				# 		}
+				# 	}
+
+			elif module in ['linux.apt.ppa']:
+
+				if 'username' in addin and addin['username'] and \
+					'password' in addin and addin['password']:
+					addin['ppa_auth'] = '{0}:{1}'.format(addin['username'], addin['password'])
+
+				if 'username' in addin:
+					addin.pop('username')
+				if 'password' in addin:
+					addin.pop('password')
 
 			elif module in ['common.gem.source']:
 				addin.update(
@@ -824,15 +814,23 @@ class StateAdaptor(object):
 
 				# set absent
 				if 'absent' in addin and addin['absent']:
-					module_state = {}
-					module_state['absent'] = {
-						'name' : addin['name']
-					}
+					module_state = {'absent':{}}
+					if 'name' in addin:
+						module_state['absent']['name'] = addin['name']
+					elif 'names' in addin:
+						module_state['absent']['names'] = addin['names']
 
 				else:
+					# set default user,group
+					if 'user' not in addin:
+						addin['user'] = 'root'
+					if 'group' not in addin:
+						addin['group'] = 'root'
 					# set mode
 					if 'mode' in addin and addin['mode']:
 						addin['mode'] = int(addin['mode'])
+					else:
+						addin['mode'] = 755
 
 					# set recurse
 					if 'recurse' in addin and addin['recurse']:
@@ -844,19 +842,45 @@ class StateAdaptor(object):
 						if 'mode' in addin and addin['mode']:
 							addin['recurse'].append('mode')
 
-					# set user
-					if 'user' not in addin:
-						addin['user'] = 'root'
-
 			elif module in ['linux.cmd']:
-				if 'onlyif' in addin:
-					addin['onlyif'] = "[ -d " + addin['onlyif'] + " ]"
+				cmd = []
+				for flag in ['onlyif', 'unless']:
+					if flag in addin:
+						if isinstance(addin[flag], basestring):
+							cmd.append('{0} -e {1}'.format('' if flag=='onlyif' else '!', addin[flag]))
 
-				if 'unless' in addin:
-					addin['unless'] = "[ -d " + addin['unless'] + " ]"
+						elif isinstance(addin[flag], list):
+							for f in addin[flag]:
+								if not isinstance(f, basestring):	continue
+
+								cmd.append('{0} -e {1}'.format('' if flag=='onlyif' else '!', f))
+
+						addin.pop(flag)
+
+				if cmd:
+					addin['onlyif'] = '[ {0} ]'.format(' -a '.join(cmd))
 
 				if 'timeout' in addin:
 					addin['timeout'] = int(addin['timeout'])
+				else:
+					addin['timeout'] = 600
+
+				if 'env' in addin:
+					env = {}
+					for item in addin['env']:
+						if not isinstance(item, dict):	continue
+						if 'key' not in item or not item['key'] or \
+							'value' not in item or not item['value']:	continue
+
+						env[item['key']] = item['value']
+
+					addin.pop('env')
+					if env:
+						addin['env'] = env
+
+				# default cwd
+				if 'cwd' not in addin:
+					addin['cwd'] = '/opt/visualops/tmp/'
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
@@ -869,6 +893,16 @@ class StateAdaptor(object):
 					addin['shell'] = '/sbin/nologin'
 					addin.pop('nologin')
 
+				# set home
+				if 'home' not in addin:
+					addin['home'] = '/home/{0}'.format(addin['name'])
+				else:
+					addin['createhome'] = True
+					# add dir require
+					self.mod_map[module]['require'] = [
+						{'linux.dir':{'path':[addin['home']]}}
+					]
+
 			elif module in ['linux.mount']:
 				for attr in ['dump', 'pass_num']:
 					if attr in addin:
@@ -877,21 +911,64 @@ class StateAdaptor(object):
 						except Exception:
 							addin[attr] = 0
 
-			elif module in ['linux.hosts']:
-
-				module_state[default_state] = {
-					'name' 		: '/etc/hosts',
-					'user' 		: 'root',
-					'group' 	: 'root',
-					'mode' 		: '0644',
-					'contents' 	: addin['contents']
-				}
+				# set persist
+				if 'persist' not in addin:
+					addin['persist'] = False
 
 			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
 					addin['devices'] = ','.join(addin['devices'])
 				if 'pv' in addin and isinstance(addin['pv'], list):
 					addin['pv'] = ','.join(addin['pv'])
+
+			elif module in ['common.archive']:
+				if 'source' in addin and addin['source'].find('.') > 0:
+					ext = addin['source'].split('.')[-1]
+					if ext not in self.supported_ext:
+						raise StateException("Not supported archive type %s" % addin['source'])
+
+					if ext == 'zip':
+						addin['archive_format'] = 'zip'
+					elif ext == 'rar':
+						addin['archive_format'] = 'rar'
+					else: # ext in ['tar', 'tgz', 'gz', 'bz', 'bz2']:
+						addin['archive_format'] = 'tar'
+						tar_options = ''
+						if ext in ['tgz', 'gz']:
+							tar_options = 'z'
+						elif ext in ['tbz', 'bz', 'bz2']:
+							tar_options = 'j'
+						elif ext in ['tlz', 'lzma']:
+							tar_options = 'J'
+
+						addin['tar_options'] = tar_options
+
+					# add require-pkg when it isnt tar
+					if ext == 'zip':
+						self.mod_map[module]['require'] = [
+							{'linux.apt.package' : { 'name' : [{'key':'zip'}] }},
+							{'linux.yum.package' : { 'name' : [{'key':'zip'}] }},
+						]
+
+				if 'source_hash' in addin:
+					hash_list = addin['source_hash'].split(':')
+					if len(hash_list) == 2 and hash_list[0] in ['http', 'md5', 'sha1']:
+						if hash_list[0] != 'http':
+							addin['source_hash'] = '{0}={1}'.format(hash_list[0].lower(), hash_list[1].lower())
+					else:
+						utils.log("WARNING", "Invalid source hash format: %s" % addin['source_hash'], ("__build_up", self))
+						addin.pop('source_hash')
+
+				# add the last slash when there isnt
+				addin['name'] = os.path.normpath(addin['name']) + os.sep
+
+				# check whether previously extracted
+				# try:
+				# 	if os.path.isdir(addin['name']):
+				# 		addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
+				# except:
+				# 	pass
+
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
 
@@ -974,19 +1051,20 @@ class StateAdaptor(object):
 			Generate require state.
 		"""
 
-		require_state = {}
+		require_state = []
 
 		try:
-			for module, parameter in require.items():
-				if module not in self.mod_map.keys():	continue
+			for item in require:
+				for module, parameter in item.iteritems():
+					if module not in self.mod_map.keys():	continue
 
-				# filter not current platform's package module
-				if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
+					# filter not current platform's package module
+					if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
 
-				the_require_state = self.__salt('require', module, parameter)
+					the_require_state = self.__salt('require', module, parameter)
 
-				if the_require_state:
-					require_state.update(the_require_state)
+					if the_require_state:
+						require_state.append(the_require_state)
 		except Exception, e:
 			utils.log("DEBUG", "Generate salt requisities exception: %s" % str(e), ("__get_require", self))
 			raise StateException(str(e))
@@ -1010,15 +1088,7 @@ class StateAdaptor(object):
 				for k, v in attrs.iteritems():
 					if not v:	continue
 
-					if k in parameter:
-						req_addin[v] = parameter[k]
-					elif k.find('$')>=0:
-						str_list = k.split()
-						for idx, w in enumerate(str_list):
-							if w.startswith('$'):
-								str_list[idx] = parameter[w[1:]]
-
-						req_addin[v] = ' '.join(str_list)
+					req_addin[v] = parameter[k] if k in parameter else k
 
 				if req_addin:
 					state = self.mod_map[module]['states'][0]
@@ -1068,42 +1138,53 @@ class StateAdaptor(object):
 
 		return watch_state
 
-	# def __check_module(self, module):
-	# 	"""
-	# 		Check format of module.
-	# 	"""
+	def __render(self, parameter):
+		"""
+			Rendering the states.
+		"""
+		if not self.states or not isinstance(self.states, list):
+			raise StateException("Invalid state format %s" % str(states))
 
-	# 	module_map = {
-	# 		'package'		: ['pkg', 'apt', 'yum', 'gem', 'npm', 'pecl', 'pip'],
-	# 		'repo'			: ['apt', 'yum', 'zypper'],
-	# 		'source'		: ['gem'],
-	# 		'path'			: ['file', 'dir', 'symlink'],
-	# 		'scm' 			: ['git', 'svn', 'hg'],
-	# 		'service'		: ['supervisord', 'sysvinit', 'upstart'],
-	# 		'sys'			: ['cmd', 'cron', 'group', 'host', 'mount', 'ntp', 'selinux', 'user', 'timezone'],
-	# 		'system'		: ['ssh_auth', 'ssh_known_host']
-	# 	}
+		for idx, item in enumerate(self.states):
+			for tag, value in item.iteritems():
+				for module, state in value.iteritems():
+					for attr_idx, attributes in enumerate(state):
+						if not isinstance(attributes, dict):	continue
 
-	# 	m_list = module.split('.')
+						for attr_name, attr_value in attributes.iteritems():
+							if not isinstance(attr_value, basestring):	continue
 
-	# 	if len(m_list) <= 1:
-	# 		print "invalib module format"
-	# 		return 1
+							if attr_value.find('$')>=0:
+								try:
+									self.states[idx][tag][module][attr_idx][attr_name] = Template(attr_value).substitute(parameter)
+								except Exception, e:
+									utils.log("WARNING", "Render module %s attribute %s value %s failed" % (module, attr_name, str(attr_value)), ("__render",self))
+									pass
 
-	# 	p_module = m_list[0]
-	# 	s_module = m_list[1]
+	def __check_module(self, module, parameter):
+		"""
+			Check format of module parameters.
+		"""
+		## valid parameters check
 
-	# 	if m_list[0] == 'package':
-	# 		p_module = m_list[2]
+		## required parameters check
 
-	# 	elif m_list[0] == 'system':
-	# 		s_module = module.split('.', 1)[1].replace('.', '_')
+		## optional parameters check
+		if module == 'linux.yum.repo':
+			# priority content
+			if 'content' in parameter and 'rpm-url' in parameter:
+				parameter.pop('rpm-url')
 
-	# 	if p_module not in module_map.keys() or s_module not in module_map[p_module]:
-	# 		print "not supported module: %s, %s" % (p_module, s_module)
-	# 		return 2
+			# change module when rpm-url
+			if 'rpm-url' in parameter:
 
-	# 	return 0
+				parameter['cmd'] = 'rpm -U --force {0}'.format(parameter['rpm-url'])
+
+				parameter.pop('rpm-url')
+
+				module = 'linux.cmd'
+
+		return (module, parameter)
 
 	# def __check_state(self, module, state):
 	# 	"""
@@ -1119,7 +1200,7 @@ class StateAdaptor(object):
 # ===================== UT =====================
 def ut():
 	import json
-	pre_states = json.loads(open('/opt/madeira/bootstrap/salt/tests/state.json').read())
+	pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
 
 	# salt_opts = {
 	# 	'file_client':       'local',
@@ -1151,25 +1232,26 @@ def ut():
 
 	err_log = None
 	out_log = None
+
 	for uid, com in pre_states['component'].iteritems():
 		states = {}
 
 		for p_state in com['state']:
-			step = p_state['id']
-			states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
-			print json.dumps(states)
+			try:
+				step = p_state['id']
+				states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+				print json.dumps(states)
 
-			if not states or not isinstance(states, list):
-				err_log = "convert salt state failed"
-				print err_log
-				result = (False, err_log, out_log)
-			else:
-				result = runner.exec_salt(states)
-			print result
-
-	# out_states = [salt_opts] + states
-	# with open('states.json', 'w') as f:
-	# 	json.dump(out_states, f)
+				if not states or not isinstance(states, list):
+					err_log = "convert salt state failed"
+					print err_log
+					result = (False, err_log, out_log)
+				else:
+					result = runner.exec_salt(states)
+				print result
+			except Exception, e:
+				print str(e)
+				continue
 
 if __name__ == '__main__':
 	ut()

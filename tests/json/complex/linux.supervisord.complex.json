@@ -53,7 +53,7 @@
           "_": "5 [test1] add foo to supervisor - True",
           "module": "linux.supervisord",
           "parameter": {
-            "name": "foo",
+            "name": ["foo"],
             "config": "/etc/supervisord.conf"
           }
         }

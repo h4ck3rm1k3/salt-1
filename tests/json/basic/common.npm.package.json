@@ -6,9 +6,9 @@
           "id": "state-D5B79407-42CC-4541-A246-A632CBB637F7",
           "module": "common.npm.package",
           "parameter": {
-            "name": {
-              "express": ""
-            }
+            "name": [
+              {"key":"express"}
+            ]
           }
         }
       ]

@@ -7,7 +7,7 @@
           "_": "1 [prepare] create/ensure source (/tmp/volume) - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/volume",
+            "path": ["/tmp/volume"],
             "absent": false,
             "recursive": true,
             "mode": "0755"
@@ -18,7 +18,7 @@
           "_": "2 [prepare] create/ensure destination (/tmp/dest) - True",
           "module": "linux.dir",
           "parameter": {
-            "path": "/tmp/dest",
+            "path": ["/tmp/dest"],
             "absent": false,
             "recursive": true,
             "mode": "0755"
@@ -33,8 +33,8 @@
             "dev": "/tmp/volume",
             'filesystem': 'none',
             'dump': '0',
-            'passno': '0',
-            "args": "['bind','ro']"
+            'pass': '0',
+            "opts": ['bind','ro']
           }
         },
         {

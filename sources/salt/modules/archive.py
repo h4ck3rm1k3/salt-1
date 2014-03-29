@@ -195,8 +195,8 @@ def unzip(zipfile, dest, excludes=None, template=None):
     '''
     if isinstance(excludes, salt._compat.string_types):
         excludes = [entry.strip() for entry in excludes.split(',')]
-
-    cmd = 'unzip {0} -d {1}'.format(zipfile, dest)
+    ## overwrite old files
+    cmd = 'unzip -o {0} -d {1}'.format(zipfile, dest)
     if excludes is not None:
         cmd += ' -x {0}'.format(' '.join(excludes))
     return __salt__['cmd.run'](cmd, template=template).splitlines()

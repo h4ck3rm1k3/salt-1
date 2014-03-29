@@ -2,7 +2,7 @@
 
 
 ## variable ########################################
-ENV_DIR=/opt/madeira/env
+ENV_DIR=/opt/visualops/env
 PY_BIN=${ENV_DIR}/bin/python
 
 LIB_DIR=${ENV_DIR}/lib

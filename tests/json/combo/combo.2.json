@@ -15,7 +15,7 @@
           "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
           "module": "common.git",
           "parameter": {
-            "repo": "https://github.com/MadeiraCloud/pysa",
+            "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/git/test/",
             "force": true,
             "revision": "master"

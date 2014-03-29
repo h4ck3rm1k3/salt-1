@@ -16,6 +16,7 @@ Interaction with the Supervisor daemon
 
 # Import python libs
 import logging
+import subprocess
 
 # Import salt libs
 import salt.utils
@@ -102,6 +103,24 @@ def running(name,
         user = runas
         runas = None
 
+    # start supervisord
+    try:
+        is_supervisord = subprocess.Popen(
+            'ps aux|grep supervisord',
+            shell=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE).communicate()[0].strip().find('python')
+        if is_supervisord < 0:
+            cmd = ['supervisord']
+            if conf_file:
+                cmd += ['-c', conf_file]
+            __salt__['cmd.run_stdall'](' '.join(cmd), runas=user)
+    except Exception, e:
+        ret['result'] = False
+        ret['comment'] = 'Start up supervisord failed.'
+        ret['stdout'] = str(e)
+        return ret
+
     all_processes = __salt__['supervisord.status'](
         user=user,
         conf_file=conf_file,
@@ -112,7 +131,7 @@ def running(name,
     process_groups = []
     for proc in all_processes:
         if ':' in proc:
-            process_groups.append(proc[:proc.index(':') + 1])
+            process_groups.append(proc[:proc.index(':')])
     process_groups = list(set(process_groups))
 
     # determine if this process/group needs loading
@@ -192,6 +211,11 @@ def running(name,
                 name
             )
             log.debug(comment)
+
+            # group process
+            if process_type == 'group':
+                name = '{0}:*'.format(name)
+
             result = __salt__['supervisord.restart'](
                 name,
                 user=user,
@@ -223,6 +247,11 @@ def running(name,
         )
         changes.append(comment)
         log.debug(comment)
+
+        # group process
+        if process_type == 'group':
+            name = '{0}:*'.format(name)
+
         result = __salt__['supervisord.start'](
             name,
             user=runas,
@@ -235,6 +264,9 @@ def running(name,
         log.debug(unicode(result))
 
     if ret['result'] and len(changes):
+        # remove group flag
+        if ':' in name:
+            name = name[:name.index(':')]
         ret['changes'][name] = ' '.join(changes)
     return ret
 

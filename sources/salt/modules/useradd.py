@@ -35,7 +35,8 @@ def __virtual__():
     and remove some of the functionality on OS X
     '''
 
-    if __grains__['kernel'] in ('Linux', 'OpenBSD', 'NetBSD'):
+    if 'kernel' in __grains__ and \
+        __grains__['kernel'] in ('Linux', 'OpenBSD', 'NetBSD'):
         return __virtualname__
     return False
 

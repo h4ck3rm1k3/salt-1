@@ -1,0 +1,83 @@
+[
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "if [ ! -f /tmp/run ]; then echo 0 > /tmp/run; elif [ $(cat /tmp/run) -eq 5 ]; then echo 0 > /tmp/run; fi; RUN=$(cat /tmp/run); RUN=$((RUN+1)); echo $RUN>/tmp/run"
+        }
+    },
+    {
+        "module": "linux.file",
+        "parameter": {
+            "path": "/etc/init.d/food",
+            "mode": "0755",
+            "content": "#!/bin/bash\n# Provides: food\n# Required-Start:\n# Should-Start:\n# Required-Stop:\n# Should-Stop:\n# Default-Start:  3 4 5\n# Default-Stop:   0 6\n# Short-Description: Foo Daemon\n# Description: Runs foo\n\nRUN=$(cat /tmp/run)\n\nif [ $RUN -eq 1 ]; then\n    echo -n > /tmp/food\nfi\n\ncase \"$1\" in\n    start)\n        echo \"start ${RUN}\" >> /tmp/food\n        touch /tmp/food.status\n        ;;\n    stop)\n        echo \"stop ${RUN}\" >> /tmp/food\n        rm -f /tmp/food.status\n        ;;\n    restart)\n        echo \"restart ${RUN}\" >> /tmp/food\n        ;;\n    status)\n        echo \"status ${RUN}\" >> /tmp/food\n        if [ -f /tmp/food.status ]; then\n            exit 0\n        else\n            exit 1\n        fi\n        ;;\n\n    *)\n        echo \"Usage: $0 {start|stop|restart|status}\"\n        exit 1\n        ;;\nesac\n\nexit 0"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "service sshd stop ; service crond stop"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "service sshd status | grep 'is stopped'"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "service crond status | grep 'is stopped'"
+        }
+    },
+    {
+        "module": "linux.service",
+        "parameter": {
+            "name": ["sshd","crond"]
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "service sshd status | grep 'is running'"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "service crond status | grep 'is running'"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then echo foo > /tmp/foo1; elif [ $RUN -eq 2 ]; then echo foo_mod > /tmp/foo1; fi;"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then echo foo > /tmp/foo2; elif [ $RUN -eq 3 ]; then echo foo_mod > /tmp/foo2; fi;"
+        }
+    },
+    {
+        "module": "linux.service",
+        "parameter": {
+            "name": ["food"],
+            "watch": ["/tmp/foo1","/tmp/foo2"]
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "RUN=$(cat /tmp/run); if [ $RUN -eq 1 ]; then CHECK=\"start ${RUN}\"; elif [ $RUN -eq 2 ]; then CHECK=\"restart ${RUN}\"; elif [ $RUN -eq 3 ]; then CHECK=\"restart ${RUN}\"; else CHECK=\"${RUN}\"; fi; grep \"${CHECK}\" /tmp/food"
+        }
+    },
+    {
+        "module": "linux.cmd",
+        "parameter": {
+            "cmd": "cat /tmp/food"
+        }
+    }
+]

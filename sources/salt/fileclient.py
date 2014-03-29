@@ -337,15 +337,23 @@ class Client(object):
             # Backwards compatibility
             saltenv = env
 
+        # support url
+        url_data = urlparse(path)
+
         localsfilesdest = os.path.join(
             self.opts['cachedir'], 'localfiles', path.lstrip('/'))
         filesdest = os.path.join(
             self.opts['cachedir'], 'files', saltenv, path.lstrip('salt://'))
+        # support url
+        urlcacheddest = salt.utils.path_join(
+            self.opts['cachedir'], 'extrn_files', saltenv, url_data.netloc, url_data.path)
 
         if os.path.exists(filesdest):
             return filesdest
         elif os.path.exists(localsfilesdest):
             return localsfilesdest
+        elif os.path.exists(urlcacheddest):
+            return urlcacheddest
 
         return ''
 

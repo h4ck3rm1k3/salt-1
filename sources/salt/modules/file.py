@@ -2134,7 +2134,7 @@ def extract_hash(hash_fn, hash_type='md5', file_name=''):
     source_sum = None
     partial_id = False
     name_sought = re.findall(r'^(.+)/([^/]+)$', '/x' + file_name)[0][1]
-    log.debug('modules.file.py - extract_hash(): Extracting hash for file named: {}'.format(name_sought))
+    log.debug('modules.file.py - extract_hash(): Extracting hash for file named: {0}'.format(name_sought))
     hash_fn_fopen = salt.utils.fopen(hash_fn, 'r')
     for hash_variant in HASHES:
         if hash_type == '' or hash_type == hash_variant[0]:
@@ -2145,25 +2145,25 @@ def extract_hash(hash_fn, hash_type='md5', file_name=''):
             for line in hash_fn_fopen.read().splitlines():
                 hash_array = re.findall(r'(?i)(?<![a-z0-9])[a-f0-9]{' + str(hash_variant[1]) + '}(?![a-z0-9])', line)
                 log.debug('modules.file.py - extract_hash(): '
-                    'From "line": {} got : {}'.format(line, hash_array))
+                    'From "line": {0} got : {1}'.format(line, hash_array))
                 if hash_array:
                     if not partial_id:
                         source_sum = {'hsum': hash_array[0], 'hash_type': hash_variant[0]}
                         partial_id = True
 
-                    log.debug('modules.file.py - extract_hash(): Found : {} -- {}'.format(
+                    log.debug('modules.file.py - extract_hash(): Found : {0} -- {1}'.format(
                                             source_sum['hash_type'], source_sum['hsum']))
 
                     if re.search(name_sought, line):
                         source_sum = {'hsum': hash_array[0], 'hash_type': hash_variant[0]}
                         log.debug('modules.file.py - extract_hash: '
-                        'For {} -- returning the {} hash "{}".'.format(
+                        'For {0} -- returning the {1} hash "{2}".'.format(
                                  name_sought, source_sum['hash_type'], source_sum['hsum']))
                         return source_sum
 
     if partial_id:
         log.debug('modules.file.py - extract_hash: '
-                'Returning the partially identified {} hash "{}".'.format(
+                'Returning the partially identified {0} hash "{1}".'.format(
                        source_sum['hash_type'], source_sum['hsum']))
     else:
         log.debug('modules.file.py - extract_hash: Returning None.')
@@ -2371,7 +2371,7 @@ def check_file_meta(
         # Write a tempfile with the static contents
         tmp = salt.utils.mkstemp(text=True)
         with salt.utils.fopen(tmp, 'w') as tmp_:
-            tmp_.write(str(contents))
+            tmp_.write(contents.encode('utf8'))
         # Compare the static contents with the named file
         with contextlib.nested(
                 salt.utils.fopen(tmp, 'rb'),
@@ -2539,7 +2539,7 @@ def manage_file(name,
             # Write the static contents to a temporary file
             tmp = salt.utils.mkstemp(text=True)
             with salt.utils.fopen(tmp, 'w') as tmp_:
-                tmp_.write(str(contents))
+                tmp_.write(contents.encode('utf8'))
 
             # Compare contents of files to know if we need to replace
             with contextlib.nested(
@@ -2662,7 +2662,7 @@ def manage_file(name,
             # Write the static contents to a temporary file
             tmp = salt.utils.mkstemp(text=True)
             with salt.utils.fopen(tmp, 'w') as tmp_:
-                tmp_.write(str(contents))
+                tmp_.write(contents.encode('utf8'))
             # Copy into place
             salt.utils.copyfile(tmp,
                                 name,

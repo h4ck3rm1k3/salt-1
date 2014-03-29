@@ -152,6 +152,7 @@ import yaml
 import salt.utils
 from salt.exceptions import CommandExecutionError
 from salt._compat import string_types
+from salt.modules import state_std
 
 log = logging.getLogger(__name__)
 
@@ -571,7 +572,9 @@ def run(name,
                 cmd_all = __salt__['cmd.run_stdall'](
                     name, timeout=timeout, **cmd_kwargs
                 )
-                ret['state_stdout'] += cmd_all['stdout'] + '\n'
+                # ret['state_stdout'] += cmd_all['stdout'] + '\n'
+                state_ret = {'state_ret':ret}
+                state_std(state_ret, cmd_all)
             except CommandExecutionError as err:
                 ret['comment'] = str(err)
                 return ret

@@ -28,7 +28,7 @@
           "module": "common.timezone",
           "parameter": {
             "name": "Asia/Shanghai",
-            "use_utc": false
+            "use-utc": false
           }
         },
         {

@@ -16,7 +16,7 @@ def __virtual__():
     '''
     Confirm this module is on a Debian based system
     '''
-    return __virtualname__ if __grains__['os_family'] == 'Debian' else False
+    return __virtualname__ if 'os_family' in __grains__ and __grains__['os_family'] == 'Debian' else False
 
 
 def list_pkgs(*packages):

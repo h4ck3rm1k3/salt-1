@@ -23,7 +23,7 @@
                     "id": "state-960FDF91-C1DC-47A5-8B6E-32094DAD5A33",
                     "module": "linux.cmd",
                     "parameter": {
-                        "cmd": "pvremove -f /dev/sdb1 /dev/sdb2"
+                        "cmd": "pvremove -f /dev/sdb1 /dev/sdb2 /dev/sdb3 /dev/sdb4"
                     }
                 },
                 {
@@ -31,7 +31,7 @@
                     "id": "state-4898B633-A457-438E-B473-842BA868B00D",
                     "module": "linux.lvm.pv",
                     "parameter": {
-                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -40,7 +40,7 @@
                     "module": "linux.lvm.vg",
                     "parameter": {
                         "name": "vgtest",
-                        "path": ["/dev/sdb1", "/dev/sdb2"]
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -49,9 +49,9 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"]
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -76,9 +76,9 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LE number": "500",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"]
+                        "vg-name": "vgtest",
+                        "le-number": "500",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"]
                     }
                 },
                 {
@@ -103,14 +103,17 @@
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
                         "monitor": "y",
                         "permission": "rw",
                         "readahead": "auto",
-                        "zero": "y"
+                        "zero": "y",
+                        "available": "y",
+                        "autobackup": "y",
+                        "tag": "lvtag"
                     }
                 },
                 {
@@ -122,43 +125,21 @@
                     }
                 },
                 {
-                    "_": "14 [test4] creat striped volumes  - True",
-                    "id": "state-721791BB-59C2-45CF-8900-2B8C3257E1D0",
-                    "module": "linux.lvm.lv",
-                    "parameter": {
-                        "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
-                        "contiguous": "n",
-                        "stripe number": 2,
-                        "stripe size": 64
-                    }
-                },
-                {
-                    "_": "15 [test4] remove lv - True",
-                    "id": "state-B855D31B-CC49-4306-9AC8-499C935466F1",
-                    "module": "linux.cmd",
-                    "parameter": {
-                        "cmd": "lvremove -f vgtest/lvtest"
-                    }
-                },
-                {
-                    "_": "16 [test5] creat mirrored volumes  - True",
+                    "_": "14 [test4] creat mirrored volumes  - True",
                     "id": "state-77736AB4-5A5D-4E6A-8470-19E6EA36EC67",
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
-                        "mirror number": 1,
+                        "mirror-number": 1,
                         "persistent": "n"
                     }
                 },
                 {
-                    "_": "17 [test5] remove lv - True",
+                    "_": "15 [test4] remove lv - True",
                     "id": "state-3D1AD8D7-4BCD-45DD-8DD6-A7FA6F72A816",
                     "module": "linux.cmd",
                     "parameter": {
@@ -166,30 +147,44 @@
                     }
                 },
                 {
-                    "_": "18 [test6]  pool logical volume  - True",
-                    "id": "state-00B25365-0991-4664-92D2-36041D87D68D",
+                    "_": "16 [test5] creat striped volumes  - True",
+                    "id": "state-721791BB-59C2-45CF-8900-2B8C3257E1D0",
                     "module": "linux.lvm.lv",
                     "parameter": {
                         "name": "lvtest",
-                        "VG name": "vgtest",
-                        "LV size": "500M",
-                        "PV": ["/dev/sdb1", "/dev/sdb2"],
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
-                        "stripe number": 2,
-                        "stripe size": 64,
-                        "thinpool": "vgtest/pool",
-                        "virtual size": "1G",
-                        "type": "thin",
-                        "pool metadata size": "4M",
-                        "monitor": "y"
+                        "stripe-number": 2,
+                        "stripe-size": 64
                     }
                 },
                 {
-                    "_": "19 [test6] remove lv - True",
-                    "id": "state-BF6E489C-DCB5-4212-B21B-0FF07BBF46A7",
+                    "_": "18 [test6] assert lv existed  - True",
+                    "id": "state-0C34E53D-9E88-4630-9554-3BE5530C14B7",
                     "module": "linux.cmd",
                     "parameter": {
-                        "cmd": "lvremove -f vgtest/pool"
+                        "cmd": "lvs | grep lvtest"
+                    }
+                },
+                {
+                    "_": "19 [test7] create snapshot - True",
+                    "id": "state-BF6E489C-DCB5-4212-B21B-0FF07BBF46A7",
+                    "module": "linux.lvm.lv",
+                    "parameter": {
+                        "name": "sstest",
+                        "vg-name": "vgtest",
+                        "lv-size": "500M",
+                        "snapshot": "lvtest"
+                    }
+                },
+                {
+                    "_": "20 [test7] assert lv existed  - True",
+                    "id": "state-64152D57-2872-4AD3-AADC-EB85BDC18800",
+                    "module": "linux.cmd",
+                    "parameter": {
+                        "cmd": "lvs | grep sstest"
                     }
                 }
             ]
