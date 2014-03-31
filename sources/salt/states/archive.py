@@ -135,11 +135,27 @@ def extracted(name,
             ret['comment'] = 'Download source file %s failed.' % source
             ret['state_stdout'] = str(e)
             return ret
-    # else:
-    #     ret['result'] = True
-    #     ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
-    #         ).format(filename, source_hash['hsum'])
-    #     return ret
+
+    # check source hash
+    if source_hash:
+        try:
+            hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
+            if not __salt__['file.check_hash'](sfn, hash_value):
+                dl_sum = __salt__['file.get_hash'](sfn, source_hash['hash_type'])
+                if sfn:
+                    __salt__['file.remove'](sfn)
+                ret['result'] = False
+                ret['comment'] = ('File sum set for file {0} of {1} does '
+                                    'not match real sum of {2}'
+                                    ).format(sfn,
+                                            source_hash['hsum'],
+                                            dl_sum)
+                return ret
+        except Exception, e:
+            ret['result'] = False
+            ret['comment'] = 'Check file sum set for file %s exception.' % sfn
+            ret['state_stdout'] = str(e)
+            return ret
 
     ## prepare tmp file
     try:
@@ -155,19 +171,7 @@ def extracted(name,
     if not os.path.isfile(filename):
         ret['result'] = False
         ret['comment'] = 'Source file {0} not found'.format(source)
-
-    ## check source hash
-    if source_hash:
-        hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
-        if not __salt__['file.check_hash'](filename, hash_value):
-            dl_sum = __salt__['file.get_hash'](filename, source_hash['hash_type'])
-            ret['result'] = False
-            ret['comment'] = ('File sum set for file {0} of {1} does '
-                                'not match real sum of {2}'
-                                ).format(filename,
-                                        source_hash['hsum'],
-                                        dl_sum)
-            return ret
+        return ret
     ########################################################################################
 
     if __opts__['test']:
