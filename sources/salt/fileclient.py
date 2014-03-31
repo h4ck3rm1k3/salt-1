@@ -26,7 +26,7 @@ import salt.utils.templates
 import salt.utils.gzip_util
 from salt._compat import (
     URLError, HTTPError, BaseHTTPServer, urlparse, urlunparse, url_open,
-    url_passwd_mgr, url_auth_handler, url_build_opener, url_install_opener)
+    url_passwd_mgr, url_auth_handler, url_build_opener, url_install_opener, url_request, RedirectHandler)
 
 log = logging.getLogger(__name__)
 
@@ -542,7 +542,14 @@ class Client(object):
         else:
             fixed_url = url
         try:
-            with contextlib.closing(url_open(fixed_url)) as srcfp:
+            ## add header for 403
+            hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',\
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',\
+                'Accept-Encoding': 'none','Accept-Language': 'en-US,en;q=0.8','Connection': 'keep-alive'}
+            req = url_request(fixed_url, headers=hdr)
+
+            opener = url_build_opener(RedirectHandler())
+            with contextlib.closing(opener.open(req)) as srcfp:
                 with salt.utils.fopen(dest, 'wb') as destfp:
                     shutil.copyfileobj(srcfp, destfp)
             return dest
