@@ -881,6 +881,8 @@ class StateAdaptor(object):
 				# default cwd
 				if 'cwd' not in addin:
 					addin['cwd'] = '/opt/visualops/tmp/'
+				else:
+					self.mod_map[module].pop('require')
 
 			elif module in ['linux.group', 'linux.user']:
 				if 'gid' in addin and addin['gid']:
