@@ -7,8 +7,8 @@
           "module": "linux.lvm.lv",
           "parameter": {
             "name": "lvtest",
-            "VG name": "vgtest",
-            "LV size": "500M",
+            "vg-name": "vgtest",
+            "le-size": "500M",
             "path": ["/dev/sdb1", "/dev/sdb2"]
           }
         }
