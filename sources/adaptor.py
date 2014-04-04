@@ -915,7 +915,7 @@ class StateAdaptor(object):
 				if 'persist' not in addin:
 					addin['persist'] = False
 
-			elif module in ['linux.lvm.vg', 'linux.lvm.lv']:
+			elif module in ['linux.lvm.pv', 'linux.lvm.vg', 'linux.lvm.lv']:
 				if 'devices' in addin and isinstance(addin['devices'], list):
 					addin['devices'] = ','.join(addin['devices'])
 				if 'pv' in addin and isinstance(addin['pv'], list):
@@ -924,8 +924,7 @@ class StateAdaptor(object):
 				for attr in ['force', 'zero', 'metadata-ignore', 'norestorefile', \
 					'clustered', 'autobackup', \
 					'contiguous', 'persistent', 'no-udev-sync', 'monitor', 'ignore-monitoring']:
-					if attr not in addin:
-						continue
+					if attr not in addin:	continue
 					if addin[attr]:
 						addin[attr] = 'y'
 					else:
