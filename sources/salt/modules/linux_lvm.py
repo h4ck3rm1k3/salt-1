@@ -250,11 +250,10 @@ def lvcreate(lvname, vgname, size=None, extents=None, snapshot=None, pv='', **kw
 
         salt '*' lvm.lvcreate new_volume_name vg_name size=10G
         salt '*' lvm.lvcreate new_volume_name vg_name extents=100 /dev/sdb
+        salt '*' lvm.lvcreate new_snapshot    vg_name snapshot=volume_name size=3G
     '''
     if size and extents:
         return 'Error: Please specify only size or extents'
-    if snapshot and pv:
-        return 'Error: Please specify only snapshot or pv'
 
     valid = ('activate', 'chunksize', 'contiguous', 'discards', 'stripes',
              'stripesize', 'minor', 'persistent', 'mirrors', 'noudevsync',
@@ -268,15 +267,29 @@ def lvcreate(lvname, vgname, size=None, extents=None, snapshot=None, pv='', **kw
     ])
 
     if snapshot:
-        vgname = '-s ' + vgname + '/' + snapshot
+        _snapshot = '-s ' + vgname + '/' + snapshot
 
     if pv:
         pv = ' '.join(pv.split(','))
 
     if size:
-        cmd = 'lvcreate -n {0} {1} -L {2} {3} {4}'.format(lvname, vgname, size, extra_arguments, pv)
+        if snapshot:
+            cmd = 'lvcreate -n {0} {1} -L {2} {3} {4}'.format(
+                lvname, _snapshot, size, extra_arguments, pv
+            )
+        else:
+            cmd = 'lvcreate -n {0} {1} -L {2} {3} {4}'.format(
+                lvname, vgname, size, extra_arguments, pv
+            )
     elif extents:
-        cmd = 'lvcreate -n {0} {1} -l {2} {3} {4}'.format(lvname, vgname, extents, extra_arguments, pv)
+        if snapshot:
+            cmd = 'lvcreate -n {0} {1} -l {2} {3} {4}'.format(
+                lvname, _snapshot, extents, extra_arguments, pv
+            )
+        else:
+            cmd = 'lvcreate -n {0} {1} -l {2} {3} {4}'.format(
+                lvname, vgname, extents, extra_arguments, pv
+            )
     else:
         return 'Error: Either size or extents must be specified'
     result = __salt__['cmd.run_all'](cmd)

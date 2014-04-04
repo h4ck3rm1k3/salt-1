@@ -18,6 +18,8 @@ A state module to manage LVMs
       lvm.lv_present:
         - vgname: my_vg
         - size: 10G
+        - stripes: 5
+        - stripesize: 8K
 '''
 
 # Import salt libs
@@ -156,6 +158,9 @@ def lv_present(name, vgname=None, size=None, extents=None, snapshot=None, pv='',
     extents
         The number of logical extents to allocate
 
+    snapshot
+        The name of the snapshot
+
     pv
         The physical volume to use
 
@@ -169,6 +174,12 @@ def lv_present(name, vgname=None, size=None, extents=None, snapshot=None, pv='',
            'result': True,
            'state_stdout': ''}
 
+    _snapshot = None
+
+    if snapshot:
+        _snapshot = name
+        name = snapshot
+
     lvpath = '/dev/{0}/{1}'.format(vgname, name)
     if __salt__['lvm.lvdisplay'](lvpath):
         ret['comment'] = 'Logical Volume {0} already present'.format(name)
@@ -181,8 +192,8 @@ def lv_present(name, vgname=None, size=None, extents=None, snapshot=None, pv='',
                                            vgname,
                                            size=size,
                                            extents=extents,
+                                           snapshot=_snapshot,
                                            pv=pv,
-                                           snapshot=snapshot,
                                            kwargs=kwargs,
                                            state_ret=ret)
 
