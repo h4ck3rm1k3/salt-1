@@ -201,7 +201,7 @@ def pvcreate(devices, **kwargs):
             cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
-    if result['retcode'] != 0:
+    if result['retcode'] != 0 or result['stderr']:
         return result['stderr']
     out = result['stdout'].splitlines()
     return out[0]
@@ -232,7 +232,7 @@ def vgcreate(vgname, devices, **kwargs):
             cmd += ' --{0} {1}'.format(var, kwargs['kwargs'][var])
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
-    if result['retcode'] != 0:
+    if result['retcode'] != 0 or result['stderr']:
         return result['stderr']
     out = result['stdout'].splitlines()
     vgdata = vgdisplay(vgname)
@@ -294,7 +294,7 @@ def lvcreate(lvname, vgname, size=None, extents=None, snapshot=None, pv='', **kw
         return 'Error: Either size or extents must be specified'
     result = __salt__['cmd.run_all'](cmd)
     state_std(kwargs, result)
-    if result['retcode'] != 0:
+    if result['retcode'] != 0 or result['stderr']:
         return result['stderr']
     out = result['stdout'].splitlines()
     lvdev = '/dev/{0}/{1}'.format(vgname, lvname)
