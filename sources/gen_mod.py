@@ -1724,11 +1724,11 @@ manage LVM physical volume (PV)
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'metadata-size'	:	{
+					'data-alignment-offset'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'data-alignment-offset'	:	{
+					'metadata-size'	:	{
 						'type'		:	'line',
 						'required'	:	False
 					},
@@ -1881,6 +1881,11 @@ manage LVM volume group (VG)
 						'default'	:	'4m',
 						'required'	:	False
 					},
+					'autobackup'		:	{
+						'type'		:	'bool',
+						'default'	:	False,
+						'required'	:	False
+					},
 					'tag'		:	{
 						'type'		:	'line',
 						'required'	:	False
@@ -1890,11 +1895,6 @@ manage LVM volume group (VG)
 						'option'	:	['anywhere', 'contiguous', 'cling', 'inherit', 'normal'],
 						'required'	:	False
 					},
-					'autobackup'		:	{
-						'type'		:	'bool',
-						'default'	:	False,
-						'required'	:	False
-					}
 				}
 			},
 			'lv'	:	{
@@ -2064,12 +2064,12 @@ manage LVM logical volume (LV)
 						'default'	:	False,
 						'required'	:	False,
 					},
-					# 'discards':	{
-					# 	'type'		:	'line',
-					# 	'default'	:	'passdown',
-					# 	'option'	:	['ignore', 'nopassdown', 'passdown'],
-					# 	'required'	:	False,
-					# },
+					'discards':	{
+						'type'		:	'line',
+						'default'	:	'passdown',
+						'option'	:	['ignore', 'nopassdown', 'passdown'],
+						'required'	:	False,
+					},
 					'stripe-number':	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2095,6 +2095,10 @@ manage LVM logical volume (LV)
 						'default'	:	False,
 						'required'	:	False,
 					},
+					'mirror-number':	{
+						'type'		:	'line',
+						'required'	:	False,
+					},
 					'no-udev-sync'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
@@ -2115,10 +2119,10 @@ manage LVM logical volume (LV)
 						'option'	:	['r', 'rw'],
 						'required'	:	False,
 					},
-					# 'pool metadata size':	{
-					# 	'type'		:	'line',
-					# 	'required'	:	False,
-					# },
+					'pool metadata size':	{
+						'type'		:	'line',
+						'required'	:	False,
+					},
 					'region-size'	:	{
 						'type'		:	'line',
 						'required'	:	False,
@@ -2132,10 +2136,10 @@ manage LVM logical volume (LV)
 						'type'		:	'line',
 						'required'	:	False,
 					},
-					# 'thinpool'	:	{
-					# 	'type'		:	'line',
-					# 	'required'	:	False,
-					# },
+					'thinpool'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+					},
 					'type'		:	{
 						'type'		:	'line',
 						'option'	:	['raid1', 'raid4', 'raid5', 'raid6'],
@@ -2150,6 +2154,11 @@ manage LVM logical volume (LV)
 						'default'	:	True,
 						'required'	:	False,
 					},
+					'autobackup'		:	{
+						'type'		:	'bool',
+						'default'	:	False,
+						'required'	:	False
+					},
 					'tag'		:	{
 						'type'		:	'line',
 						'required'	:	False
@@ -2159,11 +2168,6 @@ manage LVM logical volume (LV)
 						'option'	:	['anywhere', 'contiguous', 'cling', 'inherit', 'normal'],
 						'required'	:	False
 					},
-					'autobackup'		:	{
-						'type'		:	'bool',
-						'default'	:	False,
-						'required'	:	False
-					}
 				}
 			},
 #			'ntp'	:	{},
