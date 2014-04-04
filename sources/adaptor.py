@@ -921,6 +921,16 @@ class StateAdaptor(object):
 				if 'pv' in addin and isinstance(addin['pv'], list):
 					addin['pv'] = ','.join(addin['pv'])
 
+				for attr in ['force', 'zero', 'metadata-ignore', 'norestorefile', \
+					'clustered', 'autobackup', \
+					'contiguous', 'persistent', 'no-udev-sync', 'monitor', 'ignore-monitoring']:
+					if attr not in addin:
+						continue
+					if addin[attr]:
+						addin[attr] = 'y'
+					else:
+						addin[attr] = 'n'
+
 			elif module in ['common.archive']:
 				if 'source' in addin and addin['source'].find('.') > 0:
 					ext = addin['source'].split('.')[-1]
