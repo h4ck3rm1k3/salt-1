@@ -699,6 +699,10 @@ class StateAdaptor(object):
 						pkg_name = item['key'] if 'key' in item else None
 						pkg_version = item['value'] if 'value' in item else None
 
+						# no latest in npm|pip|gem
+						if module.startswith('common') and pkg_version == 'latest':
+							pkg_version = 'installed'
+
 						if not pkg_name:	continue
 
 						pkg_state = default_state
