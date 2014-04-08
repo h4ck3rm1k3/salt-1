@@ -199,6 +199,9 @@ def extracted(name,
             log.debug("Untar %s in %s", filename, name)
             results = __salt__['cmd.run_all']('tar -xv{0}f {1}'.format(tar_options,filename),cwd=name)
             if results['retcode'] != 0:
+                ret['result'] = False
+                ret['comment'] = 'Extract file %s failed' % filename
+                ret['state_stdout'] = results['stderr']
                 return results
             files = results['stdout']
         if len(files) > 0:

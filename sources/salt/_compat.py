@@ -161,8 +161,6 @@ else:
     from urllib2 import HTTPBasicAuthHandler as url_auth_handler
     from urllib2 import build_opener as url_build_opener
     from urllib2 import install_opener as url_install_opener
-    from urllib2 import Request as url_request
-    from urllib2 import HTTPRedirectHandler as http_redirect_handler
     import ConfigParser as configparser
 
     def url_unquote_text(v, encoding='utf-8', errors='replace'):
@@ -186,18 +184,4 @@ if PY3:
     import queue as Queue
 else:
     import Queue
-
-class RedirectHandler(http_redirect_handler):
-    def http_error_301(self, req, fp, code, msg, headers):
-        result = http_redirect_handler.http_error_301(
-            self, req, fp, code, msg, headers)
-        result.status = code
-        return result
-
-    def http_error_302(self, req, fp, code, msg, headers):
-        result = http_redirect_handler.http_error_302(
-            self, req, fp, code, msg, headers)
-        result.status = code
-        return result
-
 # pylint: enable=C0103

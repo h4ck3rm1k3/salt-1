@@ -10,6 +10,7 @@ import hashlib
 import os
 import shutil
 import subprocess
+import requests
 
 # Import third party libs
 import yaml
@@ -542,16 +543,9 @@ class Client(object):
         else:
             fixed_url = url
         try:
-            ## add header for 403
-            hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',\
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',\
-                'Accept-Encoding': 'none','Accept-Language': 'en-US,en;q=0.8','Connection': 'keep-alive'}
-            req = url_request(fixed_url, headers=hdr)
-
-            opener = url_build_opener(RedirectHandler())
-            with contextlib.closing(opener.open(req)) as srcfp:
-                with salt.utils.fopen(dest, 'wb') as destfp:
-                    shutil.copyfileobj(srcfp, destfp)
+            req = requests.get(fixed_url)
+            with salt.utils.fopen(dest, 'wb') as destfp:
+                destfp.write(req.content)
             return dest
         except HTTPError as ex:
             raise MinionError('HTTP error {0} reading {1}: {3}'.format(
