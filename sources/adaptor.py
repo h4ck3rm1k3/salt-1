@@ -729,6 +729,13 @@ class StateAdaptor(object):
 						else:
 							module_state[pkg_state][pkg_flag].append(pkg_name)
 
+					# add other parameters
+					addin.pop(pkg_flag)
+
+					if addin:
+						for pkg_state in module_state.keys():
+							module_state[pkg_state].update(addin)
+
 			elif module in ['common.git', 'common.svn', 'common.hg']:
 
 				# svn target path(remove the last prefix)
