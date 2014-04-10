@@ -145,8 +145,10 @@ def latest(name,
                                                               fmt='dict')[0]['Revision']
     
         ret['comment'] = 'Repository %s cloned to %s' % (name, target)
-    except:
+    except Exception, e:
         ret['result'] = False
+        ret['comment'] = 'Checkout svn repository {0} failed'.format(name)
+        ret['state_stdout'] = str(e)
     return ret
 
 
