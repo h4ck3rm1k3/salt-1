@@ -108,7 +108,7 @@ def _get_repo_options(**kwargs):
     in the yum command, based on the kwargs.
     '''
     # Get repo options from the kwargs
-    fromrepo = str(kwargs.get('fromrepo', ''))
+    fromrepo = kwargs.get('fromrepo', '')
     repo = kwargs.get('repo', '')
     disablerepo = kwargs.get('disablerepo', '')
     enablerepo = kwargs.get('enablerepo', '')
@@ -523,7 +523,7 @@ def install(name=None,
             log.warning('"version" parameter will be ignored for multiple '
                         'package targets')
 
-    repo_arg = _get_repo_options(fromrepo=fromrepo, **kwargs)
+    repo_arg = _get_repo_options(fromrepo=str(fromrepo) if fromrepo else fromrepo, **kwargs)
 
     old = list_pkgs()
     downgrade = []
