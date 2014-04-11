@@ -108,7 +108,7 @@ def _get_repo_options(**kwargs):
     in the yum command, based on the kwargs.
     '''
     # Get repo options from the kwargs
-    fromrepo = kwargs.get('fromrepo', '')
+    fromrepo = str(kwargs.get('fromrepo', ''))
     repo = kwargs.get('repo', '')
     disablerepo = kwargs.get('disablerepo', '')
     enablerepo = kwargs.get('enablerepo', '')
