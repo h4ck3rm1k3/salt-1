@@ -1057,7 +1057,7 @@ manage a symlink
 				'parameter'	:	{
 					'source'		:	{
 						'type'		:	'line',
-						'required'	:	False,
+						'required'	:	True,
 						'visible'	:	True,
 					},
 					'target'	:	{
