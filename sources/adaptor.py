@@ -916,6 +916,15 @@ class StateAdaptor(object):
 						{'linux.dir':{'path':[addin['home']]}}
 					]
 
+				# generate user password hash
+				if 'password' in addin and addin['password']:
+					import string
+					import random
+					import crypt
+					random_string_len = 8
+					random_string = str(''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(random_string_len)))
+					addin['password'] = crypt.crypt(str(addin['password']), '$1$'+random_string)
+
 			elif module in ['linux.mount']:
 				for attr in ['dump', 'pass_num']:
 					if attr in addin:
