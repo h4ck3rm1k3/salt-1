@@ -2,7 +2,7 @@
 
 def attr():
 	return {
-		'tag'	:	'v2014-04-04',
+		'tag'	:	'v2014-04-11',
 		'meta'	:	{
 			'#'	:	{
 				'module'	:	'meta.comment',
@@ -142,7 +142,7 @@ manage the timezone
 
 	example: Pacific/Tahiti
 
-*   **`use-utc`** (*optional*): whether to use UTC for the hardware clock, by default ***`True`***
+*   **`use-utc`** (*optional*): whether to use UTC for the hardware clock, by default ***`true`***
 					''',
 					'cn'	:	''''''
 				},
@@ -321,7 +321,7 @@ manage a git repo
 
 		example: /root/.ssh/id_rsa
 
-* **`force`** (*optional*): force the checkout if there is conflict, by default ***`False`***
+* **`force`** (*optional*): force the checkout if there is conflict, by default ***`false`***
 
 * **`user`** (*optional*): the username that performs the operation, by default ***`root`***
 					''',
@@ -387,7 +387,7 @@ manage a hg repo
 			specify a static tag - release-1.0
 			specify a particular revision id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6
 
-* **`force`** (*optional*): force the checkout if there is conflict, by default ***`False`***
+* **`force`** (*optional*): force the checkout if there is conflict, by default ***`false`***
 
 * **`user`** (*optional*): the username that performs the operation, by default ***`root`***
 					''',
@@ -433,7 +433,7 @@ manage a svn repo
 
 		example: /var/www/html/mysite/
 
-*   **`repo`** (*required*): the hg repository uri
+*   **`repo`** (*required*): the svn repository uri
 
 		example:
 			file://local/filesystem/path
@@ -450,7 +450,7 @@ manage a svn repo
 
 * **`password`** (*optional*): the password of the svn user
 
-* **`force`** (*optional*): force the checkout if there is conflict, by default ***`False`***
+* **`force`** (*optional*): force the checkout if there is conflict, by default ***`false`***
 
 * **`user`** (*optional*): the username that performs the operation, by default ***`root`***
 					''',
@@ -512,17 +512,17 @@ manage a python virtualenv
 
 *   **`requirements-file`** (*optional*): the python requirements file path, which will be used to configure this environment
 
-*   **`system-site-packages`** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***`True`***
+*   **`system-site-packages`** (*optional*): whether to give the virtual environment access to the global site-packages, by default ***`true`***
 
-*   **`always-copy`** (*optional*): whether to always copy files rather than symlinking, by default ***`False`***
+*   **`always-copy`** (*optional*): whether to always copy files rather than symlinking, by default ***`false`***
 
-*   **`unzip-setuptools`** (*optional*): whether to always copy files rather than symlinking, by default ***`False`***
+*   **`unzip-setuptools`** (*optional*): whether to always copy files rather than symlinking, by default ***`false`***
 
-*   **`no-setuptool`** (*optional*): whether to install setuptools (or pip) in the new virtualenv, by default ***`True`***
+*   **`no-setuptool`** (*optional*): whether to install setuptools (or pip) in the new virtualenv, by default ***`true`***
 
-*   **`no-pip`** (*optional*): whether to install pip in the new virtualenv, by default ***`True`***
+*   **`no-pip`** (*optional*): whether to install pip in the new virtualenv, by default ***`true`***
 
-*   **`extra-search-dir`** (*optional*): whether to always copy files rather than symlinking., by default ***`False`***
+*   **`extra-search-dir`** (*optional*): whether to always copy files rather than symlinking., by default ***`false`***
 					''',
 					'cn'	:	''''''
 				},
@@ -599,7 +599,7 @@ manage apt packages
 
 		example: /etc/apt/deb.conf
 
-* **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`True`***
+* **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`true`***
 					''',
 					'cn'	:	''''''
 				},
@@ -713,7 +713,7 @@ manage yum packages
 
 		example: epel
 
-* **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`True`***
+* **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`true`***
 					''',
 					'cn'	:	''''''
 				},
@@ -803,7 +803,7 @@ manage a yum repo
 #* **from-repo** (*optional*): an repo name, which you want to use for installing the packages
 #		epel
 #
-#* **verify-gpg** (*optional*): verify the package's GPG siganature, by default ***`True`***
+#* **verify-gpg** (*optional*): verify the package's GPG siganature, by default ***`true`***
 #					''',
 #					'cn'	:	''''''
 #				},
@@ -889,9 +889,9 @@ manage a directory
 
 	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
 
-* **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`True`***
+* **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`true`***
 
-* **`absent`** (*optional*): ensure all directories are absent, by default ***`False`***
+* **`absent`** (*optional*): ensure all directories are absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
 					''',
@@ -941,7 +941,7 @@ manage a file
 
 		example: /root/.ssh/known_hosts
 
-	>note: This state ensures the specifed file is present with correposnding attributes and content. If the directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified file itself.
+	>note: This state ensures the specifed file is present with correposnding attributes and content. If the file is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified file itself.
 
 * **`user`** (*optional*): the user name of the file owner
 
@@ -955,17 +955,17 @@ manage a file
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
-* **`mode`** (*optional*): the directory mode
+* **`mode`** (*optional*): the file mode
 
-		example: 0755
+		example: 0644
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
+	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0644
 
 * **`content`** (*optional*): the file content
 
 	>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten
 
-* **`absent`** (*optional*): ensure the directory is absent, by default ***`False`***
+* **`absent`** (*optional*): ensure the file is absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
 					''',
@@ -987,7 +987,7 @@ manage a file
 					},
 					'mode':	{
 						'type'		:	'line',
-						'default'	:	'0755',
+						'default'	:	'0644',
 						'required'	:	False
 					},
 					'content'	:	{
@@ -1042,13 +1042,13 @@ manage a symlink
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
-* **`mode`** (*optional*): the directory mode
+* **`mode`** (*optional*): the symlink mode
 
-		example: 0755
+		example: 0777
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
+	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0777
 
-* **`absent`** (*optional*): ensure the directory is absent, by default ***`False`***
+* **`absent`** (*optional*): ensure the directory is absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
 					''',
@@ -1075,7 +1075,7 @@ manage a symlink
 					},
 					'mode':	{
 						'type'		:	'line',
-						'default'	:	'0755',
+						'default'	:	'0777',
 						'required'	:	False
 					},
 					'absent'	:	{
@@ -1378,19 +1378,19 @@ manage mount points
 
 *   **`filesystem`** (*required*): the file system type of the device
 
-*   **`fstab`** (*optional*): whether to save in /etc/fstab, by default ***`False`***
+*   **`fstab`** (*optional*): whether to save in /etc/fstab, by default ***`false`***
 
 *   **`opts`** (*optional*): a list of options for /etc/fstab, see *`fstab(8)`*
 
-	>note: this parameter applies only if `fstab is `True`
+	>note: this parameter applies only if `fstab is `true`
 
 *   **`dump`** (*optional*): the dump value in /etc/fstab, see *`fstab(8)`*
 
-	>note: this parameter applies only if `fstab` is `True`
+	>note: this parameter applies only if `fstab` is `true`
 
 *   **`pass`** (*optional*): the pass value in /etc/fstab, see *`fstab(8)`*
 
-	>note: this parameter applies only if `fstab` is `True`
+	>note: this parameter applies only if `fstab` is `true`
 					''',
 					'cn'	:	''''''
 				},
@@ -1537,9 +1537,9 @@ manage a user
 
 	>note: if the directory already exists, the uid and gid of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the uid and gid
 
-*   **`system-account`** (*optional*): whether to create a system account (see `useradd(8)`), by default: `False`
+*   **`system-account`** (*optional*): whether to create a system account (see `useradd(8)`), by default: `false`
 
-*   **`no-login`** (*optional*): whether to allow user to login, by default `False`
+*   **`no-login`** (*optional*): whether to allow user to login, by default `false`
 
 *   **`groups`** (*optional*): a list of groups of the user
 
@@ -1607,7 +1607,7 @@ manage a group
 
 *   **`gid`** (*optional*): the group id
 
-*   **`system-group`** (*optional*): whether to create a system group (see `groupadd(8)`), by default `False`
+*   **`system-group`** (*optional*): whether to create a system group (see `groupadd(8)`), by default `false`
 					''',
 					'cn'	:	''''''
 				},
@@ -1642,7 +1642,7 @@ manage LVM physical volume (PV)
 `
 		Example: /dev/sdc4, /dev/sde
 
-*   **`force`** (*optional*): force to create the PV without any confirmation, by default ***`False`***
+*   **`force`** (*optional*): force to create the PV without any confirmation, by default ***`false`***
 
 	>note: You can not recreate (reinitialize) a PV belonging to an existing volume group.
 
@@ -1652,7 +1652,7 @@ manage LVM physical volume (PV)
 	>>note: Without this option, a random uuid will be generated. All of your PVs must have unique uuids. You need to use this option before restoring a backup of LVM metadata onto a replacement device - see vgcfgrestore(8). As such, use of ***restore file is compulsory unless the norestorefile is used.
 
 
-*   **`zero`** (*optional*): whether or the first 4 sectors (2048 bytes) of the device should be wiped, by default ***`True`***
+*   **`zero`** (*optional*): whether or the first 4 sectors (2048 bytes) of the device should be wiped, by default ***`true`***
 
 	>>note: If this option is not given, the default is to wipe these sectors unless either or both of the --restorefile or --uuid options were specified.
 
@@ -1678,7 +1678,7 @@ manage LVM physical volume (PV)
 
 	>>note: If set to 2, two copies of the volume group metadata are held on the PV, one at the front of the PV and one at the end. If set to 1 (the default), one copy is kept at the front of the PV (starting in the 5th sector).  If set to 0,  no copies are kept on this PV - you might wish to use this with VGs containing large numbers of PVs.  But if you do this and then later use vgsplit(8) you must ensure that each VG is still going to have a suitable number of copies of the metadata after the split!
 
-*   **`metadata-ignore`** (*optional*): whether to ignore metadata areas on this PV, by default ***`False`***
+*   **`metadata-ignore`** (*optional*): whether to ignore metadata areas on this PV, by default ***`false`***
 
 	>>note: This setting can be changed with pvchange. If metadata areas on a physical volume are ignored, LVM will not store metadata in the metadata areas present on this Physical Volume. Metadata areas cannot be created or extended after Logical Volumes have been allocated on the device. If you do not want  to  store metadata on this device, it is still wise always to allocate a metadata area in case you need it  in  the  future and to use this option to instruct LVM2 to ignore it.
 
@@ -1785,7 +1785,7 @@ manage LVM volume group (VG)
 
 		Example: /dev/sdk1, /dev/sdl1
 
-*   **`clustered`** (*optional*): whether to enable the clustered locking on the VG, by default ***`True`***
+*   **`clustered`** (*optional*): whether to enable the clustered locking on the VG, by default ***`true`***
 
 	>>note: If the new VG is shared with other nodes in the cluster, need to enable this option. If the new VG contains only local disks that are not visible on the other nodes, this option must be turned off. If the cluster infrastructure is unavailable on a particular node at a particular time, you may still be able to use such VGs
 
@@ -1825,7 +1825,7 @@ manage LVM volume group (VG)
 
 	>The 2.4 kernel has a limitation of 2TiB per block device.
 
-*   **`autobackup`** (*optional*): whether to  metadata should be backed up automatically after a change, by default ***`True`***
+*   **`autobackup`** (*optional*): whether to  metadata should be backed up automatically after a change, by default ***`true`***
 
 	>>note: You are strongly advised not to  disable  this! See vgcfgbackup(8)
 
@@ -1930,7 +1930,7 @@ manage LVM logical volume (LV)
 
 	>>note: For snapshots the value must be power of 2 between 4KiB and 512KiB and the default value is 4. For thin pools the value must be between 64KiB and 1048576KiB and the default value starts with 64 and scales up to fit the pool metadata size within 128MB, if the poolmetadata size is not specified. Older dm thin pool target version (<1.4) requires the value to be power of 2. The newer version requires to be the multiple of 64KiB, however discard is not supported for non power of 2 values.  Default unit is in kilobytes.
 
-*   **`contiguous`** (*optional*): set or reset the contiguous allocation policy for LVs, by default ***`False`***
+*   **`contiguous`** (*optional*): set or reset the contiguous allocation policy for LVs, by default ***`false`***
 
 	>>note: Default is no contiguous allocation based on a next free principle.
 
@@ -1956,7 +1956,7 @@ manage LVM logical volume (LV)
 
 *   **`minor-number`** (*optional*): specify the minor number
 
-*   **`persistent`** (*optional*): whether to make the minor number specified persistent, by default ***`False`***
+*   **`persistent`** (*optional*): whether to make the minor number specified persistent, by default ***`false`***
 
 *   **`mirror-number`** (*optional*): Create a mirrored LV with this number of copies
 
@@ -1968,15 +1968,15 @@ manage LVM logical volume (LV)
 
 	>The optional argument --corelog is equivalent to --mirrorlog core
 
-*   **`no-udev-sync`** (*optional*): whether to disable udev synchronisation, by default ***`False`***
+*   **`no-udev-sync`** (*optional*): whether to disable udev synchronisation, by default ***`false`***
 
 	>>note: The process will not wait for notification from udev. It will continue irrespective of any possible udev processing in the background. You should only use this if udev is not running or has rules that ignore the devices LVM2 creates
 
-*   **`monitor`** (*optional*): whether to monitor a mirrored or snapshot LV with dmeventd, if it is installed, by default ***`False`***
+*   **`monitor`** (*optional*): whether to monitor a mirrored or snapshot LV with dmeventd, if it is installed, by default ***`false`***
 
 	>>note: If a device used by a monitored mirror reports an I/O error, the failure is handled according to mirror_image_fault_policy and mirror_log_fault_policy set in lvm.conf
 
-*   **`ignore-monitoring`** (*optional*): make no attempt to interact with dmeventd unless ***monitor*** is ***`True`*** ,by default ***`False`***
+*   **`ignore-monitoring`** (*optional*): make no attempt to interact with dmeventd unless ***monitor*** is ***`true`*** ,by default ***`false`***
 
 *   **`permission`** (*optional*): specify the access permissions to read only or read and write, by default ***RW***
 
@@ -2014,13 +2014,13 @@ manage LVM logical volume (LV)
 
 	>>note: Anything written to the device will be returned when reading from it. Reading from other areas of the device will return blocks of zeros. Virtual snapshot is implemented by creating a hidden virtual device of the requested size using the zero target. A suffix of _vorigin is used for this device.
 
-*   **`zero`** (*optional*): whether to set zero of the  first  KB of data in the new LV, by default ***`True`***
+*   **`zero`** (*optional*): whether to set zero of the  first  KB of data in the new LV, by default ***`true`***
 
 	>>note: Volume will not be zeroed if read only flag is set.
 
 	>Snapshot volumes are zeroed always.
 
-*   **`autobackup`** (*optional*): whether to metadata should be backed up automatically after a change, by default ***`True`***
+*   **`autobackup`** (*optional*): whether to metadata should be backed up automatically after a change, by default ***`true`***
 
 	>>note: You are strongly advised not to disable this! See vgcfgbackup(8)
 
