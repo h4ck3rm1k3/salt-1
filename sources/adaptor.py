@@ -1229,6 +1229,7 @@ class StateAdaptor(object):
 			Check a command whether existed.
 		"""
 		try:
+			import subprocess
 			cmd = 'which {0}'.format(cmd_name)
 			process = subprocess.Popen(
 				cmd,
