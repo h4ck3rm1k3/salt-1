@@ -72,7 +72,7 @@ def mounted(name,
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Make sure that opts is correct, it can be a list or a comma delimited
     # string
@@ -120,7 +120,7 @@ def mounted(name,
             ret['comment'] = '{0} would be mounted'.format(name)
             return ret
 
-        out = __salt__['mount.mount'](name, device, mkmnt, fstype, opts, state_ret)
+        out = __salt__['mount.mount'](name, device, mkmnt, fstype, opts, state_ret=ret)
         active = __salt__['mount.active']()
         if isinstance(out, string_types):
             # Failed to (re)mount, the state has failed!s
@@ -202,7 +202,7 @@ def swap(name, persist=True, config='/etc/fstab'):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     on_ = __salt__['mount.swaps']()
 
     if name in on_:
@@ -285,7 +285,7 @@ def unmounted(name,
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Get the active data
     active = __salt__['mount.active']()

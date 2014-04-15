@@ -34,3 +34,23 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# emacs tmp
+*~
+.*~
+#*#
+.#*#
+
+# mac folder info
+.DS_Store
+
+# others
+*.swp
+.settings/
+*DS_Store
+.idea/
+test*.sh
+
+build/
+build_old/
+build_stable/

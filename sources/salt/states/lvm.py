@@ -18,6 +18,8 @@ A state module to manage LVMs
       lvm.lv_present:
         - vgname: my_vg
         - size: 10G
+        - stripes: 5
+        - stripesize: 8K
 '''
 
 # Import salt libs
@@ -48,7 +50,7 @@ def pv_present(name, **kwargs):
            'comment': '',
            'name': name,
            'result': True,
-           'state_std': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     if __salt__['lvm.pvdisplay'](name):
         ret['comment'] = 'Physical Volume {0} already present'.format(name)
@@ -57,7 +59,7 @@ def pv_present(name, **kwargs):
         ret['result'] = None
         return ret
     else:
-        changes = __salt__['lvm.pvcreate'](name, state_ret=ret)
+        changes = __salt__['lvm.pvcreate'](name, kwargs=kwargs, state_ret=ret)
 
         if __salt__['lvm.pvdisplay'](name):
             ret['comment'] = 'Created Physical Volume {0}'.format(name)
@@ -65,6 +67,7 @@ def pv_present(name, **kwargs):
         else:
             ret['comment'] = 'Failed to create Physical Volume {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = changes
     return ret
 
 
@@ -86,7 +89,7 @@ def vg_present(name, devices=None, **kwargs):
            'comment': '',
            'name': name,
            'result': True,
-           'state_std': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     if __salt__['lvm.vgdisplay'](name):
         ret['comment'] = 'Volume Group {0} already present'.format(name)
@@ -95,7 +98,7 @@ def vg_present(name, devices=None, **kwargs):
         ret['result'] = None
         return ret
     else:
-        changes = __salt__['lvm.vgcreate'](name, devices, state_ret=ret, **kwargs)
+        changes = __salt__['lvm.vgcreate'](name, devices, kwargs=kwargs, state_ret=ret)
 
         if __salt__['lvm.vgdisplay'](name):
             ret['comment'] = 'Created Volume Group {0}'.format(name)
@@ -103,6 +106,7 @@ def vg_present(name, devices=None, **kwargs):
         else:
             ret['comment'] = 'Failed to create Volume Group {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = changes
     return ret
 
 
@@ -117,7 +121,7 @@ def vg_absent(name):
            'comment': '',
            'name': name,
            'result': True,
-           'state_std': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     if not __salt__['lvm.vgdisplay'](name):
         ret['comment'] = 'Volume Group {0} already absent'.format(name)
@@ -134,10 +138,11 @@ def vg_absent(name):
         else:
             ret['comment'] = 'Failed to remove Volume Group {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = changes
     return ret
 
 
-def lv_present(name, vgname=None, size=None, extents=None, pv=''):
+def lv_present(name, vgname=None, size=None, extents=None, snapshot=None, pv='', **kwargs):
     '''
     Create a new logical volume
 
@@ -153,14 +158,27 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
     extents
         The number of logical extents to allocate
 
+    snapshot
+        The name of the snapshot
+
     pv
         The physical volume to use
+
+    kwargs
+        Any supported options to lvcreate. See
+        :mod:`linux_lvm <salt.modules.linux_lvm>` for more details.
     '''
     ret = {'changes': {},
            'comment': '',
            'name': name,
            'result': True,
-           'state_std': '', 'state_stderr': ''}
+           'state_stdout': ''}
+
+    _snapshot = None
+
+    if snapshot:
+        _snapshot = name
+        name = snapshot
 
     lvpath = '/dev/{0}/{1}'.format(vgname, name)
     if __salt__['lvm.lvdisplay'](lvpath):
@@ -174,7 +192,9 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
                                            vgname,
                                            size=size,
                                            extents=extents,
-                                           pv=pv, 
+                                           snapshot=_snapshot,
+                                           pv=pv,
+                                           kwargs=kwargs,
                                            state_ret=ret)
 
         if __salt__['lvm.lvdisplay'](lvpath):
@@ -183,6 +203,7 @@ def lv_present(name, vgname=None, size=None, extents=None, pv=''):
         else:
             ret['comment'] = 'Failed to create Logical Volume {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = changes
     return ret
 
 
@@ -200,7 +221,7 @@ def lv_absent(name, vgname=None):
            'comment': '',
            'name': name,
            'result': True,
-           'state_std': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     lvpath = '/dev/{0}/{1}'.format(vgname, name)
     if not __salt__['lvm.lvdisplay'](lvpath):
@@ -218,4 +239,5 @@ def lv_absent(name, vgname=None):
         else:
             ret['comment'] = 'Failed to remove Logical Volume {0}'.format(name)
             ret['result'] = False
+            ret['state_stdout'] = changes
     return ret

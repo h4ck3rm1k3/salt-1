@@ -1,24 +1,53 @@
 [description]
 .
-|-- module.lst  #module list to test
-|-- json/	#test json for each module
-|-- step.sh	#test single module
+|-- json/
+|   |-- basic/			#json for single module basic test
+|   |-- complex/		#json for single module complex test
+|   |-- combo/			#json for multiple module combo test
+|   |-- module_basic.lst	#config for single module basic test
+|   |-- module_complex.lst	#config for single module complex test
+|   `-- module_combo.lst	#config for multiple module combo test
 |-- log/	#output for run.sh
-`-- run.sh	#test all module
+|-- run.sh	#run all test case
+`-- step.sh	#run single test case
 
-[prepare]
-copy test/ to /opt/madeira/env/lib/python2.7/site-packages/opsagent/state/
-cd /opt/madeira/env/lib/python2.7/site-packages/opsagent/state/test
-chmod 755 *.sh
 
 [usage]
-1.test all module
-./run.sh
 
-2.test single module (copy json\xxx.json to ..\api.json eachtime)
-./step.sh
+#Generate state json from IDE
+in brwoser console, run:
+    dd.selectedCompState()
 
-3.test by manual
-cd /opt/madeira/env/lib/python2.7/site-packages/opsagent/state
-vim api.json 
-/opt/madeira/env/bin/python adaptor.py
+
+#Install Agent and test tool
+    curl -sSL -o /tmp/clean.sh  https://s3.amazonaws.com/visualops/clean.sh && bash /tmp/clean.sh reinstall debug
+
+#Test module
+    cd /opt/visualops/bootstrap/salt/tests
+    ./step.sh #run single testcase
+    ./run.sh #run all testcase
+
+##example
+to test "linux.user" module, run£º
+    ./step.sh 0
+
+##test module with custom api.json (/opt/visualops/env/lib/python2.7/site-packages/opsagent/state/api.json)
+    cd /opt/visualops/env/lib/python2.7/site-packages/opsagent/state
+    /opt/visualops/env/bin/python adaptor.py
+
+[tips]
+to view result only:
+
+export GREP_OPTIONS='--color=auto' 
+./step.sh 2 1 | grep "^(" | grep -n -E "True|False"
+
+
+[colorization output]
+pip install colout
+
+
+[colorization json]
+yum install nodejs"
+npm install -g underscore-cli
+
+

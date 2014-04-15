@@ -1,0 +1,47 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324000",
+          "_": "[test1] set timezone to chongqing(with required parameter) - True",
+          "module": "common.timezone",
+          "parameter": {
+            "name": "Asia/Chongqing"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324001",
+          "_": "2 [test1] assert timezone - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "ls -l /etc/localtime | grep Chongqing"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
+          "_": "3 [test2] set timezone to shanghai(with full parameter) - True",
+          "module": "common.timezone",
+          "parameter": {
+            "name": "Asia/Shanghai",
+            "use-utc": false
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324101",
+          "_": "4 [test2] assert timezone - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "ls -l /etc/localtime | grep Shanghai"
+          }
+        }
+
+      ]
+    }
+  }
+}

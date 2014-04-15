@@ -35,7 +35,8 @@ def __virtual__():
     and remove some of the functionality on OS X
     '''
 
-    if __grains__['kernel'] in ('Linux', 'OpenBSD', 'NetBSD'):
+    if 'kernel' in __grains__ and \
+        __grains__['kernel'] in ('Linux', 'OpenBSD', 'NetBSD'):
         return __virtualname__
     return False
 
@@ -239,7 +240,7 @@ def chuid(name, uid, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['uid'] != pre_info['uid']:
-        return post_info['uid'] == uid
+        return str(post_info['uid']) == uid
     return False
 
 
@@ -261,7 +262,7 @@ def chgid(name, gid, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['gid'] != pre_info['gid']:
-        return post_info['gid'] == gid
+        return str(post_info['gid']) == gid
     return False
 
 
@@ -283,7 +284,7 @@ def chshell(name, shell, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['shell'] != pre_info['shell']:
-        return post_info['shell'] == shell
+        return str(post_info['shell']) == shell
     return False
 
 
@@ -309,7 +310,7 @@ def chhome(name, home, persist=False, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['home'] != pre_info['home']:
-        return post_info['home'] == home
+        return str(post_info['home']) == home
     return False
 
 
@@ -361,7 +362,7 @@ def chfullname(name, fullname, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['fullname'] != pre_info['fullname']:
-        return post_info['fullname'] == fullname
+        return str(post_info['fullname']) == fullname
     return False
 
 
@@ -388,7 +389,7 @@ def chroomnumber(name, roomnumber, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['roomnumber'] != pre_info['roomnumber']:
-        return post_info['roomnumber'] == roomnumber
+        return str(post_info['roomnumber']) == roomnumber
     return False
 
 
@@ -415,7 +416,7 @@ def chworkphone(name, workphone, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['workphone'] != pre_info['workphone']:
-        return post_info['workphone'] == workphone
+        return str(post_info['workphone']) == workphone
     return False
 
 
@@ -442,7 +443,7 @@ def chhomephone(name, homephone, **kwargs):
     state_std(kwargs, result)
     post_info = info(name)
     if post_info['homephone'] != pre_info['homephone']:
-        return post_info['homephone'] == homephone
+        return str(post_info['homephone']) == homephone
     return False
 
 

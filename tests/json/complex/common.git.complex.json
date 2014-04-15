@@ -1,0 +1,50 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "1 [prepare] install git with yum - True|False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "git": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "2 [prepare] install git with apt - True|False",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "git": ""
+            }
+          }
+        },
+        {
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E0",
+          "_": "3 [prepare] create/ensure git location directory - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/git"],
+            "absent": false,
+            "recursive": true,
+            "mode": "0755"
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
+          "_": "4 [test1] clone pysa with git - True",
+          "module": "common.git",
+          "parameter": {
+            "repo": "https://github.com/VisualOps/pysa",
+            "path": "/tmp/git/test/",
+            "force": true,
+            "revision": "master"
+          }
+        }
+      ]
+    }
+  }
+}

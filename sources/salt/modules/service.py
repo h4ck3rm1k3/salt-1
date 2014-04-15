@@ -43,6 +43,8 @@ def __virtual__():
         'elementary OS',
         'McAfee  OS Server'
     ))
+    if 'os' not in __grains__ or 'kernel' not in __grains__:
+        return False
     if __grains__.get('os', '') in disable:
         return False
     # Disable on all non-Linux OSes as well
@@ -77,7 +79,7 @@ def start(name, **kwargs):
     return not result['retcode']
 
 
-def stop(name):
+def stop(name, **kwargs):
     '''
     Stop the specified service
 
@@ -96,7 +98,7 @@ def stop(name):
     return not result['retcode']
 
 
-def restart(name):
+def restart(name, **kwargs):
     '''
     Restart the specified service
 
@@ -130,7 +132,7 @@ def status(name, sig=None):
     return __salt__['status.pid'](sig if sig else name)
 
 
-def reload_(name):
+def reload_(name, **kwargs):
     '''
     Restart the specified service
 

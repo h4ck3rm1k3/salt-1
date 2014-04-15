@@ -40,7 +40,7 @@ service, then set the reload value to True:
 def __virtual__():
     '''
     Only make these states available if a service provider has been detected or
-    assigned for this minion
+    assigned for this host
     '''
     return 'service' if 'service.start' in __salt__ else False
 
@@ -61,25 +61,25 @@ def _enable(name, started, result=True, **kwargs):
     ret = {'name': name,
            'changes': {},
            'result': result,
-           'comment': ''}
+           'comment': '', 'state_stdout': ''}
 
     # is service available?
     if not _available(name, ret):
         return ret
 
-    # Check to see if this minion supports enable
+    # Check to see if this host supports enable
     if not 'service.enable' in __salt__ or not 'service.enabled' in __salt__:
         if started is True:
-            ret['comment'] = ('Enable is not available on this minion,'
+            ret['comment'] = ('Enable is not available on this host,'
                               ' service {0} started').format(name)
             return ret
         elif started is None:
-            ret['comment'] = ('Enable is not available on this minion,'
+            ret['comment'] = ('Enable is not available on this host,'
                               ' service {0} is in the desired state'
                               ).format(name)
             return ret
         else:
-            ret['comment'] = ('Enable is not available on this minion,'
+            ret['comment'] = ('Enable is not available on this host,'
                               ' service {0} is dead').format(name)
             return ret
 
@@ -105,7 +105,7 @@ def _enable(name, started, result=True, **kwargs):
         ret['comment'] = 'Service {0} set to be enabled'.format(name)
         return ret
 
-    if __salt__['service.enable'](name, **kwargs):
+    if __salt__['service.enable'](name, state_ret=ret, **kwargs):
         # Service has been enabled
         if started is True:
             ret['changes'][name] = True
@@ -149,7 +149,7 @@ def _disable(name, started, result=True, **kwargs):
     ret = {'name': name,
            'changes': {},
            'result': result,
-           'comment': ''}
+           'comment': '', 'state_stdout': ''}
 
     # is service available?
     if not _available(name, ret):
@@ -159,16 +159,16 @@ def _disable(name, started, result=True, **kwargs):
     # is enable/disable available?
     if not 'service.disable' in __salt__ or not 'service.disabled' in __salt__:
         if started is True:
-            ret['comment'] = ('Disable is not available on this minion,'
+            ret['comment'] = ('Disable is not available on this host,'
                               ' service {0} started').format(name)
             return ret
         elif started is None:
-            ret['comment'] = ('Disable is not available on this minion,'
+            ret['comment'] = ('Disable is not available on this host,'
                               ' service {0} is in the desired state'
                               ).format(name)
             return ret
         else:
-            ret['comment'] = ('Disable is not available on this minion,'
+            ret['comment'] = ('Disable is not available on this host,'
                               ' service {0} is dead').format(name)
             return ret
 
@@ -195,7 +195,7 @@ def _disable(name, started, result=True, **kwargs):
         ret['comment'] = 'Service {0} set to be disabled'.format(name)
         return ret
 
-    if __salt__['service.disable'](name, **kwargs):
+    if __salt__['service.disable'](name, state_ret=ret, **kwargs):
         # Service has been disabled
         if started is True:
             ret['changes'][name] = True
@@ -265,7 +265,7 @@ def running(name, enable=None, sig=None, **kwargs):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Check for common error: using enabled option instead of enable
     if 'enabled' in kwargs:
@@ -304,9 +304,9 @@ def running(name, enable=None, sig=None, **kwargs):
             return ret
 
     if enable is True:
-        return _enable(name, True, state_ret=ret, **kwargs)
+        return _enable(name, True, **kwargs)
     elif enable is False:
-        return _disable(name, True, state_ret=ret, **kwargs)
+        return _disable(name, True, **kwargs)
     else:
         ret['changes'] = changes
         ret['comment'] = 'Started Service {0}'.format(name)
@@ -332,7 +332,7 @@ def dead(name, enable=None, sig=None, **kwargs):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Check for common error: using enabled option instead of enable
     if 'enabled' in kwargs:
@@ -346,9 +346,9 @@ def dead(name, enable=None, sig=None, **kwargs):
     if not __salt__['service.status'](name, sig):
         ret['comment'] = 'The service {0} is already dead'.format(name)
         if enable is True:
-            return _enable(name, None, state_ret=ret, **kwargs)
+            return _enable(name, None, **kwargs)
         elif enable is False:
-            return _disable(name, None, state_ret=ret, **kwargs)
+            return _disable(name, None, **kwargs)
         else:
             return ret
 
@@ -363,18 +363,18 @@ def dead(name, enable=None, sig=None, **kwargs):
         ret['result'] = False
         ret['comment'] = 'Service {0} failed to die'.format(name)
         if enable is True:
-            return _enable(name, True, result=False, state_ret=ret)
+            return _enable(name, True, result=False)
         elif enable is False:
-            return _disable(name, True, result=False, state_ret=ret)
+            return _disable(name, True, result=False)
         else:
             ret['result'] = False
             ret['comment'] = 'Service {0} failed to die'.format(name)
             return ret
     else:
         if enable is True:
-            return _enable(name, False, state_ret=ret)
+            return _enable(name, False)
         elif enable is False:
-            return _disable(name, False, state_ret=ret)
+            return _disable(name, False)
         else:
             ret['comment'] = 'Service {0} was killed'.format(name)
             return ret
@@ -420,7 +420,7 @@ def mod_watch(name, sig=None, reload=False, full_restart=False):
            'changes': {},
            'result': True,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     action = ''
 
     if __salt__['service.status'](name, sig):

@@ -189,7 +189,7 @@ def managed(name, **kwargs):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     repo = {}
 
     # pkg.mod_repo has conflicting kwargs, so move 'em around
@@ -332,7 +332,7 @@ def absent(name, **kwargs):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_std': '', 'state_stderr': ''}
+           'state_stdout': ''}
     repo = {}
     if 'ppa' in kwargs and __grains__['os'] == 'Ubuntu':
         kwargs['name'] = kwargs.pop('ppa')

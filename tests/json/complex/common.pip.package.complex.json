@@ -1,0 +1,38 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8A84-15D020634E0A",
+          "_": "1 [prepare] setup pip with apt - True|False",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "pip": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8A84-15D020634E1F",
+          "_": "2 [prepare] setup pip with yum - True|False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "python-pip": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F9F",
+          "_": "3 [test1] setup supervisor - True",
+          "module": "common.pip.package",
+          "parameter": {
+            "name": {
+              "supervisor": ""
+            }
+          }
+        }
+      ]
+    }
+  }
+}

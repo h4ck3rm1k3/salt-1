@@ -60,7 +60,9 @@ def __virtual__():
     Only work on Ubuntu
     '''
     # Disable on these platforms, specific service modules exist:
-    if __grains__['os'] in ('Ubuntu', 'Linaro', 'elementary OS'):
+    if 'os' not in __grains__:
+        return False
+    elif __grains__['os'] in ('Ubuntu', 'Linaro', 'elementary OS'):
         return __virtualname__
     elif __grains__['os'] in ('Debian', 'Raspbian'):
         debian_initctl = '/sbin/initctl'

@@ -1,0 +1,62 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+        {
+          "id": "state-28DF743B-82CC-4C60-ACDD-3F35A10640AA",
+          "_": "1 [prepare] remove pv  - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "pvremove -y /dev/sdb1 /dev/sdb2"
+          }
+        },
+        {
+          "id": "state-650CDA4E-D9FC-4A42-8308-74F6EABF919E",
+          "_": "2 [test1] create pv with required parameters  - True",
+          "module": "linux.lvm.pv",
+          "parameter": {
+            "path": ["/dev/sdb1"]
+          }
+        },
+        {
+          "id": "state-336C2B65-F53D-4710-A076-92458FDA189F",
+          "_": "3 [test2] remove pv  - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "pvremove -y /dev/sdb1"
+          }
+        },
+        {
+          "id": "state-BF8CB589-0058-4788-995C-0359D3600AFA",
+          "_": "4 [test3] create pv with full parameters - True",
+          "module": "linux.lvm.pv",
+          "parameter": {
+            "path": ["/dev/sdb1"],
+            "metadata size": 8,
+            "metadata copies": 1,
+            "data-alignment": "256k",
+            "data-alignment offset": "8k",
+            "metadata-ignore": "n",
+            "label-sector": 1,
+            "PV-size": "500M",
+            "force": "y",
+            "zero": "y",
+            "metadata-type": "lvm2"
+          }
+        },
+        {
+          "id": "state-5455BA71-183F-4B86-8A33-28E8392196EC",
+          "_": "5 [test4] asset pv /dev/sdb1 - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "pvs | grep /dev/sdb1"
+          }
+        }
+
+      ]
+    }
+  }
+}

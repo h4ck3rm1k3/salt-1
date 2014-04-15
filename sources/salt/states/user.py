@@ -235,7 +235,8 @@ def present(name,
     ret = {'name': name,
            'changes': {},
            'result': True,
-           'comment': 'User {0} is present and up to date'.format(name)}
+           'comment': 'User {0} is present and up to date'.format(name),
+           'state_stdout': ''}
 
     if groups:
         missing_groups = [x for x in groups if not __salt__['group.info'](x)]
@@ -294,14 +295,14 @@ def present(name,
         pre = __salt__['user.info'](name)
         for key, val in changes.items():
             if key == 'passwd':
-                __salt__['shadow.set_password'](name, password)
+                __salt__['shadow.set_password'](name, password, state_ret=ret)
                 continue
             if key == 'groups':
                 __salt__['user.ch{0}'.format(key)](
-                    name, val, not remove_groups
+                    name, val, not remove_groups, state_ret=ret
                 )
             else:
-                __salt__['user.ch{0}'.format(key)](name, val)
+                __salt__['user.ch{0}'.format(key)](name, val, state_ret=ret)
 
         # Clear cached groups
         sys.modules[
@@ -367,11 +368,11 @@ def present(name,
                                 roomnumber=roomnumber,
                                 workphone=workphone,
                                 homephone=homephone,
-                                createhome=createhome):
+                                createhome=createhome, state_ret=ret):
             ret['comment'] = 'New user {0} created'.format(name)
             ret['changes'] = __salt__['user.info'](name)
             if all((password, 'shadow.info' in __salt__)):
-                __salt__['shadow.set_password'](name, password)
+                __salt__['shadow.set_password'](name, password, state_ret=ret)
                 spost = __salt__['shadow.info'](name)
                 if spost['passwd'] != password and not salt.utils.is_windows():
                     ret['comment'] = 'User {0} created but failed to set' \
@@ -403,7 +404,8 @@ def absent(name, purge=False, force=False):
     ret = {'name': name,
            'changes': {},
            'result': True,
-           'comment': ''}
+           'comment': '',
+           'state_stdout': ''}
 
     lusr = __salt__['user.info'](name)
     if lusr:
@@ -414,7 +416,7 @@ def absent(name, purge=False, force=False):
             return ret
         beforegroups = set(
                 [g['name'] for g in __salt__['group.getent'](refresh=True)])
-        ret['result'] = __salt__['user.delete'](name, purge, force)
+        ret['result'] = __salt__['user.delete'](name, purge, force, state_ret=ret)
         aftergroups = set(
                 [g['name'] for g in __salt__['group.getent'](refresh=True)])
         if ret['result']:

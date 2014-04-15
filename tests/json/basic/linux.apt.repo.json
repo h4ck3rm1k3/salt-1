@@ -1,0 +1,16 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "1",
+          "module": "linux.apt.repo",
+          "parameter": {
+            "name": "opscode",
+            "content": "deb http://apt.opscode.com/ precise-0.10 main"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -182,7 +182,7 @@ def present(name,
            'comment': '',
            'name': name,
            'result': True,
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
     if __opts__['test']:
         status = _check_cron(user,
                              name,
@@ -253,7 +253,7 @@ def absent(name,
            'result': True,
            'changes': {},
            'comment': '',
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     if __opts__['test']:
         status = _check_cron(user, name)
@@ -344,7 +344,7 @@ def file(name,
            'comment': '',
            'name': name,
            'result': True,
-           'state_stdout': '', 'state_stderr': ''}
+           'state_stdout': ''}
 
     # Avoid variable naming confusion in below module calls, since ID
     # declaration for this state will be a source URI.

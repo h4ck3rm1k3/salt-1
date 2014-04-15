@@ -10,6 +10,7 @@ import hashlib
 import os
 import shutil
 import subprocess
+import requests
 
 # Import third party libs
 import yaml
@@ -337,15 +338,23 @@ class Client(object):
             # Backwards compatibility
             saltenv = env
 
+        # support url
+        url_data = urlparse(path)
+
         localsfilesdest = os.path.join(
             self.opts['cachedir'], 'localfiles', path.lstrip('/'))
         filesdest = os.path.join(
             self.opts['cachedir'], 'files', saltenv, path.lstrip('salt://'))
+        # support url
+        urlcacheddest = salt.utils.path_join(
+            self.opts['cachedir'], 'extrn_files', saltenv, url_data.netloc, url_data.path)
 
         if os.path.exists(filesdest):
             return filesdest
         elif os.path.exists(localsfilesdest):
             return localsfilesdest
+        elif os.path.exists(urlcacheddest):
+            return urlcacheddest
 
         return ''
 
@@ -534,9 +543,9 @@ class Client(object):
         else:
             fixed_url = url
         try:
-            with contextlib.closing(url_open(fixed_url)) as srcfp:
-                with salt.utils.fopen(dest, 'wb') as destfp:
-                    shutil.copyfileobj(srcfp, destfp)
+            req = requests.get(fixed_url)
+            with salt.utils.fopen(dest, 'wb') as destfp:
+                destfp.write(req.content)
             return dest
         except HTTPError as ex:
             raise MinionError('HTTP error {0} reading {1}: {3}'.format(

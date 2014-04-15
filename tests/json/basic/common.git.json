@@ -1,0 +1,16 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-2E042A11-4697-465B-B995-5C3194145D36",
+          "module": "common.git",
+          "parameter": {
+            "repo": "https://github.com/ErikDubbelboer/phpRedisAdmin.git",
+            "path": "/tmp/test/git/phpRedisAdmin"
+          }
+        }
+      ]
+    }
+  }
+}

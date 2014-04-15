@@ -54,10 +54,10 @@ def __virtual__():
     '''
     Confirm this module is on a Debian based system
     '''
-    if __grains__['os_family'] != 'Debian':
+    if 'os_family' not in __grains__ or \
+        __grains__['os_family'] != 'Debian':
         return False
     return __virtualname__
-
 
 def __init__(opts):
     '''
@@ -169,7 +169,7 @@ def latest_version(*names, **kwargs):
 
     if len(names) == 0:
         return ''
-    ret = {'state_stdout': '', 'state_stderr': ''}
+    ret = {'state_stdout': ''}
     # Initialize the dict with empty strings
     for name in names:
         ret[name] = ''
@@ -1170,7 +1170,7 @@ def mod_repo(repo, saltenv='base', **kwargs):
         imported = output.startswith('-----BEGIN PGP')
         if ks:
             if not imported:
-                cmd = ('apt-key adv --keyserver {0} --logger-fd 1 '
+                cmd = ('apt-key adv --keyserver hkp://{0}:80 --logger-fd 1 '
                        '--recv-keys {1}')
                 ret = __salt__['cmd.run_stdall'](
                     cmd.format(ks, keyid), output_loglevel='debug', **kwargs

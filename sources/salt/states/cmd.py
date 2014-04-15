@@ -152,6 +152,7 @@ import yaml
 import salt.utils
 from salt.exceptions import CommandExecutionError
 from salt._compat import string_types
+from salt.modules import state_std
 
 log = logging.getLogger(__name__)
 
@@ -500,7 +501,7 @@ def run(name,
     ret = {'name': name,
            'changes': {},
            'result': False,
-           'comment': ''}
+           'comment': '', 'state_stdout': ''}
 
     if cwd and not os.path.isdir(cwd):
         ret['comment'] = 'Desired working directory is not available'
@@ -568,9 +569,12 @@ def run(name,
         # Wow, we passed the test, run this sucker!
         if not __opts__['test']:
             try:
-                cmd_all = __salt__['cmd.run_all'](
+                cmd_all = __salt__['cmd.run_stdall'](
                     name, timeout=timeout, **cmd_kwargs
                 )
+                # ret['state_stdout'] += cmd_all['stdout'] + '\n'
+                state_ret = {'state_ret':ret}
+                state_std(state_ret, cmd_all)
             except CommandExecutionError as err:
                 ret['comment'] = str(err)
                 return ret
@@ -664,7 +668,7 @@ def script(name,
     ret = {'changes': {},
            'comment': '',
            'name': name,
-           'result': False}
+           'result': False, 'state_stdout': ''}
 
     if cwd and not os.path.isdir(cwd):
         ret['comment'] = 'Desired working directory is not available'
@@ -729,7 +733,8 @@ def script(name,
 
         # Wow, we passed the test, run this sucker!
         try:
-            cmd_all = __salt__['cmd.script'](source, **cmd_kwargs)
+            cmd_all = __salt__['cmd.script_stdall'](source, **cmd_kwargs)
+            ret['state_stdout'] += cmd_all['stdout'] + '\n'
         except (CommandExecutionError, IOError) as err:
             ret['comment'] = str(err)
             return ret
@@ -790,7 +795,7 @@ def call(name,
     ret = {'name': name,
            'changes': {},
            'result': False,
-           'comment': ''}
+           'comment': '', 'state_stdout': ''}
 
     cmd_kwargs = {'cwd': kwargs.get('cwd'),
                   'runas': kwargs.get('user'),

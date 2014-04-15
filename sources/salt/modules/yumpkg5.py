@@ -523,7 +523,7 @@ def install(name=None,
             log.warning('"version" parameter will be ignored for multiple '
                         'package targets')
 
-    repo_arg = _get_repo_options(fromrepo=fromrepo, **kwargs)
+    repo_arg = _get_repo_options(fromrepo=str(fromrepo) if fromrepo else fromrepo, **kwargs)
 
     old = list_pkgs()
     downgrade = []

@@ -15,7 +15,7 @@ import salt.utils
 
 
 def __virtual__():
-    return 'shadow' if __grains__.get('kernel', '') == 'Linux' else False
+    return 'shadow' if 'kernel' in __grains__ and __grains__.get('kernel', '') == 'Linux' else False
 
 
 def default_hash():
@@ -128,7 +128,7 @@ def set_mindays(name, mindays):
     return False
 
 
-def set_password(name, password, use_usermod=False):
+def set_password(name, password, use_usermod=False, **kwargs):
     '''
     Set the password for a named user. The password must be a properly defined
     hash. The password hash can be generated with this command:
@@ -176,7 +176,8 @@ def set_password(name, password, use_usermod=False):
     else:
         # Use usermod -p (less secure, but more feature-complete)
         cmd = 'usermod -p {0} {1}'.format(name, password)
-        __salt__['cmd.run'](cmd)
+        result = __salt__['cmd.run_stdall'](cmd)
+        state_std(kwargs, result)
         uinfo = info(name)
         return uinfo['passwd'] == password
 

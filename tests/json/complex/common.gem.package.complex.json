@@ -1,0 +1,38 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "_": "1 [prepare] install rubygems with yum - True|False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "rubygems": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1E",
+          "_": "2 [prepare] install rubygems with apt - True|False",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "rubygems": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CB-4878-8E86-15D020632F1A",
+          "_": "3 [test1] install a2ws with gens - True",
+          "module": "common.gem.package",
+          "parameter": {
+            "name": {
+              "a2ws": ""
+            }
+          }
+        }
+      ]
+    }
+  }
+}

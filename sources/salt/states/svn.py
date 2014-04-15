@@ -77,7 +77,7 @@ def latest(name,
     trust : False
         Automatically trust the remote server. SVN's --trust-server-cert
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
     if not target:
         return _fail(ret, 'Target option is required')
 
@@ -119,31 +119,36 @@ def latest(name,
     if trust:
         opts += ('--trust-server-cert',)
 
-    if svn_cmd == 'svn.update':
-        out = __salt__[svn_cmd](cwd, basename, user, username, password, *opts, state_ret=ret)
-
-        current_rev = current_info[0]['Revision']
-        new_rev = __salt__['svn.info'](cwd=target,
-                                       targets=None,
-                                       user=user,
-                                       username=username,
-                                       password=password,
-                                       fmt='dict')[0]['Revision']
-        if current_rev != new_rev:
-            ret['changes']['revision'] = "{0} => {1}".format(current_rev, new_rev)
-
-    else:
-        out = __salt__[svn_cmd](cwd, name, basename, user, username, password, *opts, state_ret=ret)
-
-        ret['changes']['new'] = name
-        ret['changes']['revision'] = __salt__['svn.info'](cwd=target,
-                                                          targets=None,
-                                                          user=user,
-                                                          username=username,
-                                                          password=password,
-                                                          fmt='dict')[0]['Revision']
-
-    ret['comment'] = out
+    try:
+        if svn_cmd == 'svn.update':
+            out = __salt__[svn_cmd](cwd, basename, user, username, password, *opts, state_ret=ret)
+    
+            current_rev = current_info[0]['Revision']
+            new_rev = __salt__['svn.info'](cwd=target,
+                                           targets=None,
+                                           user=user,
+                                           username=username,
+                                           password=password,
+                                           fmt='dict')[0]['Revision']
+            if current_rev != new_rev:
+                ret['changes']['revision'] = "{0} => {1}".format(current_rev, new_rev)
+    
+        else:
+            out = __salt__[svn_cmd](cwd, name, basename, user, username, password, *opts, state_ret=ret)
+    
+            ret['changes']['new'] = name
+            ret['changes']['revision'] = __salt__['svn.info'](cwd=target,
+                                                              targets=None,
+                                                              user=user,
+                                                              username=username,
+                                                              password=password,
+                                                              fmt='dict')[0]['Revision']
+    
+        ret['comment'] = 'Repository %s cloned to %s' % (name, target)
+    except Exception, e:
+        ret['result'] = False
+        ret['comment'] = 'Checkout svn repository {0} failed'.format(name)
+        ret['state_stdout'] = str(e)
     return ret
 
 
@@ -191,7 +196,7 @@ def export(name,
     trust : False
         Automatically trust the remote server. SVN's --trust-server-cert
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
     if not target:
         return _fail(ret, 'Target option is required')
 
@@ -228,9 +233,12 @@ def export(name,
     if trust:
         opts += ('--trust-server-cert',)
 
-    out = __salt__[svn_cmd](cwd, name, basename, user, username, password, *opts, state_ret=ret)
-    ret['changes'] = name + ' was Exported to ' + target
-
+    try:
+        out = __salt__[svn_cmd](cwd, name, basename, user, username, password, *opts, state_ret=ret)
+        ret['changes'] = name + ' was Exported to ' + target
+        ret['comment'] = 'Repository %s exported to %s' % (name, target)
+    except:
+        ret['result'] = False
     return ret
 
 
@@ -243,5 +251,5 @@ def dirty(name,
     '''
     Determine if the working directory has been changed.
     '''
-    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': None, 'comment': '', 'changes': {}, 'state_stdout': ''}
     return _fail(ret, 'This function is not implemented yet.')

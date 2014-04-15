@@ -1,0 +1,279 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8A84-15D020634E1F",
+          "_": "2 [prepare] setup pip with yum - True|False",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "python-pip": ""
+            }
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F9F",
+          "_": "3 [test1] setup supervisor - True",
+          "module": "common.pip.package",
+          "parameter": {
+            "name": {
+              "virtualenv": ""
+            }
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632100",
+          "_": "4 [test1] Virtualenv in non-existing directory - False",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenvtest"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632200",
+          "_": "5 [test2] create root directory - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/test"]
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632201",
+          "_": "6 [test2] create standard virtualenv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv1"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632301",
+          "_": "7 [test3] Setup python2.7 on yum platform (dirty way) - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "yum -y -q groupinstall 'Development tools';yum -y -q install zlib-devel bzip2-devel openssl-devel ncurses-devel;cd /tmp;curl -sSLO 'http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.bz2';tar xf Python-2.7.6.tar.bz2;cd Python-2.7.6;./configure --prefix=/usr;make;make altinstall"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632201",
+          "_": "8 [test3] create virtualen with python2.6 - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv2",
+            "python-bin": "/usr/bin/python2.6"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6C9A-17CD-4578-8E85-15D020632301",
+          "_": "9 [test4] Setup python3 on yum platform (dirty way) - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "yum -y -q groupinstall 'Development tools';yum -y -q install zlib-devel bzip2-devel openssl-devel ncurses-devel;cd /tmp;curl -sSLO 'http://www.python.org/ftp/python/3.4.0/Python-3.4.0.tar.bz2';tar xf Python-3.4.0.tar.bz2;cd Python-3.4.0;./configure --prefix=/usr;make;make altinstall"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020102301",
+          "_": "10 [test4] Setup python3 on apt platform - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "apt-get -y -q install python3"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D0206DC201",
+          "_": "11 [test4] create virtualen with python3 - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv3",
+            "python-bin": "/usr/bin/python3"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02BA32301",
+          "_": "12 [test5] Install pysa python module - True|False",
+          "module": "common.pip.package",
+          "parameter": {
+            "name": {
+              "pysa": ""
+            }
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D550632400",
+          "_": "13 [test5] create python test file - True",
+          "module": "linux.file",
+          "parameter": {
+            "path": "/tmp/p.py",
+            "content": "import pysa"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D100692201",
+          "_": "14 [test5] create sys enabled packages venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv4",
+            "system-site-packages": true
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020002302",
+          "_": "15 [test5] import pysa in venv - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "/tmp/test/virtualenv4/bin/python /tmp/p.py"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020102201",
+          "_": "16 [test5] create sys disabled packages venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv5",
+            "system-site-packages": false
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020202302",
+          "_": "17 [test5] import pysa in venv - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "/tmp/test/virtualenv4/bin/python /tmp/p.py"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020302201",
+          "_": "18 [test6] create always copy venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv6",
+            "python": "/usr/bin/python2.7"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020402302",
+          "_": "19 [test6] Test if link - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "if [ -L /tmp/test/virtualenv6/lib/python2.7/os.py ]; then exit 0; else exit 1; fi"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA2201",
+          "_": "20 [test7] create never copy venv and unzip setup tools - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv7",
+            "python-bin": "/usr/bin/python2.7"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB2302",
+          "_": "21 [test7] Test if link - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "if [ -L /tmp/test/virtualenv7/lib/python2.7/os.py ]; then exit 0; else exit 1; fi"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22BB",
+          "_": "22 [test7] create no setup tools venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv8",
+            "python-bin": "/usr/bin/python2.7"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23CC",
+          "_": "23 [test7] Test if link - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "/tmp/test/virtualenv8/python2.7/bin/pip --help"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22DD",
+          "_": "24 [test7] create setup tools venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv9",
+            "python-bin": "/usr/bin/python2.7"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23EE",
+          "_": "25 [test7] Test if link - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "/tmp/test/virtualenv9/python2.7/bin/pip --help"
+          }
+        },
+
+
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22BB",
+          "_": "26 [test8] create no pip venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv10",
+            "python-bin": "/usr/bin/python2.7"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23CC",
+          "_": "27 [test8] Test if link - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "/tmp/test/virtualenv10/python2.7/bin/pip --help"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22DD",
+          "_": "28 [test8] create pip venv - True",
+          "module": "common.virtualenv",
+          "parameter": {
+            "path": "/tmp/test/virtualenv11",
+            "python-bin": "/usr/bin/python2.7"
+          }
+        },
+        {
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23EE",
+          "_": "29 [test8] Test if link - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "/tmp/test/virtualenv11/python2.7/bin/pip --help"
+          }
+        }
+      ]
+    }
+  }
+}
+
+

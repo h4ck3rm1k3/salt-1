@@ -1,0 +1,210 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324000",
+          "_": "1 [prepare] delete user InstantForge1 - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge1 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324001",
+          "_": "2 [prepare] delete group Dev - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "groupdel Dev"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324002",
+          "_": "3 [prepare] create group Dev(600) with full parameter - True",
+          "module": "linux.group",
+          "parameter": {
+            "groupname": "Dev",
+            "gid" : "600",
+            "system" : false
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
+          "_": "4 [test1] create user with required parameter - True",
+          "module": "linux.user",
+          "parameter": {
+            "username": "InstantForge1",
+            "password": "instant"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324101",
+          "_": "5 [test1] assert user exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep InstantForge1 /etc/passwd"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
+          "_": "6 [test2] delete user - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge1 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324201",
+          "_": "7 [test2] create user with full parameter - True",
+          "module": "linux.user",
+          "parameter": {
+            "password": "instant",
+            "username": "InstantForge1",
+            "fullname": "visualops username",
+            "gid": "600",
+            "groups": [
+              "Dev"
+            ],
+            "home": "/tmp/test/user/visualops1",
+            "no-login": false,
+            "uid": "600",
+            "system-account": true
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324202",
+          "_": "8 [test2] assert user exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep InstantForge1 /etc/passwd"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
+          "_": "9 [test3] delete user - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge2 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
+          "_": "10 [test3] create user: test nologin parameter - True",
+          "module": "linux.user",
+          "parameter": {
+            "password": "instant",
+            "username": "InstantForge2",
+            "no-login": true
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324302",
+          "_": "11 [test3] assert user exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep InstantForge2 /etc/passwd"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
+          "_": "12 [test2] delete user - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge3 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324300",
+          "_": "13 [test5] create diretory - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/test/user"]
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
+          "_": "14 [test4] create user: test not existed home parameter - True",
+          "module": "linux.user",
+          "parameter": {
+            "password": "instant",
+            "username": "InstantForge3",
+            "groups": [
+              "Dev"
+            ],
+            "home": "/tmp/test/user/visualops2"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324302",
+          "_": "15 [test4] assert user exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep InstantForge3 /etc/passwd"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
+          "_": "16 [test2] delete user - True|False",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge4 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324300",
+          "_": "17 [test5] create diretory - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/test/user/visualops3/test/dir"],
+            "user": "InstantForge1",
+            "group": "Dev",
+            "mode": "0600"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
+          "_": "18 [test5] create user: test existed home parameter - True",
+          "module": "linux.user",
+          "parameter": {
+            "password": "instant",
+            "username": "InstantForge4",
+            "groups": [
+              "Dev"
+            ],
+            "home": "/tmp/test/user/visualops3"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324302",
+          "_": "19 [test5] assert user exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "grep InstantForge4 /etc/passwd"
+          }
+        }
+      ]
+    }
+  }
+}

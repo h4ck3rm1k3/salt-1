@@ -1,0 +1,88 @@
+{
+  "component": {
+    "init": {
+      "state": [
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324000",
+          "_": "1 [prepare] delete /tmp/test dir - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "if [ -d /tmp/test ]; then rm -rf /tmp/test; fi"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324001",
+          "_": "2 [prepare] assert /tmp/test not exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "if [ -d /tmp/test ]; then exit -1; fi "
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
+          "_": "3 [test1] create sub dir with required parameter(dir not exist) - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/test/subtest"]
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324101",
+          "_": "4 [test1] assert dir exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "ls -l /tmp/test"
+          }
+        },
+
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
+          "_": "5 [test2] delete user InstantForge1 for prepare - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "userdel InstantForge1 -r"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324201",
+          "_": "6 [test2] create user for create file - True",
+          "module": "linux.user",
+          "parameter": {
+            "username": "InstantForge1",
+            "password": "instant"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324202",
+          "_": "7 [test2] update dir with full parameter(dir existed) - True ",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/test/subtest"],
+            "absent": false,
+            "recursive": true,
+            "mode": "0777",
+            "user": "InstantForge1",
+            "group": "InstantForge1"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324203",
+          "_": "8 [test2] assert dir exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "ls -l /tmp/test"
+          }
+        }
+      ]
+    }
+  }
+}

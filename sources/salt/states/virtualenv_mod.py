@@ -67,7 +67,7 @@ def managed(name,
             - system_site_packages: False
             - requirements: salt://REQUIREMENTS.txt
     '''
-    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': '', 'state_stderr': ''}
+    ret = {'name': name, 'result': True, 'comment': '', 'changes': {}, 'state_stdout': ''}
 
     if not 'virtualenv.create' in __salt__:
         ret['result'] = False

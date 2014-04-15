@@ -1,0 +1,16 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-87FEAC5A-B74F-4F77-8602-CD5A43466E2B",
+          "module": "linux.symlink",
+          "parameter": {
+            "source": "/mnt",
+            "target": "/tmp/test/mnt"
+          }
+        }
+      ]
+    }
+  }
+}

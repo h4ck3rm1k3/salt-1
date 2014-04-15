@@ -50,7 +50,7 @@ def system(name, utc=''):
            'changes': {},
            'result': None,
            'comment': '',
-           'state_stdout': '', 'state_stderr':	''}
+           'state_stdout': ''}
     # Set up metadata
     do_utc = False
     do_zone = False

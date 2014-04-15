@@ -1,0 +1,44 @@
+####################################################
+#lines begin with "#" or blank lines will be ignored
+####################################################
+
+#######################################
+# single module with required parameter test
+#######################################
+linux.cmd # run first to prepare test env, all test file will be in /tmp/test/ dir
+linux.user
+linux.group
+linux.cronjob
+linux.file
+linux.dir
+linux.symlink
+linux.timezone
+linux.yum.repo
+linux.yum.package
+linux.apt.repo
+linux.apt.ppa
+linux.apt.package
+common.git # -> need to install git
+common.hg # -> need to install hg
+common.svn # -> need to install svn
+common.virtualenv # -> create?
+linux.supervisord # -> need to create service
+linux.service
+linux.mount
+linux.lvm.pv # TODO: set right path
+linux.lvm.vg # TODO: set right path
+linux.lvm.lv # TODO: lvname?vgname?
+
+common.npm.package # -> need to install npm
+common.pip.package # -> need to install pip
+common.gem.package # -> need to install gem
+
+common.archive
+
+# TODO
+#linux.hosts
+#linux.hostname
+#linux.fs # Doesn't exists?
+#linux.ulimit # Doesn't exists?
+#internal.reboot
+#internal.wait

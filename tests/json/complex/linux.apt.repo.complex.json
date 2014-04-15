@@ -1,0 +1,40 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D3B5186",
+          "_": "1 [test1] add opscode repo - True",
+          "module": "linux.apt.repo",
+          "parameter": {
+            "name": "opscode",
+            "content": "deb http://apt.opscode.com/ precise-0.10 main"
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D0206B5F1E",
+          "_": "2 [test2] install chef and stuff - True",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "ohai": "",
+              "chef": "",
+              "chef-server": "10.18.2"
+            },
+            'fromrepo': "opscode",
+          }
+        },
+        {
+          "id": "state-7B5B2E8A-17CD-4578-8E85-15D0206B5F1E",
+          "_": "3 [test2] install wrong chef version - False",
+          "module": "linux.apt.package",
+          "parameter": {
+            "name": {
+              "chef": "1"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

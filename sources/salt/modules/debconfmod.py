@@ -26,14 +26,14 @@ def __virtual__():
     Confirm this module is on a Debian based system and that debconf-utils
     is installed.
     '''
-    if __grains__['os_family'] != 'Debian':
+    if 'os_family' not in __grains__ or \
+        __grains__['os_family'] != 'Debian':
         return False
 
     if salt.utils.which('debconf-get-selections') is None:
         return False
 
     return __virtualname__
-
 
 def _unpack_lines(out):
     '''
