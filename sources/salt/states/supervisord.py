@@ -114,11 +114,16 @@ def running(name,
             cmd = ['supervisord']
             if conf_file:
                 cmd += ['-c', conf_file]
-            __salt__['cmd.run_stdall'](' '.join(cmd), runas=user)
+            result = __salt__['cmd.run_stdall'](' '.join(cmd), runas=user)
+            if result['retcode'] != 0:
+                ret['result'] = False
+                ret['comment'] = 'Start supervisord failed.'
+                ret['state_stdout'] = result['stdout']
+                return ret
     except Exception, e:
         ret['result'] = False
         ret['comment'] = 'Start up supervisord failed.'
-        ret['stdout'] = str(e)
+        ret['state_stdout'] = str(e)
         return ret
 
     all_processes = __salt__['supervisord.status'](
