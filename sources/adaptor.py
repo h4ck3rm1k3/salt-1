@@ -847,8 +847,6 @@ class StateAdaptor(object):
 					# set mode
 					if 'mode' in addin and addin['mode']:
 						addin['mode'] = int(addin['mode'])
-					else:
-						addin['mode'] = 644
 
 					# set recurse
 					if 'recurse' in addin and addin['recurse']:

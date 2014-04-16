@@ -871,23 +871,23 @@ manage a directory
 
 	>note: This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified directory itself.
 
-* **`user`** (*optional*): the user name of the file owner
+* **`user`** (*optional*): the user name of the directory owner
 
 		example: root
 
-	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists. If existed, the file owner will be left unchanged, otherwise default: root
+	>note: If specified, the directory owner will be set to this user. Otherwise, the result depends on whether the directory exists. If existed, the directory owner will be left unchanged, otherwise default: root
 
-* **`group`** (*optional*): the group name of the file owner
+* **`group`** (*optional*): the group name of the directory owner
 
 		example: root
 
-    >note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
+    >note: If specified, the directory will be set to this group. Otherwise, the result depends on whether the directory exists. If existed, the directory group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
 
 		example: 0755
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0755
+	>note: If specified, the directory will be set to this mode. Otherwise, the result depends on whether the directory exists. If existed, the directory mode will be left unchanged
 
 * **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`true`***
 
@@ -959,7 +959,7 @@ manage a file
 
 		example: 0644
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0644
+	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged
 
 * **`content`** (*optional*): the file content
 
@@ -1042,12 +1042,6 @@ manage a symlink
 
 	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists. If existed, the file group will be left unchanged; otherwise default: root
 
-* **`mode`** (*optional*): the symlink mode
-
-		example: 0777
-
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists. If existed, the file mode will be left unchanged, otherwise default: 0777
-
 * **`absent`** (*optional*): ensure the directory is absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
@@ -1073,11 +1067,11 @@ manage a symlink
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0777',
-						'required'	:	False
-					},
+					# 'mode':	{
+					# 	'type'		:	'line',
+					# 	'default'	:	'0777',
+					# 	'required'	:	False
+					# },
 					'absent'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
