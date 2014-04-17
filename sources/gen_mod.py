@@ -1519,7 +1519,7 @@ manage a user
 
 *   **`password`** (*required*): the encrypted password
 
-	>note: use `openssl passwd -salt &lt;salt&gt; -1 &lt;plaintext&gt;` to generate the passworld hash
+	>note: use `openssl passwd -salt <salt> -1 <plaintext>` to generate the passworld hash
 
 *   **`fullname`** (*optional*): the full name of the user
 
