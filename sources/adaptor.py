@@ -741,7 +741,11 @@ class StateAdaptor(object):
 					cmd_name = module.split('.')[1]
 
 					if cmd_name and self.__check_cmd(cmd_name):
-						self.mod_map[module].pop('require')
+						self.mod_map[module]['require'] = [{
+							'linux.cmd' : {
+								'cmd' : 'which {0}'.format(cmd_name)
+							}
+						}]
 
 			elif module in ['common.git', 'common.svn', 'common.hg']:
 
