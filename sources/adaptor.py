@@ -736,6 +736,17 @@ class StateAdaptor(object):
 						for pkg_state in module_state.keys():
 							module_state[pkg_state].update(addin)
 
+				## check require package
+				if module in ['common.npm.package', 'common.pip.package', 'common.gem.package']:
+					cmd_name = module.split('.')[1]
+
+					if cmd_name and self.__check_cmd(cmd_name):
+						self.mod_map[module]['require'] = [{
+							'linux.cmd' : {
+								'cmd' : 'which {0}'.format(cmd_name)
+							}
+						}]
+
 			elif module in ['common.git', 'common.svn', 'common.hg']:
 
 				# svn target path(remove the last prefix)
@@ -840,8 +851,6 @@ class StateAdaptor(object):
 					# set mode
 					if 'mode' in addin and addin['mode']:
 						addin['mode'] = int(addin['mode'])
-					else:
-						addin['mode'] = 644
 
 					# set recurse
 					if 'recurse' in addin and addin['recurse']:
@@ -911,10 +920,10 @@ class StateAdaptor(object):
 					addin['home'] = '/home/{0}'.format(addin['name'])
 				else:
 					addin['createhome'] = True
-					# add dir require
-					self.mod_map[module]['require'] = [
-						{'linux.dir':{'path':[addin['home']]}}
-					]
+					# # add dir require
+					# self.mod_map[module]['require'] = [
+					# 	{'linux.dir':{'path':[addin['home']]}}
+					# ]
 
 				# generate user password hash
 				if 'password' in addin and addin['password']:
@@ -1216,6 +1225,30 @@ class StateAdaptor(object):
 				module = 'linux.cmd'
 
 		return (module, parameter)
+
+	def __check_cmd(self, cmd_name):
+		"""
+			Check a command whether existed.
+		"""
+		try:
+			import subprocess
+			cmd = 'which {0}'.format(cmd_name)
+			process = subprocess.Popen(
+				cmd,
+				shell=True,
+				stdout=subprocess.PIPE,
+				stderr=subprocess.PIPE)
+
+			out, err = process.communicate()
+
+			if process.returncode != 0:
+				utils.log("ERROR", "Command %s isn't existed..."%cmd_name, ("__check_cmd", self))
+				return False
+
+			return True
+		except Exception, e:
+			utils.log("ERROR", "Check command %s excpetion: %s" % (cmd_name, str(e)), ("__check_cmd", self))
+			return False	
 
 	# def __check_state(self, module, state):
 	# 	"""

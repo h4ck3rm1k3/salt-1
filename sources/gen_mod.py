@@ -871,23 +871,23 @@ manage a directory
 
 	>note: This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributes as the specified directory itself.
 
-* **`user`** (*optional*): the user name of the file owner
+* **`user`** (*optional*): the user name of the directory owner
 
 		example: root
 
-	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists or not. If existed, the file owner will be left unchanged, otherwise default: root
+	>note: If specified, the directory owner will be set to this user. Otherwise, the result depends on whether the directory exists or not. If existed, the directory owner will be left unchanged, otherwise default: root
 
-* **`group`** (*optional*): the group name of the file owner
+* **`group`** (*optional*): the group name of the directory owner
 
 		example: root
 
-    >note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists or not. If existed, the file group will be left unchanged; otherwise default: root
+    >note: If specified, the directory will be set to this group. Otherwise, the result depends on whether the directory exists or not. If existed, the directory group will be left unchanged; otherwise default: root
 
 * **`mode`** (*optional*): the directory mode
 
 		example: 0755
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists or not. If existed, the file mode will be left unchanged, otherwise default: 0755
+	>note: If specified, the directory will be set to this mode. Otherwise, the result depends on whether the directory exists or not. If existed, the directory mode will be left unchanged
 
 * **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`true`***
 
@@ -959,7 +959,7 @@ manage a file
 
 		example: 0644
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists or not. If existed, the file mode will be left unchanged, otherwise default: 0644
+	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists or not. If existed, the file mode will be left unchanged
 
 * **`content`** (*optional*): the file content
 
@@ -1030,23 +1030,23 @@ manage a symbolic link
 
 	>note: If the target's parent path does not exist, this state will fail.
 
-* **`user`** (*optional*): the user name of the file owner
+* **`user`** (*optional*): the user name of the link owner
 
 		example: root
 
-	>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists or not. If existed, the file owner will be left unchanged, otherwise default: root
+	>note: If specified, the link owner will be set to this user. Otherwise, the result depends on whether the link exists or not. If existed, the link owner will be left unchanged, otherwise default: root
 
-* **`group`** (*optional*): the group name of the file owner
+* **`group`** (*optional*): the group name of the link owner
 
 		example: root
 
-	>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists or not. If existed, the file group will be left unchanged; otherwise default: root
+	>note: If specified, the link will be set to this group. Otherwise, the result depends on whether the link exists or not. If existed, the link group will be left unchanged; otherwise default: root
 
-* **`mode`** (*optional*): the symlink mode
+* **`mode`** (*optional*): the link mode
 
 		example: 0777
 
-	>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists or not. If existed, the file mode will be left unchanged, otherwise default: 0777
+	>note: If specified, the link will be set to this mode. Otherwise, the result depends on whether the link exists or not. If existed, the link mode will be left unchanged, otherwise default: 0777
 
 * **`absent`** (*optional*): ensure the link is absent, by default ***`false`***
 
@@ -1073,11 +1073,11 @@ manage a symbolic link
 						'type'		:	'line',
 						'required'	:	False
 					},
-					'mode':	{
-						'type'		:	'line',
-						'default'	:	'0777',
-						'required'	:	False
-					},
+					# 'mode':	{
+					# 	'type'		:	'line',
+					# 	'default'	:	'0777',
+					# 	'required'	:	False
+					# },
 					'absent'	:	{
 						'type'		:	'bool',
 						'default'	:	False,
@@ -1139,7 +1139,7 @@ ensure supervisord and the specified services are running, and trigger superviso
 
 		example: httpd, mysqld
 
-*   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
+*   **`watch`** (*optional*): watch a list of files, restart the service if any of them is modified
 
 		example: /etc/nginx/nginx.conf
 					''',

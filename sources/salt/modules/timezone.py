@@ -260,10 +260,6 @@ def set_hwclock(clock, **kwargs):
     elif 'RedHat' in __grains__['os_family']:
         __salt__['file.sed'](
             '/etc/sysconfig/clock', '^ZONE=.*', 'ZONE="{0}"'.format(timezone))
-        if clock == 'UTC':
-            __salt__['file.sed']('/etc/sysconfig/clock', '^UTC=.*', 'UTC=yes')
-        elif clock == 'localtime':
-            __salt__['file.sed']('/etc/sysconfig/clock', '^UTC=.*', 'UTC=no')
     elif 'Suse' in __grains__['os_family']:
         __salt__['file.sed'](
             '/etc/sysconfig/clock', '^ZONE=.*', 'ZONE="{0}"'.format(timezone))
