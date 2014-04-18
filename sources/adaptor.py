@@ -920,10 +920,10 @@ class StateAdaptor(object):
 					addin['home'] = '/home/{0}'.format(addin['name'])
 				else:
 					addin['createhome'] = True
-					# add dir require
-					self.mod_map[module]['require'] = [
-						{'linux.dir':{'path':[addin['home']]}}
-					]
+					# # add dir require
+					# self.mod_map[module]['require'] = [
+					# 	{'linux.dir':{'path':[addin['home']]}}
+					# ]
 
 				# generate user password hash
 				if 'password' in addin and addin['password']:
