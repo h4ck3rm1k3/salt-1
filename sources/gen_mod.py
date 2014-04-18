@@ -1094,7 +1094,7 @@ ensure the specified services are running, and trigger service restart if necess
 
 		example: httpd, mysqld
 
-*   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
+*   **`watch`** (*optional*): watch a list of files, restart the service if any of them is modified
 
 		example: /etc/nginx/nginx.conf, /etc/my.cnf
 					''',
@@ -1133,7 +1133,7 @@ ensure supervisord and the specified services are running, and trigger superviso
 
 		example: httpd, mysqld
 
-*   **`watch`** (*optional*): watch a list of files or directories, restart the service if any of them is modified
+*   **`watch`** (*optional*): watch a list of files, restart the service if any of them is modified
 
 		example: /etc/nginx/nginx.conf
 					''',
