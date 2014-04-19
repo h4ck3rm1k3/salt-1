@@ -514,14 +514,6 @@ manage a python virtualenv
 
 *   **`system-site-packages`** (*optional*): whether to give the virtual environment access to the global site-packages or not, by default ***`true`***
 
-*   **`always-copy`** (*optional*): whether to always copy files rather than symlinking or not, by default ***`false`***
-
-*   **`unzip-setuptools`** (*optional*): whether to always copy files rather than symlinking or not, by default ***`false`***
-
-*   **`no-setuptool`** (*optional*): whether to install setuptools (or pip) in the new virtualenv or not, by default ***`true`***
-
-*   **`no-pip`** (*optional*): whether to install pip in the new virtualenv or not, by default ***`true`***
-
 *   **`extra-search-dir`** (*optional*): whether to always copy files rather than symlinking or not, by default ***`false`***
 					''',
 					'cn'	:	''''''
@@ -543,26 +535,6 @@ manage a python virtualenv
 					'system-site-packages'		:	{
 						'type'		:	'bool',
 						'default'	:	True,
-						'required'	:	False
-					},
-					'always-copy'	:	{
-						'type'		:	'bool',
-						'default'	:	False,
-						'required'	:	False
-					},
-					'unzip-setuptools'	:	{
-						'type'		:	'bool',
-						'default'	:	False,
-						'required'	:	False
-					},
-					'no-setuptools'	:	{
-						'type'		:	'bool',
-						'default'	:	False,
-						'required'	:	False
-					},
-					'no-pip'	:	{
-						'type'		:	'bool',
-						'default'	:	False,
 						'required'	:	False
 					},
 					'extra-search-dir'	:	{
