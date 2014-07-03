@@ -219,7 +219,6 @@ class StateAdaptor(object):
 			# 	}
 			# },
 		},
-
 		## path
 		'linux.dir' : {
 			'attributes' : {
@@ -521,6 +520,68 @@ class StateAdaptor(object):
 			'states' : ['extracted'],
 			'type' : 'archive',
 		}
+
+                # docker
+                'common.dockerio.installed' : {
+                        'attributes' : {
+                                'name'          : 'name',
+                                'image'         : 'image',
+                                'repo'          : 'repo',
+                                'tag'           : 'tag',
+                                'username'      : 'username',
+                                'password'      : 'password',
+                                'email'         : 'email',
+                                'force_pull'    : 'force_pull',
+                                'path'          : 'path',
+                                'watch'         : 'force_build',
+                                'environment'   : 'environment',
+                                'ports'         : 'ports',
+                                'volumes'       : 'volumes',
+                                'mem_limit'     : 'mem_limit',
+                                'cpu_shares'    : 'cpu_shares',
+                        },
+			'states' : ['installed'],
+			'type' : 'dockerio',
+                },
+                'common.dockerio.running' : {
+                        'attributes' : {
+                                'name'          : 'name',
+                                'container'     : 'container',
+                                'binds'         : 'binds',
+                                'publish_all_ports': 'publish_all_ports',
+                                'links'         : 'links',
+                                'port_bindings' : 'port_bindings',
+                        },
+			'states' : ['running'],
+			'type' : 'dockerio',
+                },
+                'common.dockerio.cmd' : {
+                        'attributes' : {
+                                'name'          : 'name',
+                                'cid'           : 'cid',
+                                'state_id'      : 'state_id',
+                                'stateful'      : 'stateful',
+                                'onlyif'        : 'onlyif',
+                                'unless'        : 'unless',
+                                'docked_onlyif' : 'docked_onlyif',
+                                'docked_unless' : 'docked_unless',
+                        },
+			'states' : ['run'],
+			'type' : 'dockerio',
+                },
+#                'common.dockerio.pushed' : {
+#                        'attributes' : {
+#                                'container'     : 'container',
+#                                'repository'    : 'repository',
+#                                'tag'           : 'tag',
+#                                'message'       : 'message',
+#                                'author'        : 'author',
+#                                'conf'          : 'conf',
+#                        },
+#			'states' : ['pushed'],
+#			'type' : 'dockerio',
+#                },
+
 	}
 
 	def __init__(self):
@@ -541,7 +602,7 @@ class StateAdaptor(object):
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
 		# distro check and package manger check
-		if (os_type in ['centos', 'redhat', 'debian'] and module in ['linux.apt.package', 'linux.apt.repo']) \
+		if (os_type in ['centos', 'redhat'] and module in ['linux.apt.package', 'linux.apt.repo']) \
 			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
 			raise StateException("Conflict on os type %s and module %s" % (os_type, module))
 
@@ -1008,6 +1069,17 @@ class StateAdaptor(object):
 				# 		addin['if_missing'] = addin['name'] + os.path.splitext(addin['source'].split('/')[-1])[0]
 				# except:
 				# 	pass
+
+                        elif module in ["common.dockerio.running"]:
+                                if adding.get("port_bindings"):
+                                        pb = {}
+                                        for key in adding["port_bindings"]:
+                                                v = adding["port_bindings"][key].split(":")
+                                                pb[key] = {
+                                                        "HostIp": v[0],
+                                                        "HostPort": v[1]
+                                                }
+                                        adding["port_bindings"] = pb
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))

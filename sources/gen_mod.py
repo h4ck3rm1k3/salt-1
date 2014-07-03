@@ -543,63 +543,63 @@ manage a python virtualenv
 					}
 				}
 			},
-			'docker pulled'	:	{
-				'module'	:	'common.dockerio.pulled',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-Pull an image from a docker registry. (`docker pull`)
-
-### Parameters
-
-*   **`name`** (*required*): Tag of the image
-
-*   **`force`** (*optional*): Pull even if the image is already pulled
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
-					'force'		:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-				}
-			},
-			'docker built'	:	{
-				'module'	:	'common.dockerio.built',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-Build a docker image from a path or URL to a dockerfile. (`docker build`)
-
-### Parameters
-
-*   **`name`** (*required*): Tag of the image
-
-*   **`path`** (*required*): URL (e.g. `url/branch/docker_dir/dockerfile`) or filesystem path to the dockerfile
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
-					'path'		:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
-				}
-			},
+#			'docker pulled'	:	{
+#				'module'	:	'common.dockerio.pulled',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Pull an image from a docker registry. (`docker pull`)
+#
+#### Parameters
+#
+#*   **`name`** (*required*): Tag of the image
+#
+#*   **`force`** (*optional*): Pull even if the image is already pulled
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'name'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'force'		:	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#				}
+#			},
+#			'docker built'	:	{
+#				'module'	:	'common.dockerio.built',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Build a docker image from a path or URL to a dockerfile. (`docker build`)
+#
+#### Parameters
+#
+#*   **`name`** (*required*): Tag of the image
+#
+#*   **`path`** (*required*): URL (e.g. `url/branch/docker_dir/dockerfile`) or filesystem path to the dockerfile
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'name'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'path'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#				}
+#			},
 			'docker installed'	:	{
 				'module'	:	'common.dockerio.installed',
 				'distro'	:	None,
@@ -612,7 +612,21 @@ Ensure that a container with the given name exists; if not, build a new containe
 
 *   **`name`** (*required*): Name for the container
 
-*   **`image`** (*required*): Image from which to build this container
+*   **`image`** (*required*): Image from which to build this container, name of the created image if path filled
+
+*   **`repo`** (*optional*): Repo URL (e.g. `index.docker.io:MyRepo/image`) (nb: `image` should be identical to the **`image`** parameter)
+
+*   **`tag`** (*optional*): Repo tag (only if repo is filled)
+
+*   **`username`** (*optional*): Repo connection username (only if repo is filled)
+
+*   **`password`** (*optional*): Repo connection password (only if repo is filled)
+
+*   **`email`** (*optional*): Repo connection email (only if repo is filled)
+
+*   **`force_pull`** (*optional*): Force repo pull (only if repo is filled)
+
+*   **`path`** (*optional*): Filesystem path to the dockerfile
 
 *   **`environment`** (*optional*): Environment variables for the container, either
                                         - a mapping of key, values
@@ -623,6 +637,10 @@ Ensure that a container with the given name exists; if not, build a new containe
                                         - a mapping of mapping portInHost : PortInContainer
 
 *   **`volumes`** (*optional*): List of volumes
+
+*   **`mem_limit`** (*optional*): Memory size limit
+
+*   **`cpu_shares`** (*optional*): CPU shares authorized
 					''',
 					'cn'	:	''''''
 				},
@@ -637,6 +655,48 @@ Ensure that a container with the given name exists; if not, build a new containe
 						'required'	:	True,
 						'visible'	:	True
 					},
+					'repo'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'tag'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'username'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'password'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'email'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'force_pull'		:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'default'	:	False,
+						'visible'	:	True
+					},
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'watch'		:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'default'	:	False,
+						'visible'	:	False
+					},
 					'environment'	:	{
 						'type'		:	'dict',
 						'required'	:	False,
@@ -648,6 +708,16 @@ Ensure that a container with the given name exists; if not, build a new containe
 						'visible'	:	True
 					},
 					'volumes'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'mem_limit'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'cpu_shares'		:	{
 						'type'		:	'array',
 						'required'	:	False,
 						'visible'	:	True
@@ -753,7 +823,8 @@ Ensure that a container is running. (`docker inspect`)
 
 *   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
     example:
-        5000/tcp: 5000
+        5000/tcp: 127.0.0.1:5000
+        6000/tcp: :6000
 					''',
 					'cn'	:	''''''
 				},
@@ -791,58 +862,58 @@ Ensure that a container is running. (`docker inspect`)
 					},
 				}
 			},
-			'docker pushed'	:	{
-				'module'	:	'common.dockerio.pulled',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-Push an image to a docker registry. (`docker push`)
-
-### Parameters
-
-*   **`container`** (*required*): container id
-
-*   **`repository`** (*optional*): repository/imageName to commit to
-
-*   **`tag`** (*optional*): optional tag
-
-*   **`message`** (*optional*): optional commit message
-
-*   **`author`** (*optional*): optional author
-
-*   **`conf`** (*optional*): optional conf
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'container'		:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
-					'repository'		:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'tag'		:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'message'		:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'author'		:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-					'conf'		:	{
-						'type'		:	'line',
-						'required'	:	False
-					},
-				}
-			},
+#			'docker pushed'	:	{
+#				'module'	:	'common.dockerio.pushed',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Push an image to a docker registry. (`docker push`)
+#
+#### Parameters
+#
+#*   **`container`** (*required*): container id
+#
+#*   **`repository`** (*optional*): repository/imageName to commit to
+#
+#*   **`tag`** (*optional*): optional tag
+#
+#*   **`message`** (*optional*): optional commit message
+#
+#*   **`author`** (*optional*): optional author
+#
+#*   **`conf`** (*optional*): optional conf
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'container'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'repository'		:	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#					'tag'		:	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#					'message'		:	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#					'author'		:	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#					'conf'		:	{
+#						'type'		:	'line',
+#						'required'	:	False
+#					},
+#				}
+#			},
 		},
 		'linux'		:	{
 			'apt pkg'	:	{

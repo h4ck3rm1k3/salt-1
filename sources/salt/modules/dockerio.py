@@ -554,6 +554,7 @@ def create_container(image,
                      stdin_open=False,
                      tty=False,
                      mem_limit=0,
+                     cpu_shares=None,
                      ports=None,
                      environment=None,
                      dns=None,
@@ -599,6 +600,12 @@ def create_container(image,
 
         salt-call docker.create_container o/ubuntu volumes="['/s','/m:/f']"
 
+    mem_limit:
+        memory size limit
+
+    cpu_shares:
+        cpu shares authorized
+
     CLI Example:
 
     .. code-block:: bash
@@ -637,6 +644,7 @@ def create_container(image,
             volumes=mountpoints,
             volumes_from=volumes_from,
             name=name,
+            cpu_shares=cpu_shares,
         )
         container = info['Id']
         callback = valid

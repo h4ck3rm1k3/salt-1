@@ -102,6 +102,10 @@ Available Functions
 # Import salt libs
 from salt._compat import string_types
 
+## OpsAgent imports
+#from opsagent import checksum
+
+
 # Import 3rd-party libs
 try:
     import docker
@@ -219,7 +223,7 @@ def mod_watch(name, sfun=None, *args, **kw):
                         ' implemented for {0}'.format(sfun))}
 
 
-def pulled(name, force=False, *args, **kwargs):
+def pulled(name, tag=None, force=False, *args, **kwargs):
     '''
     Pull an image from a docker registry. (`docker pull`)
 
@@ -235,6 +239,9 @@ def pulled(name, force=False, *args, **kwargs):
         via the pillar.
 
     name
+        Name of the image
+
+    tag
         Tag of the image
 
     force
@@ -248,7 +255,7 @@ def pulled(name, force=False, *args, **kwargs):
             comment='Image already pulled: {0}'.format(name))
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
-    returned = func(name)
+    returned = func(name,tag)
     if previous_id != returned['id']:
         changes = {name: True}
     else:
@@ -301,6 +308,14 @@ def built(name,
 
 def installed(name,
               image,
+              repo=None,
+              tag=None,
+              username=None,
+              password=None,
+              email=None,
+              force_pull=False,
+              force_build=False,
+              path=None,
               command=None,
               hostname=None,
               user=None,
@@ -308,6 +323,7 @@ def installed(name,
               stdin_open=False,
               tty=False,
               mem_limit=0,
+              cpu_shares=None,
               ports=None,
               environment=None,
               dns=None,
@@ -325,6 +341,30 @@ def installed(name,
     image
         Image from which to build this container
 
+    repo
+        Repo URL (e.g. `index.docker.io:MyRepo/image`)
+
+    tag
+        Repo tag (only if repo is filled)
+
+    username
+        Repo connection username (only if repo is filled)
+
+    password
+        Repo connection password (only if repo is filled)
+
+    email
+        Repo connection email (only if repo is filled)
+
+    force_pull
+        Force pull repo (only if repo is filled)
+
+    path
+        Filesystem path to the dockerfile
+
+    force_pull
+        Force build container (only if path is filled)
+
     environment
         Environment variables for the container, either
             - a mapping of key, values
@@ -336,6 +376,12 @@ def installed(name,
     volumes
         List of volumes
 
+    mem_limit:
+        Memory size limit
+
+    cpu_shares:
+        CPU shares authorized
+
     For other parameters, see absolutely first the salt.modules.dockerio
     execution module and the docker-py python bindings for docker
     documentation
@@ -346,6 +392,26 @@ def installed(name,
         This command does not verify that the named container
         is running the specified image.
     '''
+
+    force_install = False
+    if repo:
+        log = logged(repo,username,password,email)
+        #TODO check
+        ret = pulled(repo,tag,force=force_pull)
+        if ret['result'] == False:
+            return ret
+        elif ret['changes']:
+            force_install = True
+    elif path:
+#        cs = Checksum(path,image,)
+#        force = (True if cs.update() else False)
+        ret = built(image,path,force=force_build)
+        if ret['result'] == False:
+            return ret
+        elif ret['changes']:
+            force_install = True
+
+
     ins_image = __salt('docker.inspect_image')
     ins_container = __salt('docker.inspect_container')
     create = __salt('docker.create_container')
@@ -355,7 +421,7 @@ def installed(name,
     cinfos = ins_container(name)
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
-    if already_exists:
+    if already_exists and not force_install:
         return _valid(comment='image {!r} already exists'.format(name))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
