@@ -695,3 +695,91 @@ def script(name,
                 return {'comment': 'docked_unless execution succeeded',
                         'result': True}
     return drun(**cmd_kwargs)
+
+
+
+
+def pushed(container,
+           repository=None,
+           tag=None,
+           message=None,
+           author=None.
+           conf=None,
+           *args, **kwargs):
+    '''
+    Push an image to a docker registry. (`docker push`)
+
+    .. note::
+
+        See first the documentation for `docker login`, `docker pull`,
+        `docker push`,
+        and `docker.import_image <https://github.com/dotcloud/docker-py#api>`_
+        (`docker import
+        <http://docs.docker.io/en/latest/reference/commandline/cli/#import>`_).
+        NOTE that We added saltack a way to identify yourself via pillar,
+        see in the salt.modules.dockerio execution module how to ident yourself
+        via the pillar.
+
+    container
+        container id
+    repository
+        repository/imageName to commit to
+    tag
+        optional tag
+    message
+        optional commit message
+    author
+        optional author
+    conf
+        optional conf
+    '''
+
+    commit = __salt__['docker.commit']
+    returned = commit(container,repository,tag,message,author,conf)
+
+    #base_status = {
+    #    'status': None,
+    #    'id': None,
+    #    'comment': '',
+    #    'out': None
+    #}
+
+    print returned #debug
+    if True:#has not changed TODO
+        return _valid(
+            name=container,
+            comment='Countainer {0} up-to-date on repo {1}'.format(container,repository))
+    push = __salt__['docker.push']
+    returned = push(repository)
+    changes = 'Countainer {0} pushed on repo {1}'.format(container,repository)
+    return _ret_status(returned, container, changes=changes)
+
+
+def logged(url,
+           username=None,
+           password=None,
+           email=None,
+           *args, **kwargs):
+    '''
+    Login to a Docker repository. (`docker login`)
+
+    url
+        repo uri
+    username
+        username
+    password
+        password
+    email
+        email
+    '''
+
+    docker_loggin = __salt__['docker.login']
+    returned = docker_loggin(url,username,password,email)
+
+    print returned #debug
+    if True:#has not changed TODO
+        return _valid(
+            url=url,
+            comment='Already logged to {0} as {1}'.format(url,username))
+    changes = 'Logged in to {0} as {1}'.format(url,username)
+    return _ret_status(returned, url, changes=changes)

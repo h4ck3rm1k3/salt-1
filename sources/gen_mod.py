@@ -542,7 +542,307 @@ manage a python virtualenv
 						'required'	:	False
 					}
 				}
-			}
+			},
+			'docker pulled'	:	{
+				'module'	:	'common.dockerio.pulled',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Pull an image from a docker registry. (`docker pull`)
+
+### Parameters
+
+*   **`name`** (*required*): Tag of the image
+
+*   **`force`** (*optional*): Pull even if the image is already pulled
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'force'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+				}
+			},
+			'docker built'	:	{
+				'module'	:	'common.dockerio.built',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Build a docker image from a path or URL to a dockerfile. (`docker build`)
+
+### Parameters
+
+*   **`name`** (*required*): Tag of the image
+
+*   **`path`** (*required*): URL (e.g. `url/branch/docker_dir/dockerfile`) or filesystem path to the dockerfile
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+				}
+			},
+			'docker installed'	:	{
+				'module'	:	'common.dockerio.installed',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Ensure that a container with the given name exists; if not, build a new container from the specified image. (`docker run`)
+
+### Parameters
+
+*   **`name`** (*required*): Name for the container
+
+*   **`image`** (*required*): Image from which to build this container
+
+*   **`environment`** (*optional*): Environment variables for the container, either
+                                        - a mapping of key, values
+                                        - a list of mappings of key values
+
+*   **`ports`** (*optional*): List of ports definitions, either
+                                        - a port to map
+                                        - a mapping of mapping portInHost : PortInContainer
+
+*   **`volumes`** (*optional*): List of volumes
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'image'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'environment'	:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'ports'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'volumes'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+				}
+			},
+			'docker run'	:	{
+				'module'	:	'common.dockerio.run',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Run a command in a specific container
+You can match by either name or hostname
+
+### Parameters
+
+*   **`name`** (*required*): Command to run in the container
+
+*   **`cid`** (*optional*): Container id
+
+*   **`state_id`** (*optional*): State id
+
+*   **`stateful`** (*optional*): Stateful mode
+
+*   **`onlyif`** (*optional*): Only execute cmd if statement on the host success
+
+*   **`unless`** (*optional*): Do not execute cmd if statement on the host success
+
+*   **`docked_onlyif`** (*optional*): Only execute cmd if statement in the container success
+
+*   **`docked_unless`** (*optional*): Do not execute cmd if statement in the container success
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'cid'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'state_id'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'stateful'		:	{
+						'type'		:	'Bool',
+						'required'	:	False,
+						'default'	:	False,
+						'visible'	:	True
+					},
+					'onlyif'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'unless'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'docked_onlyif'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'docked_unless'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+				}
+			},
+			'docker running'	:	{
+				'module'	:	'common.dockerio.running',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Ensure that a container is running. (`docker inspect`)
+
+### Parameters
+
+*   **`name`** (*required*): Name of the service
+
+*   **`container`** (*optional*): Name of the container to start
+
+*   **`binds`** (*optional*): Like -v of docker run command
+    example:
+        /var/log/service: /var/log/service
+
+*   **`publish_all_ports`** (*optional*): Publish all ports
+
+*   **`links`** (*optional*): Link several container together
+    example:
+        name_other_container: alias_for_other_container
+
+*   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
+    example:
+        5000/tcp: 5000
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'name'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'container'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'binds'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'publish_all_ports'	:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'default'	:	False,
+						'visible'	:	True
+					},
+					'links'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'port_bindings'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+				}
+			},
+			'docker pushed'	:	{
+				'module'	:	'common.dockerio.pulled',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Push an image to a docker registry. (`docker push`)
+
+### Parameters
+
+*   **`container`** (*required*): container id
+
+*   **`repository`** (*optional*): repository/imageName to commit to
+
+*   **`tag`** (*optional*): optional tag
+
+*   **`message`** (*optional*): optional commit message
+
+*   **`author`** (*optional*): optional author
+
+*   **`conf`** (*optional*): optional conf
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'container'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'repository'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+					'tag'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+					'message'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+					'author'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+					'conf'		:	{
+						'type'		:	'line',
+						'required'	:	False
+					},
+				}
+			},
 		},
 		'linux'		:	{
 			'apt pkg'	:	{
