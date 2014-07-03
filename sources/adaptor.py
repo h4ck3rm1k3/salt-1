@@ -1320,7 +1320,7 @@ class StateAdaptor(object):
 			return True
 		except Exception, e:
 			utils.log("ERROR", "Check command %s excpetion: %s" % (cmd_name, str(e)), ("__check_cmd", self))
-			return False	
+			return False
 
 	# def __check_state(self, module, state):
 	# 	"""
