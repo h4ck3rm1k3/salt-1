@@ -2,7 +2,7 @@
 
 def attr():
 	return {
-		'tag'	:	'v2014-04-15',
+		'tag'	:	'feature/docker-integration',
 		'meta'	:	{
 			'#'	:	{
 				'module'	:	'meta.comment',
