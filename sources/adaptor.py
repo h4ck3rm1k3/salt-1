@@ -526,6 +526,7 @@ class StateAdaptor(object):
                         'attributes' : {
                                 'name'          : 'name',
                                 'image'         : 'image',
+                                'command'       : 'command',
                                 'repo'          : 'repo',
                                 'tag'           : 'tag',
                                 'username'      : 'username',
@@ -555,7 +556,7 @@ class StateAdaptor(object):
 			'states' : ['running'],
 			'type' : 'dockerio',
                 },
-                'common.dockerio.cmd' : {
+                'common.dockerio.run' : {
                         'attributes' : {
                                 'name'          : 'name',
                                 'cid'           : 'cid',

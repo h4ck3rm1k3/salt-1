@@ -614,6 +614,8 @@ Ensure that a container with the given name exists; if not, build a new containe
 
 *   **`image`** (*required*): Image from which to build this container, name of the created image if path filled
 
+*   **`command`** (*optional*): Command to run to the container
+
 *   **`repo`** (*optional*): Repo URL (e.g. `index.docker.io:MyRepo/image`) (nb: `image` should be identical to the **`image`** parameter)
 
 *   **`tag`** (*optional*): Repo tag (only if repo is filled)
@@ -653,6 +655,11 @@ Ensure that a container with the given name exists; if not, build a new containe
 					'image'		:	{
 						'type'		:	'line',
 						'required'	:	True,
+						'visible'	:	True
+					},
+					'command'		:	{
+						'type'		:	'line',
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'repo'		:	{
