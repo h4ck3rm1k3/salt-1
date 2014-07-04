@@ -35,6 +35,10 @@ common.gem.package # -> need to install gem
 
 common.archive
 
+common.dockerio.installed
+common.dockerio.running
+common.dockerio.run
+
 # TODO
 #linux.hosts
 #linux.hostname
