@@ -769,7 +769,7 @@ def pushed(container,
            repository=None,
            tag=None,
            message=None,
-           author=None.
+           author=None,
            conf=None,
            *args, **kwargs):
     '''
