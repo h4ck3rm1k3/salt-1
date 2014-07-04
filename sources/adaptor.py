@@ -519,7 +519,7 @@ class StateAdaptor(object):
 			},
 			'states' : ['extracted'],
 			'type' : 'archive',
-		}
+		},
 
                 # docker
                 'common.dockerio.installed' : {
