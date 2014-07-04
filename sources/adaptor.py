@@ -1334,8 +1334,24 @@ class StateAdaptor(object):
 
 	# 	return 0
 
+
+# logger settings
+LOGLVL_VALUES=['DEBUG','INFO','WARNING','ERROR']
+LOG_FORMAT = '[%(levelname)s]-%(asctime)s: %(message)s'
+def __log(lvl, f=None):
+    level = logging.getLevelName(lvl)
+    formatter = logging.Formatter(LOG_FORMAT)
+    handler = (logging.handlers.RotatingFileHandler(f,maxBytes=(1024*1024*10),backupCount=5) if f else logging.StreamHandler())
+    logger = logging.getLogger()
+    handler.setFormatter(formatter)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+
 # ===================== UT =====================
 def ut():
+        __log('DEBUG')
+
 	import json
 	pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
 
