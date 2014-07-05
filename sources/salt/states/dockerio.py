@@ -794,7 +794,7 @@ def full(name,
         elif ret['changes']:
             force_install = True
     ret = installed(
-        name,image,command=bootstrap_command,environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
+        name,image,command=bootstrap_cmd,environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
     print "######### INSTALLED #####"
     print ret
     print "######### /INSTALLED #####"
