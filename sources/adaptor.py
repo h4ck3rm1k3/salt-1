@@ -587,7 +587,7 @@ class StateAdaptor(object):
                                 # installed
                                 'name'          : 'name',
                                 'image'         : 'image',
-                                'command'       : 'command',
+                                'bootstrap_cmd' : 'bootstrap_cmd',
                                 'repo'          : 'repo',
                                 'tag'           : 'tag',
                                 'username'      : 'username',

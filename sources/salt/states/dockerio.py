@@ -740,7 +740,7 @@ def logged(url,
 # states aggregation
 def full(name,
          image,
-         command=None,
+         bootstrap_cmd=None,
          repo=None,
          tag=None,
          username=None,
@@ -794,7 +794,7 @@ def full(name,
         elif ret['changes']:
             force_install = True
     ret = installed(
-        name,image,command=command,environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
+        name,image,command=bootstrap_command,environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
     print "######### INSTALLED #####"
     print ret
     print "######### /INSTALLED #####"

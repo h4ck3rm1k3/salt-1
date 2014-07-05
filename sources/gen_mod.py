@@ -883,7 +883,7 @@ Ensure that a container with the given name exists, and is launched; if not, bui
 
 *   **`image`** (*required*): Image from which to build this container, name of the created image if path filled
 
-*   **`command`** (*optional*): Command to run to the container
+*   **`bootstrap_cmd`** (*optional*): Command to run to the container at bootstrap
 
 *   **`repo`** (*optional*): Repo URL (e.g. `index.docker.io:MyRepo/image`) (nb: `image` should be identical to the **`image`** parameter)
 
