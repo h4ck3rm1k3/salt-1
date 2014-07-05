@@ -749,7 +749,7 @@ def full(name,
          force_pull=False,
          path=None,
          force_build=False,
-         environment=None
+         environment=None,
          ports=None,
          volumes=None,
          mem_limit=0,
