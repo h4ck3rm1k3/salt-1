@@ -600,13 +600,282 @@ manage a python virtualenv
 #					},
 #				}
 #			},
-			'docker installed'	:	{
-				'module'	:	'common.docker.installed',
+#			'docker installed'	:	{
+#				'module'	:	'common.docker.installed',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Ensure that a container with the given name exists; if not, build a new container from the specified image. (`docker run`)
+#
+#### Parameters
+#
+#*   **`name`** (*required*): Name for the container
+#
+#*   **`image`** (*required*): Image from which to build this container, name of the created image if path filled
+#
+#*   **`command`** (*optional*): Command to run to the container
+#
+#*   **`repo`** (*optional*): Repo URL (e.g. `index.docker.io:MyRepo/image`) (nb: `image` should be identical to the **`image`** parameter)
+#
+#*   **`tag`** (*optional*): Repo tag (only if repo is filled)
+#
+#*   **`username`** (*optional*): Repo connection username (only if repo is filled)
+#
+#*   **`password`** (*optional*): Repo connection password (only if repo is filled)
+#
+#*   **`email`** (*optional*): Repo connection email (only if repo is filled)
+#
+#*   **`force_pull`** (*optional*): Force repo pull (only if repo is filled)
+#
+#*   **`path`** (*optional*): Filesystem path to the dockerfile
+#
+#*   **`environment`** (*optional*): Environment variables for the container, either
+#                                        - a mapping of key, values
+#                                        - a list of mappings of key values
+#
+#*   **`ports`** (*optional*): List of ports definitions, either
+#                                        - a port to map
+#                                        - a mapping of mapping portInHost : PortInContainer
+#
+#*   **`volumes`** (*optional*): List of volumes
+#
+#*   **`mem_limit`** (*optional*): Memory size limit
+#
+#*   **`cpu_shares`** (*optional*): CPU shares authorized
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'name'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'image'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'command'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'repo'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'tag'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'username'	:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'password'	:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'email'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'force_pull'		:	{
+#						'type'		:	'bool',
+#						'required'	:	False,
+#						'default'	:	False,
+#						'visible'	:	True
+#					},
+#					'path'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'watch'		:	{
+#						'type'		:	'bool',
+#						'required'	:	False,
+#						'default'	:	False,
+#						'visible'	:	False
+#					},
+#					'environment'	:	{
+#						'type'		:	'dict',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'ports'		:	{
+#						'type'		:	'dict',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'volumes'		:	{
+#						'type'		:	'array',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'mem_limit'		:	{
+#						'type'		:	'array',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'cpu_shares'		:	{
+#						'type'		:	'array',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#				}
+#			},
+#			'docker run'	:	{
+#				'module'	:	'common.docker.run',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Run a command in a specific container
+#You can match by either name or hostname
+#
+#### Parameters
+#
+#*   **`name`** (*required*): Command to run in the container
+#
+#*   **`cid`** (*optional*): Container id
+#
+#*   **`state_id`** (*optional*): State id
+#
+#*   **`stateful`** (*optional*): Stateful mode
+#
+#*   **`onlyif`** (*optional*): Only execute cmd if statement on the host success
+#
+#*   **`unless`** (*optional*): Do not execute cmd if statement on the host success
+#
+#*   **`docked_onlyif`** (*optional*): Only execute cmd if statement in the container success
+#
+#*   **`docked_unless`** (*optional*): Do not execute cmd if statement in the container success
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'name'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'cid'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'state_id'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'stateful'		:	{
+#						'type'		:	'Bool',
+#						'required'	:	False,
+#						'default'	:	False,
+#						'visible'	:	True
+#					},
+#					'onlyif'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'unless'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'docked_onlyif'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'docked_unless'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#				}
+#			},
+#			'docker running'	:	{
+#				'module'	:	'common.docker.running',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Ensure that a container is running. (`docker inspect`)
+#
+#### Parameters
+#
+#*   **`name`** (*required*): Name of the service
+#
+#*   **`container`** (*optional*): Name of the container to start
+#
+#*   **`binds`** (*optional*): Like -v of docker run command
+#    example:
+#        /var/log/service: /var/log/service
+#
+#*   **`publish_all_ports`** (*optional*): Publish all ports
+#
+#*   **`links`** (*optional*): Link several container together
+#    example:
+#        name_other_container: alias_for_other_container
+#
+#*   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
+#    example:
+#        5000/tcp: 127.0.0.1:5000
+#        6000/tcp: :6000
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'name'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'container'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'binds'		:	{
+#						'type'		:	'dict',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'publish_all_ports'	:	{
+#						'type'		:	'bool',
+#						'required'	:	False,
+#						'default'	:	False,
+#						'visible'	:	True
+#					},
+#					'links'		:	{
+#						'type'		:	'dict',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'port_bindings'		:	{
+#						'type'		:	'dict',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#				}
+#			},
+			'docker'	:	{
+				'module'	:	'common.docker',
 				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-Ensure that a container with the given name exists; if not, build a new container from the specified image. (`docker run`)
+Ensure that a container with the given name exists, and is launched; if not, build a new container from the specified image and start it.
 
 ### Parameters
 
@@ -643,6 +912,35 @@ Ensure that a container with the given name exists; if not, build a new containe
 *   **`mem_limit`** (*optional*): Memory size limit
 
 *   **`cpu_shares`** (*optional*): CPU shares authorized
+
+*   **`service`** (*optional*): Service to run in the container
+
+*   **`binds`** (*optional*): Like -v of docker run command
+    example:
+        /var/log/service: /var/log/service
+
+*   **`publish_all_ports`** (*optional*): Publish all ports
+
+*   **`links`** (*optional*): Link several container together
+    example:
+        name_other_container: alias_for_other_container
+
+*   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
+    example:
+        5000/tcp: 127.0.0.1:5000
+        6000/tcp: :6000
+
+*   **`command`** (*optional*): Command to run in the container
+
+*   **`stateful`** (*optional*): Command stateful mode
+
+*   **`onlyif`** (*optional*): Only execute cmd if statement on the host success
+
+*   **`unless`** (*optional*): Do not execute cmd if statement on the host success
+
+*   **`docked_onlyif`** (*optional*): Only execute cmd if statement in the container success
+
+*   **`docked_unless`** (*optional*): Do not execute cmd if statement in the container success
 					''',
 					'cn'	:	''''''
 				},
@@ -729,41 +1027,35 @@ Ensure that a container with the given name exists; if not, build a new containe
 						'required'	:	False,
 						'visible'	:	True
 					},
-				}
-			},
-			'docker run'	:	{
-				'module'	:	'common.docker.run',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-Run a command in a specific container
-You can match by either name or hostname
-
-### Parameters
-
-*   **`name`** (*required*): Command to run in the container
-
-*   **`cid`** (*optional*): Container id
-
-*   **`state_id`** (*optional*): State id
-
-*   **`stateful`** (*optional*): Stateful mode
-
-*   **`onlyif`** (*optional*): Only execute cmd if statement on the host success
-
-*   **`unless`** (*optional*): Do not execute cmd if statement on the host success
-
-*   **`docked_onlyif`** (*optional*): Only execute cmd if statement in the container success
-
-*   **`docked_unless`** (*optional*): Do not execute cmd if statement in the container success
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
+					'binds'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'publish_all_ports'	:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'default'	:	False,
+						'visible'	:	True
+					},
+					'links'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'service'		:	{
 						'type'		:	'line',
-						'required'	:	True,
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'port_bindings'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'command'		:	{
+						'type'		:	'line',
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'cid'		:	{
@@ -799,71 +1091,6 @@ You can match by either name or hostname
 					},
 					'docked_unless'		:	{
 						'type'		:	'line',
-						'required'	:	False,
-						'visible'	:	True
-					},
-				}
-			},
-			'docker running'	:	{
-				'module'	:	'common.docker.running',
-				'distro'	:	None,
-				'reference'	:	{
-					'en'	:	'''
-### Description
-Ensure that a container is running. (`docker inspect`)
-
-### Parameters
-
-*   **`name`** (*required*): Name of the service
-
-*   **`container`** (*optional*): Name of the container to start
-
-*   **`binds`** (*optional*): Like -v of docker run command
-    example:
-        /var/log/service: /var/log/service
-
-*   **`publish_all_ports`** (*optional*): Publish all ports
-
-*   **`links`** (*optional*): Link several container together
-    example:
-        name_other_container: alias_for_other_container
-
-*   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
-    example:
-        5000/tcp: 127.0.0.1:5000
-        6000/tcp: :6000
-					''',
-					'cn'	:	''''''
-				},
-				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
-					'container'		:	{
-						'type'		:	'line',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'binds'		:	{
-						'type'		:	'dict',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'publish_all_ports'	:	{
-						'type'		:	'bool',
-						'required'	:	False,
-						'default'	:	False,
-						'visible'	:	True
-					},
-					'links'		:	{
-						'type'		:	'dict',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'port_bindings'		:	{
-						'type'		:	'dict',
 						'required'	:	False,
 						'visible'	:	True
 					},

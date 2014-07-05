@@ -1,0 +1,19 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
+          "module": "common.docker",
+          "parameter": {
+            "name": "my_ubuntu",
+            "image": "ubuntu",
+            "repo": "ubuntu",
+            "service": "sshd",
+            "command": "echo foo"
+          }
+        }
+      ]
+    }
+  }
+}

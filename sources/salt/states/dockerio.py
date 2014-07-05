@@ -102,10 +102,6 @@ Available Functions
 # Import salt libs
 from salt._compat import string_types
 
-## OpsAgent imports
-#from opsagent import checksum
-
-
 # Import 3rd-party libs
 try:
     import docker
@@ -223,7 +219,7 @@ def mod_watch(name, sfun=None, *args, **kw):
                         ' implemented for {0}'.format(sfun))}
 
 
-def pulled(name, tag=None, force=False, *args, **kwargs):
+def pulled(name, force=False, *args, **kwargs):
     '''
     Pull an image from a docker registry. (`docker pull`)
 
@@ -239,9 +235,6 @@ def pulled(name, tag=None, force=False, *args, **kwargs):
         via the pillar.
 
     name
-        Name of the image
-
-    tag
         Tag of the image
 
     force
@@ -255,7 +248,7 @@ def pulled(name, tag=None, force=False, *args, **kwargs):
             comment='Image already pulled: {0}'.format(name))
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
-    returned = func(name,tag)
+    returned = func(name)
     if previous_id != returned['id']:
         changes = {name: True}
     else:
@@ -308,14 +301,6 @@ def built(name,
 
 def installed(name,
               image,
-              repo=None,
-              tag=None,
-              username=None,
-              password=None,
-              email=None,
-              force_pull=False,
-              force_build=False,
-              path=None,
               command=None,
               hostname=None,
               user=None,
@@ -323,7 +308,6 @@ def installed(name,
               stdin_open=False,
               tty=False,
               mem_limit=0,
-              cpu_shares=None,
               ports=None,
               environment=None,
               dns=None,
@@ -341,30 +325,6 @@ def installed(name,
     image
         Image from which to build this container
 
-    repo
-        Repo URL (e.g. `index.docker.io:MyRepo/image`)
-
-    tag
-        Repo tag (only if repo is filled)
-
-    username
-        Repo connection username (only if repo is filled)
-
-    password
-        Repo connection password (only if repo is filled)
-
-    email
-        Repo connection email (only if repo is filled)
-
-    force_pull
-        Force pull repo (only if repo is filled)
-
-    path
-        Filesystem path to the dockerfile
-
-    force_pull
-        Force build container (only if path is filled)
-
     environment
         Environment variables for the container, either
             - a mapping of key, values
@@ -376,12 +336,6 @@ def installed(name,
     volumes
         List of volumes
 
-    mem_limit:
-        Memory size limit
-
-    cpu_shares:
-        CPU shares authorized
-
     For other parameters, see absolutely first the salt.modules.dockerio
     execution module and the docker-py python bindings for docker
     documentation
@@ -392,27 +346,6 @@ def installed(name,
         This command does not verify that the named container
         is running the specified image.
     '''
-
-    force_install = False
-    if repo:
-        if username:
-            log = logged(repo,username,password,email)
-            #TODO check
-        ret = pulled(repo,tag,force=force_pull)
-        if ret['result'] == False:
-            return ret
-        elif ret['changes']:
-            force_install = True
-    elif path:
-#        cs = Checksum(path,image,)
-#        force = (True if cs.update() else False)
-        ret = built(image,path,force=force_build)
-        if ret['result'] == False:
-            return ret
-        elif ret['changes']:
-            force_install = True
-
-
     ins_image = __salt('docker.inspect_image')
     ins_container = __salt('docker.inspect_container')
     create = __salt('docker.create_container')
@@ -422,7 +355,7 @@ def installed(name,
     cinfos = ins_container(name)
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
-    if already_exists and not force_install:
+    if already_exists:
         return _valid(comment='image {!r} already exists'.format(name))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
@@ -766,6 +699,132 @@ def script(name,
 
 
 
+
+
+##
+## VisualOps States
+##
+
+def logged(url,
+           username=None,
+           password=None,
+           email=None,
+           *args, **kwargs):
+    '''
+    Login to a Docker repository. (`docker login`)
+
+    url
+        repo uri
+    username
+        username
+    password
+        password
+    email
+        email
+    '''
+
+    docker_loggin = __salt__['docker.login']
+    returned = docker_loggin(url,username,password,email)
+
+    print returned #debug
+    if True:#has not changed TODO
+        return _valid(
+            url=url,
+            comment='Already logged to {0} as {1}'.format(url,username))
+    changes = 'Logged in to {0} as {1}'.format(url,username)
+    return _ret_status(returned, url, changes=changes)
+
+
+
+
+# states aggregation
+def full(name,
+         image,
+         command=None,
+         repo=None,
+         tag=None,
+         username=None,
+         password=None,
+         email=None,
+         force_pull=False,
+         path=None,
+         force_build=False,
+         environment=None
+         ports=None,
+         volumes=None,
+         mem_limit=0,
+         cpu_shares=None,
+         # running
+         service=None,
+         binds=None,
+         publish_all_ports=False,
+         links=None,
+         port_bindings=None,
+         # run
+         command=None,
+         stateful=False,
+         onlyif=None,
+         unless=None,
+         docked_onlyif=None,
+         docked_unless=None,
+         *args, **kwargs):
+    force_install = False
+    if repo:
+        if username:
+            lg = logged(repo,username,password,email)
+            print "######### LOGGED #####"
+            print lg
+            print "######### /LOGGED #####"
+            #TODO check
+        ret = pulled(repo,tag,force=force_pull)
+        print "######### PULLED #####"
+        print ret
+        print "######### /PULLED #####"
+        if ret['result'] == False:
+            return ret
+        elif ret['changes']:
+            force_install = True
+    elif path:
+        ret = built(image,path,force=force_build)
+        print "######### BUILT #####"
+        print ret
+        print "######### /BUILT #####"
+        if ret['result'] == False:
+            return ret
+        elif ret['changes']:
+            force_install = True
+    ret = installed(
+        name,image,command=command,environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
+    print "######### INSTALLED #####"
+    print ret
+    print "######### /INSTALLED #####"
+    if ret['result'] == False:
+        return ret
+    container = None #TODO
+    if service:
+        ret = running(
+            service,container=container,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
+        print "######### RUNNING #####"
+        print ret
+        print "######### /RUNNING #####"
+        if ret['result'] == False:
+            return ret
+    if command:
+        ret = run(
+            command,cid=container,stateful=stateful,onlyif=onlyif,unless=unless,docked_onlyif=docked_onlyif,docked_unless=docked_unless)
+        print "######### RUN #####"
+        print ret
+        print "######### RUN #####"
+        if ret['result'] == False:
+            return ret
+
+    return _ret_status("Docker done.",name,changes={name:True})
+
+
+
+
+
+#TODO
 def pushed(container,
            repository=None,
            tag=None,
@@ -822,31 +881,4 @@ def pushed(container,
     return _ret_status(returned, container, changes=changes)
 
 
-def logged(url,
-           username=None,
-           password=None,
-           email=None,
-           *args, **kwargs):
-    '''
-    Login to a Docker repository. (`docker login`)
-
-    url
-        repo uri
-    username
-        username
-    password
-        password
-    email
-        email
-    '''
-
-    docker_loggin = __salt__['docker.login']
-    returned = docker_loggin(url,username,password,email)
-
-    print returned #debug
-    if True:#has not changed TODO
-        return _valid(
-            url=url,
-            comment='Already logged to {0} as {1}'.format(url,username))
-    changes = 'Logged in to {0} as {1}'.format(url,username)
-    return _ret_status(returned, url, changes=changes)
+##
