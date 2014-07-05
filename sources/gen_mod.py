@@ -544,7 +544,7 @@ manage a python virtualenv
 				}
 			},
 #			'docker pulled'	:	{
-#				'module'	:	'common.dockerio.pulled',
+#				'module'	:	'common.docker.pulled',
 #				'distro'	:	None,
 #				'reference'	:	{
 #					'en'	:	'''
@@ -572,7 +572,7 @@ manage a python virtualenv
 #				}
 #			},
 #			'docker built'	:	{
-#				'module'	:	'common.dockerio.built',
+#				'module'	:	'common.docker.built',
 #				'distro'	:	None,
 #				'reference'	:	{
 #					'en'	:	'''
@@ -601,7 +601,7 @@ manage a python virtualenv
 #				}
 #			},
 			'docker installed'	:	{
-				'module'	:	'common.dockerio.installed',
+				'module'	:	'common.docker.installed',
 				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
@@ -732,7 +732,7 @@ Ensure that a container with the given name exists; if not, build a new containe
 				}
 			},
 			'docker run'	:	{
-				'module'	:	'common.dockerio.run',
+				'module'	:	'common.docker.run',
 				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
@@ -805,7 +805,7 @@ You can match by either name or hostname
 				}
 			},
 			'docker running'	:	{
-				'module'	:	'common.dockerio.running',
+				'module'	:	'common.docker.running',
 				'distro'	:	None,
 				'reference'	:	{
 					'en'	:	'''
@@ -870,7 +870,7 @@ Ensure that a container is running. (`docker inspect`)
 				}
 			},
 #			'docker pushed'	:	{
-#				'module'	:	'common.dockerio.pushed',
+#				'module'	:	'common.docker.pushed',
 #				'distro'	:	None,
 #				'reference'	:	{
 #					'en'	:	'''

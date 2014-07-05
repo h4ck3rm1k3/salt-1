@@ -522,7 +522,7 @@ class StateAdaptor(object):
 		},
 
                 # docker
-                'common.dockerio.installed' : {
+                'common.docker.installed' : {
                         'attributes' : {
                                 'name'          : 'name',
                                 'image'         : 'image',
@@ -542,9 +542,9 @@ class StateAdaptor(object):
                                 'cpu_shares'    : 'cpu_shares',
                         },
 			'states' : ['installed'],
-			'type' : 'dockerio',
+			'type' : 'docker',
                 },
-                'common.dockerio.running' : {
+                'common.docker.running' : {
                         'attributes' : {
                                 'name'          : 'name',
                                 'container'     : 'container',
@@ -554,9 +554,9 @@ class StateAdaptor(object):
                                 'port_bindings' : 'port_bindings',
                         },
 			'states' : ['running'],
-			'type' : 'dockerio',
+			'type' : 'docker',
                 },
-                'common.dockerio.run' : {
+                'common.docker.run' : {
                         'attributes' : {
                                 'name'          : 'name',
                                 'cid'           : 'cid',
@@ -568,9 +568,9 @@ class StateAdaptor(object):
                                 'docked_unless' : 'docked_unless',
                         },
 			'states' : ['run'],
-			'type' : 'dockerio',
+			'type' : 'docker',
                 },
-#                'common.dockerio.pushed' : {
+#                'common.docker.pushed' : {
 #                        'attributes' : {
 #                                'container'     : 'container',
 #                                'repository'    : 'repository',
@@ -580,7 +580,7 @@ class StateAdaptor(object):
 #                                'conf'          : 'conf',
 #                        },
 #			'states' : ['pushed'],
-#			'type' : 'dockerio',
+#			'type' : 'docker',
 #                },
 
 	}
@@ -1071,7 +1071,7 @@ class StateAdaptor(object):
 				# except:
 				# 	pass
 
-                        elif module in ["common.dockerio.running"]:
+                        elif module in ["common.docker.running"]:
                                 if adding.get("port_bindings"):
                                         pb = {}
                                         for key in adding["port_bindings"]:
