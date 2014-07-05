@@ -620,7 +620,7 @@ class StateAdaptor(object):
 			'require' : [
 				{'linux.apt.package' : { 'name' : [{'key':'docker'}] }},
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
-				{'linux.service' : { 'name' : [{'key':'docker'}] }},
+				{'linux.service' : { 'name' : ['docker'] }},
 			]
                 },
 	}
