@@ -395,8 +395,9 @@ def installed(name,
 
     force_install = False
     if repo:
-        log = logged(repo,username,password,email)
-        #TODO check
+        if username:
+            log = logged(repo,username,password,email)
+            #TODO check
         ret = pulled(repo,tag,force=force_pull)
         if ret['result'] == False:
             return ret
