@@ -1335,6 +1335,7 @@ class StateAdaptor(object):
 	# 	return 0
 
 
+import logging
 # logger settings
 LOGLVL_VALUES=['DEBUG','INFO','WARNING','ERROR']
 LOG_FORMAT = '[%(levelname)s]-%(asctime)s: %(message)s'
