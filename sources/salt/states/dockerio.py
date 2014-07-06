@@ -367,7 +367,7 @@ def installed(name,
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
     if already_exists:
-        return _valid(name=name,comment='image {!r} already exists, contained Id: {!r}'.format(name,cinfos.get("out",{}).get("Id")))
+        return _valid(name=name,comment='image {!r} already exists, container Id: {!r}'.format(name,str(cinfos.get("out",{}).get("Id"))))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
