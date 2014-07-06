@@ -354,12 +354,12 @@ def installed(name,
     create = __salt('docker.create_container')
     iinfos = ins_image(image)
     if not iinfos['status']:
-        return _invalid(comment='image "{0}" does not exist'.format(image))
+        return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
     cinfos = ins_container(name)
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
     if already_exists:
-        return _valid(comment='image {!r} already exists'.format(name))
+        return _valid(name=name,comment='image {!r} already exists, contained Id: {1}'.format(name,cinfos.get("Id")))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
@@ -412,6 +412,8 @@ def installed(name,
         out['comment'] = 'Container {0} created'.format(cid)
     ret = _ret_status(out, name)
     return ret
+
+
 
 
 def absent(name):
@@ -803,7 +805,13 @@ def full(name,
     print "######### /INSTALLED #####"
     if ret['result'] == False:
         return ret
-    container = None #TODO
+    s = re.search("already exists, contained Id: (.*)",ret['comment'])
+    if not s:
+        s = re.search("Container (.*) created",ret['comment'])
+    container = (s.group(1) if s else None)
+    print "########## CONTAINER ID ##########"
+    print container
+    print "########## /CONTAINER ID ##########"
     if service:
         ret = running(
             service,container=container,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
@@ -821,9 +829,7 @@ def full(name,
         if ret['result'] == False:
             return ret
 
-    return _ret_status("Docker done.",name,changes={name:True})
-
-
+    return _ret_status("Docker done.",name,changes={name:True})#TODO
 
 
 
