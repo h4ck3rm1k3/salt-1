@@ -316,12 +316,12 @@ def _get_image_infos(image):
     try:
         infos = client.inspect_image(image)
         if infos:
-            if "id" not in info:
-                info["id"] = info.get("Id")
-            if "ID" not in info:
-                info["ID"] = info.get("id")
-            if "Id" not in info:
-                info["Id"] = info.get("id")
+            if "id" not in infos:
+                infos["id"] = infos.get("Id")
+            if "ID" not in infos:
+                infos["ID"] = infos.get("id")
+            if "Id" not in infos:
+                infos["Id"] = infos.get("id")
             valid(
                 status,
                 id=infos['id'],
@@ -675,7 +675,7 @@ def create_container(image,
             volumes=mountpoints,
             volumes_from=volumes_from,
             name=name,
-            cpu_shares=cpu_shares,
+            cpu_shares=cpu_shares
         )
         container = info['Id']
         callback = valid
