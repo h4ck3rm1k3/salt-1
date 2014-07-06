@@ -10,7 +10,7 @@
             "image": "ubuntu",
             "repo": "ubuntu",
             "service": "sshd",
-            "command": "echo foo"
+            "bootstrap_cmd": "sleep 50"
           }
         }
       ]
