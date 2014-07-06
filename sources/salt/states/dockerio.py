@@ -98,6 +98,7 @@ Available Functions
 '''
 
 # Import python libs
+import re
 
 # Import salt libs
 from salt._compat import string_types
