@@ -130,6 +130,13 @@ NOTSET = object()
 MAPPING_CACHE = {}
 FN_CACHE = {}
 
+base_status = {
+    'status': None,
+    'id': None,
+    'comment': '',
+    'out': None
+}
+
 
 def __salt(fn):
     if not fn in FN_CACHE:
@@ -359,7 +366,7 @@ def installed(name,
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
     if already_exists:
-        return _valid(name=name,comment='image {!r} already exists, contained Id: {1}'.format(name,cinfos.get("Id")))
+        return _valid(name=name,comment='image {!r} already exists, contained Id: {!r}'.format(name,cinfos.get("out",{}).get("Id")))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
@@ -805,7 +812,7 @@ def full(name,
     print "######### /INSTALLED #####"
     if ret['result'] == False:
         return ret
-    s = re.search("already exists, contained Id: (.*)",ret['comment'])
+    s = re.search("already exists, contained Id: '(.*)'",ret['comment'])
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
     container = (s.group(1) if s else None)
@@ -829,7 +836,12 @@ def full(name,
         if ret['result'] == False:
             return ret
 
-    return _ret_status("Docker done.",name,changes={name:True})#TODO
+    status = base_status.copy()
+    status["comment"] = "Docker done."
+    status["status"] = True
+    status["id"] = name
+
+    return _ret_status(status,name,changes={name:True})#TODO
 
 
 
