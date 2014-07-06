@@ -813,7 +813,7 @@ def full(name,
     print "######### /INSTALLED #####"
     if ret['result'] == False:
         return ret
-    s = re.search("already exists, contained Id: '(.*)'",ret['comment'])
+    s = re.search("already exists, container Id: '(.*)'",ret['comment'])
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
     container = (s.group(1) if s else None)
