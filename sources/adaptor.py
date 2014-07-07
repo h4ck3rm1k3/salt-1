@@ -619,9 +619,9 @@ class StateAdaptor(object):
 			'type' : 'docker',
 			'require' : [
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
-#				{'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-				{'linux.service' : { 'name' : ['docker'] }},
-#				{'linux.service' : { 'name' : ['docker.io'] }},
+				{'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+				{'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+				{'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
 			]
                 },
 	}
@@ -1215,6 +1215,10 @@ class StateAdaptor(object):
 					# filter not current platform's package module
 					if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
 
+                                        if module in ['linux.service'] and parameter.get('pkg_mgr'):
+                                                if parameter['pkg_mgr'] != self.__agent_pkg_module: continue
+                                                del parameter['pkg_mgr']
+
 					the_require_state = self.__salt('require', module, parameter)
 
 					if the_require_state:
@@ -1237,6 +1241,10 @@ class StateAdaptor(object):
 
 				# filter not current platform's package module
 				if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
+
+                                if module in ['linux.service'] and parameter.get('pkg_mgr'):
+                                        if parameter['pkg_mgr'] != self.__agent_pkg_module: continue
+                                        del parameter['pkg_mgr']
 
 				req_addin = {}
 				for k, v in attrs.iteritems():

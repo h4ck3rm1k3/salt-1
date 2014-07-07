@@ -455,7 +455,7 @@ def logs(container, *args, **kwargs):
         info = client.logs(_get_container_infos(container)['id'])
         valid(status, id=container, out=info)
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, comment="Couldn't retreive container infos or logs for container '%s'"%container, out=traceback.format_exc())
     return status
 
 
@@ -511,7 +511,7 @@ def commit(container,
         comment = 'Image {0} created from {1}'.format(image, container)
         valid(status, id=image, out=info, comment=comment)
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, comment="Couldn't commit container '%s' to repository '%s'"%(container,repository), out=traceback.format_exc())
     return status
 
 
@@ -534,7 +534,7 @@ def diff(container, *args, **kwargs):
         info = client.diff(_get_container_infos(container)['id'])
         valid(status, id=container, out=info)
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, out=traceback.format_exc(), comment="Couldn't get container diffs '%s'"%(container))
     return status
 
 
@@ -573,7 +573,7 @@ def export(container, path, *args, **kwargs):
               id=container, out=ppath,
               comment='Exported to {0}'.format(ppath))
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, comment="Couldn't export container '%s' to path '%s'"%(container,path), out=traceback.format_exc())
     return status
 
 
@@ -686,7 +686,7 @@ def create_container(image,
         }
         return callback(status, id=container, comment=comment, out=out)
     except Exception:
-        invalid(status, id=image, out=traceback.format_exc())
+        invalid(status, id=image, comment="Couldn't create countainer from image '%s'"%(image), out=traceback.format_exc())
     return status
 
 
@@ -706,7 +706,7 @@ def version(*args, **kwargs):
         info = client.version()
         valid(status, out=info)
     except Exception:
-        invalid(status, out=traceback.format_exc())
+        invalid(status, comment="Couldn't fetch curent Docker version.", out=traceback.format_exc())
     return status
 
 
@@ -729,7 +729,7 @@ def info(*args, **kwargs):
         info = client.info()
         valid(status, out=info)
     except Exception:
-        invalid(status, out=traceback.format_exc())
+        invalid(status, comment="Couldn't get Docker information", out=traceback.format_exc())
     return status
 
 
@@ -759,7 +759,7 @@ def port(container, private_port, *args, **kwargs):
             port)
         valid(status, id=container, out=info)
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, comment="Unable to map ports on container '%s'"%(container), out=traceback.format_exc())
     return status
 
 
@@ -810,8 +810,7 @@ def stop(container, timeout=10, *args, **kwargs):
     except Exception:
         invalid(status, id=container, out=traceback.format_exc(),
                 comment=(
-                    'An exception occured while stopping '
-                    'your container {0}').format(container))
+                    'Unable to stop your container {0}').format(container))
     return status
 
 
@@ -862,8 +861,7 @@ def kill(container, *args, **kwargs):
                 id=container,
                 out=traceback.format_exc(),
                 comment=(
-                    'An exception occurred while killing '
-                    'your container {0}').format(container))
+                    'Unable to kill your container {0}').format(container))
     return status
 
 
@@ -905,8 +903,7 @@ def restart(container, timeout=10, *args, **kwargs):
     except Exception:
         invalid(status, id=container, out=traceback.format_exc(),
                 comment=(
-                    'An exception occurred while restarting '
-                    'your container {0}').format(container))
+                    'Unable to restart your container {0}').format(container))
     return status
 
 
@@ -963,8 +960,7 @@ def start(container, binds=None, ports=None, port_bindings=None,
                 id=container,
                 out=traceback.format_exc(),
                 comment=(
-                    'An exception occurred while starting '
-                    'your container {0}').format(container))
+                    'Unable to start your container {0}').format(container))
     return status
 
 
@@ -1005,8 +1001,7 @@ def wait(container, *args, **kwargs):
     except Exception:
         invalid(status, id=container, out=traceback.format_exc(),
                 comment=(
-                    'An exception occurred while waiting '
-                    'your container {0}').format(container))
+                    'Unable to wait your container {0}').format(container))
     return status
 
 
@@ -1100,7 +1095,7 @@ def remove_container(container=None, force=False, v=False, *args, **kwargs):
             status['status'] = True
             status['comment'] = 'Container {0} was removed'.format(container)
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, out=traceback.format_exc(), comment="Unable to remove container '%s'"%(container))
     return status
 
 
@@ -1152,7 +1147,7 @@ def top(container, *args, **kwargs):
             invalid(status,
                     comment='Container {0} is not running'.format(container))
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, out=traceback.format_exc(), comment="Unable to get stats on container '%s'"%(container))
     return status
 
 
@@ -1181,7 +1176,7 @@ def inspect_container(container, *args, **kwargs):
     except Exception:
         invalid(status, id=container, out=traceback.format_exc(),
                 comment=(
-                    'Container does not exit: {0}'
+                    'Container does not exist: {0}'
                 ).format(container))
     if "id" not in status:
         status["id"] = status.get("Id")
@@ -1202,8 +1197,16 @@ def login(url=None, username=None, password=None, email=None, *args, **kwargs):
 
         salt '*' docker.login <container id>
     '''
-    client = _get_client()
-    return client.login(url, username, password, email)
+    status = base_status.copy()
+    status['id'] = url
+    try:
+        client = _get_client()
+        lg = client.login(url, username, password, email)
+        valid(status, id=url, out=lg, comment="%s logged to %s")
+    except Exception:
+        invalid(status, id=url, out=traceback.format_exc(),
+                comment="%s can't login to repo %s"%(username,url))
+    return status
 
 
 def search(term, *args, **kwargs):
@@ -1307,7 +1310,7 @@ def import_image(src, repo, tag=None, *args, **kwargs):
         else:
             invalid(status)
     except Exception:
-        invalid(status, out=traceback.format_exc())
+        invalid(status, out=traceback.format_exc(), comment="Unable to import the content from '%s' to an image"%(src))
     return status
 
 
@@ -1403,7 +1406,7 @@ def get_images(name=None, quiet=False, all=True, *args, **kwargs):
                 pass
         valid(status, out=infos)
     except Exception:
-        invalid(status, out=traceback.format_exc())
+        invalid(status, out=traceback.format_exc(), comment="Unable to list Docker images")
     return status
 
 
@@ -1535,7 +1538,7 @@ def inspect_image(image, *args, **kwargs):
         valid(status, id=image, out=infos)
     except Exception:
         invalid(status, id=image, out=traceback.format_exc(),
-                comment='Image does not exist')
+                comment='Image does not exist: %s'%(image))
     if "id" not in status:
         status["id"] = status.get("Id")
     if "ID" not in status['out']:
@@ -1693,7 +1696,7 @@ def pull(repo, tag=None, *args, **kwargs):
         else:
             invalid(status)
     except Exception:
-        invalid(status, id=repo, out=traceback.format_exc())
+        invalid(status, id=repo, out=traceback.format_exc(), comment="An error has occured pulling image: %s"%(repo))
     return status
 
 
@@ -1824,7 +1827,7 @@ def _run_wrapper(status, container, func, cmd, *args, **kwargs):
             invalid(status, id=container,
                     comment=comment, out=traceback.format_exc())
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, out=traceback.format_exc(), comment="Unable to run command '%s'\nOn container: %s"%(cmd,container))
     return status
 
 
@@ -2081,7 +2084,7 @@ def _script(status,
         if not no_clean:
             os.remove(path)
     except Exception:
-        invalid(status, id=container, out=traceback.format_exc())
+        invalid(status, id=container, out=traceback.format_exc(), comment="Unable to run script '%s' on container '%s'"%(source,container))
     return status
 
 

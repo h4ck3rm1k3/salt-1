@@ -374,7 +374,8 @@ def installed(name,
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
     if already_exists:
-        return _valid(name=name,comment='image {!r} already exists, container Id: {!r}'.format(name,str(cinfos.get("out",{}).get("Id"))))
+        cid = cinfos.get("out",{}).get("Id", "")
+        return _valid(name=name,comment='image {!r} already exists, container Id: {!r}'.format(name,str(cid)))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
@@ -744,17 +745,14 @@ def logged(url,
     '''
 
     docker_loggin = __salt__['docker.login']
-    returned = docker_loggin(url,username,password,email)
+    ret = docker_loggin(url,username,password,email)
 
-    print returned #debug
-    if True:#has not changed TODO
-        return _valid(
-            url=url,
-            comment='Already logged to {0} as {1}'.format(url,username))
-    changes = 'Logged in to {0} as {1}'.format(url,username)
-    return _ret_status(returned, url, changes=changes)
+    status = base_status.copy()
+    status["comment"] = ret["comment"]
+    status["status"] = ret["result"]
+    status["id"] = url
 
-
+    return _ret_status(status, name=url)
 
 
 # states aggregation
@@ -788,6 +786,7 @@ def full(name,
          docked_onlyif=None,
          docked_unless=None,
          *args, **kwargs):
+    out_text = ""
     force_install = False
     if repo:
         if username:
@@ -795,12 +794,16 @@ def full(name,
             print "######### LOGGED #####"
             print lg
             print "######### /LOGGED #####"
-            #TODO check
+            if lg.get('comment'):
+                out_text += "%s\n"%(lg['comment'])
         ret = pulled(repo,tag,force=force_pull)
         print "######### PULLED #####"
         print ret
         print "######### /PULLED #####"
-        if ret['result'] == False:
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
+        if not ret.get('result'):
+            ret['comment'] = out_text
             return ret
         elif ret['changes']:
             force_install = True
@@ -809,7 +812,10 @@ def full(name,
         print "######### BUILT #####"
         print ret
         print "######### /BUILT #####"
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
         if ret['result'] == False:
+            ret['comment'] = out_text
             return ret
         elif ret['changes']:
             force_install = True
@@ -818,7 +824,10 @@ def full(name,
     print "######### INSTALLED #####"
     print ret
     print "######### /INSTALLED #####"
+    if ret.get('comment'):
+        out_text += "%s\n"%(ret['comment'])
     if ret['result'] == False:
+        ret['comment'] = out_text
         return ret
     s = re.search("already exists, container Id: '(.*)'",ret['comment'])
     if not s:
@@ -833,7 +842,10 @@ def full(name,
         print "######### RUNNING #####"
         print ret
         print "######### /RUNNING #####"
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
         if ret['result'] == False:
+            ret['comment'] = out_text
             return ret
     if command:
         ret = run(
@@ -841,15 +853,19 @@ def full(name,
         print "######### RUN #####"
         print ret
         print "######### RUN #####"
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
         if ret['result'] == False:
+            ret['comment'] = out_text
             return ret
 
     status = base_status.copy()
-    status["comment"] = "Docker done."
+    status["comment"] = "%s\nDocker done."%out_text
     status["status"] = True
     status["id"] = name
 
-    return _ret_status(status,name,changes={name:True})#TODO
+    #TODO: changes
+    return _ret_status(status,name,changes={})
 
 
 
