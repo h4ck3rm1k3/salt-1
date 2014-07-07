@@ -163,7 +163,8 @@ def _ret_status(exec_status=None,
         out = exec_status.get('out', None)
         if out:
             if isinstance(out, string_types):
-                comment += '\n' + out
+                print "out for name:%s => %s\n"%(name,out)
+#                comment += '\n' + out
     return {
         'changes': changes,
         'result': result,
