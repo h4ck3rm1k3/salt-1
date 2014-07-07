@@ -362,7 +362,14 @@ def installed(name,
     create = __salt('docker.create_container')
     iinfos = ins_image(image)
     if not iinfos['status']:
-        return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
+        # try to pull if doesn't exist
+        ret = pulled(image)
+        if ret['result'] == False:
+            return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
+        else:
+            iinfos = ins_image(image)
+            if not iinfos['status']:
+                return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
     cinfos = ins_container(name)
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
