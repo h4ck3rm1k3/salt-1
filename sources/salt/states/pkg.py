@@ -114,6 +114,10 @@ def _find_install_targets(name=None,
         elif sources:
             desired = __salt__['pkg_resource.pack_sources'](sources)
 
+        print "!!!!!!!!"
+        print "1DESIRED=%s"%desired
+        print "!!!!!!!!+"
+
         if not desired:
             # Badly-formatted SLS
             return {'name': name,
@@ -135,6 +139,11 @@ def _find_install_targets(name=None,
             if version is None:
                 version = _get_latest_pkg_version(pkginfo)
         desired = {name: version}
+
+        print "@@@@@"
+        print "2DESIRED=%s"%desired
+        print "@@@@@+"
+
 
         cver = cur_pkgs.get(name, [])
         if version and version in cver:
