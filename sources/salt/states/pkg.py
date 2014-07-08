@@ -242,6 +242,10 @@ def _verify_install(desired, new_pkgs):
     failed = []
     for pkgname, pkgver in desired.iteritems():
         cver = new_pkgs.get(pkgname)
+        print "+++++++++++++++++++++"
+        print "cver=%s"%cver
+        print "pkgver=%s"%pkgver
+        print "-+++++++++++++++++++++-"
         if not cver:
             failed.append(pkgname)
             continue
