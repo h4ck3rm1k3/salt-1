@@ -376,7 +376,7 @@ def installed(name,
     # if container exists but is not started, try to start it
     if already_exists:
         cid = cinfos.get("out",{}).get("Id", "")
-        return _valid(name=name,comment='image {!r} already exists, container Id: {!r}'.format(name,str(cid)))
+        return _valid(name=name,comment='image {0!r} already exists, container Id: {1!r}'.format(name,str(cid)))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
@@ -452,17 +452,17 @@ def absent(name):
             is_running = __salt('docker.is_running')(cid)
             if is_running:
                 return _invalid(
-                    comment=('Container {!r}'
+                    comment=('Container {0!r}'
                              ' could not be stopped'.format(cid)))
             else:
-                return _valid(comment=('Container {!r}'
+                return _valid(comment=('Container {0!r}'
                                        ' was stopped,'.format(cid)),
                               changes={name: True})
         else:
-            return _valid(comment=('Container {!r}'
+            return _valid(comment=('Container {0!r}'
                                    ' is stopped,'.format(cid)))
     else:
-        return _valid(comment='Container {!r} not found'.format(name))
+        return _valid(comment='Container {0!r} not found'.format(name))
 
 
 def present(name):
@@ -612,7 +612,7 @@ def running(name, container=None, port_bindings=None, binds=None,
     is_running = __salt('docker.is_running')(container)
     if is_running:
         return _valid(
-            comment='Container {!r} is started'.format(container))
+            comment='Container {0!r} is started'.format(container))
     else:
         started = __salt__['docker.start'](
             container, binds=binds, port_bindings=port_bindings,
@@ -621,12 +621,12 @@ def running(name, container=None, port_bindings=None, binds=None,
         is_running = __salt__['docker.is_running'](container)
         if is_running:
             return _valid(
-                comment=('Container {!r} started.\n').format(container),
+                comment=('Container {0!r} started.\n').format(container),
                 changes={name: True})
         else:
             return _invalid(
-                comment=('Container {!r}'
-                         ' cannot be started\n{!s}').format(container,
+                comment=('Container {0!r}'
+                         ' cannot be started\n{1!s}').format(container,
                                                             started['out']))
 
 
