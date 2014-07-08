@@ -108,17 +108,12 @@ def _find_install_targets(name=None,
                 'result': False,
                 'comment': 'Only one of "pkgs" and "sources" is permitted.'}
 
-    print "a"
     cur_pkgs = __salt__['pkg.list_pkgs'](versions_as_list=True, **kwargs)
     if any((pkgs, sources)):
         if pkgs:
             desired = _repack_pkgs(pkgs)
         elif sources:
             desired = __salt__['pkg_resource.pack_sources'](sources)
-
-        print "!!!!!!!!"
-        print "1DESIRED=%s"%desired
-        print "!!!!!!!!+"
 
         if not desired:
             # Badly-formatted SLS
@@ -130,7 +125,6 @@ def _find_install_targets(name=None,
                                                     else 'sources')}
 
     else:
-        print "b"
         if salt.utils.is_windows():
             pkginfo = _get_package_info(name)
             if not pkginfo:
@@ -142,11 +136,6 @@ def _find_install_targets(name=None,
             if version is None:
                 version = _get_latest_pkg_version(pkginfo)
         desired = {name: version}
-
-        print "@@@@@"
-        print "2DESIRED=%s"%desired
-        print "@@@@@+"
-
 
         cver = cur_pkgs.get(name, [])
         if version and version in cver:
@@ -165,7 +154,6 @@ def _find_install_targets(name=None,
                     'result': True,
                     'comment': 'Package {0} is already installed'.format(name)}
 
-    print "c"
     version_spec = False
     # Find out which packages will be targeted in the call to pkg.install
     if sources:
@@ -194,7 +182,6 @@ def _find_install_targets(name=None,
                     'result': False,
                     'comment': '. '.join(comments).rstrip()}
 
-        print "d"
         # Check current versions against desired versions
         targets = {}
         problems = []
@@ -235,7 +222,6 @@ def _find_install_targets(name=None,
                     'result': False,
                     'comment': ' '.join(problems)}
 
-    print "e"
     if not targets:
         # All specified packages are installed
         msg = 'All specified packages are already installed{0}.'.format(
@@ -257,12 +243,12 @@ def _verify_install(desired, new_pkgs):
     failed = []
     for pkgname, pkgver in desired.iteritems():
         cver = new_pkgs.get(pkgname)
-        print "+++++++++++++++++++++"
-        print "cver=%s"%cver
-        print "pkgver=%s"%pkgver
-        print "-+++++++++++++++++++++-"
         if not cver:
             failed.append(pkgname)
+            continue
+        # hack no version
+        elif not pkgver:
+            ok.append(pkgname)
             continue
         # hack match user input package version
         elif any([ i.startswith(pkgver) for i in cver ]):
