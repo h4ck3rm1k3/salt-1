@@ -1113,15 +1113,15 @@ class StateAdaptor(object):
 				# 	pass
 
                         elif module in ["common.docker"]:
-                                if adding.get("port_bindings"):
+                                if addin.get("port_bindings"):
                                         pb = {}
-                                        for key in adding["port_bindings"]:
-                                                v = adding["port_bindings"][key].split(":")
+                                        for key in addin["port_bindings"]:
+                                                v = addin["port_bindings"][key].split(":")
                                                 pb[key] = {
                                                         "HostIp": v[0],
                                                         "HostPort": v[1]
                                                 }
-                                        adding["port_bindings"] = pb
+                                        addin["port_bindings"] = pb
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
@@ -1305,7 +1305,7 @@ class StateAdaptor(object):
 			Rendering the states.
 		"""
 		if not self.states or not isinstance(self.states, list):
-			raise StateException("Invalid state format %s" % str(states))
+			raise StateException("Invalid state format %s" % str(self.states))
 
 		for idx, item in enumerate(self.states):
 			for tag, value in item.iteritems():
