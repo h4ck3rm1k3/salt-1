@@ -18,6 +18,12 @@ class StateAdaptor(object):
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
         deb_docker_version = "1.10"
+        # Custom watch map
+        watch = {
+                "linux.service": "watch",
+                "common.dockerio.installed": "path",
+        }
+
 
 	mod_map = {
 		## package
@@ -1461,7 +1467,7 @@ def ut():
 					print err_log
 					result = (False, err_log, out_log)
 				else:
-					result = runner.exec_salt(states)
+					result = runner.exec_salt(states,adaptor.get_config())
 				print result
 			except Exception, e:
 				print str(e)
