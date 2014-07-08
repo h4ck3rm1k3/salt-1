@@ -101,12 +101,14 @@ def _find_install_targets(name=None,
     Inspect the arguments to pkg.installed and discover what packages need to
     be installed. Return a dict of desired packages
     '''
+    print "PASS PASSP ASS PASS PASS"
     if all((pkgs, sources)):
         return {'name': name,
                 'changes': {},
                 'result': False,
                 'comment': 'Only one of "pkgs" and "sources" is permitted.'}
 
+    print "a"
     cur_pkgs = __salt__['pkg.list_pkgs'](versions_as_list=True, **kwargs)
     if any((pkgs, sources)):
         if pkgs:
@@ -128,6 +130,7 @@ def _find_install_targets(name=None,
                                                     else 'sources')}
 
     else:
+        print "b"
         if salt.utils.is_windows():
             pkginfo = _get_package_info(name)
             if not pkginfo:
@@ -162,6 +165,7 @@ def _find_install_targets(name=None,
                     'result': True,
                     'comment': 'Package {0} is already installed'.format(name)}
 
+    print "c"
     version_spec = False
     # Find out which packages will be targeted in the call to pkg.install
     if sources:
@@ -190,6 +194,7 @@ def _find_install_targets(name=None,
                     'result': False,
                     'comment': '. '.join(comments).rstrip()}
 
+        print "d"
         # Check current versions against desired versions
         targets = {}
         problems = []
@@ -230,6 +235,7 @@ def _find_install_targets(name=None,
                     'result': False,
                     'comment': ' '.join(problems)}
 
+    print "e"
     if not targets:
         # All specified packages are installed
         msg = 'All specified packages are already installed{0}.'.format(
