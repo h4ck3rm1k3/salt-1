@@ -276,7 +276,7 @@ def reload_(name, **kwargs):
     state_std(kwargs, result)
     return not result['retcode']
 
-def force_reload(name):
+def force_reload(name, **kwargs):
     '''
     Force-reload the specified service with systemd
 
@@ -309,7 +309,6 @@ def status(name, sig=None):
         systemctl_reload()
     cmd = 'systemctl is-active {0}'.format(_canonical_unit_name(name))
     result = __salt__['cmd.run_stdall'](cmd)
-    state_std(kwargs, result)
     return not result['retcode']
 
 def enable(name, **kwargs):
@@ -359,7 +358,7 @@ def _templated_instance_enabled(name):
     ))
 
 
-def _enabled(name, **kwargs):
+def _enabled(name):
     is_enabled = \
         not __salt__['cmd.retcode'](_systemctl_cmd('is-enabled', name))
 
