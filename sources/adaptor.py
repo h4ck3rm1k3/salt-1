@@ -17,6 +17,7 @@ class StateAdaptor(object):
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
+        deb_docker_version = "1.10"
 
 	mod_map = {
 		## package
@@ -627,8 +628,12 @@ class StateAdaptor(object):
 	}
 
 	def __init__(self):
-
+                self.__shared_config = {}
 		self.states = None
+                self.os_type = None
+
+        def get_config(self):
+                return self.__shared_config
 
 	def convert(self, step, module, parameter, os_type):
 		"""
@@ -636,6 +641,8 @@ class StateAdaptor(object):
 		"""
 
 		utils.log("INFO", "Begin to convert module json data ...", ("convert", self))
+
+                self.os_type = os_type
 
 		if not isinstance(module, basestring):	raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if not isinstance(parameter, dict):		raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
@@ -700,7 +707,7 @@ class StateAdaptor(object):
 		try:
 			for state, addin in module_states.iteritems():
 				# add require
-				utils.log("DEBUG", "Begin to generate requirity ...", ("_convert", self))
+				utils.log("DEBUG", "Begin to generate requirity ...", ("__salt", self))
 				require = []
 				if 'require' in self.mod_map[module]:
 					req_state = self.__get_require(self.mod_map[module]['require'])
@@ -711,7 +718,7 @@ class StateAdaptor(object):
 								require.append({ next(iter(req_value)) : req_tag })
 
 				# add require in
-				utils.log("DEBUG", "Begin to generate require-in ...", ("_convert", self))
+				utils.log("DEBUG", "Begin to generate require-in ...", ("__salt", self))
 				require_in = []
 				if 'require_in' in self.mod_map[module]:
 					req_in_state = self.__get_require_in(self.mod_map[module]['require_in'], parameter)
@@ -721,7 +728,7 @@ class StateAdaptor(object):
 							require_in.append({ next(iter(req_in_value)) : req_in_tag })
 
 				## add watch, todo
-				utils.log("DEBUG", "Begin to generate watch ...",("_convert", self))
+				utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
 				if 'watch' in parameter and parameter['watch']:
 					state = 'mod_watch'
 					if module == 'linux.service':
@@ -742,7 +749,7 @@ class StateAdaptor(object):
 				# tag
 				#name = addin['names'] if 'names' in addin else addin['name']
 				tag = self.__get_tag(module, None, step, None, state)
-				utils.log("DEBUG", "Generated tag is %s" % tag, ("_convert", self))
+				utils.log("DEBUG", "Generated tag is %s" % tag, ("__salt", self))
 				salt_state[tag] = {
 					self.mod_map[module]['type'] : module_state
 				}
@@ -1113,6 +1120,9 @@ class StateAdaptor(object):
 				# 	pass
 
                         elif module in ["common.docker"]:
+                                if self.os_type in ['debian', 'ubuntu']:
+                                        self.__shared_config['docker.version'] = StateAdaptor.deb_docker.version
+
                                 if addin.get("port_bindings"):
                                         pb = {}
                                         for key in addin["port_bindings"]:
@@ -1213,7 +1223,8 @@ class StateAdaptor(object):
 					if module not in self.mod_map.keys():	continue
 
 					# filter not current platform's package module
-					if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:	continue
+					if module in ['linux.apt.package', 'linux.yum.package'] and module != self.__agent_pkg_module:
+                                                continue
 
                                         if module in ['linux.service'] and parameter.get('pkg_mgr'):
                                                 if parameter['pkg_mgr'] != self.__agent_pkg_module: continue
