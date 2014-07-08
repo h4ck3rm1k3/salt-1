@@ -1127,7 +1127,7 @@ class StateAdaptor(object):
 
                         elif module in ["common.docker"]:
                                 if self.os_type in ['debian', 'ubuntu']:
-                                        self.__shared_config['docker.version'] = StateAdaptor.deb_docker.version
+                                        self.__shared_config['docker.version'] = StateAdaptor.deb_docker_version
 
                                 if addin.get("port_bindings"):
                                         pb = {}
