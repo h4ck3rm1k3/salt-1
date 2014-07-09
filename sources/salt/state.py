@@ -540,9 +540,6 @@ class State(object):
         self.__run_num = 0
         self.jid = jid
 
-    def update_opts(self, opts):
-        self.opts.update(opts)
-
     def _gather_pillar(self):
         '''
         Whenever a state run starts, gather the pillar data fresh

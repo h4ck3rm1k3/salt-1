@@ -363,14 +363,15 @@ def installed(name,
     create = __salt('docker.create_container')
     iinfos = ins_image(image)
     if not iinfos['status']:
-        # try to pull if doesn't exist
-        ret = pulled(image)
-        if ret['result'] == False:
-            return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
-        else:
-            iinfos = ins_image(image)
-            if not iinfos['status']:
-                return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
+#        # try to pull if doesn't exist
+#        ret = pulled(image)
+#        if ret['result'] == False:
+#            return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
+#        else:
+#            iinfos = ins_image(image)
+#            if not iinfos['status']:
+#                return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
+        return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
     cinfos = ins_container(name)
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
@@ -928,3 +929,153 @@ def pushed(container,
 
 
 ##
+
+
+
+
+# pulled image
+def _pulled(repo,
+            tag=None,
+            username=None,
+            password=None,
+            email=None,
+            force_pull=False,
+            containers=None,
+            *args, **kwargs):
+    out_text = ""
+    force_install = False
+    if repo:
+        if username:
+            lg = logged(repo,username,password,email)
+            print "######### LOGGED #####"
+            print lg
+            print "######### /LOGGED #####"
+            if lg.get('comment'):
+                out_text += "%s\n"%(lg['comment'])
+        ret = pulled(repo,tag,force=force_pull)
+        print "######### PULLED #####"
+        print ret
+        print "######### /PULLED #####"
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
+        if not ret.get('result'):
+            ret['comment'] = out_text
+            return ret
+        elif ret['changes']:
+            force_install = True
+
+    if force_install and containers:
+        for container in containers:
+            a = absent(container)
+            if a.get('comment'):
+                out_text += "%s\n"%(a['comment'])
+            if not a.get('result'):
+                a['comment'] = out_text
+                return a
+
+    status = base_status.copy()
+    status["comment"] = out_text
+    status["status"] = True
+    status["id"] = name
+
+    #TODO: changes
+    return _ret_status(status,name,changes={})
+
+
+
+# built image
+def _built(image,
+           path=None,
+           containers=None,
+           force_build=False,
+           *args, **kwargs):
+    out_text = ""
+    force_install = False
+
+    if image and path:
+        ret = built(image,path,force=force_build)
+        print "######### BUILT #####"
+        print ret
+        print "######### /BUILT #####"
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
+        if ret['result'] == False:
+            ret['comment'] = out_text
+            return ret
+        elif ret['changes']:
+            force_install = True
+
+    if force_install and containers:
+        for container in containers:
+            a = absent(container)
+            if a.get('comment'):
+                out_text += "%s\n"%(a['comment'])
+            if not a.get('result'):
+                a['comment'] = out_text
+                return a
+
+    status = base_status.copy()
+    status["comment"] = out_text
+    status["status"] = True
+    status["id"] = name
+
+    #TODO: changes
+    return _ret_status(status,name,changes={})
+
+
+
+# running container
+def _running(name,
+             image,
+             bootstrap_cmd=None,
+             environment=None,
+             ports=None,
+             volumes=None,
+             mem_limit=0,
+             cpu_shares=None,
+             # running
+             binds=None,
+             publish_all_ports=False,
+             links=None,
+             port_bindings=None,
+             *args, **kwargs):
+
+    out_text = ""
+    ret = installed(
+        name,image,command=bootstrap_cmd,
+        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
+    print "######### INSTALLED #####"
+    print ret
+    print "######### /INSTALLED #####"
+    if ret.get('comment'):
+        out_text += "%s\n"%(ret['comment'])
+    if ret['result'] == False:
+        ret['comment'] = out_text
+        return ret
+    s = re.search("already exists, container Id: '(.*)'",ret['comment'])
+    if not s:
+        s = re.search("Container (.*) created",ret['comment'])
+    container = (s.group(1) if s else None)
+    print "########## CONTAINER ID ##########"
+    print container
+    print "########## /CONTAINER ID ##########"
+    if service:
+        ret = running(
+            name,container=name,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
+        print "######### RUNNING #####"
+        print ret
+        print "######### /RUNNING #####"
+        if ret.get('comment'):
+            out_text += "%s\n"%(ret['comment'])
+        if ret['result'] == False:
+            ret['comment'] = out_text
+            return ret
+
+
+    status = base_status.copy()
+    status["comment"] = "%s\nDocker done."%out_text
+    status["status"] = True
+    status["id"] = name
+
+    #TODO: changes
+    return _ret_status(status,name,changes={})

@@ -17,13 +17,11 @@ class StateAdaptor(object):
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
-        deb_docker_version = "1.10"
         # Custom watch map
         watch = {
                 "linux.service": "watch",
-                "common.dockerio.installed": "path",
+                "common.dockerio.built": "path",
         }
-
 
 	mod_map = {
 		## package
@@ -589,40 +587,59 @@ class StateAdaptor(object):
 #			'states' : ['pushed'],
 #			'type' : 'docker',
 #                },
-                'common.docker' : {
+                'common.docker.pulled' : {
                         'attributes' : {
-                                # installed
-                                'name'          : 'name',
-                                'image'         : 'image',
-                                'bootstrap_cmd' : 'bootstrap_cmd',
                                 'repo'          : 'repo',
                                 'tag'           : 'tag',
                                 'username'      : 'username',
                                 'password'      : 'password',
                                 'email'         : 'email',
                                 'force_pull'    : 'force_pull',
+                                'containers'    : 'containers',
+                        },
+			'states' : ['_pulled'],
+			'type' : 'docker',
+			'require' : [
+				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
+				{'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+				{'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+				{'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+			]
+                },
+                'common.docker.built' : {
+                        'attributes' : {
+                                'image'         : 'image',
                                 'path'          : 'path',
+                                'containers'    : 'containers',
                                 'watch'         : 'force_build',
+                        },
+			'states' : ['_built'],
+			'type' : 'docker',
+			'require' : [
+				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
+				{'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+				{'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+				{'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+			]
+                },
+                'common.docker.running' : {
+                        'attributes' : {
+                                # installed
+                                'name'          : 'name',
+                                'image'         : 'image',
+                                'bootstrap_cmd' : 'bootstrap_cmd',
                                 'environment'   : 'environment',
                                 'ports'         : 'ports',
                                 'volumes'       : 'volumes',
                                 'mem_limit'     : 'mem_limit',
                                 'cpu_shares'    : 'cpu_shares',
                                 # running
-                                'service'       : 'service',
                                 'binds'         : 'binds',
                                 'publish_all_ports': 'publish_all_ports',
                                 'links'         : 'links',
                                 'port_bindings' : 'port_bindings',
-                                # run
-                                'command'       : 'command',
-                                'stateful'      : 'stateful',
-                                'onlyif'        : 'onlyif',
-                                'unless'        : 'unless',
-                                'docked_onlyif' : 'docked_onlyif',
-                                'docked_unless' : 'docked_unless',
                         },
-			'states' : ['full'],
+			'states' : ['_running'],
 			'type' : 'docker',
 			'require' : [
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
@@ -633,13 +650,11 @@ class StateAdaptor(object):
                 },
 	}
 
+
+
 	def __init__(self):
-                self.__shared_config = {}
 		self.states = None
                 self.os_type = None
-
-        def get_config(self):
-                return self.__shared_config
 
 	def convert(self, step, module, parameter, os_type):
 		"""
@@ -647,8 +662,6 @@ class StateAdaptor(object):
 		"""
 
 		utils.log("INFO", "Begin to convert module json data ...", ("convert", self))
-
-                self.os_type = os_type
 
 		if not isinstance(module, basestring):	raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if not isinstance(parameter, dict):		raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
@@ -1125,10 +1138,7 @@ class StateAdaptor(object):
 				# except:
 				# 	pass
 
-                        elif module in ["common.docker"]:
-                                if self.os_type in ['debian', 'ubuntu']:
-                                        self.__shared_config['docker.version'] = StateAdaptor.deb_docker_version
-
+                        elif module in ["common.docker.running"]:
                                 if addin.get("port_bindings"):
                                         pb = {}
                                         for key in addin["port_bindings"]:
@@ -1467,7 +1477,7 @@ def ut():
 					print err_log
 					result = (False, err_log, out_log)
 				else:
-					result = runner.exec_salt(states,adaptor.get_config())
+					result = runner.exec_salt(states)
 				print result
 			except Exception, e:
 				print str(e)

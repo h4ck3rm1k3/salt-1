@@ -216,6 +216,7 @@ def get(key, default=''):
 
         salt '*' config.get pkg:apache
     '''
+
     ret = salt.utils.traverse_dict(__opts__, key, '_|-')
     if ret != '_|-':
         return ret
