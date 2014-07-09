@@ -1059,17 +1059,17 @@ def vops_running(name,
     print "########## CONTAINER ID ##########"
     print container
     print "########## /CONTAINER ID ##########"
-    if service:
-        ret = running(
-            name,container=name,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
-        print "######### RUNNING #####"
-        print ret
-        print "######### /RUNNING #####"
-        if ret.get('comment'):
-            out_text += "%s\n"%(ret['comment'])
-        if ret['result'] == False:
-            ret['comment'] = out_text
-            return ret
+
+    ret = running(
+        name,container=name,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
+    print "######### RUNNING #####"
+    print ret
+    print "######### /RUNNING #####"
+    if ret.get('comment'):
+        out_text += "%s\n"%(ret['comment'])
+    if ret['result'] == False:
+        ret['comment'] = out_text
+        return ret
 
 
     status = base_status.copy()
