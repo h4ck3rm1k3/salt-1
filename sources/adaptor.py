@@ -1450,7 +1450,8 @@ def ut():
 	config = {
 		'srv_root' : '/srv/salt',
 		'extension_modules' : '/var/cache/salt/minion/extmods',
-		'cachedir' : '/code/OpsAgent/cache'
+		'cachedir' : '/code/OpsAgent/cache',
+                'runtime': {}
 	}
 
 	from opsagent.state.runner import StateRunner
