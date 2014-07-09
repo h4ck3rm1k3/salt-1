@@ -597,7 +597,7 @@ class StateAdaptor(object):
                                 'force_pull'    : 'force_pull',
                                 'containers'    : 'containers',
                         },
-			'states' : ['_pulled'],
+			'states' : ['vops_pulled'],
 			'type' : 'docker',
 			'require' : [
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
@@ -613,7 +613,7 @@ class StateAdaptor(object):
                                 'containers'    : 'containers',
                                 'watch'         : 'force_build',
                         },
-			'states' : ['_built'],
+			'states' : ['vops_built'],
 			'type' : 'docker',
 			'require' : [
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
@@ -639,7 +639,7 @@ class StateAdaptor(object):
                                 'links'         : 'links',
                                 'port_bindings' : 'port_bindings',
                         },
-			'states' : ['_running'],
+			'states' : ['vops_running'],
 			'type' : 'docker',
 			'require' : [
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},

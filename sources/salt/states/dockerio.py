@@ -934,14 +934,14 @@ def pushed(container,
 
 
 # pulled image
-def _pulled(repo,
-            tag=None,
-            username=None,
-            password=None,
-            email=None,
-            force_pull=False,
-            containers=None,
-            *args, **kwargs):
+def vops_pulled(repo,
+                tag=None,
+                username=None,
+                password=None,
+                email=None,
+                force_pull=False,
+                containers=None,
+                *args, **kwargs):
     out_text = ""
     force_install = False
     if repo:
@@ -984,11 +984,11 @@ def _pulled(repo,
 
 
 # built image
-def _built(image,
-           path=None,
-           containers=None,
-           force_build=False,
-           *args, **kwargs):
+def vops_built(image,
+               path=None,
+               containers=None,
+               force_build=False,
+               *args, **kwargs):
     out_text = ""
     force_install = False
 
@@ -1025,20 +1025,20 @@ def _built(image,
 
 
 # running container
-def _running(name,
-             image,
-             bootstrap_cmd=None,
-             environment=None,
-             ports=None,
-             volumes=None,
-             mem_limit=0,
-             cpu_shares=None,
-             # running
-             binds=None,
-             publish_all_ports=False,
-             links=None,
-             port_bindings=None,
-             *args, **kwargs):
+def vops__running(name,
+                  image,
+                  bootstrap_cmd=None,
+                  environment=None,
+                  ports=None,
+                  volumes=None,
+                  mem_limit=0,
+                  cpu_shares=None,
+                  # running
+                  binds=None,
+                  publish_all_ports=False,
+                  links=None,
+                  port_bindings=None,
+                  *args, **kwargs):
 
     out_text = ""
     ret = installed(
