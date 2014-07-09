@@ -17,13 +17,11 @@ class StateAdaptor(object):
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
-        deb_docker_version = "1.10"
         # Custom watch map
         watch = {
                 "linux.service": "watch",
                 "common.dockerio.installed": "path",
         }
-
 
 	mod_map = {
 		## package
@@ -633,13 +631,11 @@ class StateAdaptor(object):
                 },
 	}
 
+
+
 	def __init__(self):
-                self.__shared_config = {}
 		self.states = None
                 self.os_type = None
-
-        def get_config(self):
-                return self.__shared_config
 
 	def convert(self, step, module, parameter, os_type):
 		"""
@@ -647,8 +643,6 @@ class StateAdaptor(object):
 		"""
 
 		utils.log("INFO", "Begin to convert module json data ...", ("convert", self))
-
-                self.os_type = os_type
 
 		if not isinstance(module, basestring):	raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
 		if not isinstance(parameter, dict):		raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
@@ -1126,9 +1120,6 @@ class StateAdaptor(object):
 				# 	pass
 
                         elif module in ["common.docker"]:
-                                if self.os_type in ['debian', 'ubuntu']:
-                                        self.__shared_config['docker.version'] = StateAdaptor.deb_docker_version
-
                                 if addin.get("port_bindings"):
                                         pb = {}
                                         for key in addin["port_bindings"]:
