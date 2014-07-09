@@ -313,6 +313,20 @@ def _merge_auth_bits():
     return config
 
 
+def _set_id(infos):
+    if infos:
+        id = None
+        if infos.get("Id"): id = infos["Id"]
+        elif infos.get("ID"): id = infos["ID"]
+        elif infos.get("id"): id = infos["id"]
+        if "id" not in infos:
+            infos["id"] = id
+        if "ID" not in infos:
+            infos["ID"] = id
+        if "Id" not in infos:
+            infos["Id"] = id
+    return infos
+
 def _get_image_infos(image):
     '''
     Verify that the image exists
@@ -329,14 +343,8 @@ def _get_image_infos(image):
     status = base_status.copy()
     client = _get_client()
     try:
-        infos = client.inspect_image(image)
+        infos = _set_id(client.inspect_image(image))
         if infos:
-            if "id" not in infos:
-                infos["id"] = infos.get("Id")
-            if "ID" not in infos:
-                infos["ID"] = infos.get("id")
-            if "Id" not in infos:
-                infos["Id"] = infos.get("id")
             valid(
                 status,
                 id=infos['id'],
@@ -344,25 +352,14 @@ def _get_image_infos(image):
                 comment='found')
     except Exception:
         pass
-    if "id" not in status:
-        status["id"] = status.get("Id")
-    if "ID" not in status:
-        status["ID"] = status.get("id")
-    if "Id" not in status:
-        status["Id"] = status.get("id")
+    status = _set_id(status)
     if not status['id']:
         invalid(status)
         raise CommandExecutionError(
             'ImageID "%s" could not be resolved to '
             'an existing Image' % (image)
         )
-    if "id" not in status['out']:
-        status['out']["id"] = status['out'].get("Id")
-    if "ID" not in status['out']:
-        status['out']["ID"] = status['out'].get("id")
-    if "Id" not in status['out']:
-        status['out']["Id"] = status['out'].get("id")
-    return status['out']
+    return _set_id(status['out'])
 
 
 def _get_container_infos(container):
@@ -378,39 +375,21 @@ def _get_container_infos(container):
     status = base_status.copy()
     client = _get_client()
     try:
-        info = client.inspect_container(container)
+        info = _set_id(client.inspect_container(container))
         if info:
-            if "id" not in info:
-                info["id"] = info.get("Id")
-            if "ID" not in info:
-                info["ID"] = info.get("id")
-            if "Id" not in info:
-                info["Id"] = info.get("id")
             valid(status,
                   id=info['ID'],
                   out=info)
     except Exception:
         pass
-    if "id" not in status:
-        status["id"] = status.get("Id")
-    if "ID" not in status:
-        status["ID"] = status.get("id")
-    if "Id" not in status:
-        status["Id"] = status.get("id")
+    status = _set_id(status)
     if not status['id']:
         raise CommandExecutionError(
             'Container_id {0} could not be resolved to '
             'an existing container'.format(
                 container)
         )
-    if "id" not in status['out']:
-        status['out']["id"] = status['out'].get("Id")
-    if "ID" not in status['out']:
-        status['out']["ID"] = status['out'].get("id")
-    if "Id" not in status['out']:
-        status['out']["Id"] = status['out'].get("id")
-    return status['out']
-
+    return _set_id(status['out'])
 
 def get_containers(all=True,
                    trunc=False,
@@ -1193,13 +1172,7 @@ def inspect_container(container, *args, **kwargs):
                 comment=(
                     'Container does not exist: {0}'
                 ).format(container))
-    if "id" not in status:
-        status["id"] = status.get("Id")
-    if "ID" not in status:
-        status["ID"] = status.get("id")
-    if "Id" not in status:
-        status["Id"] = status.get("id")
-    return status
+    return _set_id(status)
 
 
 def login(url=None, username=None, password=None, email=None, *args, **kwargs):
@@ -1554,14 +1527,7 @@ def inspect_image(image, *args, **kwargs):
     except Exception:
         invalid(status, id=image, out=traceback.format_exc(),
                 comment='Image does not exist: %s'%(image))
-    if "id" not in status:
-        status["id"] = status.get("Id")
-    if "ID" not in status['out']:
-        status["ID"] = status.get("id")
-    if "Id" not in status['out']:
-        status["Id"] = status.get("id")
-    return status
-
+    return _set_id(status)
 
 def _parse_image_multilogs_string(ret, repo):
     '''
