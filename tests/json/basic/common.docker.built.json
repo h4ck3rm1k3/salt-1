@@ -4,11 +4,11 @@
       "state": [
         {
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
-          "module": "common.docker.running",
+          "module": "common.docker.built",
           "parameter": {
-            "name": "my_ubuntu",
-            "image": "ubuntu",
-            "bootstrap_cmd": "service sshd start"
+            "image": "ubuntu_nginx",
+            "containers": "c_ubuntu_nginx",
+            "path": "/tmp/docker_nginx",
           }
         }
       ]
