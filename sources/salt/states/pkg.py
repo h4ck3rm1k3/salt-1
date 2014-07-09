@@ -246,12 +246,8 @@ def _verify_install(desired, new_pkgs):
         if not cver:
             failed.append(pkgname)
             continue
-        # hack no version
-        elif not pkgver:
-            ok.append(pkgname)
-            continue
         # hack match user input package version
-        elif any([ i.startswith(pkgver) for i in cver ]):
+        elif not pkgver or any([ i.startswith(pkgver) for i in cver ]):
             ok.append(pkgname)
             continue
         elif not __salt__['pkg_resource.version_clean'](pkgver):
