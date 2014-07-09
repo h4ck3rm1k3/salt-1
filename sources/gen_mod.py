@@ -898,7 +898,7 @@ Ensure an image is pulled from the specified repo. If not, pull.
 				'parameter'	:	{
 					'repo'		:	{
 						'type'		:	'line',
-						'required'	:	False,
+						'required'	:	True,
 						'visible'	:	True
 					},
 					'tag'		:	{
@@ -960,7 +960,7 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 					},
 					'path'		:	{
 						'type'		:	'line',
-						'required'	:	False,
+						'required'	:	True,
 						'visible'	:	True
 					},
 					'containers'		:	{

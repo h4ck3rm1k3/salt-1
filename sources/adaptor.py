@@ -20,7 +20,7 @@ class StateAdaptor(object):
         # Custom watch map
         watch = {
                 "linux.service": "watch",
-                "common.dockerio.built": "path",
+                "common.docker.built": "path",
         }
 
 	mod_map = {
