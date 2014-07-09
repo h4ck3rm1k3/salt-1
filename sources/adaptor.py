@@ -20,7 +20,7 @@ class StateAdaptor(object):
         # Custom watch map
         watch = {
                 "linux.service": "watch",
-                "common.dockerio.installed": "path",
+                "common.dockerio.built": "path",
         }
 
 	mod_map = {
@@ -587,40 +587,59 @@ class StateAdaptor(object):
 #			'states' : ['pushed'],
 #			'type' : 'docker',
 #                },
-                'common.docker' : {
+                'common.docker.pulled' : {
                         'attributes' : {
-                                # installed
-                                'name'          : 'name',
-                                'image'         : 'image',
-                                'bootstrap_cmd' : 'bootstrap_cmd',
                                 'repo'          : 'repo',
                                 'tag'           : 'tag',
                                 'username'      : 'username',
                                 'password'      : 'password',
                                 'email'         : 'email',
                                 'force_pull'    : 'force_pull',
+                                'containers'    : 'containers',
+                        },
+			'states' : ['_pulled'],
+			'type' : 'docker',
+			'require' : [
+				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
+				{'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+				{'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+				{'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+			]
+                },
+                'common.docker.built' : {
+                        'attributes' : {
+                                'image'         : 'image',
                                 'path'          : 'path',
+                                'containers'    : 'containers',
                                 'watch'         : 'force_build',
+                        },
+			'states' : ['_built'],
+			'type' : 'docker',
+			'require' : [
+				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
+				{'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+				{'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+				{'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+			]
+                },
+                'common.docker.running' : {
+                        'attributes' : {
+                                # installed
+                                'name'          : 'name',
+                                'image'         : 'image',
+                                'bootstrap_cmd' : 'bootstrap_cmd',
                                 'environment'   : 'environment',
                                 'ports'         : 'ports',
                                 'volumes'       : 'volumes',
                                 'mem_limit'     : 'mem_limit',
                                 'cpu_shares'    : 'cpu_shares',
                                 # running
-                                'service'       : 'service',
                                 'binds'         : 'binds',
                                 'publish_all_ports': 'publish_all_ports',
                                 'links'         : 'links',
                                 'port_bindings' : 'port_bindings',
-                                # run
-                                'command'       : 'command',
-                                'stateful'      : 'stateful',
-                                'onlyif'        : 'onlyif',
-                                'unless'        : 'unless',
-                                'docked_onlyif' : 'docked_onlyif',
-                                'docked_unless' : 'docked_unless',
                         },
-			'states' : ['full'],
+			'states' : ['_running'],
 			'type' : 'docker',
 			'require' : [
 				{'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
@@ -1119,7 +1138,7 @@ class StateAdaptor(object):
 				# except:
 				# 	pass
 
-                        elif module in ["common.docker"]:
+                        elif module in ["common.docker.running"]:
                                 if addin.get("port_bindings"):
                                         pb = {}
                                         for key in addin["port_bindings"]:
@@ -1458,7 +1477,7 @@ def ut():
 					print err_log
 					result = (False, err_log, out_log)
 				else:
-					result = runner.exec_salt(states,adaptor.get_config())
+					result = runner.exec_salt(states)
 				print result
 			except Exception, e:
 				print str(e)
