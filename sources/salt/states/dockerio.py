@@ -979,7 +979,7 @@ def vops_pulled(repo,
     status["id"] = repo
 
     #TODO: changes
-    return _ret_status(status,name,changes={})
+    return _ret_status(status,repo,changes={})
 
 
 
@@ -1017,10 +1017,10 @@ def vops_built(image,
     status = base_status.copy()
     status["comment"] = out_text
     status["status"] = True
-    status["id"] = name
+    status["id"] = image
 
     #TODO: changes
-    return _ret_status(status,name,changes={})
+    return _ret_status(status,image,changes={})
 
 
 
