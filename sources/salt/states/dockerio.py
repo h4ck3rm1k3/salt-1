@@ -1025,20 +1025,20 @@ def vops_built(image,
 
 
 # running container
-def vops__running(name,
-                  image,
-                  bootstrap_cmd=None,
-                  environment=None,
-                  ports=None,
-                  volumes=None,
-                  mem_limit=0,
-                  cpu_shares=None,
-                  # running
-                  binds=None,
-                  publish_all_ports=False,
-                  links=None,
-                  port_bindings=None,
-                  *args, **kwargs):
+def vops_running(name,
+                 image,
+                 bootstrap_cmd=None,
+                 environment=None,
+                 ports=None,
+                 volumes=None,
+                 mem_limit=0,
+                 cpu_shares=None,
+                 # running
+                 binds=None,
+                 publish_all_ports=False,
+                 links=None,
+                 port_bindings=None,
+                 *args, **kwargs):
 
     out_text = ""
     ret = installed(
