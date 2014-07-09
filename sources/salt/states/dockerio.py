@@ -164,7 +164,7 @@ def _ret_status(exec_status=None,
         if out:
             if isinstance(out, string_types):
                 print "out for name:%s => %s\n"%(name,out)
-#                comment += '\n' + out
+                comment += '\n' + out
     return {
         'changes': changes,
         'result': result,
@@ -1011,6 +1011,7 @@ def vops_built(image,
             if a.get('comment'):
                 out_text += "%s\n"%(a['comment'])
             if not a.get('result'):
+                a['result'] = False
                 a['comment'] = out_text
                 return a
 
