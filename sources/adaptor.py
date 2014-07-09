@@ -670,7 +670,7 @@ class StateAdaptor(object):
 			raise	StateException("Invalid input parameter: %s" % os_type)
 
 		# distro check and package manger check
-		if (os_type in ['centos', 'redhat'] and module in ['linux.apt.package', 'linux.apt.repo']) \
+		if (os_type in ['centos', 'redhat', 'amazon'] and module in ['linux.apt.package', 'linux.apt.repo']) \
 			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
 			raise StateException("Conflict on os type %s and module %s" % (os_type, module))
 
