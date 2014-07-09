@@ -976,7 +976,7 @@ def vops_pulled(repo,
     status = base_status.copy()
     status["comment"] = out_text
     status["status"] = True
-    status["id"] = name
+    status["id"] = repo
 
     #TODO: changes
     return _ret_status(status,name,changes={})
