@@ -8,7 +8,7 @@
           "parameter": {
             "image": "ubuntu_nginx",
             "containers": ["my_ubuntu_nginx"],
-            "path": "/opt/docker/images/ubuntu_nginx",
+            "path": "/opt/docker/images/ubuntu_nginx"
           }
         }
       ]
