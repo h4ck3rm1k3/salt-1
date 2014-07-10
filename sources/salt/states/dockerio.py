@@ -971,7 +971,7 @@ def vops_pulled(name,
     if force_install and containers:
         for container in containers:
             a = absent(container)
-            if a.get('comment'):
+            if a.get('changes') and a.get('comment'):
                 out_text += "%s\n"%(a['comment'])
             if not a.get('result'):
                 a['comment'] = out_text
@@ -1014,7 +1014,7 @@ def vops_built(image,
     if force_install and containers:
         for container in containers:
             a = absent(container)
-            if a.get('comment'):
+            if a.get('changes') and a.get('comment'):
                 out_text += "%s\n"%(a['comment'])
             if not a.get('result'):
                 a['result'] = False
@@ -1078,9 +1078,8 @@ def vops_running(name,
         ret['comment'] = out_text
         return ret
 
-
     status = base_status.copy()
-    status["comment"] = "%s\nDocker done."%out_text
+    status["comment"] = "%s\nContainer %s running."%(out_text,name)
     status["status"] = True
     status["id"] = name
 
