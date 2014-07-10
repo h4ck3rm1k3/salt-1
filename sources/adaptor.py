@@ -409,7 +409,11 @@ class StateAdaptor(object):
 				'PV-size'				: 'setphysicalvolumesize',
 			},
 			'states' : ['pv_present'],
-			'type' : 'lvm'
+			'type' : 'lvm',
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'lvm2'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'lvm2'}] }}
+			]
 		},
 		'linux.lvm.vg'	: {
 			'attributes' : {
@@ -426,7 +430,12 @@ class StateAdaptor(object):
 				'allocation-policy'	: 'alloc',
 			},
 			'states' : ['vg_present', 'vg_absent'],
-			'type' : 'lvm'
+			'type' : 'lvm',
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'lvm2'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'lvm2'}] }}
+			]
+
 		},
 		'linux.lvm.lv'	: {
 			'attributes'	: {
@@ -462,6 +471,10 @@ class StateAdaptor(object):
 			},
 			'states' : ['lv_present', 'lv_absent'],
 			'type' : 'lvm',
+			'require' : [
+				{'linux.apt.package' : { 'name' : [{'key':'lvm2'}] }},
+				{'linux.yum.package' : { 'name' : [{'key':'lvm2'}] }}
+			]
 		},
 
 		## virtual env
