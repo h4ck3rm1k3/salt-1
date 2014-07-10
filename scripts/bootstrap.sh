@@ -10,11 +10,10 @@ if [ ! -f "$1" ]; then
 fi
 
 # get variables
-OA_PACKAGE_PATH=$(cat "$1" | grep "package_path=" | cut -d '=' -f 2)
-OA_BOOT_DIR=$(cat "$1" | grep "root=" | cut -d '=' -f 2)
-OA_SALT=$(cat "$1" | grep "salt=" | cut -d '=' -f 2)
-OA_LIB=${OA_BOOT_DIR}/${OA_SALT}/libs
+S_OA_PACKAGE_PATH=$(cat "$1" | grep "^package_path=" | cut -d '=' -f 2)
+S_OA_BOOT_DIR=$(cat "$1" | grep "^root=" | cut -d '=' -f 2)
+S_OA_SALT=$(cat "$1" | grep "^name=" | cut -d '=' -f 2)
 
 # copy deps
-chmod 755 ${OA_BOOT_DIR}/${OA_SALT}/libs/*
-cp -rf ${OA_BOOT_DIR}/${OA_SALT}/libs/* ${OA_PACKAGE_PATH}/
+chmod 755 ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/*
+cp -rf ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/* ${S_OA_PACKAGE_PATH}/
