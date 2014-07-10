@@ -589,6 +589,7 @@ class StateAdaptor(object):
 #                },
                 'common.docker.pulled' : {
                         'attributes' : {
+                                'name'          : 'name',
                                 'repo'          : 'repo',
                                 'tag'           : 'tag',
                                 'username'      : 'username',

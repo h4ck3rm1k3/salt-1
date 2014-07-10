@@ -879,7 +879,9 @@ Ensure an image is pulled from the specified repo. If not, pull.
 
 ### Parameters
 
-*   **`repo`** (*required*): Repo URL (e.g. `index.docker.io:MyRepo/image`)
+*   **`name`** (*required*): Image name
+
+*   **`repo`** (*optional*): Repo URL (e.g. `index.docker.io:MyRepo`)
 
 *   **`tag`** (*optional*): Repo tag
 
@@ -896,9 +898,14 @@ Ensure an image is pulled from the specified repo. If not, pull.
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'repo'		:	{
+					'name'		:	{
 						'type'		:	'line',
 						'required'	:	True,
+						'visible'	:	True
+					},
+					'repo'		:	{
+						'type'		:	'line',
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'tag'		:	{

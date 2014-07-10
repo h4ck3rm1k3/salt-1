@@ -228,7 +228,7 @@ def mod_watch(name, sfun=None, *args, **kw):
                         ' implemented for {0}'.format(sfun))}
 
 
-def pulled(name, tag=None, force=False, *args, **kwargs):
+def pulled(name, repo=None, tag=None, force=False, *args, **kwargs):
     '''
     Pull an image from a docker registry. (`docker pull`)
 
@@ -246,6 +246,9 @@ def pulled(name, tag=None, force=False, *args, **kwargs):
     name
         Name of the image
 
+    repo
+        Repo on which download the image
+
     tag
         Tag of the image
 
@@ -260,7 +263,7 @@ def pulled(name, tag=None, force=False, *args, **kwargs):
             comment='Image already pulled: {0}'.format(name))
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
-    returned = func(name,tag)
+    returned = func(name, repo, tag)
     if previous_id != returned['id']:
         changes = {name: True}
     else:
@@ -934,7 +937,8 @@ def pushed(container,
 
 
 # pulled image
-def vops_pulled(repo,
+def vops_pulled(name,
+                repo=None,
                 tag=None,
                 username=None,
                 password=None,
@@ -944,15 +948,16 @@ def vops_pulled(repo,
                 *args, **kwargs):
     out_text = ""
     force_install = False
-    if repo:
-        if username:
+    if name:
+        if repo and username:
+            # TODO: test
             lg = logged(repo,username,password,email)
             print "######### LOGGED #####"
             print lg
             print "######### /LOGGED #####"
             if lg.get('comment'):
                 out_text += "%s\n"%(lg['comment'])
-        ret = pulled(repo,tag,force=force_pull)
+        ret = pulled(name,repo,tag,force=force_pull)
         print "######### PULLED #####"
         print ret
         print "######### /PULLED #####"

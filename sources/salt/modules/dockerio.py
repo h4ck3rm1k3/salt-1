@@ -1598,19 +1598,22 @@ def _pull_assemble_error_status(status, ret, logs):
     return status
 
 
-def pull(repo, tag=None, *args, **kwargs):
+def pull(name, repo=None, tag=None, *args, **kwargs):
     '''
     Pulls an image from any registry. See above documentation for
     how to configure authenticated access.
 
+    :type name: string
+    :param name: The name of the image
+
     :type repo: string
     :param repo: The repository to pull. \
-        [registryurl://]REPOSITORY_NAME_image
+        [registryurl://]REPOSITORY_NAME
         eg::
 
-            index.docker.io:MyRepo/image
-            superaddress.cdn:MyRepo/image
-            MyRepo/image
+            index.docker.io:MyRepo
+            superaddress.cdn:MyRepo
+            MyRepo
 
     :type tag: string
     :param tag: The specific tag  to pull
@@ -1658,14 +1661,15 @@ def pull(repo, tag=None, *args, **kwargs):
     '''
     client = _get_client()
     status = base_status.copy()
+    repo_uri = ("%s/%s"%(repo,name) if repo else name)
     try:
-        ret = client.pull(repo, tag=tag)
+        ret = client.pull(repo_uri, tag=tag)
         if ret:
-            logs, infos = _parse_image_multilogs_string(ret, repo)
+            logs, infos = _parse_image_multilogs_string(ret, name)
             if infos and infos.get('id', None):
-                repotag = repo
+                repotag = repo_uri
                 if tag:
-                    repotag = '{0}:{1}'.format(repo, tag)
+                    repotag = '{0}:{1}'.format(repo_uri, tag)
                 valid(status,
                       out=logs if logs else ret,
                       id=infos['id'],
@@ -1677,7 +1681,7 @@ def pull(repo, tag=None, *args, **kwargs):
         else:
             invalid(status)
     except Exception:
-        invalid(status, id=repo, out=traceback.format_exc(), comment="An error has occured pulling image: %s"%(repo))
+        invalid(status, id=name, out=traceback.format_exc(), comment="An error has occured pulling image: %s"%(repo_uri))
     return status
 
 
