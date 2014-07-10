@@ -611,6 +611,7 @@ class StateAdaptor(object):
                         'attributes' : {
                                 'image'         : 'image',
                                 'path'          : 'path',
+                                'repo'          : 'repo',
                                 'containers'    : 'containers',
                                 'watch'         : 'force_build',
                         },

@@ -955,6 +955,8 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 
 *   **`path`** (*required*): Filesystem path to the dockerfile
 
+*   **`repo`** (*optional*): Repository where to store the image
+
 *   **`containers`** (*optional*): Containers associated (required for container updates)
 					''',
 					'cn'	:	''''''
@@ -968,6 +970,11 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 					'path'		:	{
 						'type'		:	'line',
 						'required'	:	True,
+						'visible'	:	True
+					},
+					'repo'		:	{
+						'type'		:	'line',
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'containers'		:	{

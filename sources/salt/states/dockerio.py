@@ -288,7 +288,6 @@ def built(name,
     path
         URL (e.g. `url/branch/docker_dir/dockerfile`)
         or filesystem path to the dockerfile
-
     '''
     ins = __salt('docker.inspect_image')
     iinfos = ins(name)
@@ -991,6 +990,7 @@ def vops_pulled(name,
 # built image
 def vops_built(image,
                path=None,
+               repo=None,
                containers=None,
                force_build=False,
                *args, **kwargs):
@@ -998,6 +998,7 @@ def vops_built(image,
     force_install = False
 
     if image and path:
+        name = ("%s/%s"%(repo,image) if repo else image)
         ret = built(image,path,force=force_build)
         print "######### BUILT #####"
         print ret

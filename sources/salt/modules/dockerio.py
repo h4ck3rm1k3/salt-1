@@ -487,13 +487,13 @@ def commit(container,
     client = _get_client()
     try:
         container = _get_container_infos(container)['id']
-        info = client.commit(
+        info = _set_id(client.commit(
             container,
             repository=repository,
             tag=tag,
             message=message,
             author=author,
-            conf=conf)
+            conf=conf))
         found = False
         for k in 'Id', 'id', 'ID':
             if k in info:
@@ -525,7 +525,7 @@ def diff(container, *args, **kwargs):
     status = base_status.copy()
     client = _get_client()
     try:
-        info = client.diff(_get_container_infos(container)['id'])
+        info = _set_id(client.diff(_get_container_infos(container)['id']))
         valid(status, id=container, out=info)
     except Exception:
         invalid(status, id=container, out=traceback.format_exc(), comment="Couldn't get container diffs '%s'"%(container))
@@ -654,7 +654,7 @@ def create_container(image,
                     mounted = parts[0]
                 mountpoints[mountpoint] = {}
                 binds[mounted] = mountpoint
-        info = client.create_container(
+        info = _set_id(client.create_container(
             image=image,
             command=command,
             hostname=hostname,
@@ -670,7 +670,7 @@ def create_container(image,
             volumes_from=volumes_from,
             name=name,
             cpu_shares=cpu_shares
-        )
+        ))
         container = info['Id']
         callback = valid
         comment = 'Container created'
@@ -697,7 +697,7 @@ def version(*args, **kwargs):
     status = base_status.copy()
     client = _get_client()
     try:
-        info = client.version()
+        info = _set_id(client.version())
         valid(status, out=info)
     except Exception:
         invalid(status, comment="Couldn't fetch curent Docker version.", out=traceback.format_exc())
@@ -720,7 +720,7 @@ def info(*args, **kwargs):
     status = base_status.copy()
     client = _get_client()
     try:
-        info = client.info()
+        info = _set_id(client.info())
         valid(status, out=info)
     except Exception:
         invalid(status, comment="Couldn't get Docker information", out=traceback.format_exc())
@@ -748,9 +748,9 @@ def port(container, private_port, *args, **kwargs):
     status = base_status.copy()
     client = _get_client()
     try:
-        info = client.port(
+        info = _set_id(client.port(
             _get_container_infos(container)['id'],
-            port)
+            port))
         valid(status, id=container, out=info)
     except Exception:
         invalid(status, id=container, comment="Unable to map ports on container '%s'"%(container), out=traceback.format_exc())
@@ -1372,7 +1372,7 @@ def get_images(name=None, quiet=False, all=True, *args, **kwargs):
     client = _get_client()
     status = base_status.copy()
     try:
-        infos = client.images(name=name, quiet=quiet, all=all)
+        infos = _set_id(client.images(name=name, quiet=quiet, all=all))
         for i in range(len(infos)):
             inf = infos[i]
             try:
