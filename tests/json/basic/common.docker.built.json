@@ -7,8 +7,8 @@
           "module": "common.docker.built",
           "parameter": {
             "image": "ubuntu_nginx",
-            "containers": "c_ubuntu_nginx",
-            "path": "/tmp/docker_nginx",
+            "containers": ["my_ubuntu_nginx"],
+            "path": "/opt/docker/images/ubuntu_nginx",
           }
         }
       ]
