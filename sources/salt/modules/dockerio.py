@@ -1661,7 +1661,7 @@ def pull(name, repo=None, tag=None, *args, **kwargs):
     '''
     client = _get_client()
     status = base_status.copy()
-    repo_uri = ("%s/%s"%(repo,name) if repo else name)
+    repo_uri = ("%s:%s"%(repo,name) if repo else name)
     try:
         ret = client.pull(repo_uri, tag=tag)
         if ret:
