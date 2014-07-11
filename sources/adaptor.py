@@ -556,6 +556,7 @@ class StateAdaptor(object):
 		if (os_type in ['centos', 'redhat', 'amazon'] and module in ['linux.apt.package', 'linux.apt.repo']) \
 			or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
 			raise StateException("Conflict on os type %s and module %s" % (os_type, module))
+		self.os_type = os_type
 
 		# filter unhandler module
 		if module in ['meta.comment']:
@@ -576,7 +577,7 @@ class StateAdaptor(object):
 			module, parameter = self.__check_module(module, parameter)
 
 			utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
-			self.states = self.__salt(step, module, parameter, os_type)
+			self.states = self.__salt(step, module, parameter)
 
 			# expand salt state
 			utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
@@ -589,7 +590,7 @@ class StateAdaptor(object):
 		except StateException, e:
 			import json
 			utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
-				(step, module, json.dumps(parameter), os_type, str(e)), ("convert", self))
+				(step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
 			return None
 		except Exception, e:
 			utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
@@ -597,14 +598,14 @@ class StateAdaptor(object):
 
 		return self.states
 
-	def __salt(self, step, module, parameter, os_type=None):
+	def __salt(self, step, module, parameter):
 		salt_state = {}
 
 		utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
 		addin = self.__init_addin(module, parameter)
 
 		utils.log("DEBUG", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
-		module_states = self.__build_up(module, addin, os_type)
+		module_states = self.__build_up(module, addin)
 
 		try:
 			for state, addin in module_states.iteritems():
@@ -687,7 +688,8 @@ class StateAdaptor(object):
 		if not addin:	raise StateException("No addin founded: %s, %s" % (module, parameter), ("__init_addin", self))
 		return addin
 
-	def __build_up(self, module, addin, os_type=None):
+	def __build_up(self, module, addin):
+
 		default_state = self.mod_map[module]['states'][0]
 		module_state = {
 			default_state : addin
@@ -759,8 +761,8 @@ class StateAdaptor(object):
 							}
 						}]
 
-					if module == 'common.npm.package' and os_type == 'redhat':
-						self.__preinstall_npm(os_type)
+					if module == 'common.npm.package' and self.os_type in ['redhat']:
+						self.__preinstall_npm()
 						self.mod_map[module].pop('require')
 
 			elif module in ['common.git', 'common.svn', 'common.hg']:
@@ -1266,23 +1268,24 @@ class StateAdaptor(object):
 			utils.log("ERROR", "Check command %s excpetion: %s" % (cmd_name, str(e)), ("__check_cmd", self))
 			return False
 
-	def __preinstall_npm(self, os_type):
+	def __preinstall_npm(self):
 		"""
 			Preinstall nodejs and npm.
 		"""
 
 		try:
-			if not os_type:
+			if not self.os_type:
 				return
 
 			# install nodejs
-			if os_type in ['centos', 'redhat', 'amazon']:
+			if self.os_type in ['centos', 'redhat', 'amazon']:
 				pm = 'yum'
-			elif os_type in ['debian', 'ubuntu']:
+			elif self.os_type in ['debian', 'ubuntu']:
 				pm = 'apt-get'
 			else:
-				utils.log("ERROR", "Not supported os {0}".format(os_type), ("__preinstall_npm", self))
+				utils.log("ERROR", "Not supported os {0}".format(self.os_type), ("__preinstall_npm", self))
 
+			import subprocess
 			cmd = '{0} install -y nodejs'.format(pm)
 			process = subprocess.Popen(
 				cmd,
