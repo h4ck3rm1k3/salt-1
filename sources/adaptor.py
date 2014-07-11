@@ -1157,12 +1157,13 @@ class StateAdaptor(object):
                                         for item in addin["port_bindings"]:
                                                 key = item.get("key","")
                                                 value = item.get("value","")
+                                                if not key or not value: continue
                                                 v = value.split(":")
                                                 pb[key] = ({
                                                         "HostIp": v[0],
                                                         "HostPort": v[1]
                                                 } if len(v) == 2 else {
-                                                        "HostIp": "",
+                                                        "HostIp": "0.0.0.0",
                                                         "HostPort": v[0]
                                                 })
                                                 k = key.split("/")
