@@ -1010,7 +1010,7 @@ def vops_built(image,
             if ret.get('changes'):
                 out_text += "Image %s built from Dockerfile in %s\n"%(name,path)
                 state_stdout += "%s\n"%(ret['comment'])
-            else
+            else:
                 out_text += "%s\n"%(ret['comment'])
         if ret['result'] == False:
             ret['comment'] = out_text
