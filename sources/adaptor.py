@@ -1154,8 +1154,10 @@ class StateAdaptor(object):
                                         ports = []
                                         pb = {}
 
-                                        for key in addin["port_bindings"]:
-                                                v = addin["port_bindings"][key].split(":")
+                                        for item in addin["port_bindings"]:
+                                                key = item.get("key","")
+                                                value = item.get("value","")
+                                                v = value.split(":")
                                                 pb[key] = ({
                                                         "HostIp": v[0],
                                                         "HostPort": v[1]
