@@ -376,10 +376,11 @@ def installed(name,
         return _invalid(name=name,comment='image "{0}" does not exist'.format(image))
     cinfos = ins_container(name)
     already_exists = cinfos['status']
-#    # if container exists but is not started, try to start it
-#    if already_exists:
-#        cid = cinfos.get("out",{}).get("Id", "")
-#        return _valid(name=name,comment='image {0!r} already exists, container Id: {1!r}'.format(name,str(cid)))
+    # if container exists but is not started, try to start it
+    if already_exists:
+        if cinfos.get("out",{}).get("State", {}).get("Running", False):
+            cid = cinfos.get("out",{}).get("Id", "")
+            return _valid(name=name,comment='image {0!r} already exists, container Id: {1!r}'.format(name,str(cid)))
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
