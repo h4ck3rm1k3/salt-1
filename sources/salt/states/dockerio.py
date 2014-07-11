@@ -731,22 +731,22 @@ def script(name,
 ## VisualOps States
 ##
 
-def logged(url,
-           username=None,
+def logged(username,
            password=None,
            email=None,
+           url=None,
            *args, **kwargs):
     '''
     Login to a Docker repository. (`docker login`)
 
-    url
-        repo uri
     username
         username
     password
         password
     email
         email
+    url
+        repo uri
     '''
 
     docker_loggin = __salt__['docker.login']
@@ -754,8 +754,8 @@ def logged(url,
 
     status = base_status.copy()
     status["comment"] = ret["comment"]
-    status["status"] = ret["result"]
-    status["id"] = url
+    status["status"] = ret["status"]
+    status["id"] = username
 
     return _ret_status(status, name=url)
 
@@ -950,7 +950,7 @@ def vops_pulled(repo,
         if repo and username:
             # TODO: test
             url = repo.split(":")[0]
-            lg = logged((url if url else None),username,password,email)
+            lg = logged(url=(url if url else None),username=username,password=password,email=email)
             print "######### LOGGED #####"
             print lg
             print "######### /LOGGED #####"
