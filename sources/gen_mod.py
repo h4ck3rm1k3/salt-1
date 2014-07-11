@@ -996,15 +996,13 @@ Ensure that a container from the given name is running. If not, run it.
 
 *   **`image`** (*required*): Image from which to build this container, name of the created image if path filled
 
-*   **`bootstrap_cmd`** (*required*): Command to run to the container at bootstrap
+*   **`command`** (*required*): Command argument to Docker
+
+*   **`entry_point`** (*optional*): Entry point to the container
 
 *   **`environment`** (*optional*): Environment variables for the container, either
                                         - a mapping of key, values
                                         - a list of mappings of key values
-
-*   **`ports`** (*optional*): List of ports definitions, either
-                                        - a port to map
-                                        - a mapping of mapping portInHost : PortInContainer
 
 *   **`volumes`** (*optional*): List of volumes
 
@@ -1025,7 +1023,7 @@ Ensure that a container from the given name is running. If not, run it.
 *   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
     example:
         5000/tcp: 127.0.0.1:5000
-        6000/tcp: :6000
+        6000/tcp: 6000
 					''',
 					'cn'	:	''''''
 				},
@@ -1040,9 +1038,14 @@ Ensure that a container from the given name is running. If not, run it.
 						'required'	:	True,
 						'visible'	:	True
 					},
-					'bootstrap_cmd'		:	{
-						'type'		:	'line',
+					'command'		:	{
+						'type'		:	'array',
 						'required'	:	True,
+						'visible'	:	True
+					},
+					'entry_point'		:	{
+						'type'		:	'array',
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'environment'	:	{

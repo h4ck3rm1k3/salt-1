@@ -634,7 +634,8 @@ class StateAdaptor(object):
                                 # installed
                                 'name'          : 'name',
                                 'image'         : 'image',
-                                'bootstrap_cmd' : 'bootstrap_cmd',
+                                'command'       : 'command',
+                                'entry_point'   : 'entry_point',
                                 'environment'   : 'environment',
                                 'volumes'       : 'volumes',
                                 'mem_limit'     : 'mem_limit',

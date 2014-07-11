@@ -317,6 +317,7 @@ def built(name,
 
 def installed(name,
               image,
+              entrypoint=None,
               command=None,
               hostname=None,
               user=None,
@@ -411,6 +412,7 @@ def installed(name,
         dvolumes.extend(vals)
     a, kw = [image], dict(
         command=command,
+        entrypoint=entrypoint,
         hostname=hostname,
         user=user,
         detach=detach,
@@ -1041,7 +1043,8 @@ def vops_built(image,
 # running container
 def vops_running(name,
                  image,
-                 bootstrap_cmd=None,
+                 entrypoint=None,
+                 command=None,
                  environment=None,
                  ports=None,
                  volumes=None,
@@ -1056,7 +1059,7 @@ def vops_running(name,
 
     out_text = ""
     ret = installed(
-        name,image,command=bootstrap_cmd,
+        name,image,entrypoint=entrypoint,command=command,
         environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
     print "######### INSTALLED #####"
     print ret
