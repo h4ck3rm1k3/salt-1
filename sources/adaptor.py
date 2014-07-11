@@ -19,8 +19,13 @@ class StateAdaptor(object):
 	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
         # Custom watch map
         watch = {
-                "linux.service": "watch",
-                "common.docker.built": "path",
+                "linux.service": {
+                        "file_key": "watch"
+                },
+                "common.docker.built": {
+                        "file": "Dockerfile",
+                        "dir_key": "path"
+                }
         }
 
 	mod_map = {
