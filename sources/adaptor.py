@@ -1301,7 +1301,10 @@ class StateAdaptor(object):
 					raise StateException("Excute cmd %s failed"%cmd)
 
 			elif self.os_type in ['debian']:
-				cmd = 'echo "deb http://ftp.us.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list && apt-get update && apt-get install -y nodejs-legacy curl'
+				node_source_path = '/etc/apt/sources.list.d/nodejs.list'
+				cmd = 'sed -i -e "/deb  http:\/\/ftp.us.debian.org\/debian wheezy-backports main/d" /etc/apt/sources.list && \
+					echo "deb http://ftp.us.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list && \
+					apt-get update && apt-get install -y nodejs-legacy curl'
 
 				process = subprocess.Popen(
 					cmd,
@@ -1315,7 +1318,6 @@ class StateAdaptor(object):
 					raise StateException("Excute cmd %s failed"%cmd)
 
 			# install npm
-			tmp_dir = '/opt/visualops/tmp'
 			cmd = 'curl --insecure https://www.npmjs.org/install.sh | bash'
 			process = subprocess.Popen(
 				cmd,
