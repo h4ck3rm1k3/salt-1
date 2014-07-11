@@ -161,7 +161,7 @@ def info(cwd,
     if fmt == 'xml':
         opts.append('--xml')
     if targets:
-        opts += shlex.split(targets)
+        opts += shlex.split(str(targets))
     infos = _run_svn('info', cwd, user, username, password, opts)
 
     if fmt in ('str', 'xml'):
