@@ -1318,7 +1318,7 @@ class StateAdaptor(object):
 					raise StateException("Excute cmd %s failed"%cmd)
 
 			# install npm
-			cmd = 'curl --insecure https://www.npmjs.org/install.sh | bash'
+			cmd = 'curl --insecure https://www.npmjs.org/install.sh | clean=y bash'
 			process = subprocess.Popen(
 				cmd,
 				shell=True,
