@@ -982,7 +982,7 @@ Ensure that a container from the given name is running. If not, run it.
 
 *   **`image`** (*required*): Image from which to build this container (e.g. `MyRepo/image`)
 
-*   **`command`** (*required*): Command argument to Docker
+*   **`command`** (*optional*): Command argument to Docker (required if not specified in Dockerfile)
 
 *   **`entry_point`** (*optional*): Entry point to the container
 
@@ -1009,7 +1009,8 @@ Ensure that a container from the given name is running. If not, run it.
 *   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
     example:
         5000/tcp: 127.0.0.1:5000
-        6000/tcp: 6000
+        6000/tcp: 6000 (default ip: 0.0.0.0)
+        80: 6666 (default protocol: tcp)
 					''',
 					'cn'	:	''''''
 				},
@@ -1026,7 +1027,7 @@ Ensure that a container from the given name is running. If not, run it.
 					},
 					'command'		:	{
 						'type'		:	'array',
-						'required'	:	True,
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'entry_point'		:	{
