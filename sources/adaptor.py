@@ -817,6 +817,8 @@ class StateAdaptor(object):
 		}
 
 		try:
+			utils.log("DEBUG", "Building up, module is %s" % (module))
+
 			if module in ['linux.apt.package', 'linux.yum.package', 'common.npm.package', 'common.pip.package', 'common.gem.package']:
 				module_state = {}
 
@@ -1145,6 +1147,7 @@ class StateAdaptor(object):
 				# 	pass
 
                         elif module in ["common.docker.running"]:
+                                utils.log("DEBUG", "Found docker module", ("__build_up", self))
                                 if addin.get("port_bindings"):
                                         utils.log("DEBUG", "Generating ports bindings", ("__build_up", self))
 
