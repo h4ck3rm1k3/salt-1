@@ -756,7 +756,7 @@ class StateAdaptor(object):
 
 				## add watch, todo
 				utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
-				if 'watch' in parameter and parameter['watch'] and module in mod_watch_list:
+				if 'watch' in parameter and parameter['watch'] and module in StateAdaptor.mod_watch_list:
 					state = 'mod_watch'
 					if module == 'linux.service':
 						addin['full_restart'] = True
