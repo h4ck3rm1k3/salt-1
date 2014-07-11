@@ -435,7 +435,6 @@ class StateAdaptor(object):
 				{'linux.apt.package' : { 'name' : [{'key':'lvm2'}] }},
 				{'linux.yum.package' : { 'name' : [{'key':'lvm2'}] }}
 			]
-
 		},
 		'linux.lvm.lv'	: {
 			'attributes'	: {
@@ -577,7 +576,7 @@ class StateAdaptor(object):
 			module, parameter = self.__check_module(module, parameter)
 
 			utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
-			self.states = self.__salt(step, module, parameter)
+			self.states = self.__salt(step, module, parameter, os_type)
 
 			# expand salt state
 			utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
@@ -598,14 +597,14 @@ class StateAdaptor(object):
 
 		return self.states
 
-	def __salt(self, step, module, parameter):
+	def __salt(self, step, module, parameter, os_type=None):
 		salt_state = {}
 
 		utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
 		addin = self.__init_addin(module, parameter)
 
 		utils.log("DEBUG", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
-		module_states = self.__build_up(module, addin)
+		module_states = self.__build_up(module, addin, os_type)
 
 		try:
 			for state, addin in module_states.iteritems():
@@ -688,7 +687,7 @@ class StateAdaptor(object):
 		if not addin:	raise StateException("No addin founded: %s, %s" % (module, parameter), ("__init_addin", self))
 		return addin
 
-	def __build_up(self, module, addin):
+	def __build_up(self, module, addin, os_type=None):
 		default_state = self.mod_map[module]['states'][0]
 		module_state = {
 			default_state : addin
@@ -759,6 +758,10 @@ class StateAdaptor(object):
 								'cmd' : 'which {0}'.format(cmd_name)
 							}
 						}]
+
+					if module == 'common.npm.package' and os_type == 'redhat':
+						self.__preinstall_npm(os_type)
+						self.mod_map[module].pop('require')
 
 			elif module in ['common.git', 'common.svn', 'common.hg']:
 
@@ -1263,16 +1266,51 @@ class StateAdaptor(object):
 			utils.log("ERROR", "Check command %s excpetion: %s" % (cmd_name, str(e)), ("__check_cmd", self))
 			return False
 
-	# def __check_state(self, module, state):
-	# 	"""
-	# 		Check supported state.
-	# 	"""
+	def __preinstall_npm(self, os_type):
+		"""
+			Preinstall nodejs and npm.
+		"""
 
-	# 	if state not in self.mod_map[module]['states']:
-	# 		print "not supported state %s in module %s" % (state, module)
-	# 		return 1
+		try:
+			if not os_type:
+				return
 
-	# 	return 0
+			# install nodejs
+			if os_type in ['centos', 'redhat', 'amazon']:
+				pm = 'yum'
+			elif os_type in ['debian', 'ubuntu']:
+				pm = 'apt-get'
+			else:
+				utils.log("ERROR", "Not supported os {0}".format(os_type), ("__preinstall_npm", self))
+
+			cmd = '{0} install -y nodejs'.format(pm)
+			process = subprocess.Popen(
+				cmd,
+				shell=True,
+				stdout=subprocess.PIPE,
+				stderr=subprocess.PIPE)
+
+			out, err = process.communicate()
+			if process.returncode != 0:
+				utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+				raise ExecutionException("Excute cmd %s failed"%cmd)
+
+			# install npm
+			tmp_dir = '/opt/visualops/tmp'
+			cmd = 'wget https://npmjs.org/install.sh -P {0} && sh {0}/install.sh'.format(tmp_dir)
+			process = subprocess.Popen(
+				cmd,
+				shell=True,
+				stdout=subprocess.PIPE,
+				stderr=subprocess.PIPE)
+
+			out, err = process.communicate()
+			if process.returncode != 0:
+				utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+				raise ExecutionException("Excute cmd %s failed"%cmd)
+		except Exception, e:
+			utils.log("ERROR", str(e), ("__preinstall_npm", self))
+			raise ExecutionException("Install npm failed")
 
 # ===================== UT =====================
 def ut():
