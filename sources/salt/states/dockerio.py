@@ -381,6 +381,12 @@ def installed(name,
         if cinfos.get("out",{}).get("State", {}).get("Running", False):
             cid = cinfos.get("out",{}).get("Id", "")
             return _valid(name=name,comment='image {0!r} already exists, container Id: {1!r}'.format(name,str(cid)))
+        else:
+            # Throw away the old container
+            remove_container = __salt__['docker.remove_container']
+            remove_status = _ret_status(remove_container(container=name,
+                                                         force=True),
+                                        name=name)
     dports, dvolumes, denvironment = {}, [], {}
     if not ports:
         ports = []
