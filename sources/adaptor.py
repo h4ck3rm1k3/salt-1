@@ -17,6 +17,7 @@ class StateAdaptor(object):
 	ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
 	supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
 	supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
+        mod_watch_list = ["linux.service","linux.supervisord"]
         # Custom watch map
         watch = {
                 "linux.service": {
@@ -755,7 +756,7 @@ class StateAdaptor(object):
 
 				## add watch, todo
 				utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
-				if 'watch' in parameter and parameter['watch']:
+				if 'watch' in parameter and parameter['watch'] and module in mod_watch_list:
 					state = 'mod_watch'
 					if module == 'linux.service':
 						addin['full_restart'] = True
