@@ -1149,7 +1149,7 @@ class StateAdaptor(object):
                         elif module in ["common.docker.running"]:
                                 utils.log("DEBUG", "Found docker module", ("__build_up", self))
                                 if addin.get("port_bindings"):
-                                        utils.log("DEBUG", "Generating ports bindings", ("__build_up", self))
+                                        utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
 
                                         ports = []
                                         pb = {}
