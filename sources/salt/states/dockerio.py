@@ -949,8 +949,9 @@ def vops_pulled(repo,
     if repo:
         if repo and username:
             # TODO: test
-            url = repo.split(":")[0]
-            lg = logged(url=(url if url else None),username=username,password=password,email=email)
+            url = repo.split(":")
+            url = (url[0] if len(url) > 1 else None)
+            lg = logged(url=url,username=username,password=password,email=email)
             print "######### LOGGED #####"
             print lg
             print "######### /LOGGED #####"
