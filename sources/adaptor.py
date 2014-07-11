@@ -1171,6 +1171,7 @@ class StateAdaptor(object):
                                         addin.pop("port_bindings")
                                         addin["port_bindings"] = pb
                                         addin["ports"] = ports
+                                utils.log("DEBUG", "Docker addin: %s"%(addin), ("__build_up", self))
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
