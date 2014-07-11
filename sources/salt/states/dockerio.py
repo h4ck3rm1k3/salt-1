@@ -149,7 +149,8 @@ def _ret_status(exec_status=None,
                 name='',
                 comment='',
                 result=None,
-                changes=None):
+                changes=None,
+                state_stdout=None):
     if not changes:
         changes = {}
     if exec_status is None:
@@ -170,6 +171,7 @@ def _ret_status(exec_status=None,
         'result': result,
         'name': name,
         'comment': comment,
+        'state_stdout': std_out
     }
 
 
@@ -995,6 +997,7 @@ def vops_built(image,
                force_build=False,
                *args, **kwargs):
     out_text = ""
+    state_stdout = ""
     force_install = False
 
     if image and path:
@@ -1004,7 +1007,11 @@ def vops_built(image,
         print ret
         print "######### /BUILT #####"
         if ret.get('comment'):
-            out_text += "%s\n"%(ret['comment'])
+            if ret.get('changes'):
+                out_text += "Image %s built from Dockerfile in %s\n"%(name,path)
+                state_stdout += "%s\n"%(ret['comment'])
+            else
+                out_text += "%s\n"%(ret['comment'])
         if ret['result'] == False:
             ret['comment'] = out_text
             return ret
@@ -1027,7 +1034,7 @@ def vops_built(image,
     status["id"] = image
 
     #TODO: changes
-    return _ret_status(status,image,changes={})
+    return _ret_status(status,image,changes={},state_stdout=state_stdout)
 
 
 
