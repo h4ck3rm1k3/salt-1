@@ -171,7 +171,7 @@ def _ret_status(exec_status=None,
         'result': result,
         'name': name,
         'comment': comment,
-        'state_stdout': std_out
+        'state_stdout': state_stdout
     }
 
 
