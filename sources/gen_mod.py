@@ -879,9 +879,7 @@ Pull the latest image from the specified repo on the specified tag (if any)
 
 ### Parameters
 
-*   **`name`** (*required*): Image name
-
-*   **`repo`** (*optional*): Repo URL (e.g. `index.docker.io:MyRepo`)
+*   **`repo`** (*required*): Repo URL or Image name (e.g. `MyRepo/image`)
 
 *   **`tag`** (*optional*): Repo tag
 
@@ -896,14 +894,9 @@ Pull the latest image from the specified repo on the specified tag (if any)
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
-						'required'	:	True,
-						'visible'	:	True
-					},
 					'repo'		:	{
 						'type'		:	'line',
-						'required'	:	False,
+						'required'	:	True,
 						'visible'	:	True
 					},
 					'tag'		:	{
@@ -943,18 +936,16 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 
 ### Parameters
 
-*   **`image`** (*required*): Image name
+*   **`tag`** (*required*): Image tag (e.g. `MyRepo/image`)
 
 *   **`path`** (*required*): Filesystem path to the dockerfile
-
-*   **`repo`** (*optional*): Repository where to store the image
 
 *   **`containers`** (*optional*): Containers associated (required for container updates)
 					''',
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'image'		:	{
+					'tag'		:	{
 						'type'		:	'line',
 						'required'	:	True,
 						'visible'	:	True
@@ -962,11 +953,6 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 					'path'		:	{
 						'type'		:	'line',
 						'required'	:	True,
-						'visible'	:	True
-					},
-					'repo'		:	{
-						'type'		:	'line',
-						'required'	:	False,
 						'visible'	:	True
 					},
 					'containers'		:	{
@@ -994,7 +980,7 @@ Ensure that a container from the given name is running. If not, run it.
 
 *   **`name`** (*required*): Name for the container
 
-*   **`image`** (*required*): Image from which to build this container, name of the created image if path filled
+*   **`image`** (*required*): Image from which to build this container (e.g. `MyRepo/image`)
 
 *   **`command`** (*required*): Command argument to Docker
 

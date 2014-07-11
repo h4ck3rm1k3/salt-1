@@ -1664,15 +1664,14 @@ def pull(name, repo=None, tag=None, *args, **kwargs):
     '''
     client = _get_client()
     status = base_status.copy()
-    repo_uri = ("%s:%s"%(repo,name) if repo else name)
     try:
-        ret = client.pull(repo_uri, tag=tag)
+        ret = client.pull(repo, tag=tag)
         if ret:
-            logs, infos = _parse_image_multilogs_string(ret, name)
+            logs, infos = _parse_image_multilogs_string(ret, repo)
             if infos and infos.get('id', None):
-                repotag = repo_uri
+                repotag = repo
                 if tag:
-                    repotag = '{0}:{1}'.format(repo_uri, tag)
+                    repotag = '{0}:{1}'.format(repo, tag)
                 valid(status,
                       out=logs if logs else ret,
                       id=infos['id'],
@@ -1684,7 +1683,7 @@ def pull(name, repo=None, tag=None, *args, **kwargs):
         else:
             invalid(status)
     except Exception:
-        invalid(status, id=name, out=traceback.format_exc(), comment="An error has occured pulling image: %s"%(repo_uri))
+        invalid(status, id=repo, out=traceback.format_exc(), comment="An error has occured pulling repo: %s"%(repo))
     return status
 
 

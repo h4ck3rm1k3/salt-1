@@ -230,7 +230,7 @@ def mod_watch(name, sfun=None, *args, **kw):
                         ' implemented for {0}'.format(sfun))}
 
 
-def pulled(name, repo=None, tag=None, force=False, *args, **kwargs):
+def pulled(repo, tag=None, force=False, *args, **kwargs):
     '''
     Pull an image from a docker registry. (`docker pull`)
 
@@ -245,9 +245,6 @@ def pulled(name, repo=None, tag=None, force=False, *args, **kwargs):
         see in the salt.modules.dockerio execution module how to ident yourself
         via the pillar.
 
-    name
-        Name of the image
-
     repo
         Repo on which download the image
 
@@ -258,19 +255,19 @@ def pulled(name, repo=None, tag=None, force=False, *args, **kwargs):
         Pull even if the image is already pulled
     '''
     ins = __salt('docker.inspect_image')
-    iinfos = ins(name)
+    iinfos = ins(repo)
     if iinfos['status'] and not force:
         return _valid(
-            name=name,
-            comment='Image already pulled: {0}'.format(name))
+            name=repo,
+            comment='Image already pulled: {0}'.format(repo))
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
-    returned = func(name, repo, tag)
+    returned = func(repo, tag)
     if previous_id != returned['id']:
-        changes = {name: True}
+        changes = {repo: True}
     else:
         changes = {}
-    return _ret_status(returned, name, changes=changes)
+    return _ret_status(returned, repo, changes=changes)
 
 
 def built(name,
@@ -940,8 +937,7 @@ def pushed(container,
 
 
 # pulled image
-def vops_pulled(name,
-                repo=None,
+def vops_pulled(repo,
                 tag=None,
                 username=None,
                 password=None,
@@ -953,13 +949,14 @@ def vops_pulled(name,
     if name:
         if repo and username:
             # TODO: test
-            lg = logged(repo,username,password,email)
+            url = repo.split(":")[0]
+            lg = logged((url if url else None),username,password,email)
             print "######### LOGGED #####"
             print lg
             print "######### /LOGGED #####"
             if lg.get('comment'):
                 out_text += "%s\n"%(lg['comment'])
-        ret = pulled(name,repo,tag,force=True)
+        ret = pulled(repo,tag,force=True)
         print "######### PULLED #####"
         print ret
         print "######### /PULLED #####"
@@ -991,9 +988,8 @@ def vops_pulled(name,
 
 
 # built image
-def vops_built(image,
+def vops_built(tag,
                path=None,
-               repo=None,
                containers=None,
                force_build=False,
                *args, **kwargs):
@@ -1002,15 +998,14 @@ def vops_built(image,
     force_install = False
 
 
-    if image and path:
-        name = ("%s/%s"%(repo,image) if repo else image)
-        ret = built(image,path,force=force_build)
+    if tag and path:
+        ret = built(tag,path,force=force_build)
         print "######### BUILT #####"
         print ret
         print "######### /BUILT #####"
         if ret.get('comment'):
             if ret.get('changes'):
-                out_text += "Image %s built from Dockerfile in %s\n"%(name,path)
+                out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
                 state_stdout += "%s\n"%(ret['comment'])
             else:
                 out_text += "%s\n"%(ret['comment'])
@@ -1033,10 +1028,10 @@ def vops_built(image,
     status = base_status.copy()
     status["comment"] = out_text
     status["status"] = True
-    status["id"] = image
+    status["id"] = tag
 
     #TODO: changes
-    return _ret_status(status,image,changes={},state_stdout=state_stdout)
+    return _ret_status(status,tag,changes={},state_stdout=state_stdout)
 
 
 
