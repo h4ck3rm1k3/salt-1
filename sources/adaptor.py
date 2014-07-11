@@ -601,13 +601,13 @@ class StateAdaptor(object):
 	def __salt(self, step, module, parameter):
 		salt_state = {}
 
-		utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
-		addin = self.__init_addin(module, parameter)
-
-		utils.log("DEBUG", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
-		module_states = self.__build_up(module, addin)
-
 		try:
+			utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
+			addin = self.__init_addin(module, parameter)
+
+			utils.log("DEBUG", "Begin to build up of step %s, module %s..." % (step, module), ("__salt", self))
+			module_states = self.__build_up(module, addin)
+
 			for state, addin in module_states.iteritems():
 				# add require
 				utils.log("DEBUG", "Begin to generate requirity ...", ("_convert", self))
@@ -761,7 +761,7 @@ class StateAdaptor(object):
 							}
 						}]
 
-					if module == 'common.npm.package' and self.os_type in ['redhat']:
+					if module == 'common.npm.package' and self.os_type in ['redhat', 'debian']:
 						self.__preinstall_npm()
 						self.mod_map[module].pop('require')
 
@@ -1029,6 +1029,7 @@ class StateAdaptor(object):
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
+			raise StateException("Build up module state failed: %s" % module)
 
 		if not module_state:	raise StateException("Build up module state failed: %s" % module)
 		return module_state
@@ -1277,7 +1278,6 @@ class StateAdaptor(object):
 			if not self.os_type:
 				return
 
-			# install nodejs
 			if self.os_type in ['centos', 'redhat', 'amazon']:
 				pm = 'yum'
 			elif self.os_type in ['debian', 'ubuntu']:
@@ -1285,22 +1285,38 @@ class StateAdaptor(object):
 			else:
 				utils.log("ERROR", "Not supported os {0}".format(self.os_type), ("__preinstall_npm", self))
 
+			# install nodejs
 			import subprocess
-			cmd = '{0} install -y nodejs'.format(pm)
-			process = subprocess.Popen(
-				cmd,
-				shell=True,
-				stdout=subprocess.PIPE,
-				stderr=subprocess.PIPE)
+			if self.os_type in ['redhat']:
+				cmd = '{0} install -y nodejs curl'.format(pm)
+				process = subprocess.Popen(
+					cmd,
+					shell=True,
+					stdout=subprocess.PIPE,
+					stderr=subprocess.PIPE)
 
-			out, err = process.communicate()
-			if process.returncode != 0:
-				utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
-				raise ExecutionException("Excute cmd %s failed"%cmd)
+				out, err = process.communicate()
+				if process.returncode != 0:
+					utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+					raise StateException("Excute cmd %s failed"%cmd)
+
+			elif self.os_type in ['debian']:
+				cmd = 'echo "deb http://ftp.us.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list && apt-get update && apt-get install -y nodejs-legacy curl'
+
+				process = subprocess.Popen(
+					cmd,
+					shell=True,
+					stdout=subprocess.PIPE,
+					stderr=subprocess.PIPE)
+
+				out, err = process.communicate()
+				if process.returncode != 0:
+					utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+					raise StateException("Excute cmd %s failed"%cmd)
 
 			# install npm
 			tmp_dir = '/opt/visualops/tmp'
-			cmd = 'wget https://npmjs.org/install.sh -P {0} && sh {0}/install.sh'.format(tmp_dir)
+			cmd = 'curl --insecure https://www.npmjs.org/install.sh | bash'
 			process = subprocess.Popen(
 				cmd,
 				shell=True,
@@ -1310,10 +1326,10 @@ class StateAdaptor(object):
 			out, err = process.communicate()
 			if process.returncode != 0:
 				utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
-				raise ExecutionException("Excute cmd %s failed"%cmd)
+				raise StateException("Excute cmd %s failed"%cmd)
 		except Exception, e:
 			utils.log("ERROR", str(e), ("__preinstall_npm", self))
-			raise ExecutionException("Install npm failed")
+			raise StateException("Install npm failed")
 
 # ===================== UT =====================
 def ut():
