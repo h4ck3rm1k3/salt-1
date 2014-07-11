@@ -1601,13 +1601,10 @@ def _pull_assemble_error_status(status, ret, logs):
     return status
 
 
-def pull(name, repo=None, tag=None, *args, **kwargs):
+def pull(repo, tag=None, *args, **kwargs):
     '''
     Pulls an image from any registry. See above documentation for
     how to configure authenticated access.
-
-    :type name: string
-    :param name: The name of the image
 
     :type repo: string
     :param repo: The repository to pull. \
