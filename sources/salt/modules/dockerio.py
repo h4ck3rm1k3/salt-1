@@ -1445,6 +1445,7 @@ def build(path=None,
                                nocache=nocache)
             if isinstance(ret, tuple):
                 id, out = ret[0], ret[1]
+                c_out = out
                 if id:
                     valid(status, id=id, out=out, comment='Image built')
                 else:

@@ -601,7 +601,6 @@ class StateAdaptor(object):
                                 'username'      : 'username',
                                 'password'      : 'password',
                                 'email'         : 'email',
-                                'force_pull'    : 'force_pull',
                                 'containers'    : 'containers',
                         },
 			'states' : ['vops_pulled'],
@@ -637,13 +636,13 @@ class StateAdaptor(object):
                                 'image'         : 'image',
                                 'bootstrap_cmd' : 'bootstrap_cmd',
                                 'environment'   : 'environment',
-                                'ports'         : 'ports',
                                 'volumes'       : 'volumes',
                                 'mem_limit'     : 'mem_limit',
                                 'cpu_shares'    : 'cpu_shares',
+                                'ports'         : 'ports',
                                 # running
-                                'binds'         : 'binds',
                                 'publish_all_ports': 'publish_all_ports',
+                                'binds'         : 'binds',
                                 'links'         : 'links',
                                 'port_bindings' : 'port_bindings',
                         },
@@ -1148,14 +1147,28 @@ class StateAdaptor(object):
 
                         elif module in ["common.docker.running"]:
                                 if addin.get("port_bindings"):
+                                        utils.log("DEBUG", "Generating ports bindings", ("__build_up", self))
+
+                                        ports = []
                                         pb = {}
+
                                         for key in addin["port_bindings"]:
                                                 v = addin["port_bindings"][key].split(":")
-                                                pb[key] = {
+                                                pb[key] = ({
                                                         "HostIp": v[0],
                                                         "HostPort": v[1]
-                                                }
+                                                } if len(v) == 2 else {
+                                                        "HostIp": "",
+                                                        "HostPort": v[0]
+                                                })
+                                                k = key.split("/")
+                                                port = k[0]
+                                                proto = ("tcp" if len(k) != 2 else k[1])
+                                                ports.append((int(port),proto))
+
+                                        addin.pop("port_bindings")
                                         addin["port_bindings"] = pb
+                                        addin["ports"] = ports
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))

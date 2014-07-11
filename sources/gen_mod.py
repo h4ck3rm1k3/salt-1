@@ -875,7 +875,7 @@ manage a python virtualenv
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-Ensure an image is pulled from the specified repo. If not, pull.
+Pull the latest image from the specified repo on the specified tag (if any)
 
 ### Parameters
 
@@ -890,8 +890,6 @@ Ensure an image is pulled from the specified repo. If not, pull.
 *   **`password`** (*optional*): Repo connection password
 
 *   **`email`** (*optional*): Repo connection email
-
-*   **`force_pull`** (*optional*): Force repo pull
 
 *   **`containers`** (*optional*): Containers associated (required for container updates)
 					''',
@@ -926,12 +924,6 @@ Ensure an image is pulled from the specified repo. If not, pull.
 					'email'		:	{
 						'type'		:	'line',
 						'required'	:	False,
-						'visible'	:	True
-					},
-					'force_pull'		:	{
-						'type'		:	'bool',
-						'required'	:	False,
-						'default'	:	False,
 						'visible'	:	True
 					},
 					'containers'		:	{
@@ -1054,11 +1046,6 @@ Ensure that a container from the given name is running. If not, run it.
 						'visible'	:	True
 					},
 					'environment'	:	{
-						'type'		:	'dict',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'ports'		:	{
 						'type'		:	'dict',
 						'required'	:	False,
 						'visible'	:	True

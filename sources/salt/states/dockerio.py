@@ -944,7 +944,6 @@ def vops_pulled(name,
                 username=None,
                 password=None,
                 email=None,
-                force_pull=False,
                 containers=None,
                 *args, **kwargs):
     out_text = ""
@@ -958,7 +957,7 @@ def vops_pulled(name,
             print "######### /LOGGED #####"
             if lg.get('comment'):
                 out_text += "%s\n"%(lg['comment'])
-        ret = pulled(name,repo,tag,force=force_pull)
+        ret = pulled(name,repo,tag,force=True)
         print "######### PULLED #####"
         print ret
         print "######### /PULLED #####"
@@ -999,6 +998,7 @@ def vops_built(image,
     out_text = ""
     state_stdout = ""
     force_install = False
+
 
     if image and path:
         name = ("%s/%s"%(repo,image) if repo else image)
