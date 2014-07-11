@@ -946,7 +946,7 @@ def vops_pulled(repo,
                 *args, **kwargs):
     out_text = ""
     force_install = False
-    if name:
+    if repo:
         if repo and username:
             # TODO: test
             url = repo.split(":")[0]
