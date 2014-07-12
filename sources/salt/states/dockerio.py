@@ -1018,7 +1018,7 @@ def vops_built(tag,
             else:
                 out_text += "%s\n"%(ret['comment'])
         if ret['result'] == False:
-            ret['comment'] = out_text
+            ret['comment'] = "%s\nBuilt failed."%out_text
             return ret
         elif ret['changes']:
             force_install = True
