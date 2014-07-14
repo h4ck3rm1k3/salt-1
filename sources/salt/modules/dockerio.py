@@ -1177,7 +1177,7 @@ def inspect_container(container, *args, **kwargs):
     return _set_id(status)
 
 
-def login(url=None, username=None, password=None, email=None, *args, **kwargs):
+def login(username=None, password=None, email=None, url=None, *args, **kwargs):
     '''
     Wrapper to the docker.py login method, does not do much yet
 
@@ -1191,7 +1191,7 @@ def login(url=None, username=None, password=None, email=None, *args, **kwargs):
     status['id'] = url
     try:
         client = _get_client()
-        lg = client.login(url, username, password, email)
+        lg = client.login(username, password, email, url)
         valid(status, id=url, out=lg, comment="%s logged to %s")
     except Exception:
         invalid(status, id=url, out=traceback.format_exc(),
@@ -1449,9 +1449,9 @@ def build(path=None,
                 id, out = ret[0], ret[1]
                 c_out = out
                 if id:
-                    valid(status, id=id, out=out, comment='Image built')
+                    valid(status, id=id, out=out, comment='Image built from Dockerfile')
                 else:
-                    invalid(status, id=id, out=out)
+                    invalid(status, id=id, out=out, comment="Counldn't create image from Dockerfile\nPossibly Dockerfile badly formated?")
         except Exception:
             invalid(status,
                     out=traceback.format_exc(),

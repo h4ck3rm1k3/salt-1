@@ -4,13 +4,12 @@
       "state": [
         {
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
-          "module": "common.docker.pulled",
+          "module": "common.docker.pushed",
           "parameter": {
-            "containers": ["my_ubuntu_httpd"],
-            "repo": "visualops/ubuntu_httpd",
+            "repository": "visualops/ubuntu_httpd",
             "username": "visualops",
             "password": "123123123",
-            "email": "thibault@visualops.io",
+            "email": "thibault@visualops.io"
           }
         }
       ]

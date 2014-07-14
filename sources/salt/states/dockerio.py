@@ -738,6 +738,7 @@ def script(name,
 ## VisualOps States
 ##
 
+# added logged state
 def logged(username,
            password=None,
            email=None,
@@ -757,7 +758,7 @@ def logged(username,
     '''
 
     docker_loggin = __salt__['docker.login']
-    ret = docker_loggin(url,username,password,email)
+    ret = docker_loggin(username,password,email,url)
 
     status = base_status.copy()
     status["comment"] = ret["comment"]
@@ -767,128 +768,20 @@ def logged(username,
     return _ret_status(status, name=url)
 
 
-# states aggregation
-def full(name,
-         image,
-         bootstrap_cmd=None,
-         repo=None,
-         tag=None,
-         username=None,
-         password=None,
-         email=None,
-         force_pull=False,
-         path=None,
-         force_build=False,
-         environment=None,
-         ports=None,
-         volumes=None,
-         mem_limit=0,
-         cpu_shares=None,
-         # running
-         service=None,
-         binds=None,
-         publish_all_ports=False,
-         links=None,
-         port_bindings=None,
-         # run
-         command=None,
-         stateful=False,
-         onlyif=None,
-         unless=None,
-         docked_onlyif=None,
-         docked_unless=None,
-         *args, **kwargs):
-    out_text = ""
-    force_install = False
-    if repo:
-        if username:
-            lg = logged(repo,username,password,email)
-            print "######### LOGGED #####"
-            print lg
-            print "######### /LOGGED #####"
-            if lg.get('comment'):
-                out_text += "%s\n"%(lg['comment'])
-        ret = pulled(repo,tag,force=force_pull)
-        print "######### PULLED #####"
-        print ret
-        print "######### /PULLED #####"
-        if ret.get('comment'):
-            out_text += "%s\n"%(ret['comment'])
-        if not ret.get('result'):
-            ret['comment'] = out_text
-            return ret
-        elif ret['changes']:
-            force_install = True
-    elif path:
-        ret = built(image,path,force=force_build)
-        print "######### BUILT #####"
-        print ret
-        print "######### /BUILT #####"
-        if ret.get('comment'):
-            out_text += "%s\n"%(ret['comment'])
-        if ret['result'] == False:
-            ret['comment'] = out_text
-            return ret
-        elif ret['changes']:
-            force_install = True
-    ret = installed(
-        name,image,command=bootstrap_cmd,environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
-    print "######### INSTALLED #####"
-    print ret
-    print "######### /INSTALLED #####"
-    if ret.get('comment'):
-        out_text += "%s\n"%(ret['comment'])
-    if ret['result'] == False:
-        ret['comment'] = out_text
-        return ret
-    s = re.search("already exists, container Id: '(.*)'",ret['comment'])
-    if not s:
-        s = re.search("Container (.*) created",ret['comment'])
-    container = (s.group(1) if s else None)
-    print "########## CONTAINER ID ##########"
-    print container
-    print "########## /CONTAINER ID ##########"
-    if service:
-        ret = running(
-            service,container=container,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
-        print "######### RUNNING #####"
-        print ret
-        print "######### /RUNNING #####"
-        if ret.get('comment'):
-            out_text += "%s\n"%(ret['comment'])
-        if ret['result'] == False:
-            ret['comment'] = out_text
-            return ret
-    if command:
-        ret = run(
-            command,cid=container,stateful=stateful,onlyif=onlyif,unless=unless,docked_onlyif=docked_onlyif,docked_unless=docked_unless)
-        print "######### RUN #####"
-        print ret
-        print "######### RUN #####"
-        if ret.get('comment'):
-            out_text += "%s\n"%(ret['comment'])
-        if ret['result'] == False:
-            ret['comment'] = out_text
-            return ret
+# vops called states
 
-    status = base_status.copy()
-    status["comment"] = "%s\nDocker done."%out_text
-    status["status"] = True
-    status["id"] = name
-
-    #TODO: changes
-    return _ret_status(status,name,changes={})
-
-
-
-#TODO
-def pushed(container,
-           repository=None,
-           tag=None,
-           message=None,
-           author=None,
-           conf=None,
-           *args, **kwargs):
+# push image on repo
+def vops_pushed(image,
+                repository,
+                container=None,
+                tag=None,
+                message=None,
+                author=None,
+                username=None,
+                password=None,
+                email=None,
+                conf=None,
+                *args, **kwargs):
     '''
     Push an image to a docker registry. (`docker push`)
 
@@ -903,44 +796,86 @@ def pushed(container,
         see in the salt.modules.dockerio execution module how to ident yourself
         via the pillar.
 
-    container
-        container id
     repository
-        repository/imageName to commit to
+        namespace/repository to push in
+    container
+        container id (if commit container to image)
     tag
         optional tag
     message
         optional commit message
     author
         optional author
+    username
+        username
+    password
+        password
+    email
+        email
     conf
         optional conf
     '''
 
-    commit = __salt__['docker.commit']
-    returned = commit(container,repository,tag,message,author,conf)
+    out_text = ""
 
-    #base_status = {
-    #    'status': None,
-    #    'id': None,
-    #    'comment': '',
-    #    'out': None
-    #}
+    if repository and username:
+        url = repository.split(":")
+        url = (url[0] if len(url) > 1 else None)
+        lg = logged(username=username,password=password,email=email,url=url)
+        print "######### LOGGED #####"
+        print lg
+        print "######### /LOGGED #####"
+        if lg.get('comment'):
+            out_text += "%s\n"%(lg['comment'])
 
-    print returned #debug
-    if True:#has not changed TODO
-        return _valid(
-            name=container,
-            comment='Countainer {0} up-to-date on repo {1}'.format(container,repository))
+
+    if container:
+        commit = __salt__['docker.commit']
+        ret = commit(container,repository,tag,message,author,conf)
+
+        print "######### COMMIT #####"
+        print ret
+        print "######### /COMMIT #####"
+
+        if ret.get("comment"):
+            out_test += "%s\n"%ret["comment"]
+
+        if not ret.get('result'):
+            ret['comment'] = out_text
+            return _invalid(
+                name=container,
+                comment=out_test)
+
+        #has not changed TODO
+        if False:
+            out_test += 'Countainer {0} up-to-date on repo {1}\n'.format(container,repository)
+            return _valid(
+                name=container,
+                comment=out_test)
+
     push = __salt__['docker.push']
-    returned = push(repository)
-    changes = 'Countainer {0} pushed on repo {1}'.format(container,repository)
-    return _ret_status(returned, container, changes=changes)
+    ret = push(repository)
 
+    print "######### PUSH #####"
+    print ret
+    print "######### /PUSH #####"
 
-##
+    if ret.get("comment"):
+        out_test += "%s\n"%ret["comment"]
 
+    if not ret.get('result'):
+        ret['comment'] = out_text
+        return _invalid(
+            name=container,
+            comment=out_test)
 
+    status = base_status.copy()
+    status["comment"] = "%sCountainer %s pushed on repo %s."%(out_test,container,repository)
+    status["status"] = True
+    status["id"] = repo
+
+    #TODO: changes
+    return _ret_status(status,repo,changes={})
 
 
 # pulled image
@@ -955,10 +890,9 @@ def vops_pulled(repo,
     force_install = False
     if repo:
         if repo and username:
-            # TODO: test
             url = repo.split(":")
             url = (url[0] if len(url) > 1 else None)
-            lg = logged(url=url,username=username,password=password,email=email)
+            lg = logged(username=username,password=password,email=email,url=url)
             print "######### LOGGED #####"
             print lg
             print "######### /LOGGED #####"

@@ -533,66 +533,6 @@ class StateAdaptor(object):
 		},
 
                 # docker
-#                'common.docker.installed' : {
-#                        'attributes' : {
-#                                'name'          : 'name',
-#                                'image'         : 'image',
-#                                'command'       : 'command',
-#                                'repo'          : 'repo',
-#                                'tag'           : 'tag',
-#                                'username'      : 'username',
-#                                'password'      : 'password',
-#                                'email'         : 'email',
-#                                'force_pull'    : 'force_pull',
-#                                'path'          : 'path',
-#                                'watch'         : 'force_build',
-#                                'environment'   : 'environment',
-#                                'ports'         : 'ports',
-#                                'volumes'       : 'volumes',
-#                                'mem_limit'     : 'mem_limit',
-#                                'cpu_shares'    : 'cpu_shares',
-#                        },
-#			'states' : ['installed'],
-#			'type' : 'docker',
-#                },
-#                'common.docker.running' : {
-#                        'attributes' : {
-#                                'name'          : 'name',
-#                                'container'     : 'container',
-#                                'binds'         : 'binds',
-#                                'publish_all_ports': 'publish_all_ports',
-#                                'links'         : 'links',
-#                                'port_bindings' : 'port_bindings',
-#                        },
-#			'states' : ['running'],
-#			'type' : 'docker',
-#                },
-#                'common.docker.run' : {
-#                        'attributes' : {
-#                                'name'          : 'name',
-#                                'cid'           : 'cid',
-#                                'state_id'      : 'state_id',
-#                                'stateful'      : 'stateful',
-#                                'onlyif'        : 'onlyif',
-#                                'unless'        : 'unless',
-#                                'docked_onlyif' : 'docked_onlyif',
-#                                'docked_unless' : 'docked_unless',
-#                        },
-#			'states' : ['run'],
-#			'type' : 'docker',
-#                },
-#                'common.docker.pushed' : {
-#                        'attributes' : {
-#                                'container'     : 'container',
-#                                'repository'    : 'repository',
-#                                'tag'           : 'tag',
-#                                'message'       : 'message',
-#                                'author'        : 'author',
-#                                'conf'          : 'conf',
-#                        },
-#			'states' : ['pushed'],
-#			'type' : 'docker',
-#                },
                 'common.docker.pulled' : {
                         'attributes' : {
                                 'repo'          : 'repo',
@@ -654,6 +594,35 @@ class StateAdaptor(object):
 				{'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
 			]
                 },
+                'common.docker.pushed' : {
+                        'attributes' : {
+                                'repository'    : 'repository',
+                                'container'     : 'container',
+                                'tag'           : 'tag',
+                                'message'       : 'message',
+                                'author'        : 'author',
+                                'username'      : 'username',
+                                'password'      : 'password',
+                                'email'         : 'email',
+                                'conf'          : 'conf',
+                        },
+			'states' : ['pushed'],
+			'type' : 'docker',
+                },
+#                'common.docker.run' : {
+#                        'attributes' : {
+#                                'name'          : 'name',
+#                                'cid'           : 'cid',
+#                                'state_id'      : 'state_id',
+#                                'stateful'      : 'stateful',
+#                                'onlyif'        : 'onlyif',
+#                                'unless'        : 'unless',
+#                                'docked_onlyif' : 'docked_onlyif',
+#                                'docked_unless' : 'docked_unless',
+#                        },
+#			'states' : ['run'],
+#			'type' : 'docker',
+#                },
 	}
 
 

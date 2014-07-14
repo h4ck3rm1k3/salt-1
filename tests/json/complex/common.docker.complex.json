@@ -1,0 +1,244 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
+          "_": "1 [test0] Create images directory - True",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/opt/docker/images"]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300001",
+          "_": "2 [test0] Pull git images repository - True",
+          "module": "common.git",
+          "parameter": {
+            "repo": "https://github.com/tbronchain/docker.git",
+            "path": "/opt/docker/images"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300002",
+          "_": "3 [test1] Build image from Dockerfile - True",
+          "module": "common.docker.built",
+          "parameter": {
+            "tag": "visualops/ubuntu_httpd",
+            "path": "/opt/docker/images/httpd_hello",
+            "containers": ["my_ubuntu_httpd"]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300003",
+          "_": "4 [test2] Push created image - True",
+          "module": "common.docker.pushed",
+          "parameter": {
+            "repository": "visualops/ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300004",
+          "_": "5 [test3] Run created image - True",
+          "module": "common.docker.running",
+          "parameter": {
+            "name": "my_ubuntu_httpd",
+            "image": "visualops/ubuntu_httpd",
+            "ports_bindings": [{
+                "key": "80",
+                "value": "80"
+            }]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300005",
+          "_": "6 [test4] Commit created container as image and push created image - True",
+          "module": "common.docker.pushed",
+          "parameter": {
+            "repository": "visualops/my_ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io",
+            "container": "my_ubuntu_httpd",
+            "message": "test push my",
+            "author": "Thibault Bronchain"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300006",
+          "_": "7 [test5] Pull created image from container - True",
+          "module": "common.docker.pulled",
+          "parameter": {
+            "containers": ["my_ubuntu_httpd_pulled"],
+            "repo": "visualops/my_ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300007",
+          "_": "8 [test6] Run created image from container - True",
+          "module": "common.docker.running",
+          "parameter": {
+            "name": "my_ubuntu_httpd_pulled",
+            "image": "visualops/my_ubuntu_httpd",
+            "ports_bindings": [{
+                "key": "80",
+                "value": "80"
+            }]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300008",
+          "_": "9 [test7] Test indempotence built - True",
+          "module": "common.docker.built",
+          "parameter": {
+            "tag": "visualops/ubuntu_httpd",
+            "path": "/opt/docker/images/httpd_hello",
+            "containers": ["my_ubuntu_httpd"]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300009",
+          "_": "10 [test7] Test indempotence pushed - True",
+          "module": "common.docker.pushed",
+          "parameter": {
+            "repository": "visualops/ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300010",
+          "_": "11 [test7] Test indempotence running - True",
+          "module": "common.docker.running",
+          "parameter": {
+            "name": "my_ubuntu_httpd",
+            "image": "visualops/ubuntu_httpd",
+            "ports_bindings": [{
+                "key": "80",
+                "value": "80"
+            }]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300011",
+          "_": "12 [test7] Test indempotence pushed2 - True",
+          "module": "common.docker.pushed",
+          "parameter": {
+            "repository": "visualops/my_ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io",
+            "container": "my_ubuntu_httpd",
+            "message": "test push my",
+            "author": "Thibault Bronchain"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300012",
+          "_": "13 [test7] Test indempotence pulled - True",
+          "module": "common.docker.pulled",
+          "parameter": {
+            "containers": ["my_ubuntu_httpd_pulled"],
+            "repo": "visualops/my_ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300013",
+          "_": "14 [test7] Test indempotence running2 - True",
+          "module": "common.docker.running",
+          "parameter": {
+            "name": "my_ubuntu_httpd_pulled",
+            "image": "visualops/my_ubuntu_httpd",
+            "ports_bindings": [{
+                "key": "80",
+                "value": "80"
+            }]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300014",
+          "_": "15 [test8] Change Dockerfile to wordpress - True",
+          "module": "common.docker.built",
+          "parameter": {
+            "tag": "visualops/ubuntu_httpd",
+            "path": "/opt/docker/images/httpd_wordpress",
+            "containers": ["my_ubuntu_httpd"]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300015",
+          "_": "16 [test9] Push newly created image - True",
+          "module": "common.docker.pushed",
+          "parameter": {
+            "repository": "visualops/ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300016",
+          "_": "17 [test10] Run new image - True",
+          "module": "common.docker.running",
+          "parameter": {
+            "name": "my_ubuntu_httpd",
+            "image": "visualops/ubuntu_httpd",
+            "ports_bindings": [{
+                "key": "80",
+                "value": "80"
+            }]
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300017",
+          "_": "18 [test11] Push new container as image - True",
+          "module": "common.docker.pushed",
+          "parameter": {
+            "repository": "visualops/my_ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io",
+            "container": "my_ubuntu_httpd",
+            "message": "test push my",
+            "author": "Thibault Bronchain"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300018",
+          "_": "19 [test12] Pull new image from container - True",
+          "module": "common.docker.pulled",
+          "parameter": {
+            "containers": ["my_ubuntu_httpd_pulled"],
+            "repo": "visualops/my_ubuntu_httpd",
+            "username": "visualops",
+            "password": "123123123",
+            "email": "thibault@visualops.io"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300019",
+          "_": "20 [test13] Run new image from container - True",
+          "module": "common.docker.running",
+          "parameter": {
+            "name": "my_ubuntu_httpd_pulled",
+            "image": "visualops/my_ubuntu_httpd",
+            "ports_bindings": [{
+                "key": "80",
+                "value": "80"
+            }]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -32,6 +32,7 @@ linux.lvm.pv.complex
 linux.lvm.vg.complex
 linux.lvm.lv.complex
 
+common.docker.complex
 #linux.fs.complex
 #linux.ulimit.complex
 #linux.hosts.complex
