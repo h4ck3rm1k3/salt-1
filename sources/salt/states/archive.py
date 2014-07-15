@@ -202,7 +202,7 @@ def extracted(name,
                 ret['result'] = False
                 ret['comment'] = 'Extract file %s failed' % filename
                 ret['state_stdout'] = results['stderr']
-                return results
+                return ret
             files = results['stdout']
         if len(files) > 0:
             ret['result'] = True
