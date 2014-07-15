@@ -1778,6 +1778,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
             if laststatus and (
                     ('already pushed' in laststatus)
                     or ('Pushing tags for rev' in laststatus)
+                    or ('Pushing tag for rev' in laststatus)
             ):
                 status['status'] = True
                 status['id'] = _get_image_infos(repo)['id']

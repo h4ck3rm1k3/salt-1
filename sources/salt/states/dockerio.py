@@ -801,7 +801,7 @@ def vops_pushed(repository,
             ret['comment'] = out_text
             return _invalid(
                 name=container,
-                comment=out_test)
+                comment=out_text)
 
     push = __salt__['docker.push']
     ret = push(repository,username=username,password=password,email=email)
@@ -811,16 +811,16 @@ def vops_pushed(repository,
     print "######### /PUSH #####"
 
     if ret.get("comment"):
-        out_test += "%s\n"%ret["comment"]
+        out_text += "%s\n"%ret["comment"]
 
     if not ret.get('result'):
         ret['comment'] = out_text
         return _invalid(
             name=container,
-            comment=out_test)
+            comment=out_text)
 
     status = base_status.copy()
-    status["comment"] = "%sCountainer %s pushed on repo %s."%(out_test,container,repository)
+    status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
     status["status"] = True
     status["id"] = repo
 
