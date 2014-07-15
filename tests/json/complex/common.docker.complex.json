@@ -166,8 +166,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300011",
-          "_": "12 [test] Test indempotence pushed2 - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300014",
+          "_": "15 [test7] Test indempotence pushed2 - True",
           "module": "common.docker.pushed",
           "parameter": {
             "repository": "visualops/my_ubuntu_httpd",
@@ -180,8 +180,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300012",
-          "_": "13 [test7] Test indempotence pulled - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300015",
+          "_": "16 [test7] Test indempotence pulled - True",
           "module": "common.docker.pulled",
           "parameter": {
             "containers": ["my_ubuntu_httpd_pulled"],
@@ -192,8 +192,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300013",
-          "_": "14 [test7] Test indempotence running2 - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300016",
+          "_": "17 [test7] Test indempotence running2 - True",
           "module": "common.docker.running",
           "parameter": {
             "name": "my_ubuntu_httpd_pulled",
@@ -205,8 +205,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300014",
-          "_": "15 [test7] Test ran image - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300017",
+          "_": "18 [test7] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "curl localhost:81",
@@ -214,18 +214,19 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300015",
-          "_": "16 [test8] Change Dockerfile to wordpress - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300018",
+          "_": "19 [test8] Change Dockerfile to wordpress - True",
           "module": "common.docker.built",
           "parameter": {
             "tag": "visualops/ubuntu_httpd",
             "path": "/opt/docker/images/httpd_wordpress",
-            "containers": ["my_ubuntu_httpd"]
+            "containers": ["my_ubuntu_httpd"],
+            "watch": true
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300016",
-          "_": "17 [test9] Push newly created image - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300019",
+          "_": "20 [test9] Push newly created image - True",
           "module": "common.docker.pushed",
           "parameter": {
             "repository": "visualops/ubuntu_httpd",
@@ -235,8 +236,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300017",
-          "_": "18 [test10] Run new image - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300020",
+          "_": "21 [test10] Run new image - True",
           "module": "common.docker.running",
           "parameter": {
             "name": "my_ubuntu_httpd",
@@ -248,8 +249,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300018",
-          "_": "19 [test10] Test ran image - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300021",
+          "_": "22 [test10] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "curl localhost/wordpress | grep -v 404",
@@ -257,8 +258,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300019",
-          "_": "20 [test11] Push new container as image - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300022",
+          "_": "23 [test11] Push new container as image - True",
           "module": "common.docker.pushed",
           "parameter": {
             "repository": "visualops/my_ubuntu_httpd",
@@ -271,8 +272,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300020",
-          "_": "21 [test12] Pull new image from container - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300023",
+          "_": "24 [test12] Pull new image from container - True",
           "module": "common.docker.pulled",
           "parameter": {
             "containers": ["my_ubuntu_httpd_pulled"],
@@ -283,8 +284,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300021",
-          "_": "22 [test13] Run new image from container - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300024",
+          "_": "25 [test13] Run new image from container - True",
           "module": "common.docker.running",
           "parameter": {
             "name": "my_ubuntu_httpd_pulled",
@@ -296,8 +297,8 @@
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300022",
-          "_": "23 [test3] Test ran image - True",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300025",
+          "_": "26 [test3] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
             "cmd": "curl localhost:81/wordpress | grep -v 404",

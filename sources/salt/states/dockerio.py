@@ -823,7 +823,7 @@ def vops_pushed(repository,
     status = base_status.copy()
     status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
     status["status"] = True
-    status["id"] = repo
+    status["id"] = repository
 
     #TODO: changes
     return _ret_status(status,repo,changes={})
