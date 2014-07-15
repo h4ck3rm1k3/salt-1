@@ -7,7 +7,7 @@
           "_": "1 [test0] Create images directory - True",
           "module": "linux.dir",
           "parameter": {
-            "path": ["/opt/docker/images"]
+            "path": ["/opt/docker"]
           }
         },
         {
@@ -16,7 +16,7 @@
           "module": "common.git",
           "parameter": {
             "repo": "https://github.com/tbronchain/docker.git",
-            "path": "/opt/docker/images"
+            "path": "/opt/docker"
           }
         },
         {
