@@ -795,7 +795,7 @@ def vops_pushed(repository,
         print "######### /COMMIT #####"
 
         if ret.get("comment"):
-            out_test += "%s\n"%ret["comment"]
+            out_text += "%s\n"%ret["comment"]
 
         if not ret.get('result'):
             ret['comment'] = out_text
