@@ -1780,7 +1780,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
             elif laststatus and (('Pushing tags for rev' in laststatus)
                                  or ('Pushing tag for rev' in laststatus)):
                 status['changes'] = True
-            if status.get('change') != None:
+            if status.get('changes') != None:
                 status['status'] = True
                 status['id'] = _get_image_infos(repo)['id']
                 status['comment'] = 'Image {0}({1}) was pushed'.format(
