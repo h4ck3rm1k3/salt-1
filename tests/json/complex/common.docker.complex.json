@@ -3,8 +3,17 @@
     "init": {
       "state": [
         {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300101",
+          "_": "0 [prepare] Activate ports forwarding - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "echo 1 > /proc/sys/net/ipv4/ip_forward"
+          }
+        },
+        {
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
-          "_": "1 [test0] Create images directory - True",
+          "_": "1 [prepare] Create images directory - True",
           "module": "linux.dir",
           "parameter": {
             "path": ["/opt/docker"]
@@ -12,7 +21,7 @@
         },
         {
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300001",
-          "_": "2 [test0] Pull git images repository - True",
+          "_": "2 [prepare] Pull git images repository - True",
           "module": "common.git",
           "parameter": {
             "repo": "https://github.com/tbronchain/docker.git",
