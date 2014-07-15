@@ -1537,6 +1537,7 @@ def _parse_image_multilogs_string(ret, repo):
     Parse image log strings into grokable data
     '''
     logs, infos = [], None
+    ret = ret.strip()
     if ret and ret.startswith('{') and ret.endswith('}'):
         pushd = 0
         buf = ''
