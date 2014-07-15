@@ -750,6 +750,7 @@ def vops_pushed(repository,
                 password=None,
                 email=None,
                 conf=None,
+                dep_containers=None,
                 *args, **kwargs):
     '''
     Push an image to a docker registry. (`docker push`)
@@ -783,6 +784,8 @@ def vops_pushed(repository,
         email
     conf
         optional conf
+    dep_containers
+        containers to stop
     '''
 
     out_text = ""
@@ -820,13 +823,21 @@ def vops_pushed(repository,
             name=container,
             comment=out_text)
 
+    if dep_containers and ret.get(changes):
+        for container in dep_containers:
+            a = absent(container)
+            if a.get('changes') and a.get('comment'):
+                out_text += "%s\n"%(a['comment'])
+            if not a.get('result'):
+                a['comment'] = out_text
+                return a
+
     status = base_status.copy()
     status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
     status["status"] = True
     status["id"] = repository
 
-    #TODO: changes
-    return _ret_status(status,repository,changes={})
+    return _ret_status(status,repository,changes={repository:ret.get(changes,False)})
 
 
 # pulled image

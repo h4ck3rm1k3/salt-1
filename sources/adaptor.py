@@ -607,6 +607,7 @@ class StateAdaptor(object):
                                 'password'      : 'password',
                                 'email'         : 'email',
                                 'conf'          : 'conf',
+                                'dep_containers': 'dep_containers',
                         },
 			'states' : ['vops_pushed'],
 			'type' : 'docker',

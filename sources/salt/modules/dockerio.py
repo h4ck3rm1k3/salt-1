@@ -1775,11 +1775,12 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
         print "INFOS=%s"%infos
         if logs:
             laststatus = logs[0].get('status', None)
-            if laststatus and (
-                    ('already pushed' in laststatus)
-                    or ('Pushing tags for rev' in laststatus)
-                    or ('Pushing tag for rev' in laststatus)
-            ):
+            if laststatus and ('already pushed' in laststatus):
+                status['changes'] = False
+            elif laststatus and (('Pushing tags for rev' in laststatus)
+                                 or ('Pushing tag for rev' in laststatus)):
+                status['changes'] = True
+            if status.get('change') != None:
                 status['status'] = True
                 status['id'] = _get_image_infos(repo)['id']
                 status['comment'] = 'Image {0}({1}) was pushed'.format(

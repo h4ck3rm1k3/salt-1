@@ -862,6 +862,8 @@ Push an image to a docker registry. (`docker push`)
 *   **`email`** (*optional*): Repo connection email
 
 *   **`conf`** (*optional*): optional conf
+
+*   **`dep_containers`** (*optional*): containers needed to be shutdown if something is pushed
 					''',
 					'cn'	:	''''''
 				},
@@ -911,6 +913,11 @@ Push an image to a docker registry. (`docker push`)
 						'required'	:	False,
 						'visible'	:	True,
 					},
+					'dep_containers'	:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True,
+					},
 				},
 			},
 		},
@@ -954,7 +961,7 @@ manage apt packages
 					},
 					'repo'	:	{
 						'type'		:	'line',
-						'required'	:	False
+						'required'	:	False,
 						'visible'	:	True
 					},
 					'deb-conf-file'	:	{
