@@ -1751,6 +1751,9 @@ def push(repo, *args, **kwargs):
     registry, repo_name = docker.auth.resolve_repository_name(repo)
     ret = client.push(repo)
     logs, infos = _parse_image_multilogs_string(ret, repo_name)
+    print "RET=%s"%ret
+    print "LOGS=%s"%logs
+    print "INFOS=%s"%infos
     if logs:
         laststatus = logs[0].get('status', None)
         if laststatus and (
