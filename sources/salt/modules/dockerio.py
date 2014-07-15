@@ -1192,7 +1192,7 @@ def login(username=None, password=None, email=None, url=None, *args, **kwargs):
     try:
         client = _get_client()
         lg = client.login(username, password, email, url)
-        valid(status, id=url, out=lg, comment="%s logged to %s"&(username,(url if url else "default repo")))
+        valid(status, id=url, out=lg, comment="%s logged to %s"%(username,(url if url else "default repo")))
     except Exception:
         invalid(status, id=url, out=traceback.format_exc(),
                 comment="%s can't login to repo %s"%(username,url))

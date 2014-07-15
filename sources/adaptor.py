@@ -608,7 +608,7 @@ class StateAdaptor(object):
                                 'email'         : 'email',
                                 'conf'          : 'conf',
                         },
-			'states' : ['pushed'],
+			'states' : ['vops_pushed'],
 			'type' : 'docker',
                 },
 #                'common.docker.run' : {
@@ -622,7 +622,7 @@ class StateAdaptor(object):
 #                                'docked_onlyif' : 'docked_onlyif',
 #                                'docked_unless' : 'docked_unless',
 #                        },
-#			'states' : ['run'],
+#			'states' : ['vops_run'],
 #			'type' : 'docker',
 #                },
 	}
