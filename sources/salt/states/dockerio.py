@@ -823,7 +823,7 @@ def vops_pushed(repository,
             name=container,
             comment=out_text)
 
-    if dep_containers and ret.get(changes):
+    if dep_containers and ret.get('changes'):
         for container in dep_containers:
             a = absent(container)
             if a.get('changes') and a.get('comment'):
@@ -837,7 +837,7 @@ def vops_pushed(repository,
     status["status"] = True
     status["id"] = repository
 
-    return _ret_status(status,repository,changes={repository:ret.get(changes,False)})
+    return _ret_status(status,repository,changes={repository:ret.get('changes',False)})
 
 
 # pulled image
