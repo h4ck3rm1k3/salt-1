@@ -250,10 +250,10 @@
         },
         {
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300021",
-          "_": "22 [test10] Test ran image - True",
+          "_": "22 [test10] Test ran image - False",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost/wordpress | grep -v 404",
+            "cmd": "curl localhost/wordpress | grep 404",
             "timeout": "120"
           }
         },
@@ -298,10 +298,10 @@
         },
         {
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300025",
-          "_": "26 [test3] Test ran image - True",
+          "_": "26 [test3] Test ran image - False",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost:81/wordpress | grep -v 404",
+            "cmd": "curl localhost:81/wordpress | grep 404",
             "timeout": "120"
           }
         }

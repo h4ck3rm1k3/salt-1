@@ -826,7 +826,7 @@ def vops_pushed(repository,
     status["id"] = repository
 
     #TODO: changes
-    return _ret_status(status,repo,changes={})
+    return _ret_status(status,repository,changes={})
 
 
 # pulled image
