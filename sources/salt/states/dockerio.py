@@ -327,6 +327,7 @@ def installed(name,
               dns=None,
               volumes=None,
               volumes_from=None,
+              force=False,
               *args, **kwargs):
     '''
     Ensure that a container with the given name exists;
@@ -378,9 +379,9 @@ def installed(name,
     already_exists = cinfos['status']
     # if container exists but is not started, try to start it
     if already_exists:
-        if cinfos.get("out",{}).get("State", {}).get("Running", False):
+        if cinfos.get("out",{}).get("State", {}).get("Running", False) and not force:
             cid = cinfos.get("out",{}).get("Id", "")
-            return _valid(name=name,comment='image {0!r} already exists, container Id: {1!r}'.format(name,str(cid)))
+            return _valid(name=name,comment='Container {0!r} already exists, container Id: {1!r}'.format(name,str(cid)))
         else:
             # Throw away the old container
             remove_container = __salt__['docker.remove_container']
@@ -764,6 +765,7 @@ def logged(username,
     status["comment"] = ret["comment"]
     status["status"] = ret["status"]
     status["id"] = username
+    status["out"] = ret["out"]
 
     return _ret_status(status, name=url)
 
@@ -933,7 +935,7 @@ def vops_pulled(repo,
 def vops_built(tag,
                path=None,
                containers=None,
-               force_build=False,
+               force=False,
                *args, **kwargs):
     out_text = ""
     state_stdout = ""
@@ -941,7 +943,7 @@ def vops_built(tag,
 
 
     if tag and path:
-        ret = built(tag,path,force=force_build)
+        ret = built(tag,path,force=force)
         print "######### BUILT #####"
         print ret
         print "######### /BUILT #####"
@@ -992,12 +994,13 @@ def vops_running(name,
                  publish_all_ports=False,
                  links=None,
                  port_bindings=None,
+                 force=False,
                  *args, **kwargs):
 
     out_text = ""
     ret = installed(
         name,image,entrypoint=entrypoint,command=command,
-        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares)
+        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
     print "######### INSTALLED #####"
     print ret
     print "######### /INSTALLED #####"

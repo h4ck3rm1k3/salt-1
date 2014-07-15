@@ -688,6 +688,8 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 *   **`path`** (*required*): Filesystem path to the dockerfile
 
 *   **`containers`** (*optional*): Containers associated (required for container updates)
+
+*   **`force`** (*optional*): Force (re)build every round
 					''',
 					'cn'	:	''''''
 				},
@@ -707,6 +709,12 @@ Ensure an image is built from a docker file. If not, build it. If the file chang
 						'required'	:	False,
 						'visible'	:	True
 					},
+                                        'force'                 :       {
+						'type'		:	'bool',
+                                                'default'       :       False,
+						'required'	:	False,
+						'visible'	:	True
+                                        }
 				},
 			},
 			'docker running'	:	{
@@ -752,6 +760,8 @@ Ensure that a container from the given name is running. If not, run it.
         5000/tcp: 127.0.0.1:5000
         6000/tcp: 6000 (default ip: 0.0.0.0)
         80: 6666 (default protocol: tcp)
+
+*   **`force`** (*optional*): Force (re)build container
 					''',
 					'cn'	:	''''''
 				},
@@ -814,6 +824,12 @@ Ensure that a container from the given name is running. If not, run it.
 					},
 					'port_bindings'		:	{
 						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'port_bindings'		:	{
+						'type'		:	'bool',
+                                                'default'       :       False,
 						'required'	:	False,
 						'visible'	:	True
 					},
@@ -935,11 +951,11 @@ manage apt packages
 						'option'	:	['latest', 'removed', 'purged'],	# autofill options to show in IDE
 						'default'	:	'',			# the default value to show in IDE,
 						'required'	:	True,
-						'visible'	:	True
 					},
 					'repo'	:	{
 						'type'		:	'line',
 						'required'	:	False
+						'visible'	:	True
 					},
 					'deb-conf-file'	:	{
 						'type'		:	'line',

@@ -56,7 +56,7 @@
           "parameter": {
             "name": "my_ubuntu_httpd",
             "image": "visualops/ubuntu_httpd",
-            "ports_bindings": [{
+            "port_bindings": [{
                 "key": "80",
                 "value": "80"
             }]
@@ -104,7 +104,7 @@
           "parameter": {
             "name": "my_ubuntu_httpd_pulled",
             "image": "visualops/my_ubuntu_httpd",
-            "ports_bindings": [{
+            "port_bindings": [{
                 "key": "80",
                 "value": "81"
             }]
@@ -147,7 +147,7 @@
           "parameter": {
             "name": "my_ubuntu_httpd",
             "image": "visualops/ubuntu_httpd",
-            "ports_bindings": [{
+            "port_bindings": [{
                 "key": "80",
                 "value": "80"
             }]
@@ -195,7 +195,7 @@
           "parameter": {
             "name": "my_ubuntu_httpd_pulled",
             "image": "visualops/my_ubuntu_httpd",
-            "ports_bindings": [{
+            "port_bindings": [{
                 "key": "80",
                 "value": "81"
             }]
@@ -238,7 +238,7 @@
           "parameter": {
             "name": "my_ubuntu_httpd",
             "image": "visualops/ubuntu_httpd",
-            "ports_bindings": [{
+            "port_bindings": [{
                 "key": "80",
                 "value": "80"
             }]
@@ -286,7 +286,7 @@
           "parameter": {
             "name": "my_ubuntu_httpd_pulled",
             "image": "visualops/my_ubuntu_httpd",
-            "ports_bindings": [{
+            "port_bindings": [{
                 "key": "80",
                 "value": "81"
             }]

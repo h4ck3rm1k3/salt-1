@@ -556,7 +556,8 @@ class StateAdaptor(object):
                                 'tag'           : 'tag',
                                 'path'          : 'path',
                                 'containers'    : 'containers',
-                                'watch'         : 'force_build',
+                                'watch'         : 'watch',
+                                'force'         : 'force',
                         },
 			'states' : ['vops_built'],
 			'type' : 'docker',
@@ -584,6 +585,7 @@ class StateAdaptor(object):
                                 'binds'         : 'binds',
                                 'links'         : 'links',
                                 'port_bindings' : 'port_bindings',
+                                'force'         : 'force',
                         },
 			'states' : ['vops_running'],
 			'type' : 'docker',
@@ -1116,7 +1118,7 @@ class StateAdaptor(object):
 				# 	pass
 
                         elif module in ["common.docker.running"]:
-                                utils.log("DEBUG", "Found docker module", ("__build_up", self))
+                                utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                                 if addin.get("port_bindings"):
                                         utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
 
@@ -1143,7 +1145,14 @@ class StateAdaptor(object):
                                         addin.pop("port_bindings")
                                         addin["port_bindings"] = pb
                                         addin["ports"] = ports
-                                utils.log("DEBUG", "Docker addin: %s"%(addin), ("__build_up", self))
+                                utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
+                        elif module in ["common.docker.built"]:
+                                utils.log("DEBUG", "Found docker running module", ("__build_up", self))
+                                if addin.get("watch"):
+                                        utils.log("DEBUG", "Watch state detected", ("__build_up", self))
+                                        addin.pop("watch")
+                                        addin["force"] = True
+                                utils.log("DEBUG", "Docker built addin: %s"%(addin), ("__build_up", self))
 
 		except Exception, e:
 			utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
