@@ -739,39 +739,6 @@ def script(name,
 ## VisualOps States
 ##
 
-# added logged state
-def logged(username,
-           password=None,
-           email=None,
-           url=None,
-           *args, **kwargs):
-    '''
-    Login to a Docker repository. (`docker login`)
-
-    username
-        username
-    password
-        password
-    email
-        email
-    url
-        repo uri
-    '''
-
-    docker_loggin = __salt__['docker.login']
-    ret = docker_loggin(username,password,email,url)
-
-    status = base_status.copy()
-    status["comment"] = ret["comment"]
-    status["status"] = ret["status"]
-    status["id"] = username
-    status["out"] = ret["out"]
-
-    return _ret_status(status, name=url)
-
-
-# vops called states
-
 # push image on repo
 def vops_pushed(repository,
                 container=None,
@@ -819,17 +786,6 @@ def vops_pushed(repository,
 
     out_text = ""
 
-    if repository and username:
-        url = repository.split(":")
-        url = (url[0] if len(url) > 1 else None)
-        lg = logged(username=username,password=password,email=email,url=url)
-        print "######### LOGGED #####"
-        print lg
-        print "######### /LOGGED #####"
-        if lg.get('comment'):
-            out_text += "%s\n"%(lg['comment'])
-
-
     if container:
         commit = __salt__['docker.commit']
         ret = commit(container,repository,tag,message,author,conf)
@@ -847,15 +803,8 @@ def vops_pushed(repository,
                 name=container,
                 comment=out_test)
 
-        #has not changed TODO
-        if False:
-            out_test += 'Countainer {0} up-to-date on repo {1}\n'.format(container,repository)
-            return _valid(
-                name=container,
-                comment=out_test)
-
     push = __salt__['docker.push']
-    ret = push(repository)
+    ret = push(repository,username=username,password=password,email=email)
 
     print "######### PUSH #####"
     print ret
@@ -890,16 +839,7 @@ def vops_pulled(repo,
     out_text = ""
     force_install = False
     if repo:
-        if repo and username:
-            url = repo.split(":")
-            url = (url[0] if len(url) > 1 else None)
-            lg = logged(username=username,password=password,email=email,url=url)
-            print "######### LOGGED #####"
-            print lg
-            print "######### /LOGGED #####"
-            if lg.get('comment'):
-                out_text += "%s\n"%(lg['comment'])
-        ret = pulled(repo,tag,force=True)
+        ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
         print "######### PULLED #####"
         print ret
         print "######### /PULLED #####"

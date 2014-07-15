@@ -1601,7 +1601,7 @@ def _pull_assemble_error_status(status, ret, logs):
     return status
 
 
-def pull(repo, tag=None, *args, **kwargs):
+def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwargs):
     '''
     Pulls an image from any registry. See above documentation for
     how to configure authenticated access.
@@ -1662,6 +1662,13 @@ def pull(repo, tag=None, *args, **kwargs):
     client = _get_client()
     status = base_status.copy()
     try:
+        url = repo.split(":")
+        url = (url[0] if len(url) > 1 else None)
+        lg = login(username,password,email,url)
+        if not lg.get("status"):
+            invalid(status,comment=lg.get("comment"),out=lg.get("out"))
+            return status
+
         ret = client.pull(repo, tag=tag)
         if ret:
             logs, infos = _parse_image_multilogs_string(ret, repo)
@@ -1726,7 +1733,7 @@ def _push_assemble_error_status(status, ret, logs):
     return status
 
 
-def push(repo, *args, **kwargs):
+def push(repo, username=None, password=None, email=None, *args, **kwargs):
     '''
     Pushes an image from any registry
     See this top level documentation to know
@@ -1748,30 +1755,44 @@ def push(repo, *args, **kwargs):
     '''
     client = _get_client()
     status = base_status.copy()
-    registry, repo_name = docker.auth.resolve_repository_name(repo)
-    ret = client.push(repo)
-    logs, infos = _parse_image_multilogs_string(ret, repo_name)
-    print "RET=%s"%ret
-    print "LOGS=%s"%logs
-    print "INFOS=%s"%infos
-    if logs:
-        laststatus = logs[0].get('status', None)
-        if laststatus and (
-            ('already pushed' in laststatus)
-            or ('Pushing tags for rev' in laststatus)
-        ):
-            status['status'] = True
-            status['id'] = _get_image_infos(repo)['id']
-            status['comment'] = 'Image {0}({1}) was pushed'.format(
-                repo, status['id'])
-            if logs:
-                status['out'] = logs
+
+    try:
+        if username:
+            url = repo.split(":")
+            url = (url[0] if len(url) > 1 else None)
+            lg = login(username,password,email,url)
+            if not lg.get("status"):
+                invalid(status,comment=lg.get("comment"),out=lg.get("out"))
+                return status
+
+        registry, repo_name = docker.auth.resolve_repository_name(repo)
+        ret = client.push(repo)
+        logs, infos = _parse_image_multilogs_string(ret, repo_name)
+        print "RET=%s"%ret
+        print "LOGS=%s"%logs
+        print "INFOS=%s"%infos
+        if logs:
+            laststatus = logs[0].get('status', None)
+            if laststatus and (
+                    ('already pushed' in laststatus)
+                    or ('Pushing tags for rev' in laststatus)
+            ):
+                status['status'] = True
+                status['id'] = _get_image_infos(repo)['id']
+                status['comment'] = 'Image {0}({1}) was pushed'.format(
+                    repo, status['id'])
+                if logs:
+                    status['out'] = logs
+                else:
+                    status['out'] = ret
             else:
-                status['out'] = ret
+                _push_assemble_error_status(status, ret, logs)
         else:
             _push_assemble_error_status(status, ret, logs)
-    else:
-        _push_assemble_error_status(status, ret, logs)
+
+    except Exception:
+        invalid(status, id=repo, out=traceback.format_exc(), comment="An error has occured pushing repo: %s"%(repo))
+
     return status
 
 
