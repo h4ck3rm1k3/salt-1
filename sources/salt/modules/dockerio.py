@@ -1072,24 +1072,29 @@ def remove_container(container=None, force=False, v=False, *args, **kwargs):
     status['id'] = container
     dcontainer = None
     try:
-        dcontainer = _get_container_infos(container)['id']
-        if is_running(dcontainer):
-            if not force:
-                invalid(status, id=container, out=None,
-                        comment=(
-                            'Container {0} is running, '
-                            'won\'t remove it').format(container))
-                return status
-            else:
-                kill(dcontainer)
-        client.remove_container(dcontainer, v=v)
         try:
-            _get_container_infos(dcontainer)
-            invalid(status,
-                    comment='Container was not removed: {0}'.format(container))
+            dcontainer = _get_container_infos(container)['id']
         except Exception:
             status['status'] = True
             status['comment'] = 'Container {0} was removed'.format(container)
+        else:
+            if is_running(dcontainer):
+                if not force:
+                    invalid(status, id=container, out=None,
+                            comment=(
+                                'Container {0} is running, '
+                                'won\'t remove it').format(container))
+                    return status
+                else:
+                    kill(dcontainer)
+            client.remove_container(dcontainer, v=v)
+            try:
+                _get_container_infos(dcontainer)
+                invalid(status,
+                        comment='Container was not removed: {0}'.format(container))
+            except Exception:
+                status['status'] = True
+                status['comment'] = 'Container {0} was removed'.format(container)
     except Exception:
         invalid(status, id=container, out=traceback.format_exc(), comment="Unable to remove container '%s'"%(container))
     return status
