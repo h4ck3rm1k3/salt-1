@@ -169,6 +169,7 @@ def _ret_status(exec_status=None,
     return {
         'changes': changes,
         'result': result,
+        'status': result,
         'name': name,
         'comment': comment,
         'state_stdout': state_stdout
@@ -797,7 +798,7 @@ def vops_pushed(repository,
         if ret.get("comment"):
             out_text += "%s\n"%ret["comment"]
 
-        if not ret.get('result'):
+        if not ret.get('status'):
             ret['comment'] = out_text
             return _invalid(
                 name=container,
@@ -813,7 +814,7 @@ def vops_pushed(repository,
     if ret.get("comment"):
         out_text += "%s\n"%ret["comment"]
 
-    if not ret.get('result'):
+    if not ret.get('status'):
         ret['comment'] = out_text
         return _invalid(
             name=container,
@@ -845,8 +846,9 @@ def vops_pulled(repo,
         print "######### /PULLED #####"
         if ret.get('comment'):
             out_text += "%s\n"%(ret['comment'])
-        if not ret.get('result'):
+        if not ret.get('status'):
             ret['comment'] = out_text
+            ret['out'] = ret.get('out')
             return ret
         elif ret['changes']:
             force_install = True
@@ -892,7 +894,7 @@ def vops_built(tag,
                 state_stdout += "%s\n"%(ret['comment'])
             else:
                 out_text += "%s\n"%(ret['comment'])
-        if ret['result'] == False:
+        if ret.get('status') == False:
             ret['comment'] = "%s\nBuilt failed."%out_text
             return ret
         elif ret['changes']:
