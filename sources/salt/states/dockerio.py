@@ -773,8 +773,7 @@ def logged(username,
 # vops called states
 
 # push image on repo
-def vops_pushed(image,
-                repository,
+def vops_pushed(repository,
                 container=None,
                 tag=None,
                 message=None,
