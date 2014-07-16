@@ -15,7 +15,7 @@ def list_to_print(l, level, acc):
 
 def dict_to_print(d, level, acc):
     for key in d:
-        if key is not in PRINT_NOT:
+        if key not in PRINT_NOT:
             acc += string_to_print("%s:\n"%key,level)
         acc += obj_to_print(d[key],level+1)
     return acc
