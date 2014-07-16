@@ -102,6 +102,8 @@ import re
 
 # Import salt libs
 from salt._compat import string_types
+import salt.utils
+from salt.utils import vops
 
 # Import 3rd-party libs
 try:
@@ -837,7 +839,7 @@ def vops_pushed(repository,
     status["status"] = True
     status["id"] = repository
 
-    return _ret_status(status,repository,changes={repository:ret.get('changes',False)})
+    return _ret_status(status,repository,changes={repository:ret.get('changes',False)},state_stdout=ret.get("out"))
 
 
 # pulled image
@@ -902,7 +904,9 @@ def vops_built(tag,
         if ret.get('comment'):
             if ret.get('changes'):
                 out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
-                state_stdout += "%s\n"%(ret['comment'])
+                tmp_out = re.search("{.*}",ret['comment'])
+                if tmp_out:
+                    state_stdout += vops.stream_to_print(tmp_out.group(0))
             else:
                 out_text += "%s\n"%(ret['comment'])
         if ret.get('status') == False:
