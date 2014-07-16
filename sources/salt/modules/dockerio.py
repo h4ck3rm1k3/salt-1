@@ -158,7 +158,7 @@ from salt.modules import cmdmod
 from salt.exceptions import CommandExecutionError
 from salt._compat import string_types
 import salt.utils
-from salt.utils import vops
+from salt.utils.vops import *
 from salt.utils.odict import OrderedDict
 
 try:
@@ -1791,7 +1791,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
                 status['id'] = _get_image_infos(repo)['id']
                 status['comment'] = 'Image {0}({1}) was pushed'.format(
                     repo, status['id'])
-                status['out'] = vops.obj_to_print(logs)
+                status['out'] = obj_to_print(logs)
              else:
                 _push_assemble_error_status(status, ret, logs)
         else:

@@ -103,7 +103,7 @@ import re
 # Import salt libs
 from salt._compat import string_types
 import salt.utils
-from salt.utils import vops
+from salt.utils.vops import *
 
 # Import 3rd-party libs
 try:
@@ -906,7 +906,7 @@ def vops_built(tag,
                 out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
                 tmp_out = re.search("{.*}",ret['comment'])
                 if tmp_out:
-                    state_stdout += vops.stream_to_print(tmp_out.group(0))
+                    state_stdout += stream_to_print(tmp_out.group(0))
             else:
                 out_text += "%s\n"%(ret['comment'])
         if ret.get('status') == False:
