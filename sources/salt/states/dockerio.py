@@ -167,7 +167,7 @@ def _ret_status(exec_status=None,
         if out:
             if isinstance(out, string_types):
                 print "out for name:%s => %s\n"%(name,out)
-                comment += '\n' + out
+#                comment += '\n' + out
     return {
         'changes': changes,
         'result': result,
@@ -312,7 +312,7 @@ def built(name,
         changes = {name: True}
     else:
         changes = {}
-    return _ret_status(returned, name, changes=changes)
+    return _ret_status(returned, name, changes=changes,state_stdout=returned.get('out',''))
 
 
 def installed(name,

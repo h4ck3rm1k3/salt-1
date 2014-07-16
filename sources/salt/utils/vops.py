@@ -12,17 +12,17 @@ def string_to_print(s, level, acc):
 
 def list_to_print(l, level, acc):
     for item in l:
-        acc += obj_to_print(item,level+1,acc)
+        acc += obj_to_print(item,acc,level+1)
     return acc
 
 def dict_to_print(d, level, acc):
     for key in d:
         if key not in PRINT_NOT:
-            acc += obj_to_print("%s:\n"%key,level,acc)
-        acc += obj_to_print(d[key],level+1,acc)
+            acc += obj_to_print("%s:\n"%key,acc,level)
+        acc += obj_to_print(d[key],acc,level+1)
     return acc
 
-def obj_to_print(o, level=0, acc=""):
+def obj_to_print(o, acc, level=0):
     if type(o) is dict:
         acc += dict_to_print(o,level,acc)
     elif type(o) is list:
@@ -50,4 +50,4 @@ def stream_to_print(s):
                 else:
                     ls.append(buf)
                     buf = ''
-    return obj_to_print(ls)
+    return obj_to_print(ls,"")
