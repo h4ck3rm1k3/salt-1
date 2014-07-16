@@ -622,21 +622,21 @@ manage a python virtualenv
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-Pull the latest image from the specified repo on the specified tag (if any)
+Pull the latest image from the specified repository at the specified tag (if any)
 
 ### Parameters
 
-*   **`repo`** (*required*): Repo URL or Image name (e.g. `namespace/repo`)
+*   **`repo`** (*required*): Repository URL or/and Image name (e.g. `namespace/repo`)
 
-*   **`tag`** (*optional*): Repo tag
+*   **`tag`** (*optional*): Repository tag
 
-*   **`username`** (*optional*): Repo connection username
+*   **`username`** (*optional*): Username used to login to repository
 
-*   **`password`** (*optional*): Repo connection password
+*   **`password`** (*optional*): Password used to login to repository (required if username specified)
 
-*   **`email`** (*optional*): Repo connection email
+*   **`email`** (*optional*): Email used to login to repository (required if username specified)
 
-*   **`containers`** (*optional*): Containers associated (required for container updates)
+*   **`containers`** (*optional*): Containers associated to this image (specify it if you want your container to be re-created when a new version of the image is pulled)
 					''',
 					'cn'	:	''''''
 				},
@@ -679,17 +679,17 @@ Pull the latest image from the specified repo on the specified tag (if any)
 				'reference'	:	{
 					'en'	:	'''
 ### Description
-Ensure an image is built from a docker file. If not, build it. If the file changes, rebuild.
+Ensure an image is built from a `Dockerfile`. If not, build it. If the file changes, the image will be rebuilt.
 
 ### Parameters
 
-*   **`tag`** (*required*): Image tag (e.g. `namespace/image`)
+*   **`tag`** (*required*): Tag of the image (e.g. `namespace/image`)
 
-*   **`path`** (*required*): Filesystem path to the dockerfile
+*   **`path`** (*required*): Filesystem path to the `Dockerfile` (e.g. `/opt/docker/image`)
 
-*   **`containers`** (*optional*): Containers associated (required for container updates)
+*   **`containers`** (*optional*): Containers associated to the newly created image (specify it if you want your container to be re-created when the file changes)
 
-*   **`force`** (*optional*): Force (re)build every round
+*   **`force`** (*optional*): Force (re)build on each round
 					''',
 					'cn'	:	''''''
 				},
@@ -727,31 +727,29 @@ Ensure that a container from the given name is running. If not, run it.
 
 ### Parameters
 
-*   **`name`** (*required*): Name for the container
+*   **`name`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
 
 *   **`image`** (*required*): Image from which to build this container (e.g. `namespace/image`)
 
-*   **`command`** (*optional*): Command argument to Docker (required if not specified in Dockerfile)
+*   **`command`** (*optional*): Command argument to Docker (if not specified in `Dockerfile`)
 
-*   **`entry_point`** (*optional*): Entry point to the container
+*   **`entry_point`** (*optional*): Entry point to the container (if not specified in `Dockerfile`)
 
-*   **`environment`** (*optional*): Environment variables for the container, either
-                                        - a mapping of key, values
-                                        - a list of mappings of key values
+*   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)
 
-*   **`volumes`** (*optional*): List of volumes
+*   **`volumes`** (*optional*): List of volumes (if not specified in `Dockerfile`)
 
-*   **`mem_limit`** (*optional*): Memory size limit
+*   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)
 
-*   **`cpu_shares`** (*optional*): CPU shares authorized
+*   **`cpu_shares`** (*optional*): CPU shares authorized (if not specified in `Dockerfile`)
 
-*   **`binds`** (*optional*): Like -v of docker run command
+*   **`binds`** (*optional*): Like -v of docker run command (if not specified in `Dockerfile`)
     example:
         /var/log/service: /var/log/service
 
 *   **`publish_all_ports`** (*optional*): Publish all ports
 
-*   **`links`** (*optional*): Link several container together
+*   **`links`** (*optional*): Link several container together (if not specified in `Dockerfile`)
     example:
         name_other_container: alias_for_other_container
 
@@ -761,7 +759,7 @@ Ensure that a container from the given name is running. If not, run it.
         6000/tcp: 6000 (default ip: 0.0.0.0)
         80: 6666 (default protocol: tcp)
 
-*   **`force`** (*optional*): Force (re)build container
+*   **`force`** (*optional*): Force (re)build container on each round
 					''',
 					'cn'	:	''''''
 				},
@@ -845,25 +843,23 @@ Push an image to a docker registry. (`docker push`)
 
 ### Parameters
 
-*   **`repository`** (*required*): namespace/repository to commit to
+*   **`repository`** (*required*): Repository to push (e.g. namespace/image)
 
-*   **`container`** (*optional*): container id to commit
+*   **`container`** (*optional*): Container id to commit (if desired to push a container as an image)
 
-*   **`tag`** (*optional*): optional tag
+*   **`tag`** (*optional*): Repository tag
 
-*   **`message`** (*optional*): optional commit message
+*   **`message`** (*optional*): Commit message (if container specified to be commited)
 
-*   **`author`** (*optional*): optional author
+*   **`author`** (*optional*): Author (if container specified to be commited)
 
-*   **`username`** (*optional*): Repo connection username
+*   **`username`** (*optional*): Username used to login to repository
 
-*   **`password`** (*optional*): Repo connection password
+*   **`password`** (*optional*): Password used to login to repository (required if username specified)
 
-*   **`email`** (*optional*): Repo connection email
+*   **`email`** (*optional*): Email used to login to repository (required if username specified)
 
-*   **`conf`** (*optional*): optional conf
-
-*   **`dep_containers`** (*optional*): containers needed to be shutdown if something is pushed
+*   **`dep_containers`** (*optional*): Containers needed to be shutdown if something new is pushed (in order to be rebuilt)
 					''',
 					'cn'	:	''''''
 				},
@@ -907,11 +903,6 @@ Push an image to a docker registry. (`docker push`)
 						'type'		:	'line',
 						'required'	:	False,
 						'visible'	:	True
-					},
-					'conf'		:	{
-						'type'		:	'line',
-						'required'	:	False,
-						'visible'	:	True,
 					},
 					'dep_containers'	:	{
 						'type'		:	'array',

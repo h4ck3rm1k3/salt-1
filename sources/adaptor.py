@@ -606,7 +606,6 @@ class StateAdaptor(object):
                                 'username'      : 'username',
                                 'password'      : 'password',
                                 'email'         : 'email',
-                                'conf'          : 'conf',
                                 'dep_containers': 'dep_containers',
                         },
 			'states' : ['vops_pushed'],
@@ -1146,6 +1145,36 @@ class StateAdaptor(object):
                                         addin.pop("port_bindings")
                                         addin["port_bindings"] = pb
                                         addin["ports"] = ports
+                                if addin.get("environment"):
+                                        utils.log("DEBUG", "Generating environment, current: %s"%(addin["environment"]), ("__build_up", self))
+                                        env = {}
+                                        for item in addin["environment"]:
+                                                key = item.get("key","")
+                                                value = item.get("value","")
+                                                if not key: continue
+                                                env[key] = value
+                                        addin.pop("environment")
+                                        addin["environment"] = env
+                                if addin.get("binds"):
+                                        utils.log("DEBUG", "Generating binds, current: %s"%(addin["binds"]), ("__build_up", self))
+                                        binds = {}
+                                        for item in addin["binds"]:
+                                                key = item.get("key","")
+                                                value = item.get("value","")
+                                                if not key or not value: continue
+                                                binds[key] = value
+                                        addin.pop("binds")
+                                        addin["binds"] = binds
+                                if addin.get("links"):
+                                        utils.log("DEBUG", "Generating links, current: %s"%(addin["links"]), ("__build_up", self))
+                                        links = {}
+                                        for item in addin["links"]:
+                                                key = item.get("key","")
+                                                value = item.get("value","")
+                                                if not key or not value: continue
+                                                links[key] = value
+                                        addin.pop("links")
+                                        addin["links"] = links
                                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
                         elif module in ["common.docker.built"]:
                                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
