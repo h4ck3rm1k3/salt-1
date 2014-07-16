@@ -626,9 +626,13 @@ Pull the latest image from the specified repository at the specified tag (if any
 
 ### Parameters
 
-*   **`repo`** (*required*): Repository URL or/and Image name (e.g. `namespace/repo`)
+*   **`repo`** (*required*): Repository URL or/and Image name
+                example:
+                        namespace/repo
 
-*   **`tag`** (*optional*): Repository tag
+*   **`tag`** (*optional*): Repository tag (default: latest)
+                example:
+                        latest
 
 *   **`username`** (*optional*): Username used to login to repository
 
@@ -636,7 +640,9 @@ Pull the latest image from the specified repository at the specified tag (if any
 
 *   **`email`** (*optional*): Email used to login to repository (required if username specified)
 
-*   **`containers`** (*optional*): Containers associated to this image (specify it if you want your container to be re-created when a new version of the image is pulled)
+*   **`containers`** (*optional*): Container(s) associated to this image (specify it if you want your container to be re-created when a new version of the image is pulled)
+                example:
+                        my_container
 					''',
 					'cn'	:	''''''
 				},
@@ -683,11 +689,17 @@ Ensure an image is built from a `Dockerfile`. If not, build it. If the file chan
 
 ### Parameters
 
-*   **`tag`** (*required*): Tag of the image (e.g. `namespace/image`)
+*   **`tag`** (*required*): Tag of the image
+                example:
+                        namespace/image
 
-*   **`path`** (*required*): Filesystem path to the `Dockerfile` (e.g. `/opt/docker/image`)
+*   **`path`** (*required*): Filesystem path to the `Dockerfile`
+                example:
+                        /opt/docker/image
 
-*   **`containers`** (*optional*): Containers associated to the newly created image (specify it if you want your container to be re-created when the file changes)
+*   **`containers`** (*optional*): Container(s) associated to the newly created image (specify it if you want your container to be re-created when the file changes)
+                example:
+                        my_container
 
 *   **`force`** (*optional*): Force (re)build on each round
 					''',
@@ -728,36 +740,53 @@ Ensure that a container from the given name is running. If not, run it.
 ### Parameters
 
 *   **`name`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
+                example:
+                        my_container
 
-*   **`image`** (*required*): Image from which to build this container (e.g. `namespace/image`)
+*   **`image`** (*required*): Image from which to build this container
+                example:
+                        namespace/image
 
 *   **`command`** (*optional*): Command argument to Docker (if not specified in `Dockerfile`)
+                example (in case of apache server):
+                        -D
+                        FOREGROUND
 
 *   **`entry_point`** (*optional*): Entry point to the container (if not specified in `Dockerfile`)
+                exemple (in case of apache server):
+                        /usr/bin/apache2
 
 *   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)
+                example:
+                        FOO: BAR
 
 *   **`volumes`** (*optional*): List of volumes (if not specified in `Dockerfile`)
+                example:
+                        /volumes/my_volume
 
 *   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)
+                example:
+                        512m
 
 *   **`cpu_shares`** (*optional*): CPU shares authorized (if not specified in `Dockerfile`)
+                example:
+                        0-3
 
 *   **`binds`** (*optional*): Like -v of docker run command (if not specified in `Dockerfile`)
-    example:
-        /var/log/service: /var/log/service
+                example:
+                        /var/log/service: /var/log/service
 
 *   **`publish_all_ports`** (*optional*): Publish all ports
 
 *   **`links`** (*optional*): Link several container together (if not specified in `Dockerfile`)
-    example:
-        name_other_container: alias_for_other_container
+                example:
+                        name_other_container: alias_for_other_container
 
 *   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
-    example:
-        5000/tcp: 127.0.0.1:5000
-        6000/tcp: 6000 (default ip: 0.0.0.0)
-        80: 6666 (default protocol: tcp)
+                example:
+                        5000/tcp: 127.0.0.1:5000
+                        6000/tcp: 6000 (default ip: 0.0.0.0)
+                        80: 6666 (default protocol: tcp)
 
 *   **`force`** (*optional*): Force (re)build container on each round
 					''',
@@ -843,11 +872,19 @@ Push an image to a docker registry. (`docker push`)
 
 ### Parameters
 
-*   **`repository`** (*required*): Repository to push (e.g. namespace/image)
+*   **`repository`** (*required*): Repository to push
+                example:
+                        namespace/image
 
+                example:
+                        namespace/my_container
 *   **`container`** (*optional*): Container id to commit (if desired to push a container as an image)
+                example:
+                        my_container
 
-*   **`tag`** (*optional*): Repository tag
+*   **`tag`** (*optional*): Repository tag (default: latest)
+                example:
+                        latest
 
 *   **`message`** (*optional*): Commit message (if container specified to be commited)
 
@@ -860,6 +897,8 @@ Push an image to a docker registry. (`docker push`)
 *   **`email`** (*optional*): Email used to login to repository (required if username specified)
 
 *   **`dep_containers`** (*optional*): Containers needed to be shutdown if something new is pushed (in order to be rebuilt)
+                example:
+                        my_container
 					''',
 					'cn'	:	''''''
 				},
