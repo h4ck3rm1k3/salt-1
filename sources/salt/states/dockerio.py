@@ -904,7 +904,7 @@ def vops_built(tag,
         if ret.get('comment'):
             if ret.get('changes'):
                 out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
-                tmp_out = re.search("{.*}",ret['comment'])
+                tmp_out = re.search("{.*}",ret.get('out',''))
                 if tmp_out:
                     state_stdout += stream_to_print(tmp_out.group(0))
             else:

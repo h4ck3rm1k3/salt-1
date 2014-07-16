@@ -6,18 +6,20 @@
 PRINT_NOT=["stream"]
 
 def string_to_print(s, level, acc):
+    if not s:
+        return acc
     return acc+("  "*level)+s.encode('ascii','ignore').strip()+"\n"
 
 def list_to_print(l, level, acc):
     for item in l:
-        acc += obj_to_print(item,level+1)
+        acc += obj_to_print(item,level+1,acc)
     return acc
 
 def dict_to_print(d, level, acc):
     for key in d:
         if key not in PRINT_NOT:
-            acc += string_to_print("%s:\n"%key,level)
-        acc += obj_to_print(d[key],level+1)
+            acc += obj_to_print("%s:\n"%key,level,acc)
+        acc += obj_to_print(d[key],level+1,acc)
     return acc
 
 def obj_to_print(o, level=0, acc=""):
@@ -45,6 +47,7 @@ def stream_to_print(s):
                     buf = json.loads(buf)
                 except Exception:
                     pass
-                ls.append(buf)
-                buf = ''
+                else:
+                    ls.append(buf)
+                    buf = ''
     return obj_to_print(ls)
