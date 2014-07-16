@@ -1792,7 +1792,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
                 status['comment'] = 'Image {0}({1}) was pushed'.format(
                     repo, status['id'])
                 status['out'] = obj_to_print(logs)
-             else:
+            else:
                 _push_assemble_error_status(status, ret, logs)
         else:
             _push_assemble_error_status(status, ret, logs)

@@ -8,7 +8,7 @@ PRINT_NOT=["stream"]
 def string_to_print(s, level, acc):
     return acc+("  "*level)+s.encode('ascii','ignore').strip()+"\n"
 
-def list_to_print(l, level, acc)
+def list_to_print(l, level, acc):
     for item in l:
         acc += obj_to_print(item,level+1)
     return acc
