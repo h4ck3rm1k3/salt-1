@@ -819,6 +819,8 @@ def vops_pushed(repository,
     if ret.get("comment"):
         out_text += "%s\n"%ret["comment"]
 
+    ret["state_stdout"] = ret.get("out")
+
     if not ret.get('status'):
         ret['comment'] = out_text
         return _invalid(
@@ -839,7 +841,7 @@ def vops_pushed(repository,
     status["status"] = True
     status["id"] = repository
 
-    return _ret_status(status,repository,changes={repository:ret.get('changes',False)},state_stdout=ret.get("out"))
+    return _ret_status(status,repository,changes={repository:ret.get('changes',False)})
 
 
 # pulled image

@@ -1791,7 +1791,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
                 status['id'] = _get_image_infos(repo)['id']
                 status['comment'] = 'Image {0}({1}) was pushed'.format(
                     repo, status['id'])
-                status['out'] = obj_to_print(logs, "")
+                status['out'] = obj_to_print(logs[::-1], "")
             else:
                 _push_assemble_error_status(status, ret, logs)
         else:
