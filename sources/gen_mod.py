@@ -827,7 +827,7 @@ Ensure that a container from the given name is running. If not, run it.
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'port_bindings'		:	{
+					'force'                 :	{
 						'type'		:	'bool',
                                                 'default'       :       False,
 						'required'	:	False,
