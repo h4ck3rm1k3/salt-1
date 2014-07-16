@@ -906,12 +906,9 @@ def vops_built(tag,
         if ret.get('comment'):
             if ret.get('changes'):
                 out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
-                state_stdout += stream_to_print(ret.get('state_stdout',''))
-#                tmp_out = re.search("{.*}",ret.get('state_stdout',''))
-#                if tmp_out:
-#                    state_stdout += stream_to_print(tmp_out.group(0))
             else:
-                out_text += "%s\n"%(ret['comment'])
+                out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
+            state_stdout += stream_to_print(ret.get('state_stdout',''))
         if ret.get('status') == False:
             ret['comment'] = "%s\nBuilt failed."%out_text
             return ret
