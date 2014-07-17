@@ -1194,14 +1194,14 @@ def login(username=None, password=None, email=None, url=None, *args, **kwargs):
         salt '*' docker.login <container id>
     '''
     status = base_status.copy()
-    status['id'] = url
+    status['id'] = username
     try:
         client = _get_client()
         lg = client.login(username, password, email, url)
-        valid(status, id=url, out=lg, comment="%s logged to %s"%(username,(url if url else "default repo")))
+        valid(status, id=username, out=lg, comment="%s logged to %s"%(username,(url if url else "default repo")))
     except Exception:
-        invalid(status, id=url, out=traceback.format_exc(),
-                comment="%s can't login to repo %s"%(username,url))
+        invalid(status, id=username, out=traceback.format_exc(),
+                comment="%s can't login to repo %s"%(username,(url if url else "default repo")))
     return status
 
 
@@ -1765,10 +1765,13 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
     status = base_status.copy()
 
     try:
+        registry, repo_name = docker.auth.resolve_repository_name(repo)
         if username:
-            url = repo.split(":")
-            url = (url[0] if len(url) > 1 else None)
-            lg = login(username,password,email,url)
+            url = (registry if registry else None)
+            lg = login(username,password,email,registry=url)
+            print "####### LOGIN #######"
+            print lg
+            print "####### /LOGIN #######"
             if not lg.get("status"):
                 invalid(status,comment=lg.get("comment"),out=lg.get("out"))
                 return status
