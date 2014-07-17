@@ -1537,7 +1537,8 @@ def ut():
         'srv_root' : '/srv/salt',
         'extension_modules' : '/var/cache/salt/minion/extmods',
         'cachedir' : '/code/OpsAgent/cache',
-                'runtime': {}
+        'runtime': {},
+        'pkg_cache': '/opt/visualops/env/var/cache/pkg'
     }
 
     from opsagent.state.runner import StateRunner
