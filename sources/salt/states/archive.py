@@ -117,7 +117,8 @@ def extracted(name,
             hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
             re_fetched = not __salt__['file.check_hash'](sfn, hash_value)
 
-            if not re_fetched:
+            # the same hash code and existed target directory
+            if not re_fetched and __salt__['file.directory_exists'](name):
                 ret['result'] = True
                 ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
                     ).format(filename, source_hash['hsum'])

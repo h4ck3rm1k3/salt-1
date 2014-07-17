@@ -611,22 +611,7 @@ class StateAdaptor(object):
             'states' : ['vops_pushed'],
             'type' : 'docker',
         },
-#                'common.docker.run' : {
-#                        'attributes' : {
-#                                'name'          : 'name',
-#                                'cid'           : 'cid',
-#                                'state_id'      : 'state_id',
-#                                'stateful'      : 'stateful',
-#                                'onlyif'        : 'onlyif',
-#                                'unless'        : 'unless',
-#                                'docked_onlyif' : 'docked_onlyif',
-#                                'docked_unless' : 'docked_unless',
-#                        },
-#           'states' : ['vops_run'],
-#           'type' : 'docker',
-#                },
     }
-
 
 
     def __init__(self, runner):
@@ -855,6 +840,11 @@ class StateAdaptor(object):
                                 'cmd' : 'which {0}'.format(cmd_name)
                             }
                         }]
+
+                if module == 'common.npm.package':
+                    if self.os_type in ['redhat', 'centos'] and float(self.os_release) >= 7.0 or self.os_type == 'debian':
+                        #self.__preinstall_npm()
+                        self.mod_map[module].pop('require')
 
             elif module in ['common.git', 'common.svn', 'common.hg']:
 
@@ -1446,6 +1436,67 @@ class StateAdaptor(object):
 
     #   return 0
 
+    def __preinstall_npm(self):
+        """
+            Preinstall nodejs and npm.
+        """
+
+        try:
+            if not self.os_type:
+                return
+
+            if self.os_type in ['centos', 'redhat', 'amazon']:
+                pm = 'yum'
+            elif self.os_type in ['debian', 'ubuntu']:
+                pm = 'apt-get'
+            else:
+                utils.log("ERROR", "Not supported os {0}".format(self.os_type), ("__preinstall_npm", self))
+
+            # install nodejs
+            import subprocess
+            if self.os_type in ['redhat']:
+                cmd = '{0} install -y nodejs curl'.format(pm)
+                process = subprocess.Popen(
+                    cmd,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+
+                out, err = process.communicate()
+                if process.returncode != 0:
+                    utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+                    raise StateException("Excute cmd %s failed"%cmd)
+
+            elif self.os_type in ['debian']:
+                cmd = 'echo "deb http://ftp.us.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list && apt-get update && apt-get install -y nodejs-legacy curl'
+
+                process = subprocess.Popen(
+                    cmd,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+
+                out, err = process.communicate()
+                if process.returncode != 0:
+                    utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+                    raise StateException("Excute cmd %s failed"%cmd)
+
+            # install npm
+            tmp_dir = '/opt/visualops/tmp'
+            cmd = 'curl --insecure https://www.npmjs.org/install.sh | bash'
+            process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+
+            out, err = process.communicate()
+            if process.returncode != 0:
+                utils.log("ERROR", "Excute cmd {0} failed: {1}".format(cmd, err), ("__preinstall_npm", self))
+                raise StateException("Excute cmd %s failed"%cmd)
+        except Exception, e:
+            utils.log("ERROR", str(e), ("__preinstall_npm", self))
+            raise StateException("Install npm failed")
 
 import logging
 # logger settings
@@ -1459,7 +1510,6 @@ def __log(lvl, f=None):
     handler.setFormatter(formatter)
     logger.setLevel(level)
     logger.addHandler(handler)
-
 
 # ===================== UT =====================
 def ut():

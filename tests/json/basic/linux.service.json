@@ -4,9 +4,9 @@
       "state": [
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632ACD",
-          "module": "linux.sysvinit",
+          "module": "linux.service",
           "parameter": {
-            "name": "crond"
+            "name": ["crond"]
           }
         }
       ]

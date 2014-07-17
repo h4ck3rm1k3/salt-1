@@ -244,7 +244,6 @@ def status(name, sig=None):
         cmd = _service_cmd(name, 'status')
 
         result = __salt__['cmd.run_stdall'](cmd)
-        state_std(kwargs, result)
         return not result['retcode']
 
 

@@ -7,9 +7,9 @@
           "_": "1 [test1] zip archive test - True",
           "module": "common.archive",
           "parameter": {
-            "file": "http://wordpress.org/latest.zip",
-            "path": "/tmp/test/wordpress/",
-            "checksum": "md5:8133645e8820557761d7a551fea70028"
+            "source": "http://wordpress.org/wordpress-3.9.1.zip",
+            "path": "/tmp/test/archive/wordpress/",
+            "checksum": "http://wordpress.org/wordpress-3.9.1.zip.md5"
           }
         },
         {
@@ -17,8 +17,8 @@
           "_": "1 [test1] gz archive test - True",
           "module": "common.archive",
           "parameter": {
-            "file": "https://git-core.googlecode.com/files/git-1.8.3.2.tar.gz",
-            "path": "/tmp/test/",
+            "source": "https://git-core.googlecode.com/files/git-1.8.3.2.tar.gz",
+            "path": "/tmp/test/archive/git/",
             "checksum": "md5:83b792fd06066c77e1d4911ebba2d701"
           }
         }
