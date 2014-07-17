@@ -832,7 +832,7 @@ Ensure that a container from the given name is running. If not, run it.
 						'visible'	:	True
 					},
 					'volumes'		:	{
-						'type'		:	'doct',
+						'type'		:	'dict',
 						'required'	:	False,
 						'visible'	:	True
 					},
