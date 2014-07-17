@@ -629,11 +629,12 @@ class StateAdaptor(object):
 
 
 
-    def __init__(self):
+    def __init__(self, runner):
         self.states = None
-        self.os_type = None
+        self.os_type = runner.os_type if hasattr(runner, 'os_type') else ''
+        self.os_release = runner.os_release if hasattr(runner, 'os_release') else ''
 
-    def convert(self, step, module, parameter, os_type):
+    def convert(self, step, module, parameter):
         """
             convert the module json data to salt states.
         """
@@ -643,20 +644,20 @@ class StateAdaptor(object):
         if not isinstance(module, basestring):  raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
         if not isinstance(parameter, dict):     raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
         if module not in self.mod_map:          raise StateException("Unsupported module %s" % module)
-        if not os_type or not isinstance(os_type, basestring) or os_type not in self.supported_os:
-            raise   StateException("Invalid input parameter: %s" % os_type)
+        if not self.os_type or not isinstance(self.os_type, basestring) or self.os_type not in self.supported_os:
+            raise   StateException("Invalid input parameter: %s" % self.os_type)
 
         # distro check and package manger check
-        if (os_type in ['centos', 'redhat', 'amazon'] and module in ['linux.apt.package', 'linux.apt.repo']) \
-            or (os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
-            raise StateException("Conflict on os type %s and module %s" % (os_type, module))
+        if (self.os_type in ['centos', 'redhat', 'amazon'] and module in ['linux.apt.package', 'linux.apt.repo']) \
+            or (self.os_type in ['debian', 'ubuntu'] and module in ['linux.yum.package', 'linux.yum.repo']):
+            raise StateException("Conflict on os type %s and module %s" % (self.os_type, module))
 
         # filter unhandler module
         if module in ['meta.comment']:
             return None
 
         # get agent package module
-        self.__agent_pkg_module = 'linux.apt.package' if os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
+        self.__agent_pkg_module = 'linux.apt.package' if self.os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
 
         # convert from unicode to string
         # utils.log("INFO", "Begin to convert unicode parameter to string ...", ("convert", self))
@@ -683,7 +684,7 @@ class StateAdaptor(object):
         except StateException, e:
             import json
             utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
-                (step, module, json.dumps(parameter), os_type, str(e)), ("convert", self))
+                (step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
             return None
         except Exception, e:
             utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
@@ -1505,7 +1506,7 @@ def ut():
         for p_state in com['state']:
             try:
                 step = p_state['id']
-                states = adaptor.convert(step, p_state['module'], p_state['parameter'], runner.os_type)
+                states = adaptor.convert(step, p_state['module'], p_state['parameter'])
                 print json.dumps(states)
 
                 if not states or not isinstance(states, list):
