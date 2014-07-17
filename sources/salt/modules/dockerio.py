@@ -1183,7 +1183,7 @@ def inspect_container(container, *args, **kwargs):
     return _set_id(status)
 
 
-def login(username=None, password=None, email=None, url=None, *args, **kwargs):
+def login(username=None, password=None, email=None, url=None, client=None, *args, **kwargs):
     '''
     Wrapper to the docker.py login method, does not do much yet
 
@@ -1196,8 +1196,8 @@ def login(username=None, password=None, email=None, url=None, *args, **kwargs):
     status = base_status.copy()
     status['id'] = username
     try:
-        client = _get_client()
-        lg = client.login(username, password, email, url)
+        c = (_get_client() if not client else client)
+        lg = c.login(username, password, email, url)
         valid(status, id=username, out=lg, comment="%s logged to %s"%(username,(url if url else "default repo")))
     except Exception:
         invalid(status, id=username, out=traceback.format_exc(),
@@ -1768,7 +1768,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
         registry, repo_name = docker.auth.resolve_repository_name(repo)
         if username:
             url = (registry if registry else None)
-            lg = login(username,password,email,registry=url)
+            lg = login(username,password,email,registry=url,client=client)
             print "####### LOGIN #######"
             print lg
             print "####### /LOGIN #######"
