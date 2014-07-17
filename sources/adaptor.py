@@ -1085,8 +1085,8 @@ class StateAdaptor(object):
                     # add require-pkg when it isnt tar
                     if ext == 'zip':
                         self.mod_map[module]['require'] = [
-                            {'linux.apt.package' : { 'name' : [{'key':'zip'}] }},
-                            {'linux.yum.package' : { 'name' : [{'key':'zip'}] }},
+                            {'linux.apt.package' : { 'name' : [{'key':'zip'}, {'key':'unzip'}] }},
+                            {'linux.yum.package' : { 'name' : [{'key':'zip'}, {'key':'unzip'}] }},
                         ]
 
                 if 'source_hash' in addin:
