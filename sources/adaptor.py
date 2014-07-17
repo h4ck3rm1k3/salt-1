@@ -1541,8 +1541,8 @@ def ut():
     }
 
     from opsagent.state.runner import StateRunner
-    adaptor = StateAdaptor()
     runner = StateRunner(config)
+    adaptor = StateAdaptor(runner)
 
     # print json.dumps(adaptor._salt_opts, sort_keys=True,
     #   indent=4, separators=(',', ': '))
