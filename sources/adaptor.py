@@ -579,10 +579,10 @@ class StateAdaptor(object):
                     'volumes'       : 'volumes',
                     'mem_limit'     : 'mem_limit',
                     'cpu_shares'    : 'cpu_shares',
-                    'ports'         : 'ports',
+#                    'ports'         : 'ports',
                     # running
                     'publish_all_ports': 'publish_all_ports',
-                    'binds'         : 'binds',
+#                    'binds'         : 'binds',
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'force'         : 'force',
@@ -1112,13 +1112,11 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                 if addin.get("port_bindings"):
                     utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
-
                     ports = []
                     pb = {}
-
                     for item in addin["port_bindings"]:
-                        key = item.get("key","")
-                        value = item.get("value","")
+                        key = item.get("key",None)
+                        value = item.get("value",None)
                         if not key or not value: continue
                         v = value.split(":")
                         pb[key] = ({
@@ -1132,10 +1130,31 @@ class StateAdaptor(object):
                         port = k[0]
                         proto = ("tcp" if len(k) != 2 else k[1])
                         ports.append((int(port),proto))
-
                     addin.pop("port_bindings")
-                    addin["port_bindings"] = pb
-                    addin["ports"] = ports
+                    if pb and ports:
+                        addin["port_bindings"] = pb
+                        addin["ports"] = ports
+                if addin.get("volumes"):
+                    utils.log("DEBUG", "Generating volumes, current: %s"%(addin.get("volumes")), ("__build_up", self))
+                    volumes = []
+                    binds = {}
+                    vol = addin.get("volumes",{})
+                    for item in vol:
+                        key = item.get("key",None)
+                        value = item.get("value",None)
+                        if not key or not value: continue
+                        mp = value.split(":")
+                        ro = (True if (len(mp) == 2 and mp[1] == "ro") else False)
+                        value = mp[0]
+                        volumes.append(value)
+                        binds[key] = {
+                            'bind': value,
+                            'ro': ro
+                        }
+                    addin.pop("volumes")
+                    if volumes and binds:
+                        addin["volumes"] = volumes
+                        addin["binds"] = binds
                 if addin.get("environment"):
                     utils.log("DEBUG", "Generating environment, current: %s"%(addin["environment"]), ("__build_up", self))
                     env = {}

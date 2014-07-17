@@ -771,10 +771,11 @@ Ensure that a container from the given name is running. If not, run it.
 		example:
 			FOO: BAR
 
-*   **`volumes`** (*optional*): List of volumes (if not specified in `Dockerfile`)
+*   **`volumes`** (*optional*): List of volumes to attach (if not specified in `Dockerfile`). (specify :ro for read only mode)
 
 		example:
-			/volumes/my_volume
+			/host/path: /mount/point
+			/host/path: /mount/point/read/only:ro
 
 *   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)
 
@@ -785,11 +786,6 @@ Ensure that a container from the given name is running. If not, run it.
 
 		example:
 			0-3
-
-*   **`binds`** (*optional*): Like -v of docker run command (if not specified in `Dockerfile`)
-
-		example:
-			/var/log/service: /var/log/service
 
 *   **`publish_all_ports`** (*optional*): Publish all ports
 
@@ -836,7 +832,7 @@ Ensure that a container from the given name is running. If not, run it.
 						'visible'	:	True
 					},
 					'volumes'		:	{
-						'type'		:	'array',
+						'type'		:	'doct',
 						'required'	:	False,
 						'visible'	:	True
 					},
@@ -847,11 +843,6 @@ Ensure that a container from the given name is running. If not, run it.
 					},
 					'cpu_shares'		:	{
 						'type'		:	'array',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'binds'		:	{
-						'type'		:	'dict',
 						'required'	:	False,
 						'visible'	:	True
 					},
