@@ -163,10 +163,16 @@ def _ret_status(exec_status=None,
         scomment = exec_status.get('comment', None)
         if scomment:
             comment += '\n' + scomment
+        stdout = exec_status.get('state_stdout', None)
+        if stdout:
+            if isinstance(stdout, string_types):
+                state_stdout = stdout
         out = exec_status.get('out', None)
         if out:
             if isinstance(out, string_types):
                 print "out for name:%s => %s\n"%(name,out)
+                if not state_stdout:
+                    state_stdout = out
 #                comment += '\n' + out
     return {
         'changes': changes,
@@ -840,6 +846,7 @@ def vops_pushed(repository,
     status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
     status["status"] = True
     status["id"] = repository
+    status["state_stdout"] = ret["state_stdout"]
 
     return _ret_status(status,repository,changes={repository:ret.get('changes',False)})
 

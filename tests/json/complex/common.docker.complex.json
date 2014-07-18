@@ -3,20 +3,20 @@
     "init": {
       "state": [
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300101",
-          "_": "0 [prepare] Activate ports forwarding - True",
-          "module": "linux.cmd",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
+          "_": "0 [prepare] Create images directory - True",
+          "module": "linux.dir",
           "parameter": {
-            "timeout": "1000",
-            "cmd": "echo 1 > /proc/sys/net/ipv4/ip_forward"
+            "path": ["/opt/docker","/opt/foo"]
           }
         },
         {
-          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
-          "_": "1 [prepare] Create images directory - True",
-          "module": "linux.dir",
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300101",
+          "_": "1 [prepare] Activate ports forwarding - True",
+          "module": "linux.cmd",
           "parameter": {
-            "path": ["/opt/docker"]
+            "timeout": "1000",
+            "cmd": "(echo 1 > /proc/sys/net/ipv4/ip_forward) && (echo foobar > /opt/foo/bar)"
           }
         },
         {
@@ -60,6 +60,10 @@
             "port_bindings": [{
                 "key": "80",
                 "value": "80"
+            }],
+            "volumes": [{
+                "key": "/opt/foo",
+                "value": "/tmp"
             }],
             "force": true
           }
