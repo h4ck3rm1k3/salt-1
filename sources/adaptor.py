@@ -1112,13 +1112,11 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                 if addin.get("port_bindings"):
                     utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
-
                     ports = []
                     pb = {}
-
                     for item in addin["port_bindings"]:
-                        key = item.get("key","")
-                        value = item.get("value","")
+                        key = item.get("key",None)
+                        value = item.get("value",None)
                         if not key or not value: continue
                         v = value.split(":")
                         pb[key] = ({
@@ -1128,14 +1126,36 @@ class StateAdaptor(object):
                                 "HostIp": "0.0.0.0",
                                 "HostPort": v[0]
                         })
-                        k = key.split("/")
-                        port = k[0]
-                        proto = ("tcp" if len(k) != 2 else k[1])
-                        ports.append((int(port),proto))
-
+#                        k = key.split("/")
+#                        port = k[0]
+#                        proto = ("tcp" if len(k) != 2 else k[1])
+#                        ports.append((int(port),proto))
+                        ports.append(key)
                     addin.pop("port_bindings")
-                    addin["port_bindings"] = pb
-                    addin["ports"] = ports
+                    if pb and ports:
+                        addin["port_bindings"] = pb
+                        addin["ports"] = ports
+                if addin.get("volumes"):
+                    utils.log("DEBUG", "Generating volumes, current: %s"%(addin.get("volumes")), ("__build_up", self))
+                    volumes = []
+                    binds = {}
+                    vol = addin.get("volumes",{})
+                    for item in vol:
+                        key = item.get("key",None)
+                        value = item.get("value",None)
+                        if not key or not value: continue
+                        mp = value.split(":")
+                        ro = (True if (len(mp) == 2 and mp[1] == "ro") else False)
+                        value = mp[0]
+                        volumes.append(value)
+                        binds[key] = {
+                            'bind': value,
+                            'ro': ro
+                        }
+                    addin.pop("volumes")
+                    if volumes and binds:
+                        addin["volumes"] = volumes
+                        addin["binds"] = binds
                 if addin.get("environment"):
                     utils.log("DEBUG", "Generating environment, current: %s"%(addin["environment"]), ("__build_up", self))
                     env = {}
@@ -1146,16 +1166,6 @@ class StateAdaptor(object):
                         env[key] = value
                     addin.pop("environment")
                     addin["environment"] = env
-                if addin.get("binds"):
-                    utils.log("DEBUG", "Generating binds, current: %s"%(addin["binds"]), ("__build_up", self))
-                    binds = {}
-                    for item in addin["binds"]:
-                        key = item.get("key","")
-                        value = item.get("value","")
-                        if not key or not value: continue
-                        binds[key] = value
-                    addin.pop("binds")
-                    addin["binds"] = binds
                 if addin.get("links"):
                     utils.log("DEBUG", "Generating links, current: %s"%(addin["links"]), ("__build_up", self))
                     links = {}
@@ -1166,6 +1176,17 @@ class StateAdaptor(object):
                         links[key] = value
                     addin.pop("links")
                     addin["links"] = links
+                if addin.get("mem_limit"):
+                    utils.log("DEBUG", "Generating memory limit, current: %s"%(addin["mem_limit"]), ("__build_up", self))
+                    mem=addin.get("mem_limit")
+                    mem_eq={
+                        'b': lambda x: x,
+                        'k': lambda x: x << 10,
+                        'm': lambda x: x << 20,
+                        'g': lambda x: x << 30,
+                        't': lambda x: x << 40,
+                    }
+                    addin["mem_limit"] = (mem_eq[mem[-1]](mem[:-1]) if mem[-1] in mem_eq else mem)
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
             elif module in ["common.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))

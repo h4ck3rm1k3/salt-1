@@ -624,6 +624,8 @@ manage a python virtualenv
 ### Description
 Pull the latest image from the specified repository at the specified tag (if any)
 
+Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
+
 ### Parameters
 
 *   **`repo`** (*required*): Repository URL or/and Image name
@@ -690,6 +692,8 @@ Pull the latest image from the specified repository at the specified tag (if any
 ### Description
 Ensure an image is built from a `Dockerfile`. If not, build it. If the file changes, the image will be rebuilt.
 
+Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
+
 ### Parameters
 
 *   **`tag`** (*required*): Tag of the image
@@ -743,6 +747,8 @@ Ensure an image is built from a `Dockerfile`. If not, build it. If the file chan
 ### Description
 Ensure that a container from the given name is running. If not, run it.
 
+Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
+
 ### Parameters
 
 *   **`name`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
@@ -769,12 +775,13 @@ Ensure that a container from the given name is running. If not, run it.
 *   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)
 
 		example:
-			FOO: BAR
+			FOO: bar
 
-*   **`volumes`** (*optional*): List of volumes (if not specified in `Dockerfile`)
+*   **`volumes`** (*optional*): List of volumes to attach (if not specified in `Dockerfile`). (specify :ro for read only mode)
 
 		example:
-			/volumes/my_volume
+			/host/path: /mount/point
+			/host/path: /mount/point/read/only:ro
 
 *   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)
 
@@ -786,10 +793,8 @@ Ensure that a container from the given name is running. If not, run it.
 		example:
 			0-3
 
-*   **`binds`** (*optional*): Like -v of docker run command (if not specified in `Dockerfile`)
-
 		example:
-			/var/log/service: /var/log/service
+			0
 
 *   **`publish_all_ports`** (*optional*): Publish all ports
 
@@ -836,7 +841,7 @@ Ensure that a container from the given name is running. If not, run it.
 						'visible'	:	True
 					},
 					'volumes'		:	{
-						'type'		:	'array',
+						'type'		:	'dict',
 						'required'	:	False,
 						'visible'	:	True
 					},
@@ -847,11 +852,6 @@ Ensure that a container from the given name is running. If not, run it.
 					},
 					'cpu_shares'		:	{
 						'type'		:	'array',
-						'required'	:	False,
-						'visible'	:	True
-					},
-					'binds'		:	{
-						'type'		:	'dict',
 						'required'	:	False,
 						'visible'	:	True
 					},
@@ -886,6 +886,8 @@ Ensure that a container from the given name is running. If not, run it.
 					'en'	:	'''
 ### Description
 Push an image to a docker registry. (`docker push`)
+
+Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
 
 ### Parameters
 
