@@ -841,8 +841,7 @@ def vops_pushed(repository,
         ret['comment'] = out_text
         return _invalid(
             exec_status=ret,
-            name=container,
-            comment=out_text)
+            name=container)
 
     if dep_containers and ret.get('changes'):
         for container in dep_containers:
@@ -922,16 +921,17 @@ def vops_built(tag,
 #        print "######### BUILT #####"
 #        print ret
 #        print "######### /BUILT #####"
-        if ret.get('comment'):
+        if ret.get('state_stdout'):
+            state_stdout += stream_to_print(ret.get('state_stdout',''))
+        if ret.get('status'):
             if ret.get('changes'):
                 out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
             else:
                 out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
-            state_stdout += stream_to_print(ret.get('state_stdout',''))
-        if ret.get('status') == False:
-            ret['comment'] = "%s\nBuilt failed."%out_text
+        else:
+            ret['comment'] = "%s%s\nBuilt failed."%(out_text,ret['comment'])
             return _ret_status(ret)
-        elif ret['changes']:
+        if ret.get('changes'):
             force_install = True
 
     if force_install and containers:
