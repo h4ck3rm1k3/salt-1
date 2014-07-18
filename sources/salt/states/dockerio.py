@@ -177,10 +177,10 @@ def _ret_status(exec_status=None,
         out = exec_status.get('out', None)
         if out:
             if isinstance(out, string_types):
-                print "out for name:%s => %s\n"%(name,out)
+#                # Debug
+#                print "out for name:%s => %s\n"%(name,out)
                 if not state_stdout:
                     state_stdout = out
-#                comment += '\n' + out
     return {
         'id': name,
         'name': name,
@@ -810,9 +810,10 @@ def vops_pushed(repository,
         commit = __salt__['docker.commit']
         ret = commit(container,repository,tag,message,author,conf)
 
-        print "######### COMMIT #####"
-        print ret
-        print "######### /COMMIT #####"
+#        # DEBUG
+#        print "######### COMMIT #####"
+#        print ret
+#        print "######### /COMMIT #####"
 
         if ret.get("comment"):
             out_text += "%s\n"%ret["comment"]
@@ -826,9 +827,10 @@ def vops_pushed(repository,
     push = __salt__['docker.push']
     ret = push(repository,username=username,password=password,email=email)
 
-    print "######### PUSH #####"
-    print ret
-    print "######### /PUSH #####"
+#    # DEBUG
+#    print "######### PUSH #####"
+#    print ret
+#    print "######### /PUSH #####"
 
     if ret.get("comment"):
         out_text += "%s\n"%ret["comment"]
@@ -872,9 +874,10 @@ def vops_pulled(repo,
     force_install = False
     if repo:
         ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
-        print "######### PULLED #####"
-        print ret
-        print "######### /PULLED #####"
+#        # PUSHED
+#        print "######### PULLED #####"
+#        print ret
+#        print "######### /PULLED #####"
         if ret.get('comment'):
             out_text += "%s\n"%(ret['comment'])
         if not ret.get('status'):
@@ -915,9 +918,10 @@ def vops_built(tag,
 
     if tag and path:
         ret = built(tag,path,force=force)
-        print "######### BUILT #####"
-        print ret
-        print "######### /BUILT #####"
+#        # DEBUG
+#        print "######### BUILT #####"
+#        print ret
+#        print "######### /BUILT #####"
         if ret.get('comment'):
             if ret.get('changes'):
                 out_text += "Image %s built from Dockerfile in %s\n"%(tag,path)
@@ -972,9 +976,10 @@ def vops_running(name,
     ret = installed(
         name,image,entrypoint=entrypoint,command=command,
         environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
-    print "######### INSTALLED #####"
-    print ret
-    print "######### /INSTALLED #####"
+#    # DEBUG
+#    print "######### INSTALLED #####"
+#    print ret
+#    print "######### /INSTALLED #####"
     if ret.get('comment'):
         out_text += "%s\n"%(ret['comment'])
     if ret['result'] == False:
@@ -984,15 +989,17 @@ def vops_running(name,
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
     container = (s.group(1) if s else None)
-    print "########## CONTAINER ID ##########"
-    print container
-    print "########## /CONTAINER ID ##########"
+#    # DEBUG
+#    print "########## CONTAINER ID ##########"
+#    print container
+#    print "########## /CONTAINER ID ##########"
 
     ret = running(
         name,container=name,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
-    print "######### RUNNING #####"
-    print ret
-    print "######### /RUNNING #####"
+#    # DEBUG
+#    print "######### RUNNING #####"
+#    print ret
+#    print "######### /RUNNING #####"
     if ret.get('comment'):
         out_text += "%s\n"%(ret['comment'])
     if ret['result'] == False:

@@ -101,7 +101,6 @@ def _find_install_targets(name=None,
     Inspect the arguments to pkg.installed and discover what packages need to
     be installed. Return a dict of desired packages
     '''
-    print "PASS PASSP ASS PASS PASS"
     if all((pkgs, sources)):
         return {'name': name,
                 'changes': {},

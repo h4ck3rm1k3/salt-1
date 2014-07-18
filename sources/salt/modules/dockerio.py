@@ -1769,9 +1769,10 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
         if username:
             url = (registry if registry else None)
             lg = login(username,password,email,registry=url,client=client)
-            print "####### LOGIN #######"
-            print lg
-            print "####### /LOGIN #######"
+#            #DEBUG
+#            print "####### LOGIN #######"
+#            print lg
+#            print "####### /LOGIN #######"
             if not lg.get("status"):
                 invalid(status,comment=lg.get("comment"),out=lg.get("out"))
                 return status
@@ -1779,9 +1780,10 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
         registry, repo_name = docker.auth.resolve_repository_name(repo)
         ret = client.push(repo)
         logs, infos = _parse_image_multilogs_string(ret, repo_name)
-        print "RET=%s"%ret
-        print "LOGS=%s"%logs
-        print "INFOS=%s"%infos
+#        # DEBUG
+#        print "RET=%s"%ret
+#        print "LOGS=%s"%logs
+#        print "INFOS=%s"%infos
         if logs:
             laststatus = logs[0].get('status', None)
             if laststatus and ('already pushed' in laststatus):
