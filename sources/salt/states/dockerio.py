@@ -813,9 +813,9 @@ def vops_pushed(repository,
         if not ret.get('status'):
             ret['comment'] = out_text
             return _invalid(
+                exec_status=ret,
                 name=container,
-                comment=out_text,
-                out=ret.get("out"))
+                comment=out_text)
 
     push = __salt__['docker.push']
     ret = push(repository,username=username,password=password,email=email)
@@ -832,6 +832,7 @@ def vops_pushed(repository,
     if not ret.get('status'):
         ret['comment'] = out_text
         return _invalid(
+            exec_status=ret,
             name=container,
             comment=out_text)
 
