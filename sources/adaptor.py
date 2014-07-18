@@ -1177,7 +1177,6 @@ class StateAdaptor(object):
                     addin.pop("links")
                     addin["links"] = links
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
-                time.sleep(100)
             elif module in ["common.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                 if addin.get("watch"):
