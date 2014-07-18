@@ -1534,7 +1534,7 @@ def __log(lvl, f=None):
 
 # ===================== UT =====================
 def ut():
-    __log('DEBUG')
+#    __log('DEBUG')
 
     import json
     pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
