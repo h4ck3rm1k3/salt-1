@@ -579,10 +579,10 @@ class StateAdaptor(object):
                     'volumes'       : 'volumes',
                     'mem_limit'     : 'mem_limit',
                     'cpu_shares'    : 'cpu_shares',
-#                    'ports'         : 'ports',
+                    'ports'         : 'ports',
                     # running
                     'publish_all_ports': 'publish_all_ports',
-#                    'binds'         : 'binds',
+                    'binds'         : 'binds',
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'force'         : 'force',

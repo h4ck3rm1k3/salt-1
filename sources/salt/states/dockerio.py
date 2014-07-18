@@ -137,7 +137,8 @@ base_status = {
     'status': None,
     'id': None,
     'comment': '',
-    'out': None
+    'out': None,
+    'state_stdout': None,
 }
 
 
