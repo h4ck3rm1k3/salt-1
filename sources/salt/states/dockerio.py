@@ -159,8 +159,14 @@ def _ret_status(exec_status=None,
     if exec_status is None:
         exec_status = {}
     if exec_status:
+        if not name:
+            name = exec_status.get('name','')
+            if not name:
+                name = exec_status.get('id','')
         if result is None:
-            result = exec_status['status']
+            result = exec_status.get('status',None)
+            if result is None:
+                result = exec_status.get('result',False)
         scomment = exec_status.get('comment', None)
         if scomment:
             comment += '\n' + scomment
@@ -176,12 +182,13 @@ def _ret_status(exec_status=None,
                     state_stdout = out
 #                comment += '\n' + out
     return {
-        'changes': changes,
+        'id': name,
+        'name': name,
         'result': result,
         'status': result,
-        'name': name,
         'comment': comment,
-        'state_stdout': state_stdout
+        'state_stdout': state_stdout,
+        'changes': changes,
     }
 
 
@@ -814,8 +821,7 @@ def vops_pushed(repository,
             ret['comment'] = out_text
             return _invalid(
                 exec_status=ret,
-                name=container,
-                comment=out_text)
+                name=container)
 
     push = __salt__['docker.push']
     ret = push(repository,username=username,password=password,email=email)
@@ -843,7 +849,7 @@ def vops_pushed(repository,
                 out_text += "%s\n"%(a['comment'])
             if not a.get('result'):
                 a['comment'] = out_text
-                return a
+                return _ret_status(a)
 
     status = base_status.copy()
     status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
@@ -873,8 +879,7 @@ def vops_pulled(repo,
             out_text += "%s\n"%(ret['comment'])
         if not ret.get('status'):
             ret['comment'] = out_text
-            ret['out'] = ret.get('out')
-            return ret
+            return _ret_status(ret)
         elif ret['changes']:
             force_install = True
 
@@ -885,7 +890,7 @@ def vops_pulled(repo,
                 out_text += "%s\n"%(a['comment'])
             if not a.get('result'):
                 a['comment'] = out_text
-                return a
+                return _ret_status(a)
 
     status = base_status.copy()
     status["comment"] = out_text
@@ -921,7 +926,7 @@ def vops_built(tag,
             state_stdout += stream_to_print(ret.get('state_stdout',''))
         if ret.get('status') == False:
             ret['comment'] = "%s\nBuilt failed."%out_text
-            return ret
+            return _ret_status(ret)
         elif ret['changes']:
             force_install = True
 
@@ -933,7 +938,7 @@ def vops_built(tag,
             if not a.get('result'):
                 a['result'] = False
                 a['comment'] = out_text
-                return a
+                return _ret_status(a)
 
     status = base_status.copy()
     status["comment"] = out_text
@@ -974,7 +979,7 @@ def vops_running(name,
         out_text += "%s\n"%(ret['comment'])
     if ret['result'] == False:
         ret['comment'] = out_text
-        return ret
+        return _ret_status(ret)
     s = re.search("already exists, container Id: '(.*)'",ret['comment'])
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
@@ -992,7 +997,7 @@ def vops_running(name,
         out_text += "%s\n"%(ret['comment'])
     if ret['result'] == False:
         ret['comment'] = out_text
-        return ret
+        return _ret_status(ret)
 
     status = base_status.copy()
     status["comment"] = "%s\nContainer %s running."%(out_text,name)
