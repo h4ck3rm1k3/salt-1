@@ -1176,6 +1176,17 @@ class StateAdaptor(object):
                         links[key] = value
                     addin.pop("links")
                     addin["links"] = links
+                if addin.get("mem_limit"):
+                    utils.log("DEBUG", "Generating memory limit, current: %s"%(addin["mem_limit"]), ("__build_up", self))
+                    mem=addin.get("mem_limit")
+                    mem_eq={
+                        'b': lambda x: x,
+                        'k': lambda x: x << 10,
+                        'm': lambda x: x << 20,
+                        'g': lambda x: x << 30,
+                        't': lambda x: x << 40,
+                    }
+                    addin["mem_limit"] = (mem_eq[mem[-1]](mem[:-1]) if mem[-1] in mem_eq else mem)
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
             elif module in ["common.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
