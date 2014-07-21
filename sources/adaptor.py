@@ -1198,7 +1198,7 @@ class StateAdaptor(object):
                         'g': lambda x: x << 30,
                         't': lambda x: x << 40,
                     }
-                    addin["mem_limit"] = (mem_eq[mem[-1]](mem[:-1]) if mem[-1] in mem_eq else mem)
+                    addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
             elif module in ["common.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
