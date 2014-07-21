@@ -751,10 +751,14 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 
 ### Parameters
 
-*   **`name`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
+*   **`names`** (*required*): Desired name(s) of the container(s) (must be the name specified in "pulled" and "built" states, if any)
 
 		example:
 			my_container
+
+		example:
+			my_container1
+			my_container2
 
 *   **`image`** (*required*): Image from which to build this container
 
@@ -805,6 +809,9 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 
 *   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
 
+		note:
+			If multiple container names are specified, the host port will be incremented by one on each.
+
 		example:
 			5000/tcp: 127.0.0.1:5000
 			6000/tcp: 6000 (default ip: 0.0.0.0)
@@ -815,8 +822,8 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'name'		:	{
-						'type'		:	'line',
+					'names'		:	{
+						'type'		:	'array',
 						'required'	:	True,
 						'visible'	:	True
 					},
