@@ -136,9 +136,10 @@ FN_CACHE = {}
 base_status = {
     'status': None,
     'id': None,
+    'name': None,
     'comment': '',
-    'out': None,
-    'state_stdout': None,
+    'out': '',
+    'state_stdout': '',
 }
 
 
@@ -955,22 +956,22 @@ def vops_built(tag,
 
 
 # running container
-def vops_running(name,
-                 image,
-                 entrypoint=None,
-                 command=None,
-                 environment=None,
-                 ports=None,
-                 volumes=None,
-                 mem_limit=0,
-                 cpu_shares=None,
-                 # running
-                 binds=None,
-                 publish_all_ports=False,
-                 links=None,
-                 port_bindings=None,
-                 force=False,
-                 *args, **kwargs):
+def vops_running_one(name,
+                     image,
+                     entrypoint=None,
+                     command=None,
+                     environment=None,
+                     ports=None,
+                     volumes=None,
+                     mem_limit=0,
+                     cpu_shares=None,
+                     # running
+                     binds=None,
+                     publish_all_ports=False,
+                     links=None,
+                     port_bindings=None,
+                     force=False,
+                     *args, **kwargs):
 
     out_text = ""
     ret = installed(
@@ -1013,3 +1014,109 @@ def vops_running(name,
 
     #TODO: changes
     return _ret_status(status,name,changes={})
+
+
+def get_port(port):
+    p = port.split("/")
+    return int(p[0])
+
+def test_ports(pb,length):
+#    guests = sorted([get_port(guest) for guest in pb])
+    hosts = sorted([int(pb[guest].get("HostPort",0)) for guest in pb])
+    if not hosts:
+        return False
+#    previous = guests[0]
+#    for port in guests:
+#        if (port - previous < length):
+#            return False
+    previous = hosts[0]
+    for port in hosts[1:]:
+        if (port - previous < length):
+            return False
+    return True
+
+def gen_ports(ports,port_bindings,length):
+    out_ports = []
+    out_port_bindings = []
+
+    if test_ports(port_bindings,length) is False:
+        return (None,None)
+
+    i = 0
+    while i < length:
+        cur_port = []
+        for p in ports:
+            port = p.split("/")
+            protocol = ("tcp" if len(port) != 2 else port[1])
+            port = int(port[0])#+i
+            cur_port.append("%s/%s"%(port,protocol))
+        out_ports.append(cur_port)
+        i += 1
+
+    i = 0
+    while i < length:
+        cur_pb = {}
+        for p in port_bindings:
+            port = p.split("/")
+            protocol = ("tcp" if len(port) != 2 else port[1])
+            port = int(port[0])#+i
+            cur_pb["%s/%s"%(port,protocol)] = {
+                "HostIp": port_bindings[p].get("HostIp"),
+                "HostPort": int(port_bindings[p].get("HostPort",0))+i
+            }
+        out_port_bindings.append(cur_pb)
+        i += 1
+
+    return (out_ports[::-1],out_port_bindings[::-1])
+
+def vops_running(containers,
+                 image,
+                 entrypoint=None,
+                 command=None,
+                 environment=None,
+                 ports=None,
+                 volumes=None,
+                 mem_limit=0,
+                 cpu_shares=None,
+                 # running
+                 binds=None,
+                 publish_all_ports=False,
+                 links=None,
+                 port_bindings=None,
+                 force=False,
+                 *args, **kwargs):
+
+    if not containers:
+        return _invalid(comment='Container name missing')
+
+    if ports and port_bindings:
+        (ports,port_bindings) = gen_ports(ports,port_bindings,len(containers))
+        if not ports or not port_bindings:
+            return _invalid(comment="Error generating port bindings (is there enough space between each allocation required?)")
+
+    comment = ""
+
+    for name in containers:
+        port = (ports.pop() if ports else None)
+        port_binding = (port_bindings.pop() if port_bindings else None)
+        status = vops_running_one(name=name,
+                                  image=image,
+                                  entrypoint=entrypoint,
+                                  command=command,
+                                  environment=environment,
+                                  ports=port,
+                                  volumes=volumes,
+                                  mem_limit=mem_limit,
+                                  cpu_shares=cpu_shares,
+                                  binds=binds,
+                                  publish_all_ports=publish_all_ports,
+                                  links=links,
+                                  port_bindings=port_binding,
+                                  force=force)
+        comment += "%s\n"%status.get("comment")
+        if status.get("status") is False:
+            status["comment"] = comment
+            return status
+
+    status["comment"] = comment
+    return status
