@@ -1067,7 +1067,7 @@ def gen_ports(ports,port_bindings,length):
 
     return (out_ports,out_port_bindings)
 
-def vops_running(names,
+def vops_running(name,
                  image,
                  entrypoint=None,
                  command=None,
@@ -1084,20 +1084,20 @@ def vops_running(names,
                  force=False,
                  *args, **kwargs):
 
-    if not names:
+    if not name:
         return _invalid(comment='Container name missing')
 
     if ports and port_bindings:
-        (ports,port_bindings) = gen_ports(ports,port_bindings,len(names))
+        (ports,port_bindings) = gen_ports(ports,port_bindings,len(name))
         if not ports or not port_bindings:
             return _invalid(comment="Error generating port bindings (is there enough space between each allocation required?)")
 
     comment = ""
 
-    for name in names:
+    for n in name:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
-        status = vops_running_one(name,
+        status = vops_running_one(name=n,
                                   image=image,
                                   entrypoint=entrypoint,
                                   command=command,
