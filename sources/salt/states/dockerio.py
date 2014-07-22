@@ -1030,7 +1030,7 @@ def test_ports(pb,length):
 #        if (port - previous < length):
 #            return False
     previous = hosts[0]
-    for port in hosts:
+    for port in hosts[1:]:
         if (port - previous < length):
             return False
     return True
@@ -1051,6 +1051,7 @@ def gen_ports(ports,port_bindings,length):
             port = int(port[0])#+i
             cur_port.append("%s/%s"%(port,protocol))
         out_ports.append(cur_port)
+        i += 1
 
     i = 0
     while i < length:
@@ -1064,8 +1065,9 @@ def gen_ports(ports,port_bindings,length):
                 "HostPort": int(port_bindings[p].get("HostPort",0))+i
             }
         out_port_bindings.append(cur_port)
+        i += 1
 
-    return (out_ports,out_port_bindings)
+    return (out_ports[::-1],out_port_bindings[::-1])
 
 def vops_running(name,
                  image,
