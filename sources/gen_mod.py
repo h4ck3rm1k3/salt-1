@@ -624,8 +624,6 @@ manage a python virtualenv
 ### Description
 Pull the latest image from the specified repository at the specified tag (if any)
 
-Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
-
 ### Parameters
 
 *   **`repo`** (*required*): Repository URL or/and Image name
@@ -692,8 +690,6 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 ### Description
 Ensure an image is built from a `Dockerfile`. If not, build it. If the file changes, the image will be rebuilt.
 
-Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
-
 ### Parameters
 
 *   **`tag`** (*required*): Tag of the image
@@ -746,8 +742,6 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 					'en'	:	'''
 ### Description
 Ensure that a container from the given name is running. If not, run it.
-
-Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
 
 ### Parameters
 
@@ -893,8 +887,6 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 					'en'	:	'''
 ### Description
 Push an image to a docker registry. (`docker push`)
-
-Warning: Only available on Amazon Linux and Ubuntu. Other distributions require an explicit installation of Docker.
 
 ### Parameters
 
