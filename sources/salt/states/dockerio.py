@@ -1064,7 +1064,7 @@ def gen_ports(ports,port_bindings,length):
                 "HostIp": port_bindings[p].get("HostIp"),
                 "HostPort": int(port_bindings[p].get("HostPort",0))+i
             }
-        out_port_bindings.append(cur_port)
+        out_port_bindings.append(cur_pb)
         i += 1
 
     return (out_ports[::-1],out_port_bindings[::-1])
