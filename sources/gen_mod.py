@@ -807,7 +807,7 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 		example:
 			name_other_container: alias_for_other_container
 
-*   **`port_bindings`** (*optional*): List of ports to expose on host system a mapping port's guest, hostname's host and port's host
+*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
 
 		note:
 			If multiple container names are specified, the host port will be incremented by one on each.
