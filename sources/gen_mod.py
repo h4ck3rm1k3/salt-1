@@ -751,7 +751,7 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 
 ### Parameters
 
-*   **`name`** (*required*): Desired name(s) of the container(s) (must be the name specified in "pulled" and "built" states, if any)
+*   **`containers`** (*required*): Desired name(s) of the container(s) (must be the name specified in "pulled" and "built" states, if any)
 
 		example:
 			my_container
@@ -822,7 +822,7 @@ Warning: Only available on Amazon Linux and Ubuntu. Other distributions require 
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'name'		:	{
+					'containers'	:	{
 						'type'		:	'array',
 						'required'	:	True,
 						'visible'	:	True

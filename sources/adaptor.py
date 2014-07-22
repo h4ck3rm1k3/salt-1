@@ -583,7 +583,7 @@ class StateAdaptor(object):
         'common.docker.running' : {
             'attributes' : {
                     # installed
-                    'name'          : 'name',
+                    'containers'    : 'containers',
                     'image'         : 'image',
                     'command'       : 'command',
                     'entry_point'   : 'entry_point',
