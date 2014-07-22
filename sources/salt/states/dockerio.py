@@ -1039,7 +1039,7 @@ def gen_ports(ports,port_bindings,length):
     out_ports = []
     out_port_bindings = []
 
-    if test_ports(port_bindings,length) if False:
+    if test_ports(port_bindings,length) is False:
         return (None,None)
 
     i = 0
@@ -1111,8 +1111,8 @@ def vops_running(names,
                                   links=links,
                                   port_bindings=port_binding,
                                   force=force)
-        comment += "%s\n"%res.get("comment")
-        if res.get("status") is False:
+        comment += "%s\n"%status.get("comment")
+        if status.get("status") is False:
             status["comment"] = comment
             return status
 
