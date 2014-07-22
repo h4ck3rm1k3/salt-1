@@ -557,7 +557,8 @@ class StateAdaptor(object):
             'states' : ['vops_pulled'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
                 {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
                 {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
@@ -574,7 +575,8 @@ class StateAdaptor(object):
             'states' : ['vops_built'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker'}] }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
                 {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
                 {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
@@ -623,6 +625,13 @@ class StateAdaptor(object):
             },
             'states' : ['vops_pushed'],
             'type' : 'docker',
+            'require' : [
+                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+            ]
         },
     }
 
