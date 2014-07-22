@@ -411,8 +411,8 @@ def installed(name,
         ports = []
     if not volumes:
         volumes = []
-    if not entrypoint:
-        entrypoint = []
+#    if not entrypoint:
+#        entrypoint = []
     if isinstance(environment, dict):
         for k in environment:
             denvironment[u'%s' % k] = u'%s' % environment[k]
@@ -427,12 +427,12 @@ def installed(name,
         else:
             for k in p:
                 dports[str(p)] = {}
-    for e in entrypoint:
-        if not isinstance(e, dict):
-            de[str(e)] = {}
-        else:
-            for k in e:
-                de[str(e)] = {}
+#    for e in entrypoint:
+#        if not isinstance(e, dict):
+#            de[str(e)] = {}
+#        else:
+#            for k in e:
+#                de[str(e)] = {}
     for p in volumes:
         vals = []
         if not isinstance(p, dict):
@@ -443,7 +443,7 @@ def installed(name,
         dvolumes.extend(vals)
     a, kw = [image], dict(
         command=command,
-        entrypoint=de,
+        entrypoint=entrypoint,
         hostname=hostname,
         user=user,
         detach=detach,
