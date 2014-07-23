@@ -968,12 +968,6 @@ class StateAdaptor(object):
             elif module in ['linux.dir', 'linux.file', 'linux.symlink']:
                 if module == 'linux.dir':
                     addin['makedirs'] = True
-                elif module == 'linux.file':
-                    if addin.get('remote_uri'):
-                        req = urllib2.Request(addin['remote_uri'])
-                        f = urllib2.urlopen(req, timeout=URI_TIMEOUT)
-                        addin['content'] = f.read()
-                        del addin['remote_uri']
 
                 # set absent
                 if 'absent' in addin and addin['absent']:
@@ -984,6 +978,15 @@ class StateAdaptor(object):
                         module_state['absent']['names'] = addin['names']
 
                 else:
+                    if 'remote_uri' in addin:
+                        req = urllib2.Request(addin['remote_uri'])
+                        f = urllib2.urlopen(req, timeout=URI_TIMEOUT)
+                        print "####################$$$$$####"
+                        print addin
+                        print f.read()
+                        print "/####################$$$$$####"
+                        addin['content'] = f.read()
+                        del addin['remote_uri']
                     # set default user,group
                     if 'user' not in addin:
                         addin['user'] = 'root'
