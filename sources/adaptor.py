@@ -815,6 +815,8 @@ class StateAdaptor(object):
                 if pkg_flag:
                     for item in addin[pkg_flag]:
                         if isinstance(item, dict) and item.get('value','').endswith('.rpm'):
+                            addin['sources'] = addin[pkg_flag].copy()
+                            del addin[pkg_flag]
                             pkg_flag = "sources"
                             break
 
