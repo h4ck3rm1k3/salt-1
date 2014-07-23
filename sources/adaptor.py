@@ -815,12 +815,11 @@ class StateAdaptor(object):
                 if pkg_flag:
                     for item in addin[pkg_flag]:
                         if isinstance(item, dict) and item.get('value','').endswith('.rpm'):
-                            addin['sources'] = addin[pkg_flag].copy()
+                            addin['sources'] = addin[pkg_flag][:]
                             del addin[pkg_flag]
                             pkg_flag = "sources"
                             break
 
-                if pkg_flag:
                     for item in addin[pkg_flag]:
                         if not isinstance(item, dict):  continue
 
@@ -981,11 +980,7 @@ class StateAdaptor(object):
                     if 'remote_uri' in addin:
                         req = urllib2.Request(addin['remote_uri'])
                         f = urllib2.urlopen(req, timeout=URI_TIMEOUT)
-                        print "####################$$$$$####"
-                        print addin
-                        print f.read()
-                        print "/####################$$$$$####"
-                        addin['content'] = f.read()
+                        addin['contents'] = f.read()
                         del addin['remote_uri']
                     # set default user,group
                     if 'user' not in addin:
