@@ -1107,6 +1107,7 @@ manage yum packages
 *	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all YUM repos available
 	- ***`<version>`***: ensure the package is installed, at the version specified. If the version in unavailable of all YUM repos available on the host, the state will fail
+	- **`<uri>`**: ensure the package will be fetched from the following uri. Warning: if one uri is specified, only packages with uri specified will be installed. *uri* can be a remote or local path to a rpm package.
 	- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all YUM repos available on the host, will do upgrade automatically
 	- **`removed`**: ensure the package is absent
 	- **`purged`**: ensure the package is absent, and also delete all related configuration data of the package
@@ -1367,6 +1368,10 @@ manage a file
 
 	>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten
 
+* **`remote_uri`** (*optional*): path where to get the content of the file (will overwrite the *content* parameter)
+
+	>note: http, https and ftp protocols are supported
+
 * **`absent`** (*optional*): ensure the file is absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
@@ -1395,6 +1400,11 @@ manage a file
 					'content'	:	{
 						'type'		:	'text',
 						'required'	:	False
+					},
+					'remote_uri'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
 					},
 					#'source-url'	:	{
 					#	'type'		:	'line',

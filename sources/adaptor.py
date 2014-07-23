@@ -6,11 +6,14 @@ VisualOps OpsAgent states adaptor
 
 # System imports
 import os
+import urllib2
 from string import Template
 
 # Internal imports
 from opsagent.exception import StateException
 from opsagent import utils
+
+URI_TIMEOUT=600
 
 class StateAdaptor(object):
 
@@ -248,6 +251,7 @@ class StateAdaptor(object):
         'linux.file' : {
             'attributes' : {
                 'path'      : 'name',
+                'remote_uri': 'remote_uri',
                 'user'      : 'user',
                 'group'     : 'group',
                 'mode'      : 'mode',
@@ -810,10 +814,18 @@ class StateAdaptor(object):
 
                 if pkg_flag:
                     for item in addin[pkg_flag]:
+                        if isinstance(item, dict) and item.get('value','').endswith('.rpm'):
+                            pkg_flag = "sources"
+                            break
+
+                if pkg_flag:
+                    for item in addin[pkg_flag]:
                         if not isinstance(item, dict):  continue
 
                         pkg_name = item['key'] if 'key' in item else None
                         pkg_version = item['value'] if 'value' in item else None
+
+                        if pkg_flag is "sources" and not item.get('value','').endswith('.rpm'): continue
 
                         # no latest in npm|pip|gem
                         if module.startswith('common') and pkg_version == 'latest':
@@ -954,6 +966,12 @@ class StateAdaptor(object):
             elif module in ['linux.dir', 'linux.file', 'linux.symlink']:
                 if module == 'linux.dir':
                     addin['makedirs'] = True
+                elif module == 'linux.file':
+                    if addin.get('remote_uri'):
+                        req = urllib2.Request(addin['remote_uri'])
+                        f = urllib2.urlopen(req, timeout=URI_TIMEOUT)
+                        addin['content'] = f.read()
+                        del addin['remote_uri']
 
                 # set absent
                 if 'absent' in addin and addin['absent']:
