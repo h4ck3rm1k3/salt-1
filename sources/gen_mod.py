@@ -745,19 +745,18 @@ Ensure that a container from the given name is running. If not, run it.
 
 ### Parameters
 
-*   **`containers`** (*required*): Desired name(s) of the container(s) (must be the name specified in "pulled" and "built" states, if any)
+*   **`container`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
 
 		example:
 			my_container
-
-		example:
-			my_container1
-			my_container2
 
 *   **`image`** (*required*): Image from which to build this container
 
 		example:
 			namespace/image
+
+
+*   **`count`** (*optional*): Specify the number of containers to run
 
 *   **`command`** (*optional*): Command argument to Docker (if not specified in `Dockerfile`)
 
@@ -804,7 +803,7 @@ Ensure that a container from the given name is running. If not, run it.
 *   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
 
 		note:
-			If multiple container names are specified, the host port will be incremented by one on each.
+			If the count parameter is specified, the host port will be incremented by one on each.
 
 		example:
 			5000/tcp: 127.0.0.1:5000
@@ -816,8 +815,8 @@ Ensure that a container from the given name is running. If not, run it.
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'containers'	:	{
-						'type'		:	'array',
+					'container'	:	{
+						'type'		:	'line',
 						'required'	:	True,
 						'visible'	:	True
 					},
@@ -826,6 +825,11 @@ Ensure that a container from the given name is running. If not, run it.
 						'required'	:	True,
 						'visible'	:	True
 					},
+                                        'count'         :       {
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+                                        },
 					'command'		:	{
 						'type'		:	'array',
 						'required'	:	False,
@@ -1149,7 +1153,7 @@ manage a yum repo
 
 ### Parameters
 
-*   **`name`** (*required*): the repo name
+* **`name`** (*required*): the repo name
 
 		 example: epel
 
@@ -1162,7 +1166,7 @@ manage a yum repo
 			gpgcheck=0
 			enabled=1
 
-* **`rpm-url`** (*optional*): the repo rpm url
+* **`rpm-url`** (*optional*): the repo rpm url (if no content specified)
 
 		example: http://mirrors.hustunique.com/epel/6/i386/epel-release-6-8.noarch.rpm
 					''',
@@ -1181,6 +1185,30 @@ manage a yum repo
 					'rpm-url'	:	{
 						'type'		:	'line',
 						'required'	:	False,
+						'visible'	:	True
+					}
+				}
+			},
+			'rpm key'	:	{
+				'module'	:	'linux.rpm.key',
+				'distro'	:	['amazon', 'redhat', 'centos'],
+				'reference'	:	{
+					'en'	:	'''
+### Description
+manage a rpm key
+
+### Parameters
+
+* **`path`** (*required*): the location of the key
+
+		example: /path/to/YOUR-RPM-GPG-KEY
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
 						'visible'	:	True
 					}
 				}
@@ -1842,6 +1870,49 @@ manage mount points
 						'default'	:	'0',
 						'required'	:	False
 					}
+				}
+			},
+			'mkfs'	:	{
+				'module'	:	'linux.mkfs',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+create a filesystem
+
+### Parameters
+
+*   **`device`** (*required*): the path of the device to format
+
+*   **`fstype`** (*required*): the filesystem type to use
+
+*   **`label`** (*optional*): label of the device
+
+*   **`block_size`** (*optional*): block size
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'device'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'fstype'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'label'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'block_size'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
 				}
 			},
 			'cmd'	:	{

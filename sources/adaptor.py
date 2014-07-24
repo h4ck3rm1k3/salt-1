@@ -131,12 +131,27 @@ class StateAdaptor(object):
             'attributes' : {
                 'name'      : 'name',
                 'content'   : 'contents',
-                'rpm-url'   : 'rpm-url'
+                'rpm-url'   : 'rpm-url',
+                'rpm-key'   : 'rpm-key'
             },
             'states' : [
                 'managed'
             ],
             'type' : 'file',
+            # 'require_in' : {
+            #   'linux.cmd' : {
+            #       'yum-config-manager --enable $name' : 'name'
+            #   }
+            # }
+        },
+        'linux.rpm.key' : {
+            'attributes' : {
+                'path'      : 'path',
+            },
+            'states' : [
+                'run'
+            ],
+            'type' : 'cmd',
             # 'require_in' : {
             #   'linux.cmd' : {
             #       'yum-config-manager --enable $name' : 'name'
@@ -383,6 +398,18 @@ class StateAdaptor(object):
             'type' : 'mount'
         },
 
+        ## mkfs
+        'linux.mkfs' : {
+            'attributes' : {
+                'device'     :   'device',
+                'fstype'     :   'fstype',
+                'label'      :   'label',
+                'block_size' :   'block_size',
+            },
+            'states' : ['mkfs'],
+            'type' : 'fs'
+        },
+
         ## selinux
         'linux.selinux' : {
             'attributes' : {
@@ -589,7 +616,7 @@ class StateAdaptor(object):
         'common.docker.running' : {
             'attributes' : {
                     # installed
-                    'containers'    : 'containers',
+                    'container'     : 'container',
                     'image'         : 'image',
                     'command'       : 'command',
                     'entry_point'   : 'entry_point',
@@ -604,6 +631,7 @@ class StateAdaptor(object):
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'force'         : 'force',
+                    'count'         : 'count',
             },
             'states' : ['vops_running'],
             'type' : 'docker',
@@ -926,6 +954,10 @@ class StateAdaptor(object):
                 #       }
                 #   }
 
+            elif module in ['linux.rpm.key']
+                addin['cmd'] = 'rpm --import {0}'.format(parameter.get('path',''))
+                addin.pop('path')
+
             elif module in ['linux.apt.ppa']:
 
                 if 'username' in addin and addin['username'] and \
@@ -1227,6 +1259,16 @@ class StateAdaptor(object):
                         't': lambda x: x << 40,
                     }
                     addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
+                if addin.get("count"):
+                    addin["containers"] = [addin["container"]]
+                else:
+                    addin["containers"] = []
+                    count = int(addin["count"])
+                    i=0
+                    while i < count:
+                        addin["containers"] += ("%s_%s"%addin["container"],i+1)
+                        i += 1
+                addin.pop("container")
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
             elif module in ["common.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
