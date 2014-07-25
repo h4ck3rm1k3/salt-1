@@ -113,7 +113,7 @@
           "_": "11 [test4] create a file from uri - True",
           "module": "linux.file",
           "parameter": {
-            "uri": "https://fedoraproject.org/static/8E1431D5.txt",
+            "remote_uri": "https://fedoraproject.org/static/8E1431D5.txt",
             "path": "/tmp/fd.key"
           }
         },
