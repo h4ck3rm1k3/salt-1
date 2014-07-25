@@ -410,7 +410,7 @@ class StateAdaptor(object):
             'type' : 'fs',
             'require' : [
                 {'linux.apt.package' : { 'name' : [{'key':'xfsprogs'}] }},
-                {'linux.yum.package' : { 'name' : [{'key':'xfsprogs'}] }}
+                {'linux.yum.package' : { 'name' : [{'key':'xfsprogs'}],'os': ["amazon","centos",["red-hat","7.0"],["redhat","7.0"]] }}
             ],
         },
 
@@ -1377,7 +1377,21 @@ class StateAdaptor(object):
                         continue
 
                     if module in ['linux.apt.package', 'linux.yum.package'] and parameter.get("os"):
-                        if self.os_type not in parameter.get("os"): continue
+                        match = False
+                        for os in parameter["os"]:
+                            if type(os) is list:
+                                os_type=os[0]
+                                os_release=os[1]
+                            else:
+                                os_type=os
+                                os_release=None
+
+                            if os_type == self.os_type:
+                                if (not os_release) or (float(self.os_release) >= float(os_release)):
+                                    match = True
+                                    break
+
+                        if not match: continue
                         del parameter["os"]
 
 
