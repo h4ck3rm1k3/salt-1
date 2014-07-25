@@ -123,7 +123,7 @@
           "_": "12 [test4] create a file from uri - True",
           "module": "linux.file",
           "parameter": {
-            "uri": "http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm",
+            "remote_uri": "http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm",
             "path": "/tmp/epel-release-6-8.noarch.rpm"
           }
         },
