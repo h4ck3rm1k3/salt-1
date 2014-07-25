@@ -5,7 +5,7 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632001",
           "_": "1 [prepare] show disk infos - True",
-          "module": "linux.linux.cmd",
+          "module": "linux.cmd",
           "parameter": {
             "cmd": "bklid"
           }
@@ -24,7 +24,7 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632102",
           "_": "3 [test1] show disk infos - True",
-          "module": "linux.linux.cmd",
+          "module": "linux.cmd",
           "parameter": {
             "cmd": "blkid ; bklid | grep /dev/xvdb | grep ext2 | grep test1"
           }
@@ -43,7 +43,7 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632202",
           "_": "5 [test2] show disk infos - True",
-          "module": "linux.linux.cmd",
+          "module": "linux.cmd",
           "parameter": {
             "cmd": "blkid ; bklid | grep /dev/xvdb | grep ext2 | grep test1"
           }
@@ -62,7 +62,7 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632302",
           "_": "7 [test3] show disk infos - True",
-          "module": "linux.linux.cmd",
+          "module": "linux.cmd",
           "parameter": {
             "cmd": "blkid ; bklid | grep /dev/xvdb | grep ext3 | grep test2"
           }
@@ -81,7 +81,7 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632402",
           "_": "9 [test4] show disk infos - True",
-          "module": "linux.linux.cmd",
+          "module": "linux.cmd",
           "parameter": {
             "cmd": "blkid ; bklid | grep /dev/xvdb | grep ext4 | grep test3"
           }
@@ -100,7 +100,7 @@
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632502",
           "_": "3 [test5] show disk infos - True",
-          "module": "linux.linux.cmd",
+          "module": "linux.cmd",
           "parameter": {
             "cmd": "blkid ; bklid | grep /dev/xvdb | grep test4 | grep xfs"
           }
