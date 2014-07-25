@@ -1872,7 +1872,7 @@ manage mount points
 					}
 				}
 			},
-			'mkfs'	:	{
+			'filesystem'	:	{
 				'module'	:	'linux.mkfs',
 				'distro'	:	None,
 				'reference'	:	{
