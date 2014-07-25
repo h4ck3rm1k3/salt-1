@@ -36,6 +36,9 @@ common.archive.complex
 
 common.docker.complex
 
+linux.rpm.key.complex
+linux.mkfs.complex
+
 #linux.fs.complex
 #linux.ulimit.complex
 #linux.hosts.complex
