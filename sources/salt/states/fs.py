@@ -17,7 +17,7 @@ def mkfs(device, fstype="ext4", label=None, block_size=None):
                 'result': False,
                 'comment': 'No device specified',
                 'state_stdout': ''}
-    if fstype not in extfs and not in xfs:
+    if (fstype not in extfs) and (fstype not in xfs):
         return {'name': device,
                 'changes': {},
                 'result': False,
@@ -37,7 +37,7 @@ def mkfs(device, fstype="ext4", label=None, block_size=None):
     if fstype in extfs:
         if block_size:
             opts += " -b %s"%label
-        cmd = 'mke2fs -F -t {0} {1} {2}'.format(fs_type, opts, device)
+        cmd = 'mke2fs -F -t {0} {1} {2}'.format(fstype, opts, device)
     elif fstype in xfs:
         if block_size:
             opts += " -b size=%s"%label

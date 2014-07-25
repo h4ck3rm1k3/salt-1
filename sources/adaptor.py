@@ -854,7 +854,8 @@ class StateAdaptor(object):
                         pkg_name = item['key'] if 'key' in item else None
                         pkg_version = item['value'] if 'value' in item else None
 
-                        if pkg_flag is "sources" and not item.get('value','').endswith('.rpm'): continue
+                        if (pkg_flag is "sources") and (not item.get('value','').endswith('.rpm')):
+                            continue
 
                         # no latest in npm|pip|gem
                         if module.startswith('common') and pkg_version == 'latest':
@@ -954,8 +955,8 @@ class StateAdaptor(object):
                 #       }
                 #   }
 
-            elif module in ['linux.rpm.key']
-                addin['cmd'] = 'rpm --import {0}'.format(parameter.get('path',''))
+            elif module in ['linux.rpm.key']:
+                addin['cmd'] = 'rpm --import {0}'.format(addin.get('path',''))
                 addin.pop('path')
 
             elif module in ['linux.apt.ppa']:

@@ -4,11 +4,11 @@
       "state": [
         {
           "id": "state-7E596E8A-28CD-4578-8E85-15D020632ABE",
-          "module": "linux.mount",
+          "module": "linux.mkfs",
           "parameter": {
             "device": "/dev/xvdb",
-            "filesystem": "ext3",
-            "path": "/mnt/data"
+            "fstype": "ext4",
+            "label": "test"
           }
         }
       ]
