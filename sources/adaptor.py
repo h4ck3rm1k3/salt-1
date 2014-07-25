@@ -407,7 +407,11 @@ class StateAdaptor(object):
                 'block_size' :   'block_size',
             },
             'states' : ['mkfs'],
-            'type' : 'fs'
+            'type' : 'fs',
+            'require' : [
+                {'linux.apt.package' : { 'name' : [{'key':'xfsprogs'}] }},
+                {'linux.yum.package' : { 'name' : [{'key':'xfsprogs'}] }}
+            ],
         },
 
         ## selinux

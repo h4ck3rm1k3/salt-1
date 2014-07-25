@@ -41,7 +41,7 @@ def mkfs(device, fstype="ext4", label=None, block_size=None):
     elif fstype in xfs:
         if block_size:
             opts += " -b size=%s"%label
-        cmd = 'mkfs.xfs {0} {1}'.format(opts, device)
+        cmd = 'mkfs.xfs -f {0} {1}'.format(opts, device)
 
     act = __salt__['cmd.run_stdall']
     try:
@@ -59,5 +59,5 @@ def mkfs(device, fstype="ext4", label=None, block_size=None):
     return {'name': device,
             'changes': {},
             'result': result,
-            'comment': 'Error creating file system',
+            'comment': comment,
             'state_stdout': "%s"%(ret['stderr'] if ret.get('stderr') else ret.get('stdout',''))}
