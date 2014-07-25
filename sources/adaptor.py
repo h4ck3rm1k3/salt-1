@@ -954,7 +954,7 @@ class StateAdaptor(object):
                 #       }
                 #   }
 
-            elif module in ['linux.rpm.key']
+            elif module in ['linux.rpm.key']:
                 addin['cmd'] = 'rpm --import {0}'.format(parameter.get('path',''))
                 addin.pop('path')
 
