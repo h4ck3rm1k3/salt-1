@@ -407,7 +407,7 @@ class StateAdaptor(object):
                 'device'     :   'device',
                 'fstype'     :   'fstype',
                 'label'      :   'label',
-                'block_size' :   'block_size',
+#                'block_size' :   'block_size',
             },
             'states' : ['mkfs'],
             'type' : 'fs',

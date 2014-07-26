@@ -1889,8 +1889,6 @@ create a filesystem
 	>note: on REHL 6, xfs requires a manual installation of the xfsprogs (yum pkg state)
 
 *   **`label`** (*optional*): label of the device
-
-*   **`block_size`** (*optional*): block size (in bytes)
 					''',
 					'cn'	:	''''''
 				},
@@ -1910,11 +1908,11 @@ create a filesystem
 						'required'	:	False,
 						'visible'	:	True
 					},
-					'block_size'		:	{
-						'type'		:	'line',
-						'required'	:	False,
-						'visible'	:	True
-					},
+#					'block_size'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
 				}
 			},
 			'cmd'	:	{
