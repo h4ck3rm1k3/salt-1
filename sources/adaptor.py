@@ -6,11 +6,14 @@ VisualOps OpsAgent states adaptor
 
 # System imports
 import os
+import urllib2
 from string import Template
 
 # Internal imports
 from opsagent.exception import StateException
 from opsagent import utils
+
+URI_TIMEOUT=600
 
 class StateAdaptor(object):
 
@@ -131,12 +134,27 @@ class StateAdaptor(object):
             'attributes' : {
                 'name'      : 'name',
                 'content'   : 'contents',
-                'rpm-url'   : 'rpm-url'
+                'rpm-url'   : 'rpm-url',
+                'rpm-key'   : 'rpm-key'
             },
             'states' : [
                 'managed'
             ],
             'type' : 'file',
+            # 'require_in' : {
+            #   'linux.cmd' : {
+            #       'yum-config-manager --enable $name' : 'name'
+            #   }
+            # }
+        },
+        'linux.rpm.key' : {
+            'attributes' : {
+                'path'      : 'path',
+            },
+            'states' : [
+                'run'
+            ],
+            'type' : 'cmd',
             # 'require_in' : {
             #   'linux.cmd' : {
             #       'yum-config-manager --enable $name' : 'name'
@@ -251,6 +269,7 @@ class StateAdaptor(object):
         'linux.file' : {
             'attributes' : {
                 'path'      : 'name',
+                'remote_uri': 'remote_uri',
                 'user'      : 'user',
                 'group'     : 'group',
                 'mode'      : 'mode',
@@ -380,6 +399,22 @@ class StateAdaptor(object):
             },
             'states' : ['mounted', 'unmounted'],
             'type' : 'mount'
+        },
+
+        ## mkfs
+        'linux.mkfs' : {
+            'attributes' : {
+                'device'     :   'device',
+                'fstype'     :   'fstype',
+                'label'      :   'label',
+#                'block_size' :   'block_size',
+            },
+            'states' : ['mkfs'],
+            'type' : 'fs',
+            'require' : [
+                {'linux.apt.package' : { 'name' : [{'key':'xfsprogs'}] }},
+                {'linux.yum.package' : { 'name' : [{'key':'xfsprogs'}],'os': ["amazon","centos",["red-hat","7.0"],["redhat","7.0"]] }}
+            ],
         },
 
         ## selinux
@@ -588,7 +623,7 @@ class StateAdaptor(object):
         'common.docker.running' : {
             'attributes' : {
                     # installed
-                    'containers'    : 'containers',
+                    'container'     : 'container',
                     'image'         : 'image',
                     'command'       : 'command',
                     'entry_point'   : 'entry_point',
@@ -603,6 +638,7 @@ class StateAdaptor(object):
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'force'         : 'force',
+                    'count'         : 'count',
             },
             'states' : ['vops_running'],
             'type' : 'docker',
@@ -813,10 +849,20 @@ class StateAdaptor(object):
 
                 if pkg_flag:
                     for item in addin[pkg_flag]:
+                        if isinstance(item, dict) and item.get('value','').endswith('.rpm'):
+                            addin['sources'] = addin[pkg_flag][:]
+                            del addin[pkg_flag]
+                            pkg_flag = "sources"
+                            break
+
+                    for item in addin[pkg_flag]:
                         if not isinstance(item, dict):  continue
 
                         pkg_name = item['key'] if 'key' in item else None
                         pkg_version = item['value'] if 'value' in item else None
+
+                        if (pkg_flag is "sources") and (not item.get('value','').endswith('.rpm')):
+                            continue
 
                         # no latest in npm|pip|gem
                         if module.startswith('common') and pkg_version == 'latest':
@@ -916,6 +962,10 @@ class StateAdaptor(object):
                 #       }
                 #   }
 
+            elif module in ['linux.rpm.key']:
+                addin['name'] = 'rpm --import {0}'.format(addin.get('path',''))
+                addin.pop('path')
+
             elif module in ['linux.apt.ppa']:
 
                 if 'username' in addin and addin['username'] and \
@@ -967,6 +1017,11 @@ class StateAdaptor(object):
                         module_state['absent']['names'] = addin['names']
 
                 else:
+                    if 'remote_uri' in addin:
+                        req = urllib2.Request(addin['remote_uri'])
+                        f = urllib2.urlopen(req, timeout=URI_TIMEOUT)
+                        addin['contents'] = f.read()
+                        del addin['remote_uri']
                     # set default user,group
                     if 'user' not in addin:
                         addin['user'] = 'root'
@@ -1212,6 +1267,16 @@ class StateAdaptor(object):
                         't': lambda x: x << 40,
                     }
                     addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
+                if addin.get("count"):
+                    addin["containers"] = [addin["container"]]
+                else:
+                    addin["containers"] = []
+                    count = int(addin["count"])
+                    i=0
+                    while i < count:
+                        addin["containers"] += ("%s_%s"%addin["container"],i+1)
+                        i += 1
+                addin.pop("container")
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
             elif module in ["common.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
@@ -1315,7 +1380,21 @@ class StateAdaptor(object):
                         continue
 
                     if module in ['linux.apt.package', 'linux.yum.package'] and parameter.get("os"):
-                        if self.os_type not in parameter.get("os"): continue
+                        match = False
+                        for os in parameter["os"]:
+                            if type(os) is list:
+                                os_type=os[0]
+                                os_release=os[1]
+                            else:
+                                os_type=os
+                                os_release=None
+
+                            if os_type == self.os_type:
+                                if (not os_release) or (float(self.os_release) >= float(os_release)):
+                                    match = True
+                                    break
+
+                        if not match: continue
                         del parameter["os"]
 
 

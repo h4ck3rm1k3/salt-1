@@ -745,19 +745,18 @@ Ensure that a container from the given name is running. If not, run it.
 
 ### Parameters
 
-*   **`containers`** (*required*): Desired name(s) of the container(s) (must be the name specified in "pulled" and "built" states, if any)
+*   **`container`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
 
 		example:
 			my_container
-
-		example:
-			my_container1
-			my_container2
 
 *   **`image`** (*required*): Image from which to build this container
 
 		example:
 			namespace/image
+
+
+*   **`count`** (*optional*): Specify the number of containers to run
 
 *   **`command`** (*optional*): Command argument to Docker (if not specified in `Dockerfile`)
 
@@ -804,7 +803,7 @@ Ensure that a container from the given name is running. If not, run it.
 *   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
 
 		note:
-			If multiple container names are specified, the host port will be incremented by one on each.
+			If the count parameter is specified, the host port will be incremented by one on each.
 
 		example:
 			5000/tcp: 127.0.0.1:5000
@@ -816,8 +815,8 @@ Ensure that a container from the given name is running. If not, run it.
 					'cn'	:	''''''
 				},
 				'parameter'	:	{
-					'containers'	:	{
-						'type'		:	'array',
+					'container'	:	{
+						'type'		:	'line',
 						'required'	:	True,
 						'visible'	:	True
 					},
@@ -826,6 +825,11 @@ Ensure that a container from the given name is running. If not, run it.
 						'required'	:	True,
 						'visible'	:	True
 					},
+                                        'count'         :       {
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+                                        },
 					'command'		:	{
 						'type'		:	'array',
 						'required'	:	False,
@@ -1107,6 +1111,7 @@ manage yum packages
 *	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all YUM repos available
 	- ***`<version>`***: ensure the package is installed, at the version specified. If the version in unavailable of all YUM repos available on the host, the state will fail
+	- **`<uri>`**: ensure the package will be fetched from the following uri. Warning: if one uri is specified, only packages with uri specified will be installed. *uri* can be a remote or local path to a rpm package.
 	- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all YUM repos available on the host, will do upgrade automatically
 	- **`removed`**: ensure the package is absent
 	- **`purged`**: ensure the package is absent, and also delete all related configuration data of the package
@@ -1148,7 +1153,7 @@ manage a yum repo
 
 ### Parameters
 
-*   **`name`** (*required*): the repo name
+* **`name`** (*required*): the repo name
 
 		 example: epel
 
@@ -1161,7 +1166,7 @@ manage a yum repo
 			gpgcheck=0
 			enabled=1
 
-* **`rpm-url`** (*optional*): the repo rpm url
+* **`rpm-url`** (*optional*): the repo rpm url (if no content specified)
 
 		example: http://mirrors.hustunique.com/epel/6/i386/epel-release-6-8.noarch.rpm
 					''',
@@ -1180,6 +1185,30 @@ manage a yum repo
 					'rpm-url'	:	{
 						'type'		:	'line',
 						'required'	:	False,
+						'visible'	:	True
+					}
+				}
+			},
+			'rpm key'	:	{
+				'module'	:	'linux.rpm.key',
+				'distro'	:	['amazon', 'redhat', 'centos'],
+				'reference'	:	{
+					'en'	:	'''
+### Description
+manage a rpm key
+
+### Parameters
+
+* **`path`** (*required*): the location of the key
+
+		example: /path/to/YOUR-RPM-GPG-KEY
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
 						'visible'	:	True
 					}
 				}
@@ -1367,6 +1396,10 @@ manage a file
 
 	>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten
 
+* **`remote_uri`** (*optional*): path where to get the content of the file (will overwrite the *content* parameter)
+
+	>note: http, https and ftp protocols are supported
+
 * **`absent`** (*optional*): ensure the file is absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
@@ -1395,6 +1428,11 @@ manage a file
 					'content'	:	{
 						'type'		:	'text',
 						'required'	:	False
+					},
+					'remote_uri'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
 					},
 					#'source-url'	:	{
 					#	'type'		:	'line',
@@ -1832,6 +1870,49 @@ manage mount points
 						'default'	:	'0',
 						'required'	:	False
 					}
+				}
+			},
+			'filesystem'	:	{
+				'module'	:	'linux.mkfs',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+create a filesystem
+
+### Parameters
+
+*   **`device`** (*required*): the path of the device to format (/dev/xvd*)
+
+*   **`fstype`** (*required*): the filesystem type to use (ext2, ext3, ext4 or xfs)
+
+	>note: on REHL 6, xfs requires a manual installation of the xfsprogs (yum pkg state)
+
+*   **`label`** (*optional*): label of the device
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'device'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'fstype'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'label'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+#					'block_size'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
 				}
 			},
 			'cmd'	:	{

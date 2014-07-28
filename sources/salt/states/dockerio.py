@@ -406,11 +406,13 @@ def installed(name,
             remove_status = _ret_status(remove_container(container=name,
                                                          force=True),
                                         name=name)
-    dports, dvolumes, denvironment = {}, [], {}
+    dports, dvolumes, denvironment, de = {}, [], {}, {}
     if not ports:
         ports = []
     if not volumes:
         volumes = []
+#    if not entrypoint:
+#        entrypoint = []
     if isinstance(environment, dict):
         for k in environment:
             denvironment[u'%s' % k] = u'%s' % environment[k]
@@ -425,6 +427,12 @@ def installed(name,
         else:
             for k in p:
                 dports[str(p)] = {}
+#    for e in entrypoint:
+#        if not isinstance(e, dict):
+#            de[str(e)] = {}
+#        else:
+#            for k in e:
+#                de[str(e)] = {}
     for p in volumes:
         vals = []
         if not isinstance(p, dict):
