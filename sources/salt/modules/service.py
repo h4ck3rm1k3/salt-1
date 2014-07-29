@@ -28,7 +28,7 @@ def __virtual__():
         'RedHat',
         'CentOS',
         'Amazon',
-        'Scientific',
+        'ScientificLinux',
         'CloudLinux',
         'Fedora',
         'Gentoo',
@@ -72,8 +72,8 @@ def start(name, **kwargs):
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
-        name + ' start'
-    )
+        name
+    ) + ' start'
     result = __salt__['cmd.run_stdall'](cmd)
     state_std(kwargs, result)
     return not result['retcode']
@@ -91,8 +91,8 @@ def stop(name, **kwargs):
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
-        name + ' stop'
-    )
+        name
+    ) + ' stop'
     result = __salt__['cmd.run_stdall'](cmd)
     state_std(kwargs, result)
     return not result['retcode']
@@ -110,8 +110,8 @@ def restart(name, **kwargs):
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
-        name + ' restart'
-    )
+        name
+    ) + ' restart'
     result = __salt__['cmd.run_stdall'](cmd)
     state_std(kwargs, result)
     return not result['retcode']
@@ -144,8 +144,8 @@ def reload_(name, **kwargs):
     '''
     cmd = os.path.join(
         _GRAINMAP.get(__grains__.get('os'), '/etc/init.d'),
-        name + ' reload'
-    )
+        name
+    ) + ' reload'
     result = __salt__['cmd.run_stdall'](cmd)
     state_std(kwargs, result)
     return not result['retcode']
@@ -177,7 +177,7 @@ def missing(name):
 
         salt '*' service.missing sshd
     '''
-    return not name in get_all()
+    return name not in get_all()
 
 
 def get_all():

@@ -2,7 +2,7 @@
 
 def attr():
 	return {
-		'tag'	:	'v2014-04-15',
+		'tag'	:	'develop',
 		'meta'	:	{
 			'#'	:	{
 				'module'	:	'meta.comment',
@@ -542,7 +542,441 @@ manage a python virtualenv
 						'required'	:	False
 					}
 				}
-			}
+			},
+#			'docker run'	:	{
+#				'module'	:	'common.docker.run',
+#				'distro'	:	None,
+#				'reference'	:	{
+#					'en'	:	'''
+#### Description
+#Run a command in a specific container
+#You can match by either name or hostname
+#
+#### Parameters
+#
+#*   **`name`** (*required*): Command to run in the container
+#
+#*   **`cid`** (*optional*): Container id
+#
+#*   **`state_id`** (*optional*): State id
+#
+#*   **`stateful`** (*optional*): Stateful mode
+#
+#*   **`onlyif`** (*optional*): Only execute cmd if statement on the host success
+#
+#*   **`unless`** (*optional*): Do not execute cmd if statement on the host success
+#
+#*   **`docked_onlyif`** (*optional*): Only execute cmd if statement in the container success
+#
+#*   **`docked_unless`** (*optional*): Do not execute cmd if statement in the container success
+#					''',
+#					'cn'	:	''''''
+#				},
+#				'parameter'	:	{
+#					'name'		:	{
+#						'type'		:	'line',
+#						'required'	:	True,
+#						'visible'	:	True
+#					},
+#					'cid'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'state_id'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'stateful'		:	{
+#						'type'		:	'Bool',
+#						'required'	:	False,
+#						'default'	:	False,
+#						'visible'	:	True
+#					},
+#					'onlyif'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'unless'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'docked_onlyif'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#					'docked_unless'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
+#				}
+#			},
+			'docker pulled'	:	{
+				'module'	:	'common.docker.pulled',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Pull the latest image from the specified repository at the specified tag (if any)
+
+### Parameters
+
+*   **`repo`** (*required*): Repository URL or/and Image name
+
+		example:
+			namespace/repo
+
+*   **`tag`** (*optional*): Repository tag (default: latest)
+
+		example:
+			latest
+
+*   **`username`** (*optional*): Username used to login to repository
+
+*   **`password`** (*optional*): Password used to login to repository (required if username specified)
+
+*   **`email`** (*optional*): Email used to login to repository (required if username specified)
+
+*   **`containers`** (*optional*): Container(s) associated to this image (specify it if you want your container to be re-created when a new version of the image is pulled)
+
+		example:
+			my_container
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'repo'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'tag'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'username'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'password'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'email'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'containers'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+				},
+			},
+			'docker built'	:	{
+				'module'	:	'common.docker.built',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Ensure an image is built from a `Dockerfile`. If not, build it. If the file changes, the image will be rebuilt.
+
+### Parameters
+
+*   **`tag`** (*required*): Tag of the image
+
+		example:
+			namespace/image
+
+*   **`path`** (*required*): Filesystem path to the `Dockerfile`
+
+		example:
+			/opt/docker/image
+
+*   **`containers`** (*optional*): Container(s) associated to the newly created image (specify it if you want your container to be re-created when the file changes)
+
+		example:
+			my_container
+
+*   **`force`** (*optional*): Force (re)build on each round
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'tag'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'containers'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+                                        'force'                 :       {
+						'type'		:	'bool',
+                                                'default'       :       False,
+						'required'	:	False,
+						'visible'	:	True
+                                        }
+				},
+			},
+			'docker running'	:	{
+				'module'	:	'common.docker.running',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Ensure that a container from the given name is running. If not, run it.
+
+### Parameters
+
+*   **`container`** (*required*): Desired name of the container (must be the name specified in "pulled" and "built" states, if any)
+
+		example:
+			my_container
+
+*   **`image`** (*required*): Image from which to build this container
+
+		example:
+			namespace/image
+
+
+*   **`count`** (*optional*): Specify the number of containers to run
+
+*   **`command`** (*optional*): Command argument to Docker (if not specified in `Dockerfile`)
+
+		example (in case of apache server):
+			-D
+			FOREGROUND
+
+*   **`entry_point`** (*optional*): Entry point to the container (if not specified in `Dockerfile`)
+
+		exemple (in case of apache server):
+			/usr/bin/apache2
+
+*   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)
+
+		example:
+			FOO: bar
+
+*   **`volumes`** (*optional*): List of volumes to attach (if not specified in `Dockerfile`). (specify :ro for read only mode)
+
+		example:
+			/host/path: /mount/point
+			/host/path: /mount/point/read/only:ro
+
+*   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)
+
+		example:
+			512m
+
+*   **`cpu_shares`** (*optional*): CPU shares authorized (if not specified in `Dockerfile`)
+
+		example:
+			0-3
+
+		example:
+			0
+
+*   **`publish_all_ports`** (*optional*): Publish all ports
+
+*   **`links`** (*optional*): Link several container together (if not specified in `Dockerfile`)
+
+		example:
+			name_other_container: alias_for_other_container
+
+*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
+
+		note:
+			If the count parameter is specified, the host port will be incremented by one on each.
+
+		example:
+			5000/tcp: 127.0.0.1:5000
+			6000/tcp: 6000 (default ip: 0.0.0.0)
+			80: 6666 (default protocol: tcp)
+
+*   **`force`** (*optional*): Force (re)build container on each round
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'container'	:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'image'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+                                        'count'         :       {
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+                                        },
+					'command'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'entry_point'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'environment'	:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'volumes'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'mem_limit'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'cpu_shares'		:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'publish_all_ports'	:	{
+						'type'		:	'bool',
+						'required'	:	False,
+						'default'	:	False,
+						'visible'	:	True
+					},
+					'links'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'port_bindings'		:	{
+						'type'		:	'dict',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'force'                 :	{
+						'type'		:	'bool',
+                                                'default'       :       False,
+						'required'	:	False,
+						'visible'	:	True
+					},
+				},
+			},
+			'docker pushed'	:	{
+				'module'	:	'common.docker.pushed',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+Push an image to a docker registry. (`docker push`)
+
+### Parameters
+
+*   **`repository`** (*required*): Repository to push
+
+		example:
+			namespace/image
+
+		example:
+			namespace/my_container
+
+*   **`container`** (*optional*): Container id to commit (if desired to push a container as an image)
+
+		example:
+			my_container
+
+*   **`tag`** (*optional*): Repository tag (default: latest)
+
+		example:
+			latest
+
+*   **`message`** (*optional*): Commit message (if container specified to be commited)
+
+*   **`author`** (*optional*): Author (if container specified to be commited)
+
+*   **`username`** (*optional*): Username used to login to repository
+
+*   **`password`** (*optional*): Password used to login to repository (required if username specified)
+
+*   **`email`** (*optional*): Email used to login to repository (required if username specified)
+
+*   **`dep_containers`** (*optional*): Containers needed to be shutdown if something new is pushed (in order to be rebuilt)
+
+		example:
+			my_container
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'repository'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True,
+					},
+					'container'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True,
+					},
+					'tag'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True,
+					},
+					'message'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True,
+					},
+					'author'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True,
+					},
+					'username'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'password'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'email'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+					'dep_containers'	:	{
+						'type'		:	'array',
+						'required'	:	False,
+						'visible'	:	True,
+					},
+				},
+			},
 		},
 		'linux'		:	{
 			'apt pkg'	:	{
@@ -581,11 +1015,11 @@ manage apt packages
 						'option'	:	['latest', 'removed', 'purged'],	# autofill options to show in IDE
 						'default'	:	'',			# the default value to show in IDE,
 						'required'	:	True,
-						'visible'	:	True
 					},
 					'repo'	:	{
 						'type'		:	'line',
-						'required'	:	False
+						'required'	:	False,
+						'visible'	:	True
 					},
 					'deb-conf-file'	:	{
 						'type'		:	'line',
@@ -677,6 +1111,7 @@ manage yum packages
 *	**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:
 	- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all YUM repos available
 	- ***`<version>`***: ensure the package is installed, at the version specified. If the version in unavailable of all YUM repos available on the host, the state will fail
+	- **`<uri>`**: ensure the package will be fetched from the following uri. Warning: if one uri is specified, only packages with uri specified will be installed. *uri* can be a remote or local path to a rpm package.
 	- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all YUM repos available on the host, will do upgrade automatically
 	- **`removed`**: ensure the package is absent
 	- **`purged`**: ensure the package is absent, and also delete all related configuration data of the package
@@ -718,7 +1153,7 @@ manage a yum repo
 
 ### Parameters
 
-*   **`name`** (*required*): the repo name
+* **`name`** (*required*): the repo name
 
 		 example: epel
 
@@ -731,7 +1166,7 @@ manage a yum repo
 			gpgcheck=0
 			enabled=1
 
-* **`rpm-url`** (*optional*): the repo rpm url
+* **`rpm-url`** (*optional*): the repo rpm url (if no content specified)
 
 		example: http://mirrors.hustunique.com/epel/6/i386/epel-release-6-8.noarch.rpm
 					''',
@@ -750,6 +1185,30 @@ manage a yum repo
 					'rpm-url'	:	{
 						'type'		:	'line',
 						'required'	:	False,
+						'visible'	:	True
+					}
+				}
+			},
+			'rpm key'	:	{
+				'module'	:	'linux.rpm.key',
+				'distro'	:	['amazon', 'redhat', 'centos'],
+				'reference'	:	{
+					'en'	:	'''
+### Description
+manage a rpm key
+
+### Parameters
+
+* **`path`** (*required*): the location of the key
+
+		example: /path/to/YOUR-RPM-GPG-KEY
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'path'		:	{
+						'type'		:	'line',
+						'required'	:	True,
 						'visible'	:	True
 					}
 				}
@@ -937,6 +1396,10 @@ manage a file
 
 	>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten
 
+* **`remote_uri`** (*optional*): path where to get the content of the file (will overwrite the *content* parameter)
+
+	>note: http, https and ftp protocols are supported
+
 * **`absent`** (*optional*): ensure the file is absent, by default ***`false`***
 
 	>note: If True, all other parameters are ignored
@@ -965,6 +1428,11 @@ manage a file
 					'content'	:	{
 						'type'		:	'text',
 						'required'	:	False
+					},
+					'remote_uri'	:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
 					},
 					#'source-url'	:	{
 					#	'type'		:	'line',
@@ -1402,6 +1870,49 @@ manage mount points
 						'default'	:	'0',
 						'required'	:	False
 					}
+				}
+			},
+			'filesystem'	:	{
+				'module'	:	'linux.mkfs',
+				'distro'	:	None,
+				'reference'	:	{
+					'en'	:	'''
+### Description
+create a filesystem
+
+### Parameters
+
+*   **`device`** (*required*): the path of the device to format (/dev/xvd*)
+
+*   **`fstype`** (*required*): the filesystem type to use (ext2, ext3, ext4 or xfs)
+
+	>note: on REHL 6, xfs requires a manual installation of the xfsprogs (yum pkg state)
+
+*   **`label`** (*optional*): label of the device
+					''',
+					'cn'	:	''''''
+				},
+				'parameter'	:	{
+					'device'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'fstype'		:	{
+						'type'		:	'line',
+						'required'	:	True,
+						'visible'	:	True
+					},
+					'label'		:	{
+						'type'		:	'line',
+						'required'	:	False,
+						'visible'	:	True
+					},
+#					'block_size'		:	{
+#						'type'		:	'line',
+#						'required'	:	False,
+#						'visible'	:	True
+#					},
 				}
 			},
 			'cmd'	:	{
