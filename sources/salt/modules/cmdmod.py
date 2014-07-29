@@ -213,7 +213,7 @@ def _run(cmd,
          stdin=None,
          stdout=subprocess.PIPE,
          stderr=subprocess.PIPE,
-         output_loglevel='info',
+         output_loglevel='debug',
          quiet=False,
          runas=None,
          shell=DEFAULT_SHELL,
@@ -272,9 +272,9 @@ def _run(cmd,
         # The last item in the list [-1] is the current method.
         # The third item[2] in each tuple is the name of that method.
         if stack[-2][2] == 'script':
-            cmd = 'Powershell -File ' + cmd
+            cmd = 'Powershell -executionpolicy bypass -File ' + cmd
         else:
-            cmd = 'Powershell ' + cmd
+            cmd = 'Powershell "{0}"'.format(cmd.replace('"', '\\"'))
 
     # munge the cmd and cwd through the template
     (cmd, cwd) = _render_cmd(cmd, cwd, template, saltenv)
@@ -513,7 +513,7 @@ def run(cmd,
         template=None,
         rstrip=True,
         umask=None,
-        output_loglevel='info',
+        output_loglevel='debug',
         quiet=False,
         timeout=None,
         reset_system_locale=True,
@@ -595,7 +595,7 @@ def run_stdout(cmd,
                template=None,
                rstrip=True,
                umask=None,
-               output_loglevel='info',
+               output_loglevel='debug',
                quiet=False,
                timeout=None,
                reset_system_locale=True,
@@ -673,7 +673,7 @@ def run_stderr(cmd,
                template=None,
                rstrip=True,
                umask=None,
-               output_loglevel='info',
+               output_loglevel='debug',
                quiet=False,
                timeout=None,
                reset_system_locale=True,
@@ -751,7 +751,7 @@ def run_all(cmd,
             template=None,
             rstrip=True,
             umask=None,
-            output_loglevel='info',
+            output_loglevel='debug',
             quiet=False,
             timeout=None,
             reset_system_locale=True,
@@ -789,7 +789,6 @@ def run_all(cmd,
                runas=runas,
                cwd=cwd,
                stdin=stdin,
-               stderr=subprocess.STDOUT if kwargs.has_key('stderr') and kwargs['stderr'] == subprocess.STDOUT else subprocess.PIPE,
                shell=shell,
                python_shell=python_shell,
                env=env,
@@ -829,10 +828,11 @@ def run_stdall(cmd,
             template=None,
             rstrip=True,
             umask=None,
-            output_loglevel='info',
+            output_loglevel='debug',
             quiet=False,
             timeout=None,
             reset_system_locale=True,
+            ignore_retcode=False,
             saltenv='base',
             **kwargs):
     '''
@@ -883,7 +883,7 @@ def run_stdall(cmd,
 
     lvl = _check_loglevel(output_loglevel, quiet)
     if lvl is not None:
-        if ret['retcode'] != 0:
+        if not ignore_retcode and ret['retcode'] != 0:
             if lvl < LOG_LEVELS['error']:
                 lvl = LOG_LEVELS['error']
             log.error(
@@ -906,7 +906,7 @@ def retcode(cmd,
             clean_env=False,
             template=None,
             umask=None,
-            output_loglevel='info',
+            output_loglevel='debug',
             quiet=False,
             timeout=None,
             reset_system_locale=True,
@@ -970,6 +970,45 @@ def retcode(cmd,
     return ret['retcode']
 
 
+def _retcode_quiet(cmd,
+                   cwd=None,
+                   stdin=None,
+                   runas=None,
+                   shell=DEFAULT_SHELL,
+                   python_shell=True,
+                   env=None,
+                   clean_env=False,
+                   template=None,
+                   umask=None,
+                   output_loglevel='quiet',
+                   quiet=True,
+                   timeout=None,
+                   reset_system_locale=True,
+                   ignore_retcode=False,
+                   saltenv='base',
+                   **kwargs):
+    '''
+    Helper for running commands quietly for minion startup.
+    Returns same as retcode
+    '''
+    return retcode(cmd,
+                   cwd=cwd,
+                   stdin=stdin,
+                   runas=runas,
+                   shell=shell,
+                   python_shell=python_shell,
+                   env=env,
+                   clean_env=clean_env,
+                   template=template,
+                   umask=umask,
+                   output_loglevel=output_loglevel,
+                   timeout=timeout,
+                   reset_system_locale=reset_system_locale,
+                   ignore_retcode=ignore_retcode,
+                   saltenv=saltenv,
+                   **kwargs)
+
+
 def script(source,
            args=None,
            cwd=None,
@@ -980,7 +1019,7 @@ def script(source,
            env=(),
            template='jinja',
            umask=None,
-           output_loglevel='info',
+           output_loglevel='debug',
            quiet=False,
            timeout=None,
            reset_system_locale=True,
@@ -1030,17 +1069,7 @@ def script(source,
         # Backwards compatibility
         saltenv = __env__
 
-    if not salt.utils.is_windows():
-        path = salt.utils.mkstemp(dir=cwd)
-    else:
-        path = __salt__['cp.cache_file'](source, saltenv)
-        if not path:
-            _cleanup_tempfile(path)
-            return {'pid': 0,
-                    'retcode': 1,
-                    'stdout': '',
-                    'stderr': '',
-                    'cache_error': True}
+    path = salt.utils.mkstemp(dir=cwd, suffix=os.path.splitext(source)[1])
 
     if template:
         fn_ = __salt__['cp.get_template'](source,
@@ -1056,16 +1085,15 @@ def script(source,
                     'stderr': '',
                     'cache_error': True}
     else:
-        if not salt.utils.is_windows():
-            fn_ = __salt__['cp.cache_file'](source, saltenv)
-            if not fn_:
-                _cleanup_tempfile(path)
-                return {'pid': 0,
-                        'retcode': 1,
-                        'stdout': '',
-                        'stderr': '',
-                        'cache_error': True}
-            shutil.copyfile(fn_, path)
+        fn_ = __salt__['cp.cache_file'](source, saltenv)
+        if not fn_:
+            _cleanup_tempfile(path)
+            return {'pid': 0,
+                    'retcode': 1,
+                    'stdout': '',
+                    'stderr': '',
+                    'cache_error': True}
+        shutil.copyfile(fn_, path)
     if not salt.utils.is_windows():
         os.chmod(path, 320)
         os.chown(path, __salt__['file.user_to_uid'](runas), -1)
@@ -1092,10 +1120,10 @@ def script_stdall(source,
            runas=None,
            shell=DEFAULT_SHELL,
            python_shell=True,
-           env=(),
+           env=None,
            template='jinja',
            umask=None,
-           output_loglevel='info',
+           output_loglevel='debug',
            quiet=False,
            timeout=None,
            reset_system_locale=True,
