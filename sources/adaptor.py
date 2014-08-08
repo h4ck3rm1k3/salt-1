@@ -29,7 +29,7 @@ class StateAdaptor(object):
             "linux.supervisord": {
                     "file_key": "watch"
             },
-            "common.docker.built": {
+            "linux.docker.built": {
                     "file": "Dockerfile",
                     "dir_key": "path"
             }
@@ -583,7 +583,7 @@ class StateAdaptor(object):
         },
 
         # docker
-        'common.docker.pulled' : {
+        'linux.docker.pulled' : {
             'attributes' : {
                     'repo'          : 'repo',
                     'tag'           : 'tag',
@@ -602,7 +602,7 @@ class StateAdaptor(object):
                 {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
             ]
         },
-        'common.docker.built' : {
+        'linux.docker.built' : {
             'attributes' : {
                     'tag'           : 'tag',
                     'path'          : 'path',
@@ -620,7 +620,7 @@ class StateAdaptor(object):
                 {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
             ]
         },
-        'common.docker.running' : {
+        'linux.docker.running' : {
             'attributes' : {
                     # installed
                     'container'     : 'container',
@@ -650,7 +650,7 @@ class StateAdaptor(object):
                 {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
             ]
         },
-        'common.docker.pushed' : {
+        'linux.docker.pushed' : {
             'attributes' : {
                     'repository'    : 'repository',
                     'container'     : 'container',
@@ -1188,7 +1188,7 @@ class StateAdaptor(object):
                 # except:
                 #   pass
 
-            elif module in ["common.docker.running"]:
+            elif module in ["linux.docker.running"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                 if addin.get("port_bindings"):
                     utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
@@ -1278,7 +1278,7 @@ class StateAdaptor(object):
                         i += 1
                 addin.pop("container")
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
-            elif module in ["common.docker.built"]:
+            elif module in ["linux.docker.built"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                 if addin.get("watch"):
                     utils.log("DEBUG", "Watch state detected", ("__build_up", self))
