@@ -35,9 +35,9 @@ common.gem.package # -> need to install gem
 
 common.archive
 
-common.docker.pulled
-common.docker.running
-common.docker.built
+linux.docker.pulled
+linux.docker.running
+linux.docker.built
 
 # TODO
 #linux.hosts

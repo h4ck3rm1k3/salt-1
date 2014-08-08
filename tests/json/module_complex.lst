@@ -34,7 +34,7 @@ linux.lvm.lv.complex
 
 common.archive.complex
 
-common.docker.complex
+linux.docker.complex
 
 linux.rpm.key.complex
 linux.mkfs.complex
