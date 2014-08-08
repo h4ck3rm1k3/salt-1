@@ -1170,11 +1170,11 @@ class StateAdaptor(object):
                         ]
 
                 if 'source_hash' in addin:
-                    hash_list = addin['source_hash'].split(':')
-                    if len(hash_list) == 2 and hash_list[0] in ['http', 'md5', 'sha1']:
-                        if hash_list[0] != 'http':
+                    try:
+                        hash_list = addin['source_hash'].split(':')
+                        if len(hash_list) == 2 and hash_list[0] in ['md5', 'sha1']:
                             addin['source_hash'] = '{0}={1}'.format(hash_list[0].lower(), hash_list[1].lower())
-                    else:
+                    except Exception, e:
                         utils.log("WARNING", "Invalid source hash format: %s" % addin['source_hash'], ("__build_up", self))
                         addin.pop('source_hash')
 
