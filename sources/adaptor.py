@@ -1666,7 +1666,7 @@ def ut():
     config = {
         'srv_root' : '/srv/salt',
         'extension_modules' : '/var/cache/salt/minion/extmods',
-        'cachedir' : '/code/OpsAgent/cache',
+        'cachedir' : '/opt/visualops/tmp/',
         'runtime': {},
         'pkg_cache': '/opt/visualops/env/var/cache/pkg'
     }
