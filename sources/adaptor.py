@@ -1267,7 +1267,7 @@ class StateAdaptor(object):
                         't': lambda x: x << 40,
                     }
                     addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
-                if addin.get("count"):
+                if not addin.get("count"):
                     addin["containers"] = [addin["container"]]
                 else:
                     addin["containers"] = []
