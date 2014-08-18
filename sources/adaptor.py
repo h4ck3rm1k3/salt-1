@@ -97,7 +97,8 @@ class StateAdaptor(object):
             'type'  : 'pip',
             'require' : [
                 {'linux.apt.package' : { 'name' : [{'key':'python-pip'}] }},
-                {'linux.yum.package' : { 'name' : [{'key':'python-pip'}] }}
+                {'linux.yum.package' : { 'name' : [{'key':'python-pip'}] }},
+                {'linux.cmd' : { 'cmd' : 'pip install pip --upgrade'}}
             ]
         },
 
