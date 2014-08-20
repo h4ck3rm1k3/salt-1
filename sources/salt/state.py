@@ -974,7 +974,7 @@ class State(object):
                     for fun in funcs:
                         live['fun'] = fun
                         chunks.append(live)
-        chunks = self.order_chunks(chunks)
+        ##chunks = self.order_chunks(chunks)
         return chunks
 
     def reconcile_extend(self, high):
