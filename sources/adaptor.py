@@ -14,6 +14,7 @@ from opsagent.exception import StateException
 from opsagent import utils
 
 URI_TIMEOUT=600
+CONFIG_PATH="/var/lib/visualops/opsagent"
 
 class StateAdaptor(object):
 
@@ -596,11 +597,14 @@ class StateAdaptor(object):
             'states' : ['vops_pulled'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
+#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
         'linux.docker.built' : {
@@ -614,11 +618,14 @@ class StateAdaptor(object):
             'states' : ['vops_built'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
+#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
         'linux.docker.running' : {
@@ -644,11 +651,14 @@ class StateAdaptor(object):
             'states' : ['vops_running'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
+#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
         'linux.docker.pushed' : {
@@ -666,11 +676,14 @@ class StateAdaptor(object):
             'states' : ['vops_pushed'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
+#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
+#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
+#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
+#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
     }
@@ -850,7 +863,7 @@ class StateAdaptor(object):
 
                 if pkg_flag:
                     for item in addin[pkg_flag]:
-                        if isinstance(item, dict) and item.get('value','').endswith('.rpm'):
+                        if isinstance(item, dict) and (item.get('value','').endswith('.rpm') or item.get('value','').endswith('.deb')):
                             addin['sources'] = addin[pkg_flag][:]
                             del addin[pkg_flag]
                             pkg_flag = "sources"
@@ -862,7 +875,9 @@ class StateAdaptor(object):
                         pkg_name = item['key'] if 'key' in item else None
                         pkg_version = item['value'] if 'value' in item else None
 
-                        if (pkg_flag is "sources") and (not item.get('value','').endswith('.rpm')):
+                        if ((pkg_flag is "sources")
+                            and ((not item.get('value','').endswith('.rpm'))
+                                 or (not item.get('value','').endswith('.deb')))):
                             continue
 
                         # no latest in npm|pip|gem
