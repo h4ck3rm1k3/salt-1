@@ -171,7 +171,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-DEB_DOCKER_VERSION = "1.10"
+DEB_DOCKER_VERSION = "1.12"
 
 INVALID_RESPONSE = 'We did not get any expectable answer from docker'
 VALID_RESPONSE = ''
@@ -267,9 +267,9 @@ def _get_client(version=None, timeout=None):
         else:
             os_type = os_type.lower()
 
-        if os_type:
-            if os_type in ['debian', 'ubuntu']:
-                kwargs['version'] = DEB_DOCKER_VERSION
+#        if os_type:
+#            if os_type in ['debian', 'ubuntu']:
+#                kwargs['version'] = DEB_DOCKER_VERSION
 
     if timeout is not None:
         # make sure we override default timeout of docker-py
