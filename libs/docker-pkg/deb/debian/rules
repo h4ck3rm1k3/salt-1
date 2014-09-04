@@ -53,6 +53,9 @@ binary-arch: build
 # Prepare debian dir
 	$(MAKE_DIR) $(DESTDIR)/DEBIAN
 
+# Install Package Management Scripts
+	$(INST_SCRIPT) debian/postinst $(DESTDIR)/DEBIAN
+
 # Strip the symbols from the executable
 	strip -R .comment $(BIN_DIR)/$(package)
 
