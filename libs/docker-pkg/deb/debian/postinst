@@ -26,4 +26,4 @@ else
     fi
 fi
 # create group
-getent group %{realname} >/dev/null || groupadd -r %{realname}
+getent group docker >/dev/null || groupadd -r docker

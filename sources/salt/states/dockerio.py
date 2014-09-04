@@ -193,19 +193,21 @@ def _ret_status(exec_status=None,
     }
 
 
-def _valid(exec_status=None, name='', comment='', changes=None):
+def _valid(exec_status=None, name='', comment='', changes=None, state_stdout=None):
     return _ret_status(exec_status=exec_status,
                        comment=comment,
                        name=name,
                        changes=changes,
+                       state_stdout=state_stdout,
                        result=True)
 
 
-def _invalid(exec_status=None, name='', comment='', changes=None):
+def _invalid(exec_status=None, name='', comment='', changes=None, state_stdout=None):
     return _ret_status(exec_status=exec_status,
                        comment=comment,
                        name=name,
                        changes=changes,
+                       state_stdout=state_stdout,
                        result=False)
 
 
@@ -664,8 +666,8 @@ def running(name, container=None, port_bindings=None, binds=None,
         else:
             return _invalid(
                 comment=('Container {0!r}'
-                         ' cannot be started\n{1!s}').format(container,
-                                                            started['out']))
+                         ' cannot be started\n').format(container),
+                state_stdout=started['out'])
 
 
 def script(name,
@@ -865,7 +867,7 @@ def vops_pushed(repository,
     status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
     status["status"] = True
     status["id"] = repository
-    status["state_stdout"] = ret["state_stdout"]
+#    status["state_stdout"] = ret["state_stdout"]
 
     return _ret_status(status,repository,changes={repository:ret.get('changes',False)})
 
@@ -959,7 +961,7 @@ def vops_built(tag,
     status["id"] = tag
 
     #TODO: changes
-    return _ret_status(status,tag,changes={},state_stdout=state_stdout)
+    return _ret_status(status,tag,changes={})#,state_stdout=state_stdout)
 
 
 
@@ -1123,8 +1125,7 @@ def vops_running(containers,
                                   force=force)
         comment += "%s\n"%status.get("comment")
         if status.get("status") is False:
-            status["comment"] = comment
-            return status
+            break
 
     status["comment"] = comment
     return status
