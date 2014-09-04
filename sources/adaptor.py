@@ -876,8 +876,8 @@ class StateAdaptor(object):
                         pkg_version = item['value'] if 'value' in item else None
 
                         if ((pkg_flag is "sources")
-                            and ((not item.get('value','').endswith('.rpm'))
-                                 or (not item.get('value','').endswith('.deb')))):
+                            and (not item.get('value','').endswith('.rpm'))
+                            and (not item.get('value','').endswith('.deb'))):
                             continue
 
                         # no latest in npm|pip|gem
