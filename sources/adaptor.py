@@ -21,13 +21,29 @@ class StateAdaptor(object):
     ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
     supported_os = ['centos', 'redhat', 'debian', 'ubuntu', 'amazon']
     supported_ext = ['tar', 'tgz', 'gz', 'bz', 'bz2', 'zip', 'rar']
-    mod_watch_list = ["linux.service","linux.supervisord"]
+
+    # watch addin parameters
+    mod_watch_param = {
+        'linux.service': {
+            'full_restart': True,
+        },
+        'linux.supervisord': {
+            'restart': True,
+        },
+        'linux.docker.running': {
+            'sfun': 'running',
+        },
+    }
+
     # Custom watch map
     watch = {
             "linux.service": {
                     "file_key": "watch"
             },
             "linux.supervisord": {
+                    "file_key": "watch"
+            },
+            "linux.docker.running": {
                     "file_key": "watch"
             },
             "linux.docker.built": {
@@ -786,12 +802,11 @@ class StateAdaptor(object):
 
                 ## add watch, todo
                 utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
-                if 'watch' in parameter and parameter['watch'] and module in StateAdaptor.mod_watch_list:
+                if 'watch' in parameter and parameter['watch'] and module in StateAdaptor.mod_watch_param:
                     state = 'mod_watch'
-                    if module == 'linux.service':
-                        addin['full_restart'] = True
-                    elif module == 'linux.supervisord':
-                        addin['restart'] = True
+                    if module in StateAdaptor.mod_watch_param:
+                        for item in StateAdaptor.mod_watch_param[module]:
+                            addin[item] = StateAdaptor.mod_watch_param[module][item]
 
                 # build up module state
                 module_state = [

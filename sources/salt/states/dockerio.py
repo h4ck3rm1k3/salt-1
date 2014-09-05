@@ -239,8 +239,12 @@ def mod_watch(name, sfun=None, *args, **kw):
     elif sfun == 'running':
         # Force a restart against new container
         restarter = __salt__['docker.restart']
-        status = _ret_status(restarter(kw['container']), name=name,
-                             changes={name: True})
+        comment = ""
+        for container in kw['container']:
+            status = _ret_status(restarter(container), name=name,
+                                 changes={name: True})
+            comment += "%s\n"%status.get("comment")
+        status["comment"] = comment
         return status
 
     return {'name': name,
@@ -1106,10 +1110,10 @@ def vops_running(containers,
 
     comment = ""
 
-    for name in containers:
+    for container in containers:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
-        status = vops_running_one(name=name,
+        status = vops_running_one(name=container,
                                   image=image,
                                   entrypoint=entrypoint,
                                   command=command,

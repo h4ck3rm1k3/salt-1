@@ -56,7 +56,7 @@ rm -rf %{buildroot}
 %{_sysconfdir}/init.d/docker
 
 
-%pre
+%post
 # mount cgroups
 if grep -v '^#' /etc/fstab | grep -q cgroup; then
     echo 'cgroups mounted from fstab, not mounting /sys/fs/cgroup'
@@ -84,7 +84,26 @@ else
 fi
 # create group
 getent group %{realname} >/dev/null || groupadd -r %{realname}
+# install systemd service
+if [ -d "/usr/lib/systemd" ]; then
+    install -m 755 /etc/init.d/docker /usr/lib/systemd/scripts/docker
+    cat <<EOF > /usr/lib/systemd/system/docker.service
+[Unit]
+Description=Docker
 
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/systemd/scripts/docker start
+ExecStop=/usr/lib/systemd/scripts/docker stop
+ExecRestart=/usr/lib/systemd/scripts/docker restart
+ExecStatus=/usr/lib/systemd/scripts/docker status
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    chmod 755 /usr/lib/systemd/system/docker.service
+fi
 
 
 %changelog

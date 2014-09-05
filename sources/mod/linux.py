@@ -1990,6 +1990,12 @@ Ensure that a container from the given name is running. If not, run it.
 			80: 6666 (default protocol: tcp)
 
 *   **`force`** (*optional*): Force (re)build container on each round
+
+*   **`watch`** (*optional*): watch a list of files, restart the container if any of them is modified
+
+		example:
+			/etc/nginx/nginx.conf
+			/etc/my.cnf
 				''',
 				'cn'	:	''''''
 			},
@@ -2004,11 +2010,11 @@ Ensure that a container from the given name is running. If not, run it.
 					'required'	:	True,
 					'visible'	:	True
 				},
-                'count'         :       {
+				'count'         :       {
 					'type'		:	'line',
 					'required'	:	False,
 					'visible'	:	True
-                },
+				},
 				'command'		:	{
 					'type'		:	'array',
 					'required'	:	False,
@@ -2057,10 +2063,15 @@ Ensure that a container from the given name is running. If not, run it.
 				},
 				'force'                 :	{
 					'type'		:	'bool',
-                                            'default'       :       False,
+                                        'default'       :       False,
 					'required'	:	False,
 					'visible'	:	True
 				},
+				'watch'		:	{
+					'type'		:	'array',
+					'required'	:	False,
+					'visible'	:	True
+				}
 			},
 		},
 
