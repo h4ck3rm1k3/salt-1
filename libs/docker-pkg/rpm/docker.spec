@@ -86,17 +86,17 @@ fi
 getent group %{realname} >/dev/null || groupadd -r %{realname}
 # install systemd service
 if [ -d "/usr/lib/systemd" ]; then
-    install -m 755 /etc/init.d/docker /usr/lib/systemd/scripts/docker
+    mkdir -p /usr/lib/systemd/system
     cat <<EOF > /usr/lib/systemd/system/docker.service
 [Unit]
 Description=Docker
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/systemd/scripts/docker start
-ExecStop=/usr/lib/systemd/scripts/docker stop
-ExecRestart=/usr/lib/systemd/scripts/docker restart
-ExecStatus=/usr/lib/systemd/scripts/docker status
+ExecStart=/etc/init.d/docker start
+ExecStop=/etc/init.d/docker stop
+ExecRestart=/etc/init.d/docker restart
+ExecStatus=/etc/init.d/docker status
 RemainAfterExit=yes
 
 [Install]
