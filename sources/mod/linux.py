@@ -2036,12 +2036,12 @@ Ensure that a container from the given name is running. If not, run it.
 					'visible'	:	True
 				},
 				'mem_limit'		:	{
-					'type'		:	'array',
+					'type'		:	'line',
 					'required'	:	False,
 					'visible'	:	True
 				},
 				'cpu_shares'		:	{
-					'type'		:	'array',
+					'type'		:	'line',
 					'required'	:	False,
 					'visible'	:	True
 				},
@@ -2067,7 +2067,7 @@ Ensure that a container from the given name is running. If not, run it.
 					'required'	:	False,
 					'visible'	:	True
 				},
-				'watch'		:	{
+                                'watch'                 :	{
 					'type'		:	'array',
 					'required'	:	False,
 					'visible'	:	True

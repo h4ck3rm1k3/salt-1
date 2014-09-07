@@ -240,7 +240,7 @@ def mod_watch(name, sfun=None, *args, **kw):
         # Force a restart against new container
         restarter = __salt__['docker.restart']
         comment = ""
-        for container in kw['container']:
+        for container in kw['containers']:
             status = _ret_status(restarter(container), name=name,
                                  changes={name: True})
             comment += "%s\n"%status.get("comment")

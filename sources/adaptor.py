@@ -37,19 +37,23 @@ class StateAdaptor(object):
 
     # Custom watch map
     watch = {
-            "linux.service": {
-                    "file_key": "watch"
-            },
-            "linux.supervisord": {
-                    "file_key": "watch"
-            },
-            "linux.docker.running": {
-                    "file_key": "watch"
-            },
-            "linux.docker.built": {
-                    "file": "Dockerfile",
-                    "dir_key": "path"
-            }
+        "linux.service": {
+            "file_key": "watch",
+            "tfirst": True,
+        },
+        "linux.supervisord": {
+            "file_key": "watch",
+            "tfirst": True,
+        },
+        "linux.docker.running": {
+            "file_key": "watch",
+            "tfirst": False,
+        },
+        "linux.docker.built": {
+            "file": "Dockerfile",
+            "dir_key": "path",
+            "tfirst": True,
+        }
     }
 
     mod_map = {
