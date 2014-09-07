@@ -15,7 +15,7 @@ License:        Apache-2.0
 URL:            http://www.docker.io/
 Source:         %{name}-%{version}.tar.gz
 
-Requires:       shadow-utils
+Requires:       shadow-utils, libcgroup
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
