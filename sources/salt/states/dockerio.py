@@ -1130,7 +1130,7 @@ def vops_running(containers,
     for container in containers:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
-        status = vops_running_one(container
+        status = vops_running_one(container,
                                   image=image,
                                   entrypoint=entrypoint,
                                   command=command,
