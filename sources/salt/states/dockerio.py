@@ -239,11 +239,26 @@ def mod_watch(name, sfun=None, *args, **kw):
     elif sfun == 'running':
         # Force a restart against new container
         restarter = __salt__['docker.restart']
+        res = True
+        if "containers" not in kw:
+            return _invalid(comment='Container name missing')
+        if "ports" in kw and "port_bindings" in kw:
+            (kw["ports"],kw["port_bindings"]) = gen_ports(kw["ports"],kw["port_bindings"],len(kw["containers"]))
+            if not kw.get("ports") or not kw.get("port_bindings"):
+                return _invalid(comment="Error generating port bindings (is there enough space between each allocation required?)")
         comment = ""
         for container in kw['containers']:
             status = _ret_status(restarter(container), name=name,
                                  changes={name: True})
             comment += "%s\n"%status.get("comment")
+            if not status.get("result"):
+                kw["port"] = (kw["ports"].pop() if kw.get("ports") else None)
+                kw["port_binding"] = (kw["port_bindings"].pop() if kw["port_bindings"] else None)
+                status = vops_running_one(name=container,**kw)
+                comment += "%s\n"%status.get("comment")
+            if not status.get("result"):
+                res = False
+        status["result"] = res
         status["comment"] = comment
         return status
 
@@ -614,7 +629,7 @@ def run(name,
 
 def running(name, container=None, port_bindings=None, binds=None,
             publish_all_ports=False, links=None, lxc_conf=None,
-            privileged=False):
+            privileged=False, *args, **kwargs):
     '''
     Ensure that a container is running. (`docker inspect`)
 
@@ -838,6 +853,8 @@ def vops_pushed(repository,
             return _invalid(
                 exec_status=ret,
                 name=container)
+    else:
+        return _invalid(comment="container name missing")
 
     push = __salt__['docker.push']
     ret = push(repository,username=username,password=password,email=email)
@@ -886,6 +903,7 @@ def vops_pulled(repo,
                 *args, **kwargs):
     out_text = ""
     force_install = False
+
     if repo:
         ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
 #        # PUSHED
@@ -899,6 +917,8 @@ def vops_pulled(repo,
             return _ret_status(ret)
         elif ret['changes']:
             force_install = True
+    else:
+        return _invalid(comment="container name missing")
 
     if force_install and containers:
         for container in containers:
@@ -930,7 +950,7 @@ def vops_built(tag,
     force_install = False
 
 
-    if tag and path:
+    if tag and path and force:
         ret = built(tag,path,force=force)
 #        # DEBUG
 #        print "######### BUILT #####"
@@ -948,6 +968,12 @@ def vops_built(tag,
             return _ret_status(ret)
         if ret.get('changes'):
             force_install = True
+    elif not force:
+        out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
+    elif not tag:
+        return _invalid(comment="tag name missing")
+    elif not path:
+        return _invalid(comment="path name missing")
 
     if force_install and containers:
         for container in containers:
@@ -988,9 +1014,9 @@ def vops_running_one(name,
                      *args, **kwargs):
 
     out_text = ""
-    ret = installed(
-        name,image,entrypoint=entrypoint,command=command,
-        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
+    ret = installed(name, image, *args, **kwargs)
+#        name,image,entrypoint=entrypoint,command=command,
+#        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
 #    # DEBUG
 #    print "######### INSTALLED #####"
 #    print ret
@@ -1003,14 +1029,14 @@ def vops_running_one(name,
     s = re.search("already exists, container Id: '(.*)'",ret['comment'])
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
-    container = (s.group(1) if s else None)
+    container = (s.group(1) if s else name)
 #    # DEBUG
 #    print "########## CONTAINER ID ##########"
 #    print container
 #    print "########## /CONTAINER ID ##########"
 
-    ret = running(
-        name,container=name,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
+    ret = running(name, *args, **kwargs)
+#        name,container=container,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
 #    # DEBUG
 #    print "######### RUNNING #####"
 #    print ret
@@ -1035,14 +1061,9 @@ def get_port(port):
     return int(p[0])
 
 def test_ports(pb,length):
-#    guests = sorted([get_port(guest) for guest in pb])
     hosts = sorted([int(pb[guest].get("HostPort",0)) for guest in pb])
     if not hosts:
         return False
-#    previous = guests[0]
-#    for port in guests:
-#        if (port - previous < length):
-#            return False
     previous = hosts[0]
     for port in hosts[1:]:
         if (port - previous < length):
@@ -1062,7 +1083,7 @@ def gen_ports(ports,port_bindings,length):
         for p in ports:
             port = p.split("/")
             protocol = ("tcp" if len(port) != 2 else port[1])
-            port = int(port[0])#+i
+            port = int(port[0])
             cur_port.append("%s/%s"%(port,protocol))
         out_ports.append(cur_port)
         i += 1
@@ -1073,7 +1094,7 @@ def gen_ports(ports,port_bindings,length):
         for p in port_bindings:
             port = p.split("/")
             protocol = ("tcp" if len(port) != 2 else port[1])
-            port = int(port[0])#+i
+            port = int(port[0])
             cur_pb["%s/%s"%(port,protocol)] = {
                 "HostIp": port_bindings[p].get("HostIp"),
                 "HostPort": int(port_bindings[p].get("HostPort",0))+i
@@ -1113,20 +1134,20 @@ def vops_running(containers,
     for container in containers:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
-        status = vops_running_one(name=container,
-                                  image=image,
-                                  entrypoint=entrypoint,
-                                  command=command,
-                                  environment=environment,
-                                  ports=port,
-                                  volumes=volumes,
-                                  mem_limit=mem_limit,
-                                  cpu_shares=cpu_shares,
-                                  binds=binds,
-                                  publish_all_ports=publish_all_ports,
-                                  links=links,
-                                  port_bindings=port_binding,
-                                  force=force)
+        status = vops_running_one(name=container,*args,**kwargs)
+#                                  image=image,
+#                                  entrypoint=entrypoint,
+#                                  command=command,
+#                                  environment=environment,
+#                                  ports=port,
+#                                  volumes=volumes,
+#                                  mem_limit=mem_limit,
+#                                  cpu_shares=cpu_shares,
+#                                  binds=binds,
+#                                  publish_all_ports=publish_all_ports,
+#                                  links=links,
+#                                  port_bindings=port_binding,
+#                                  force=force)
         comment += "%s\n"%status.get("comment")
         if status.get("status") is False:
             break

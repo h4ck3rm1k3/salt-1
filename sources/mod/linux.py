@@ -1937,16 +1937,12 @@ Ensure that a container from the given name is running. If not, run it.
 
 *   **`count`** (*optional*): Specify the number of containers to run
 
-*   **`command`** (*optional*): Command argument to Docker (if not specified in `Dockerfile`)
+*   **`command`** (*optional*): Command to run in the container (if not specified in `Dockerfile`)
 
 		example (in case of apache server):
+			/usr/bin/apache2
 			-D
 			FOREGROUND
-
-*   **`entry_point`** (*optional*): Entry point to the container (if not specified in `Dockerfile`)
-
-		exemple (in case of apache server):
-			/usr/bin/apache2
 
 *   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)
 
@@ -2016,11 +2012,6 @@ Ensure that a container from the given name is running. If not, run it.
 					'visible'	:	True
 				},
 				'command'		:	{
-					'type'		:	'array',
-					'required'	:	False,
-					'visible'	:	True
-				},
-				'entry_point'		:	{
 					'type'		:	'array',
 					'required'	:	False,
 					'visible'	:	True
