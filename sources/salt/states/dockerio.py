@@ -853,8 +853,8 @@ def vops_pushed(repository,
             return _invalid(
                 exec_status=ret,
                 name=container)
-    else:
-        return _invalid(comment="container name missing")
+#    else:
+#        return _invalid(comment="container name missing")
 
     push = __salt__['docker.push']
     ret = push(repository,username=username,password=password,email=email)
@@ -918,7 +918,7 @@ def vops_pulled(repo,
         elif ret['changes']:
             force_install = True
     else:
-        return _invalid(comment="container name missing")
+        return _invalid(comment="repo missing")
 
     if force_install and containers:
         for container in containers:
