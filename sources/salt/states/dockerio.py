@@ -1024,7 +1024,7 @@ def vops_running_one(container,
     s = re.search("already exists, container Id: '(.*)'",ret['comment'])
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
-    container = (s.group(1) if s else container)
+#    container = (s.group(1) if s else container)
 #    # DEBUG
 #    print "########## CONTAINER ID ##########"
 #    print container
