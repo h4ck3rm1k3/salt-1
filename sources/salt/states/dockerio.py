@@ -243,8 +243,8 @@ def mod_watch(name, sfun=None, *args, **kw):
         if "containers" not in kw:
             return _invalid(comment='Container name missing')
         if "ports" in kw and "port_bindings" in kw:
-            (kw["ports"],kw["port_bindings"]) = gen_ports(kw["ports"],kw["port_bindings"],len(kw["containers"]))
-            if not kw.get("ports") or not kw.get("port_bindings"):
+            (ports,port_bindings) = gen_ports(kw["ports"],kw["port_bindings"],len(kw["containers"]))
+            if not ports or not port_bindings:
                 return _invalid(comment="Error generating port bindings (is there enough space between each allocation required?)")
         comment = ""
         for container in kw['containers']:
@@ -252,8 +252,8 @@ def mod_watch(name, sfun=None, *args, **kw):
                                  changes={name: True})
             comment += "%s\n"%status.get("comment")
             if not status.get("result"):
-                kw["port"] = (kw["ports"].pop() if kw.get("ports") else None)
-                kw["port_binding"] = (kw["port_bindings"].pop() if kw["port_bindings"] else None)
+                kw["ports"] = (ports.pop() if ports else None)
+                kw["port_bindings"] = (port_bindings.pop() if port_bindings else None)
                 status = vops_running_one(container,kw.get("image",None),**kw)
                 comment += "%s\n"%status.get("comment")
             if not status.get("result"):
@@ -432,8 +432,6 @@ def installed(name,
         ports = []
     if not volumes:
         volumes = []
-#    if not entrypoint:
-#        entrypoint = []
     if isinstance(environment, dict):
         for k in environment:
             denvironment[u'%s' % k] = u'%s' % environment[k]
@@ -448,12 +446,6 @@ def installed(name,
         else:
             for k in p:
                 dports[str(p)] = {}
-#    for e in entrypoint:
-#        if not isinstance(e, dict):
-#            de[str(e)] = {}
-#        else:
-#            for k in e:
-#                de[str(e)] = {}
     for p in volumes:
         vals = []
         if not isinstance(p, dict):
@@ -919,6 +911,7 @@ def vops_pulled(repo,
             return _ret_status(ret)
         elif ret['changes']:
             force_install = True
+            out_text += "New image version pulled."
     else:
         return _invalid(comment="repo missing")
 
@@ -1137,20 +1130,20 @@ def vops_running(containers,
     for container in containers:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
-        status = vops_running_one(container,image,*args,**kwargs)
-#                                  image=image,
-#                                  entrypoint=entrypoint,
-#                                  command=command,
-#                                  environment=environment,
-#                                  ports=port,
-#                                  volumes=volumes,
-#                                  mem_limit=mem_limit,
-#                                  cpu_shares=cpu_shares,
-#                                  binds=binds,
-#                                  publish_all_ports=publish_all_ports,
-#                                  links=links,
-#                                  port_bindings=port_binding,
-#                                  force=force)
+        status = vops_running_one(container
+                                  image=image,
+                                  entrypoint=entrypoint,
+                                  command=command,
+                                  environment=environment,
+                                  ports=port,
+                                  volumes=volumes,
+                                  mem_limit=mem_limit,
+                                  cpu_shares=cpu_shares,
+                                  binds=binds,
+                                  publish_all_ports=publish_all_ports,
+                                  links=links,
+                                  port_bindings=port_binding,
+                                  force=force)
         comment += "%s\n"%status.get("comment")
         if status.get("status") is False:
             break
