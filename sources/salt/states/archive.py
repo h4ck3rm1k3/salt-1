@@ -202,7 +202,8 @@ def extracted(name,
 
             # remove cached file and update cached md5
             __salt__['file.remove'](filename)
-            cs.update(source_hash['hsum'])
+            if source_hash:
+                cs.update(source_hash['hsum'])
 
         else:
             __salt__['file.remove'](filename)
