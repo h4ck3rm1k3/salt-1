@@ -254,7 +254,7 @@ def mod_watch(name, sfun=None, *args, **kw):
             if not status.get("result"):
                 kw["port"] = (kw["ports"].pop() if kw.get("ports") else None)
                 kw["port_binding"] = (kw["port_bindings"].pop() if kw["port_bindings"] else None)
-                status = vops_running_one(name=container,**kw)
+                status = vops_running_one(container,kw.get("image",None),**kw)
                 comment += "%s\n"%status.get("comment")
             if not status.get("result"):
                 res = False
@@ -996,7 +996,7 @@ def vops_built(tag,
 
 
 # running container
-def vops_running_one(name,
+def vops_running_one(container,
                      image,
                      entrypoint=None,
                      command=None,
@@ -1014,7 +1014,7 @@ def vops_running_one(name,
                      *args, **kwargs):
 
     out_text = ""
-    ret = installed(name, image, *args, **kwargs)
+    ret = installed(container, image, *args, **kwargs)
 #        name,image,entrypoint=entrypoint,command=command,
 #        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
 #    # DEBUG
@@ -1029,13 +1029,13 @@ def vops_running_one(name,
     s = re.search("already exists, container Id: '(.*)'",ret['comment'])
     if not s:
         s = re.search("Container (.*) created",ret['comment'])
-    container = (s.group(1) if s else name)
+    container = (s.group(1) if s else container)
 #    # DEBUG
 #    print "########## CONTAINER ID ##########"
 #    print container
 #    print "########## /CONTAINER ID ##########"
 
-    ret = running(name, *args, **kwargs)
+    ret = running(container, *args, **kwargs)
 #        name,container=container,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
 #    # DEBUG
 #    print "######### RUNNING #####"
@@ -1048,12 +1048,12 @@ def vops_running_one(name,
         return _ret_status(ret)
 
     status = base_status.copy()
-    status["comment"] = "%s\nContainer %s running."%(out_text,name)
+    status["comment"] = "%s\nContainer %s running."%(out_text,container)
     status["status"] = True
-    status["id"] = name
+    status["id"] = container
 
     #TODO: changes
-    return _ret_status(status,name,changes={})
+    return _ret_status(status,container,changes={})
 
 
 def get_port(port):
@@ -1134,7 +1134,7 @@ def vops_running(containers,
     for container in containers:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
-        status = vops_running_one(name=container,*args,**kwargs)
+        status = vops_running_one(container,image,*args,**kwargs)
 #                                  image=image,
 #                                  entrypoint=entrypoint,
 #                                  command=command,
