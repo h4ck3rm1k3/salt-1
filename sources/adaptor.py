@@ -1699,11 +1699,16 @@ def ut():
     # }
 
     config = {
-        'srv_root' : '/srv/salt',
-        'extension_modules' : '/var/cache/salt/minion/extmods',
-        'cachedir' : '/opt/visualops/tmp/',
-        'runtime': {},
-        'pkg_cache': '/opt/visualops/env/var/cache/pkg'
+        'global' : {
+            'watch' : '/var/lib/visualops/opsagent/watch'
+        },
+        'salt' : {
+            'srv_root' : '/srv/salt',
+            'extension_modules' : '/var/cache/salt/minion/extmods',
+            'cachedir' : '/opt/visualops/tmp/',
+            'runtime': {},
+            'pkg_cache': '/opt/visualops/env/var/cache/pkg'
+        }
     }
 
     from opsagent.state.runner import StateRunner
