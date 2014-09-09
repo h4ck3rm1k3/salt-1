@@ -853,6 +853,8 @@ def vops_pushed(repository,
             return _invalid(
                 exec_status=ret,
                 name=container)
+        else:
+            out_text += "Container %s commited.\n"%(container)
 #    else:
 #        return _invalid(comment="container name missing")
 
@@ -885,7 +887,7 @@ def vops_pushed(repository,
                 return _ret_status(a)
 
     status = base_status.copy()
-    status["comment"] = "%sCountainer %s pushed on repo %s."%(out_text,container,repository)
+    status["comment"] = "%sRepo %s pushed."%(out_text,repository)
     status["status"] = True
     status["id"] = repository
 #    status["state_stdout"] = ret["state_stdout"]
@@ -1014,9 +1016,9 @@ def vops_running_one(container,
                      *args, **kwargs):
 
     out_text = ""
-    ret = installed(container, image, *args, **kwargs)
-#        name,image,entrypoint=entrypoint,command=command,
-#        environment=environment,ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
+    ret = installed(
+        container,image,entrypoint=entrypoint,command=command,environment=environment,
+        ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
 #    # DEBUG
 #    print "######### INSTALLED #####"
 #    print ret
@@ -1035,8 +1037,9 @@ def vops_running_one(container,
 #    print container
 #    print "########## /CONTAINER ID ##########"
 
-    ret = running(container, *args, **kwargs)
-#        name,container=container,port_bindings=port_bindings,binds=binds,publish_all_ports=publish_all_ports,links=links)
+    ret = running(
+        container,container=container,port_bindings=port_bindings,
+        binds=binds,publish_all_ports=publish_all_ports,links=links)
 #    # DEBUG
 #    print "######### RUNNING #####"
 #    print ret
