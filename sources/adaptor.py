@@ -53,7 +53,12 @@ class StateAdaptor(object):
             "file": "Dockerfile",
             "dir_key": "path",
             "tfirst": True,
-        }
+        },
+        "linux.docker.deploy": {
+            "file_key": "config_files",
+            "tfirst": False,
+            "rerun": True,
+        },
     }
 
     mod_map = {
@@ -617,11 +622,6 @@ class StateAdaptor(object):
             'states' : ['vops_pulled'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -638,11 +638,6 @@ class StateAdaptor(object):
             'states' : ['vops_built'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -671,11 +666,6 @@ class StateAdaptor(object):
             'states' : ['vops_running'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -696,11 +686,54 @@ class StateAdaptor(object):
             'states' : ['vops_pushed'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.service' : { 'name' : ['docker'] }},
+            ]
+        },
+        'linux.docker.deploy' : {
+            'attributes' : {
+                "linux.docker.pulled" : {
+                    'image'         : 'repo',
+                    'tag'           : 'tag',
+                    'username'      : 'username',
+                    'password'      : 'password',
+                    'email'         : 'email',
+                },
+                "linux.docker.running" : {
+                    # installed
+                    'container'     : 'container',
+                    'image'         : 'image',
+                    'command'       : 'command',
+                    'environment'   : 'environment',
+                    'volumes'       : 'volumes',
+                    'mem_limit'     : 'mem_limit',
+                    'cpu_shares'    : 'cpu_shares',
+                    'ports'         : 'ports',
+                    # running
+                    'publish_all_ports': 'publish_all_ports',
+                    'binds'         : 'binds',
+                    'links'         : 'links',
+                    'port_bindings' : 'port_bindings',
+                    'count'         : 'count',
+                    'config_files'  : 'config_files',
+                },
+                "linux.file": {
+                    # file
+                    'config_files'  : {
+                        'key': 'path',
+                        'value': 'content',
+                    }
+                }
+            },
+            'split' : [
+                "linux.file",
+                "linux.docker.pulled",
+                "linux.docker.running"
+                ],
+            'states' : ['vops_running'],
+            'type' : 'docker',
+            'require' : [
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -713,6 +746,7 @@ class StateAdaptor(object):
         self.states = None
         self.os_type = runner.os_type if hasattr(runner, 'os_type') else ''
         self.os_release = runner.os_release if hasattr(runner, 'os_release') else ''
+        self.config = runner.config
 
     def convert(self, step, module, parameter):
         """
@@ -747,17 +781,24 @@ class StateAdaptor(object):
 
         # convert to salt states
         try:
-            utils.log("INFO", "Begin to check module %s parameter %s" % (module, str(parameter)), ("convert", self))
-            module, parameter = self.__check_module(module, parameter)
+            split_states = self.__split_states(module, parameter)
 
-            utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
-            self.states = self.__salt(step, module, parameter)
+            self.states = {}
+            i = 0
+            for s_module, s_parameter in split_states:
+                utils.log("INFO", "Begin to check module %s parameter %s" % (s_module, str(s_parameter)), ("convert", self))
+                s_module, s_parameter = self.__check_module(s_module, s_parameter)
+
+                utils.log("INFO", "Begin to convert module %s" % (s_module), ("convert", self))
+                self.states.update(self.__salt("%s%s"%(step,i), s_module, s_parameter))
+                i += 1
+            if not self.states: self.states = None
 
             # expand salt state
             utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
             self.__expand()
 
-            utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
+            utils.log("DEBUG", "Begin to render salt state %s" % str(self.states), ("convert", self))
             self.__render(parameter)
 
             utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
@@ -771,6 +812,47 @@ class StateAdaptor(object):
             return None
 
         return self.states
+
+
+    # split parameter in split states
+    def __create_split_params(self, s_module, c_parameter):
+        s_parameter = dict([ i for i in [
+            (
+                (StateAdaptor.mod_map['attributes'].get(s_module,{}).get(org_key),c_parameter.get(org_key))
+                if type() is not dict
+                else None
+            )
+            for org_key in StateAdaptor.mod_map['attributes'].get(s_module,{})
+        ] if i])
+        return (s_module,s_parameter)
+
+    # split states if needed
+    def __split_states(self, module, parameter):
+        split_states = []
+        c_parameter = None
+        if StateAdaptor.mod_map.get('split'):
+            for s_module in StateAdaptor.mod_map['split']:
+                for org_key in StateAdaptor.mod_map['attributes'].get(s_module,{}):
+                    if type(StateAdaptor.mod_map['attributes'].get(s_module,{}).get(org_key)) is dict:
+                        c_parameter = parameter.copy()
+                        for key in parameter.get(org_key):
+                            c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["value"]] = parameter[org_key][key]
+                            if module is "linux.docker.deploy" and org_key is "config_files":
+                                host_path = os.path.join(self.config['global']['conf_path'],
+                                                         "docker-config",
+                                                         ("%s"%key).replace('/','-'))
+                                c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["key"]] = host_path
+                                parameter[org_key][key] = host_path
+                            else:
+                                c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["key"]] = key
+                            split_states.append(self.__create_split_params(s_module,c_parameter))
+                        break
+                if c_parameter is None:
+                    split_states.append(self.__create_split_params(s_module,parameter))
+        else:
+            split_states.append((module,parameter))
+        return split_states
+
 
     def __salt(self, step, module, parameter):
         salt_state = {}
@@ -1225,6 +1307,13 @@ class StateAdaptor(object):
 
             elif module in ["linux.docker.running"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
+                if addin.get("config_files"):
+                    utils.log("DEBUG","Generating volumes from config_files, current: %s"%(addin["config_files"]),("__build_up",self))
+                    volumes = addin.pop("volumes",{})
+                    for docker_path in addin["config_files"]:
+                        volumes[addin["config_files"][docker_path]] = docker_path
+                    if volumes:
+                        addin["volumes"] = volumes
                 if addin.get("port_bindings"):
                     utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
                     ports = []
