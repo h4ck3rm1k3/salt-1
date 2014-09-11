@@ -672,6 +672,8 @@ class StateAdaptor(object):
                     'port_bindings' : 'port_bindings',
                     'force'         : 'force',
                     'count'         : 'count',
+                    # deploy
+                    'files'         : 'files',
             },
             'states' : ['vops_running'],
             'type' : 'docker',
@@ -726,6 +728,7 @@ class StateAdaptor(object):
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'count'         : 'count',
+                    # deploy
                     'files'  : 'files',
                 },
                 "linux.file": {
@@ -733,7 +736,9 @@ class StateAdaptor(object):
                     'files'  : {
                         'key': 'path',
                         'value': 'content',
-                    }
+                    },
+                    'path': 'path',
+                    'content': 'content',
                 }
             },
             'split' : [
@@ -790,73 +795,77 @@ class StateAdaptor(object):
         # module = str(module)
 
         # convert to salt states
-        try:
-            split_states = self.__split_states(module, parameter)
-
-            self.states = {}
-            i = 0
-            for s_module, s_parameter in split_states:
+        split_states = self.__split_states(module, parameter)
+        states = []
+        i = 1
+        for s_module, s_parameter in split_states:
+            try:
+                self.states = {}
                 utils.log("INFO", "Begin to check module %s parameter %s" % (s_module, str(s_parameter)), ("convert", self))
                 s_module, s_parameter = self.__check_module(s_module, s_parameter)
 
                 utils.log("INFO", "Begin to convert module %s" % (s_module), ("convert", self))
-                self.states.update(self.__salt("%s%s"%(step,i), s_module, s_parameter))
+                self.states.update(self.__salt(step, s_module, s_parameter))
                 i += 1
-            if not self.states: self.states = None
+                if not self.states: self.states = None
 
-            # expand salt state
-            utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
-            self.__expand()
+                # expand salt state
+                utils.log("DEBUG", "Begin to expand salt state %s" % self.states, ("convert", self))
+                self.__expand()
 
-            utils.log("DEBUG", "Begin to render salt state %s" % str(self.states), ("convert", self))
-            self.__render(parameter)
+                utils.log("DEBUG", "Begin to render salt state %s" % self.states, ("convert", self))
+                self.__render(parameter)
 
-            utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
-        except StateException, e:
-            import json
-            utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
-                (step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
-            return None
-        except Exception, e:
-            utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
-            return None
-
-        return self.states
+                utils.log("DEBUG", "Complete converting state %s" % self.states, ("convert", self))
+            except StateException, e:
+                import json
+                utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
+                              (step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
+                return None
+            except Exception, e:
+                utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
+                return None
+            else:
+                states += self.states
+        return states
 
 
     # split parameter in split states
-    def __create_split_params(self, s_module, c_parameter):
+    def __create_split_params(self, s_module, c_parameter, attributes):
         s_parameter = dict([ i for i in [
             (
-                (StateAdaptor.mod_map['attributes'].get(s_module,{}).get(org_key),c_parameter.get(org_key))
-                if type() is not dict
+                (attributes.get(s_module,{})[org_key],c_parameter.get(org_key))
+                if type(attributes.get(s_module,{})[org_key]) is not dict
                 else None
             )
-            for org_key in StateAdaptor.mod_map['attributes'].get(s_module,{})
+            for org_key in attributes.get(s_module,{})
         ] if i])
         return (s_module,s_parameter)
 
     # split states if needed
     def __split_states(self, module, parameter):
         split_states = []
-        c_parameter = None
-        if StateAdaptor.mod_map.get('split'):
-            for s_module in StateAdaptor.mod_map['split']:
-                for org_key in StateAdaptor.mod_map['attributes'].get(s_module,{}):
-                    if type(StateAdaptor.mod_map['attributes'].get(s_module,{}).get(org_key)) is dict:
+        if StateAdaptor.mod_map[module].get('split'):
+            for s_module in StateAdaptor.mod_map[module]['split']:
+                c_parameter = None
+                attributes = StateAdaptor.mod_map[module]['attributes']
+                for org_key in attributes.get(s_module,{}):
+                    if type(attributes.get(s_module,{}).get(org_key)) is dict:
                         c_parameter = parameter.copy()
-                        for key in parameter.get(org_key):
-                            c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["value"]] = parameter[org_key][key]
-                            if module is "linux.docker.deploy" and org_key is "files":
-                                host_path = watch_docker_deploy(config, parameter, e=key).pop()
-                                c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["key"]] = host_path
-                                parameter[org_key][key] = host_path
+                        for item in parameter.get(org_key):
+                            key = item.get("key")
+                            value = item.get("value")
+                            c_parameter[attributes[s_module][org_key]["value"]] = value
+                            if (module == "linux.docker.deploy") and (org_key == "files"):
+                                host_path = watch_docker_deploy(self.config, parameter, e=key).pop()
+                                c_parameter[attributes[s_module][org_key]["key"]] = host_path
+                                item["value"] = host_path
                             else:
-                                c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["key"]] = key
-                            split_states.append(self.__create_split_params(s_module,c_parameter))
+                                c_parameter[attributes[s_module][org_key]["key"]] = key
+                            split_states.append(self.__create_split_params(s_module,c_parameter,attributes))
                         break
                 if c_parameter is None:
-                    split_states.append(self.__create_split_params(s_module,parameter))
+                    split_states.append(self.__create_split_params(s_module,parameter,attributes))
         else:
             split_states.append((module,parameter))
         return split_states
@@ -1317,9 +1326,9 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
                 if addin.get("files"):
                     utils.log("DEBUG","Generating volumes from files, current: %s"%(addin["files"]),("__build_up",self))
-                    volumes = addin.pop("volumes",{})
-                    for docker_path in addin["files"]:
-                        volumes[addin["files"][docker_path]] = docker_path
+                    volumes = addin.pop("volumes",[])
+                    for item in addin["files"]:
+                        volumes.append({"key":item.get("value"),"value":item.get("key")})
                     if volumes:
                         addin["volumes"] = volumes
                 if addin.get("port_bindings"):
@@ -1401,12 +1410,12 @@ class StateAdaptor(object):
                     addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
                 if not addin.get("count"):
                     addin["containers"] = [addin["container"]]
-                else:
+                else: 
                     addin["containers"] = []
                     count = int(addin["count"])
                     i=0
                     while i < count:
-                        addin["containers"] += ("%s_%s"%addin["container"],i+1)
+                        addin["containers"].append("%s_%s"%(addin["container"],i+1))
                         i += 1
                 addin.pop("container")
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
