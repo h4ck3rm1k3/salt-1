@@ -19,7 +19,7 @@ CONFIG_PATH="/var/lib/visualops/opsagent"
 def watch_docker_deploy(config, parameter, e=None):
     elems = ([e]
              if e
-             else parameter.get("file",[]))
+             else [item["key"] for item in parameter.get("files",[])])
     return [os.path.join(config['global']['conf_path'],
                          "docker-config",
                          parameter.get("container"),
@@ -65,7 +65,8 @@ class StateAdaptor(object):
             "tfirst": True,
         },
         "linux.docker.deploy": {
-            "file_key": watch_docker_deploy,
+            "file_key": "files",
+            "action": watch_docker_deploy,
             "tfirst": False,
             "rerun": True,
         },
@@ -674,6 +675,7 @@ class StateAdaptor(object):
                     'count'         : 'count',
                     # deploy
                     'files'         : 'files',
+                    'watch': 'watch',
             },
             'states' : ['vops_running'],
             'type' : 'docker',
@@ -730,6 +732,7 @@ class StateAdaptor(object):
                     'count'         : 'count',
                     # deploy
                     'files'  : 'files',
+                    'watch': 'watch',
                 },
                 "linux.file": {
                     # file
@@ -907,6 +910,8 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
                 if 'watch' in parameter and parameter['watch'] and module in StateAdaptor.mod_watch_param:
                     state = 'mod_watch'
+                    if addin.get('watch') is True:
+                        addin.pop("watch")
                     if module in StateAdaptor.mod_watch_param:
                         for item in StateAdaptor.mod_watch_param[module]:
                             addin[item] = StateAdaptor.mod_watch_param[module][item]
