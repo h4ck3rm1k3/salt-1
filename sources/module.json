@@ -517,6 +517,97 @@
                 "en": "\n### Description\nmanage a directory\n\n### Parameters\n\n*   **`path`** (*required*): a list of directory paths\n\n\t\texample: /var/www/html\n\n\t>note: This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributes as the specified directory itself.\n\n* **`user`** (*optional*): the user name of the directory owner\n\n\t\texample: root\n\n\t>note: If specified, the directory owner will be set to this user. Otherwise, the result depends on whether the directory exists or not. If existed, the directory owner will be left unchanged, otherwise default: root\n\n* **`group`** (*optional*): the group name of the directory owner\n\n\t\texample: root\n\n    >note: If specified, the directory will be set to this group. Otherwise, the result depends on whether the directory exists or not. If existed, the directory group will be left unchanged; otherwise default: root\n\n* **`mode`** (*optional*): the directory mode\n\n\t\texample: 0755\n\n\t>note: If specified, the directory will be set to this mode. Otherwise, the result depends on whether the directory exists or not. If existed, the directory mode will be left unchanged\n\n* **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`true`***\n\n* **`absent`** (*optional*): ensure all directories are absent, by default ***`false`***\n\n\t>note: If True, all other parameters are ignored\n\t\t\t\t"
             }
         }, 
+        "docker": {
+            "distro": null, 
+            "module": "linux.docker.deploy", 
+            "parameter": {
+                "command": {
+                    "required": false, 
+                    "type": "array", 
+                    "visible": true
+                }, 
+                "container": {
+                    "required": true, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "count": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "cpu_shares": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "email": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "environment": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "files": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "image": {
+                    "required": true, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "links": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "mem_limit": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "password": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "port_bindings": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "publish_all_ports": {
+                    "default": false, 
+                    "required": false, 
+                    "type": "bool", 
+                    "visible": true
+                }, 
+                "tag": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "username": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "volumes": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nRun a container from a remote image\n\n### Parameters\n\n*   **`container`** (*required*): Desired name of the container (must be the name specified in \"pulled\" and \"built\" states, if any)\n\n\t\texample:\n\t\t\tmy_container\n\n*   **`image`** (*required*): Image/repo from which to build this container\n\n\t\texample:\n\t\t\tnamespace/image\n\n*   **`tag`** (*optional*): Repository tag (default: latest)\n\n\t\texample:\n\t\t\tlatest\n\n*   **`username`** (*optional*): Username used to login to repository\n\n*   **`password`** (*optional*): Password used to login to repository (required if username specified)\n\n*   **`email`** (*optional*): Email used to login to repository (required if username specified)\n\n*   **`count`** (*optional*): Specify the number of containers to run\n\n*   **`command`** (*optional*): Command to run in the container (if not specified in `Dockerfile`)\n\n\t\texample (in case of apache server):\n\t\t\t/usr/bin/apache2\n\t\t\t-D\n\t\t\tFOREGROUND\n\n*   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\tFOO: bar\n\n*   **`volumes`** (*optional*): List of volumes to attach (if not specified in `Dockerfile`). (specify :ro for read only mode)\n\n\t\texample:\n\t\t\t/host/path: /mount/point\n\t\t\t/host/path: /mount/point/read/only:ro\n\n*   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\t512m\n\n*   **`cpu_shares`** (*optional*): CPU shares authorized (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\t0-3\n\n\t\texample:\n\t\t\t0\n\n*   **`publish_all_ports`** (*optional*): Publish all ports\n\n*   **`links`** (*optional*): Link several container together (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\tname_other_container: alias_for_other_container\n\n*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port\n\n\t\tnote:\n\t\t\tIf the count parameter is specified, the host port will be incremented by one on each.\n\n\t\texample:\n\t\t\t5000/tcp: 127.0.0.1:5000\n\t\t\t6000/tcp: 6000 (default ip: 0.0.0.0)\n\t\t\t80: 6666 (default protocol: tcp)\n\n*   **`files`** (*optional*): list of persistent files\n\n\t\texample:\n\t\t\t/etc/nginx/nginx.conf : *content*\n\t\t\t/etc/my.cnf           : *content*\n\t\t\t\t"
+            }
+        }, 
         "docker built": {
             "distro": null, 
             "module": "linux.docker.built", 

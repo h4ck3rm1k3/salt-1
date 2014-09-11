@@ -16,6 +16,16 @@ from opsagent import utils
 URI_TIMEOUT=600
 CONFIG_PATH="/var/lib/visualops/opsagent"
 
+def watch_docker_deploy(config, parameter, e=None):
+    elems = ([e]
+             if e
+             else [item["key"] for item in parameter.get("files",[])])
+    return [os.path.join(config['global']['conf_path'],
+                         "docker-config",
+                         parameter.get("container"),
+                         ("%s"%key).replace('/','-'))
+            for key in elems]
+
 class StateAdaptor(object):
 
     ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
@@ -53,7 +63,13 @@ class StateAdaptor(object):
             "file": "Dockerfile",
             "dir_key": "path",
             "tfirst": True,
-        }
+        },
+        "linux.docker.deploy": {
+            "file_key": "files",
+            "action": watch_docker_deploy,
+            "tfirst": False,
+            "rerun": True,
+        },
     }
 
     mod_map = {
@@ -617,11 +633,6 @@ class StateAdaptor(object):
             'states' : ['vops_pulled'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -638,11 +649,6 @@ class StateAdaptor(object):
             'states' : ['vops_built'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -667,15 +673,13 @@ class StateAdaptor(object):
                     'port_bindings' : 'port_bindings',
                     'force'         : 'force',
                     'count'         : 'count',
+                    # deploy
+                    'files'         : 'files',
+                    'watch': 'watch',
             },
             'states' : ['vops_running'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -696,11 +700,58 @@ class StateAdaptor(object):
             'states' : ['vops_pushed'],
             'type' : 'docker',
             'require' : [
-#                {'linux.yum.package' : { 'name' : [{'key':'docker-io'}], 'os': ["redhat","centos"] }},
-#                {'linux.yum.package' : { 'name' : [{'key':'docker'}], 'os': ["amazon"] }},
-#                {'linux.apt.package' : { 'name' : [{'key':'docker.io'}] }},
-#                {'linux.service' : { 'name' : ['docker'], 'pkg_mgr': "linux.yum.package" }},
-#                {'linux.service' : { 'name' : ['docker.io'], 'pkg_mgr': "linux.apt.package" }},
+                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
+                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.service' : { 'name' : ['docker'] }},
+            ]
+        },
+        'linux.docker.deploy' : {
+            'attributes' : {
+                "linux.docker.pulled" : {
+                    'image'         : 'repo',
+                    'tag'           : 'tag',
+                    'username'      : 'username',
+                    'password'      : 'password',
+                    'email'         : 'email',
+                },
+                "linux.docker.running" : {
+                    # installed
+                    'container'     : 'container',
+                    'image'         : 'image',
+                    'command'       : 'command',
+                    'environment'   : 'environment',
+                    'volumes'       : 'volumes',
+                    'mem_limit'     : 'mem_limit',
+                    'cpu_shares'    : 'cpu_shares',
+                    'ports'         : 'ports',
+                    # running
+                    'publish_all_ports': 'publish_all_ports',
+                    'binds'         : 'binds',
+                    'links'         : 'links',
+                    'port_bindings' : 'port_bindings',
+                    'count'         : 'count',
+                    # deploy
+                    'files'  : 'files',
+                    'watch': 'watch',
+                },
+                "linux.file": {
+                    # file
+                    'files'  : {
+                        'key': 'path',
+                        'value': 'content',
+                    },
+                    'path': 'path',
+                    'content': 'content',
+                }
+            },
+            'split' : [
+                "linux.file",
+                "linux.docker.pulled",
+                "linux.docker.running"
+                ],
+            'states' : ['vops_running'],
+            'type' : 'docker',
+            'require' : [
                 {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
                 {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -713,6 +764,7 @@ class StateAdaptor(object):
         self.states = None
         self.os_type = runner.os_type if hasattr(runner, 'os_type') else ''
         self.os_release = runner.os_release if hasattr(runner, 'os_release') else ''
+        self.config = runner.config
 
     def convert(self, step, module, parameter):
         """
@@ -746,31 +798,81 @@ class StateAdaptor(object):
         # module = str(module)
 
         # convert to salt states
-        try:
-            utils.log("INFO", "Begin to check module %s parameter %s" % (module, str(parameter)), ("convert", self))
-            module, parameter = self.__check_module(module, parameter)
+        split_states = self.__split_states(module, parameter)
+        states = []
+        i = 1
+        for s_module, s_parameter in split_states:
+            try:
+                self.states = {}
+                utils.log("INFO", "Begin to check module %s parameter %s" % (s_module, str(s_parameter)), ("convert", self))
+                s_module, s_parameter = self.__check_module(s_module, s_parameter)
 
-            utils.log("INFO", "Begin to convert module %s" % (module), ("convert", self))
-            self.states = self.__salt(step, module, parameter)
+                utils.log("INFO", "Begin to convert module %s" % (s_module), ("convert", self))
+                self.states.update(self.__salt(step, s_module, s_parameter))
+                i += 1
+                if not self.states: self.states = None
 
-            # expand salt state
-            utils.log("DEBUG", "Begin to expand salt state %s" % str(self.states), ("convert", self))
-            self.__expand()
+                # expand salt state
+                utils.log("DEBUG", "Begin to expand salt state %s" % self.states, ("convert", self))
+                self.__expand()
 
-            utils.log("DEBUG", "Begin to render salt state %s " % str(self.states), ("convert", self))
-            self.__render(parameter)
+                utils.log("DEBUG", "Begin to render salt state %s" % self.states, ("convert", self))
+                self.__render(parameter)
 
-            utils.log("DEBUG", "Complete converting state %s" % str(self.states), ("convert", self))
-        except StateException, e:
-            import json
-            utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
-                (step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
-            return None
-        except Exception, e:
-            utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
-            return None
+                utils.log("DEBUG", "Complete converting state %s" % self.states, ("convert", self))
+            except StateException, e:
+                import json
+                utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
+                              (step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
+                return None
+            except Exception, e:
+                utils.log("ERROR", "Generate salt states exception: %s." % str(e), ("convert", self))
+                return None
+            else:
+                states += self.states
+        return states
 
-        return self.states
+
+    # split parameter in split states
+    def __create_split_params(self, s_module, c_parameter, attributes):
+        s_parameter = dict([ i for i in [
+            (
+                (attributes.get(s_module,{})[org_key],c_parameter.get(org_key))
+                if type(attributes.get(s_module,{})[org_key]) is not dict
+                else None
+            )
+            for org_key in attributes.get(s_module,{})
+        ] if i])
+        return (s_module,s_parameter)
+
+    # split states if needed
+    def __split_states(self, module, parameter):
+        split_states = []
+        if StateAdaptor.mod_map[module].get('split'):
+            for s_module in StateAdaptor.mod_map[module]['split']:
+                c_parameter = None
+                attributes = StateAdaptor.mod_map[module]['attributes']
+                for org_key in attributes.get(s_module,{}):
+                    if type(attributes.get(s_module,{}).get(org_key)) is dict:
+                        c_parameter = parameter.copy()
+                        for item in parameter.get(org_key):
+                            key = item.get("key")
+                            value = item.get("value")
+                            c_parameter[attributes[s_module][org_key]["value"]] = value
+                            if (module == "linux.docker.deploy") and (org_key == "files"):
+                                host_path = watch_docker_deploy(self.config, parameter, e=key).pop()
+                                c_parameter[attributes[s_module][org_key]["key"]] = host_path
+                                item["value"] = host_path
+                            else:
+                                c_parameter[attributes[s_module][org_key]["key"]] = key
+                            split_states.append(self.__create_split_params(s_module,c_parameter,attributes))
+                        break
+                if c_parameter is None:
+                    split_states.append(self.__create_split_params(s_module,parameter,attributes))
+        else:
+            split_states.append((module,parameter))
+        return split_states
+
 
     def __salt(self, step, module, parameter):
         salt_state = {}
@@ -808,6 +910,8 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
                 if 'watch' in parameter and parameter['watch'] and module in StateAdaptor.mod_watch_param:
                     state = 'mod_watch'
+                    if addin.get('watch') is True:
+                        addin.pop("watch")
                     if module in StateAdaptor.mod_watch_param:
                         for item in StateAdaptor.mod_watch_param[module]:
                             addin[item] = StateAdaptor.mod_watch_param[module][item]
@@ -1225,6 +1329,13 @@ class StateAdaptor(object):
 
             elif module in ["linux.docker.running"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
+                if addin.get("files"):
+                    utils.log("DEBUG","Generating volumes from files, current: %s"%(addin["files"]),("__build_up",self))
+                    volumes = addin.pop("volumes",[])
+                    for item in addin["files"]:
+                        volumes.append({"key":item.get("value"),"value":item.get("key")})
+                    if volumes:
+                        addin["volumes"] = volumes
                 if addin.get("port_bindings"):
                     utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
                     ports = []
@@ -1304,12 +1415,12 @@ class StateAdaptor(object):
                     addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
                 if not addin.get("count"):
                     addin["containers"] = [addin["container"]]
-                else:
+                else: 
                     addin["containers"] = []
                     count = int(addin["count"])
                     i=0
                     while i < count:
-                        addin["containers"] += ("%s_%s"%addin["container"],i+1)
+                        addin["containers"].append("%s_%s"%(addin["container"],i+1))
                         i += 1
                 addin.pop("container")
                 utils.log("DEBUG", "Docker running addin: %s"%(addin), ("__build_up", self))
