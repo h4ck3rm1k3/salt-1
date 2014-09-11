@@ -2244,7 +2244,7 @@ Run a container from a remote image
 			6000/tcp: 6000 (default ip: 0.0.0.0)
 			80: 6666 (default protocol: tcp)
 
-*   **`config_files`** (*optional*): list of persistent configuration files
+*   **`files`** (*optional*): list of persistent files
 
 		example:
 			/etc/nginx/nginx.conf : *content*
@@ -2329,7 +2329,7 @@ Run a container from a remote image
 					'required'	:	False,
 					'visible'	:	True
 				},
-                                'config_files'          :	{
+                                'files'          :	{
 					'type'		:	'dict',
 					'required'	:	False,
 					'visible'	:	True

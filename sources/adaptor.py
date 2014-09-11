@@ -16,6 +16,16 @@ from opsagent import utils
 URI_TIMEOUT=600
 CONFIG_PATH="/var/lib/visualops/opsagent"
 
+def watch_docker_deploy(config, parameter, e=None):
+    elems = ([e]
+             if e
+             else parameter.get("file",[]))
+    return [os.path.join(config['global']['conf_path'],
+                         "docker-config",
+                         parameter.get("container"),
+                         ("%s"%key).replace('/','-'))
+            for key in elems]
+
 class StateAdaptor(object):
 
     ssh_key_type = ['ssh-rsa', 'ecdsa', 'ssh-dss']
@@ -55,7 +65,7 @@ class StateAdaptor(object):
             "tfirst": True,
         },
         "linux.docker.deploy": {
-            "file_key": "config_files",
+            "file_key": watch_docker_deploy,
             "tfirst": False,
             "rerun": True,
         },
@@ -716,11 +726,11 @@ class StateAdaptor(object):
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'count'         : 'count',
-                    'config_files'  : 'config_files',
+                    'files'  : 'files',
                 },
                 "linux.file": {
                     # file
-                    'config_files'  : {
+                    'files'  : {
                         'key': 'path',
                         'value': 'content',
                     }
@@ -837,10 +847,8 @@ class StateAdaptor(object):
                         c_parameter = parameter.copy()
                         for key in parameter.get(org_key):
                             c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["value"]] = parameter[org_key][key]
-                            if module is "linux.docker.deploy" and org_key is "config_files":
-                                host_path = os.path.join(self.config['global']['conf_path'],
-                                                         "docker-config",
-                                                         ("%s"%key).replace('/','-'))
+                            if module is "linux.docker.deploy" and org_key is "files":
+                                host_path = watch_docker_deploy(config, parameter, e=key).pop()
                                 c_parameter[StateAdaptor.mod_map['attributes'][s_module][org_key]["key"]] = host_path
                                 parameter[org_key][key] = host_path
                             else:
@@ -1307,11 +1315,11 @@ class StateAdaptor(object):
 
             elif module in ["linux.docker.running"]:
                 utils.log("DEBUG", "Found docker running module", ("__build_up", self))
-                if addin.get("config_files"):
-                    utils.log("DEBUG","Generating volumes from config_files, current: %s"%(addin["config_files"]),("__build_up",self))
+                if addin.get("files"):
+                    utils.log("DEBUG","Generating volumes from files, current: %s"%(addin["files"]),("__build_up",self))
                     volumes = addin.pop("volumes",{})
-                    for docker_path in addin["config_files"]:
-                        volumes[addin["config_files"][docker_path]] = docker_path
+                    for docker_path in addin["files"]:
+                        volumes[addin["files"][docker_path]] = docker_path
                     if volumes:
                         addin["volumes"] = volumes
                 if addin.get("port_bindings"):
