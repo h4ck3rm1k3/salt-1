@@ -764,7 +764,14 @@ class StateAdaptor(object):
         self.states = None
         self.os_type = runner.os_type if hasattr(runner, 'os_type') else ''
         self.os_release = runner.os_release if hasattr(runner, 'os_release') else ''
-        self.config = runner.config
+        try:
+            self.config = runner.config
+        except Exception:
+            self.config = {
+                'global': {
+                    'conf_path': '/var/lib/visualops/opsagent',
+                },
+            }
 
     def convert(self, step, module, parameter):
         """
