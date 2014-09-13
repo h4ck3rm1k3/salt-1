@@ -862,7 +862,7 @@ class StateAdaptor(object):
                 for org_key in attributes.get(s_module,{}):
                     if type(attributes.get(s_module,{}).get(org_key)) is dict:
                         c_parameter = parameter.copy()
-                        for item in parameter.get(org_key):
+                        for item in parameter.get(org_key,{}):
                             key = item.get("key")
                             value = item.get("value")
                             c_parameter[attributes[s_module][org_key]["value"]] = value
