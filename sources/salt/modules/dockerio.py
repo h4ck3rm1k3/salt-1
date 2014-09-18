@@ -1380,9 +1380,9 @@ def get_images(name=None, quiet=False, all=True, *args, **kwargs):
     client = _get_client()
     status = base_status.copy()
     try:
-        infos = _set_id(client.images(name=name, quiet=quiet, all=all))
+        infos = client.images(name=name, quiet=quiet, all=all)
         for i in range(len(infos)):
-            inf = infos[i]
+            inf = _set_id(infos[i])
             try:
                 inf['Human_Size'] = _sizeof_fmt(int(inf['Size']))
             except ValueError:
