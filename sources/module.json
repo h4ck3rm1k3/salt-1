@@ -351,26 +351,6 @@
                 "en": "\n### Description\nmanage apt repo\n\n### Parameters\n\n*   **`name`** (*required*): the repository name (`/etc/apt/sources.list.d/$name.list` will be created)\n\n* **`content`** (*required*): the source list file content\n\n\t\texample: deb http://www.rabbitmq.com/debian/ testing main\n\t\t\t\t"
             }
         }, 
-        "chef solo": {
-            "distro": null, 
-            "module": "linux.chef.solo", 
-            "parameter": {
-                "dep_containers": {
-                    "required": false, 
-                    "type": "array", 
-                    "visible": true
-                }, 
-                "repository": {
-                    "required": true, 
-                    "type": "line", 
-                    "visible": true
-                }
-            }, 
-            "reference": {
-                "cn": "", 
-                "en": "\n\t\t\t\t"
-            }
-        }, 
         "cmd": {
             "distro": null, 
             "module": "linux.cmd", 

@@ -2345,28 +2345,5 @@ Run a container from a remote image
 #		'ssh'	:	{},
 #		'raid'	:	{},
 #		'iptables'	:	{},
-
-		# chef solo
-		'chef solo'	:	{
-			'module'	:	'linux.chef.solo',
-			'distro'	:	None,
-			'reference'	:	{
-				'en'	:	'''
-				''',
-				'cn'	:	''''''
-			},
-			'parameter'	:	{
-				'repository'		:	{
-					'type'		:	'line',
-					'required'	:	True,
-					'visible'	:	True,
-				},
-				'dep_containers'	:	{
-					'type'		:	'array',
-					'required'	:	False,
-					'visible'	:	True,
-				},
-			},
-		},
 	}
 }
