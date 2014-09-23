@@ -269,7 +269,7 @@ def mod_watch(name, sfun=None, *args, **kw):
                         ' implemented for {0}'.format(sfun))}
 
 
-def pulled(repo, tag=None, force=False, *args, **kwargs):
+def pulled(repo, tag=None, username=None, password=None, email=None, force=False, *args, **kwargs):
     '''
     Pull an image from a docker registry. (`docker pull`)
 
@@ -301,7 +301,7 @@ def pulled(repo, tag=None, force=False, *args, **kwargs):
             comment='Image already pulled: {0}'.format(repo))
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
-    returned = func(repo, tag)
+    returned = func(repo, tag, username=username, password=password,email=email)
     if previous_id != returned['id']:
         changes = {repo: True}
     else:

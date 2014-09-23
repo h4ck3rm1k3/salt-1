@@ -1380,9 +1380,9 @@ def get_images(name=None, quiet=False, all=True, *args, **kwargs):
     client = _get_client()
     status = base_status.copy()
     try:
-        infos = _set_id(client.images(name=name, quiet=quiet, all=all))
+        infos = client.images(name=name, quiet=quiet, all=all)
         for i in range(len(infos)):
-            inf = infos[i]
+            inf = _set_id(infos[i])
             try:
                 inf['Human_Size'] = _sizeof_fmt(int(inf['Size']))
             except ValueError:
@@ -1669,14 +1669,15 @@ def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwar
     client = _get_client()
     status = base_status.copy()
     try:
+        registry, repo_name = docker.auth.resolve_repository_name(repo)
         if username:
-            url = repo.split(":")
-            url = (url[0] if len(url) > 1 else None)
-            lg = login(username,password,email,url)
+            url = (registry if registry else None)
+            lg = login(username,password,email,registry=url,client=client)
             if not lg.get("status"):
                 invalid(status,comment=lg.get("comment"),out=lg.get("out"))
                 return status
 
+        registry, repo_name = docker.auth.resolve_repository_name(repo)
         ret = client.pull(repo, tag=tag)
         if ret:
             logs, infos = _parse_image_multilogs_string(ret, repo)
