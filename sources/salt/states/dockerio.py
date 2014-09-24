@@ -403,6 +403,7 @@ def installed(name,
     ins_image = __salt('docker.inspect_image')
     ins_container = __salt('docker.inspect_container')
     create = __salt('docker.create_container')
+    repo, image = docker.auth.auth.resolve_repository_name(image)
     iinfos = ins_image(image)
     if not iinfos['status']:
 #        # try to pull if doesn't exist
@@ -898,6 +899,7 @@ def vops_pulled(repo,
     out_text = ""
     force_install = False
 
+
     if repo:
         ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
 #        # PUSHED
@@ -916,13 +918,27 @@ def vops_pulled(repo,
         return _invalid(comment="repo missing")
 
     if force_install and containers:
+        if type(containers) is not list:
+            containers = [containers]
         for container in containers:
             a = absent(container)
-            if a.get('changes') and a.get('comment'):
-                out_text += "%s\n"%(a['comment'])
-            if not a.get('result'):
-                a['comment'] = out_text
-                return _ret_status(a)
+            if a.get('comment') and re.search(a['comment'],"not found"):
+                for i in range(1000):
+                    a = absent("%s_%s",(container,i+1))
+                    if a.get('comment') and re.search(a['comment'],"not found"):
+                        break
+                    if a.get('changes') and a.get('comment'):
+                        out_text += "%s\n"%(a['comment'])
+                    if not a.get('result'):
+                        a['comment'] = out_text
+                        return _ret_status(a)
+            else:
+                if a.get('changes') and a.get('comment'):
+                    out_text += "%s\n"%(a['comment'])
+                if not a.get('result'):
+                    a['comment'] = out_text
+                    return _ret_status(a)
+
 
     status = base_status.copy()
     status["comment"] = out_text

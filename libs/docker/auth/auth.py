@@ -60,6 +60,7 @@ def resolve_repository_name(repo_name):
         raise errors.InvalidRepository(
             'Invalid repository name, try "{0}" instead'.format(parts[1]))
 
+    parts = repo_name.split(':', 1)
     return expand_registry_url(parts[0]), parts[1]
 
 

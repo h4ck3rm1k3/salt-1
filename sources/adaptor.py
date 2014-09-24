@@ -713,6 +713,7 @@ class StateAdaptor(object):
                     'username'      : 'username',
                     'password'      : 'password',
                     'email'         : 'email',
+                    'container'     : 'containers',
                 },
                 "linux.docker.running" : {
                     # installed
@@ -1422,7 +1423,7 @@ class StateAdaptor(object):
                     addin["mem_limit"] = (mem_eq[mem[-1].lower()](int(mem[:-1])) if mem[-1].lower() in mem_eq else int(mem))
                 if not addin.get("count"):
                     addin["containers"] = [addin["container"]]
-                else: 
+                else:
                     addin["containers"] = []
                     count = int(addin["count"])
                     i=0
