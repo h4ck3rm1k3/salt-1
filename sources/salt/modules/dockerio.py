@@ -1677,7 +1677,7 @@ def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwar
                 invalid(status,comment=lg.get("comment"),out=lg.get("out"))
                 return status
 
-        registry, repo_name = docker.auth.resolve_repository_name(repo)
+#        registry, repo_name = docker.auth.resolve_repository_name(repo)
         ret = client.pull(repo, tag=tag)
         if ret:
             logs, infos = _parse_image_multilogs_string(ret, repo)
