@@ -403,6 +403,7 @@ def installed(name,
     ins_image = __salt('docker.inspect_image')
     ins_container = __salt('docker.inspect_container')
     create = __salt('docker.create_container')
+    repo, image = docker.auth.auth.resolve_repository_name(image)
     iinfos = ins_image(image)
     if not iinfos['status']:
 #        # try to pull if doesn't exist
