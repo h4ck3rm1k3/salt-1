@@ -1672,7 +1672,7 @@ def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwar
         registry, repo_name = docker.auth.resolve_repository_name(repo)
         if username:
             url = (registry if registry else None)
-            lg = login(username,password,email,registry=url,client=client)
+            lg = login(username,password,email,url=url,client=client)
             if not lg.get("status"):
                 invalid(status,comment=lg.get("comment"),out=lg.get("out"))
                 return status
@@ -1769,7 +1769,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
         registry, repo_name = docker.auth.resolve_repository_name(repo)
         if username:
             url = (registry if registry else None)
-            lg = login(username,password,email,registry=url,client=client)
+            lg = login(username,password,email,url=url,client=client)
 #            #DEBUG
 #            print "####### LOGIN #######"
 #            print lg
