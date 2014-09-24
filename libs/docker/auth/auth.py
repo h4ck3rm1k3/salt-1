@@ -49,8 +49,9 @@ def resolve_repository_name(repo_name):
         raise errors.InvalidRepository(
             'Repository name cannot contain a scheme ({0})'.format(repo_name))
     parts = repo_name.split('/', 1)
-    if '.' not in parts[0] and ':' not in parts[0] and parts[0] != 'localhost':
+    if ('.' not in parts[0]) and (':' not in parts[0]) and (parts[0] != 'localhost'):
         # This is a docker index repo (ex: foo/bar or ubuntu)
+        print "Docker repo"
         return INDEX_URL, repo_name
     if len(parts) < 2:
         raise errors.InvalidRepository(
@@ -60,7 +61,8 @@ def resolve_repository_name(repo_name):
         raise errors.InvalidRepository(
             'Invalid repository name, try "{0}" instead'.format(parts[1]))
 
-    parts = repo_name.split(':', 1)
+    print parts
+#    parts = repo_name.split(':', 1)
     return expand_registry_url(parts[0]), parts[1]
 
 
