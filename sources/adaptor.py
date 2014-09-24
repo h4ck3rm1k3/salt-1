@@ -659,6 +659,7 @@ class StateAdaptor(object):
                     # installed
                     'container'     : 'container',
                     'image'         : 'image',
+                    'tag'           : 'tag',
                     'command'       : 'command',
                     'entry_point'   : 'entry_point',
                     'environment'   : 'environment',
@@ -719,6 +720,7 @@ class StateAdaptor(object):
                     # installed
                     'container'     : 'container',
                     'image'         : 'image',
+                    'tag'           : 'tag',
                     'command'       : 'command',
                     'environment'   : 'environment',
                     'volumes'       : 'volumes',

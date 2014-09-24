@@ -1118,6 +1118,7 @@ def gen_ports(ports,port_bindings,length):
 
 def vops_running(containers,
                  image,
+                 tag=None,
                  entrypoint=None,
                  command=None,
                  environment=None,
@@ -1141,6 +1142,8 @@ def vops_running(containers,
         if not ports or not port_bindings:
             return _invalid(comment="Error generating port bindings (is there enough space between each allocation required?)")
 
+    if tag:
+        image = "%s:%s"%(image,tag)
     comment = ""
 
     for container in containers:

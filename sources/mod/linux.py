@@ -2006,6 +2006,11 @@ Ensure that a container from the given name is running. If not, run it.
 					'required'	:	True,
 					'visible'	:	True
 				},
+				'tag'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True
+				},
 				'count'         :       {
 					'type'		:	'line',
 					'required'	:	False,
