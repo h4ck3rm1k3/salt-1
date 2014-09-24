@@ -713,6 +713,7 @@ class StateAdaptor(object):
                     'username'      : 'username',
                     'password'      : 'password',
                     'email'         : 'email',
+                    'container'     : 'containers',
                 },
                 "linux.docker.running" : {
                     # installed
