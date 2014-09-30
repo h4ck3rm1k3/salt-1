@@ -293,6 +293,8 @@ def pulled(repo, tag=None, username=None, password=None, email=None, force=False
     force
         Pull even if the image is already pulled
     '''
+    repo_base = repo
+    repo = ("%s:%s"%(repo,tag) if tag else repo)
     ins = __salt('docker.inspect_image')
     iinfos = ins(repo)
     if iinfos['status'] and not force:
@@ -301,7 +303,7 @@ def pulled(repo, tag=None, username=None, password=None, email=None, force=False
             comment='Image already pulled: {0}'.format(repo))
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
-    returned = func(repo, tag, username=username, password=password,email=email)
+    returned = func(repo_base, tag, username=username, password=password,email=email)
     if previous_id != returned['id']:
         changes = {repo: True}
     else:
