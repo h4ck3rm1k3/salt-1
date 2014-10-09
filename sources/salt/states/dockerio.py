@@ -254,7 +254,8 @@ def mod_watch(name, sfun=None, *args, **kw):
             if not status.get("result"):
                 kw["ports"] = (ports.pop() if ports else None)
                 kw["port_bindings"] = (port_bindings.pop() if port_bindings else None)
-                status = vops_running_one(container,kw.get("image",None),**kw)
+                kw["image"] = kw.get("image",None)
+                status = vops_running_one(container,**kw)
                 comment += "%s\n"%status.get("comment")
             if not status.get("result"):
                 res = False
