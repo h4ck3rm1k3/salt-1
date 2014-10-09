@@ -14,7 +14,7 @@ from opsagent.exception import StateException
 from opsagent import utils
 
 URI_TIMEOUT=600
-CONFIG_PATH="/var/lib/visualops/opsagent
+CONFIG_PATH="/var/lib/visualops/opsagent"
 
 def watch_docker_deploy(config, parameter, e=None):
     elems = ([e]
