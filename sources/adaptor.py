@@ -638,7 +638,7 @@ class StateAdaptor(object):
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
@@ -661,7 +661,7 @@ class StateAdaptor(object):
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
@@ -700,7 +700,7 @@ class StateAdaptor(object):
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
@@ -727,7 +727,7 @@ class StateAdaptor(object):
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
@@ -788,7 +788,7 @@ class StateAdaptor(object):
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
