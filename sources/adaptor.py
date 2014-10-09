@@ -633,8 +633,15 @@ class StateAdaptor(object):
             'states' : ['vops_pulled'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'libcgroup'},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"libcgroup-dev"},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
+                ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
@@ -649,8 +656,15 @@ class StateAdaptor(object):
             'states' : ['vops_built'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'libcgroup'},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"libcgroup-dev"},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
+                ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
@@ -681,8 +695,15 @@ class StateAdaptor(object):
             'states' : ['vops_running'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'libcgroup'},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"libcgroup-dev"},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
+                ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
@@ -701,8 +722,15 @@ class StateAdaptor(object):
             'states' : ['vops_pushed'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'libcgroup'},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"libcgroup-dev"},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
+                ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
             ]
         },
@@ -755,8 +783,15 @@ class StateAdaptor(object):
             'states' : ['vops_running'],
             'type' : 'docker',
             'require' : [
-                {'linux.yum.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")}] }},
-                {'linux.apt.package' : { 'name' : [{'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")}] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'libcgroup'},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"linux-image-extra-"%os.uname()[2]},
+                    {'key':"libcgroup-dev"},
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
+                ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
             ]
         },

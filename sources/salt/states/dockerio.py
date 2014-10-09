@@ -854,6 +854,7 @@ def vops_pushed(repository,
 #        return _invalid(comment="container name missing")
 
     push = __salt__['docker.push']
+#    repository = ("%s:%s"%(repository,tag) if tag else repository)
     ret = push(repository,username=username,password=password,email=email)
 
 #    # DEBUG
