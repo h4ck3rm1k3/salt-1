@@ -1716,80 +1716,6 @@ manage LVM logical volume (LV)
 			}
 		},
 
-#			'docker run'	:	{
-#				'module'	:	'linux.docker.run',
-#				'distro'	:	None,
-#				'reference'	:	{
-#					'en'	:	'''
-#### Description
-#Run a command in a specific container
-#You can match by either name or hostname
-#
-#### Parameters
-#
-#*   **`name`** (*required*): Command to run in the container
-#
-#*   **`cid`** (*optional*): Container id
-#
-#*   **`state_id`** (*optional*): State id
-#
-#*   **`stateful`** (*optional*): Stateful mode
-#
-#*   **`onlyif`** (*optional*): Only execute cmd if statement on the host success
-#
-#*   **`unless`** (*optional*): Do not execute cmd if statement on the host success
-#
-#*   **`docked_onlyif`** (*optional*): Only execute cmd if statement in the container success
-#
-#*   **`docked_unless`** (*optional*): Do not execute cmd if statement in the container success
-#					''',
-#					'cn'	:	''''''
-#				},
-#				'parameter'	:	{
-#					'name'		:	{
-#						'type'		:	'line',
-#						'required'	:	True,
-#						'visible'	:	True
-#					},
-#					'cid'		:	{
-#						'type'		:	'line',
-#						'required'	:	False,
-#						'visible'	:	True
-#					},
-#					'state_id'		:	{
-#						'type'		:	'line',
-#						'required'	:	False,
-#						'visible'	:	True
-#					},
-#					'stateful'		:	{
-#						'type'		:	'Bool',
-#						'required'	:	False,
-#						'default'	:	False,
-#						'visible'	:	True
-#					},
-#					'onlyif'		:	{
-#						'type'		:	'line',
-#						'required'	:	False,
-#						'visible'	:	True
-#					},
-#					'unless'		:	{
-#						'type'		:	'line',
-#						'required'	:	False,
-#						'visible'	:	True
-#					},
-#					'docked_onlyif'		:	{
-#						'type'		:	'line',
-#						'required'	:	False,
-#						'visible'	:	True
-#					},
-#					'docked_unless'		:	{
-#						'type'		:	'line',
-#						'required'	:	False,
-#						'visible'	:	True
-#					},
-#				}
-#			},
-
 		# pull a docker image from the hub
 		'docker pulled'	:	{
 			'module'	:	'linux.docker.pulled',
@@ -1970,21 +1896,6 @@ Ensure that a container from the given name is running. If not, run it.
 
 *   **`publish_all_ports`** (*optional*): Publish all ports
 
-*   **`links`** (*optional*): Link several container together (if not specified in `Dockerfile`)
-
-		example:
-			name_other_container: alias_for_other_container
-
-*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
-
-		note:
-			If the count parameter is specified, the host port will be incremented by one on each.
-
-		example:
-			5000/tcp: 127.0.0.1:5000
-			6000/tcp: 6000 (default ip: 0.0.0.0)
-			80: 6666 (default protocol: tcp)
-
 *   **`force`** (*optional*): Force (re)build container on each round
 
 *   **`watch`** (*optional*): watch a list of files, restart the container if any of them is modified
@@ -2041,17 +1952,17 @@ Ensure that a container from the given name is running. If not, run it.
 					'required'	:	False,
 					'visible'	:	True
 				},
-				'publish_all_ports'	:	{
-					'type'		:	'bool',
-					'required'	:	False,
-					'default'	:	False,
-					'visible'	:	True
-				},
-				'links'		:	{
-					'type'		:	'dict',
-					'required'	:	False,
-					'visible'	:	True
-				},
+#				'publish_all_ports'	:	{
+#					'type'		:	'bool',
+#					'required'	:	False,
+#					'default'	:	False,
+#					'visible'	:	True
+#				},
+#				'links'		:	{
+#					'type'		:	'dict',
+#					'required'	:	False,
+#					'visible'	:	True
+#				},
 				'port_bindings'		:	{
 					'type'		:	'dict',
 					'required'	:	False,
@@ -2234,21 +2145,6 @@ Run a container from a remote image
 
 *   **`publish_all_ports`** (*optional*): Publish all ports
 
-*   **`links`** (*optional*): Link several container together (if not specified in `Dockerfile`)
-
-		example:
-			name_other_container: alias_for_other_container
-
-*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
-
-		note:
-			If the count parameter is specified, the host port will be incremented by one on each.
-
-		example:
-			5000/tcp: 127.0.0.1:5000
-			6000/tcp: 6000 (default ip: 0.0.0.0)
-			80: 6666 (default protocol: tcp)
-
 *   **`files`** (*optional*): list of persistent files
 
 		example:
@@ -2318,17 +2214,17 @@ Run a container from a remote image
 					'required'	:	False,
 					'visible'	:	True
 				},
-				'publish_all_ports'	:	{
-					'type'		:	'bool',
-					'required'	:	False,
-					'default'	:	False,
-					'visible'	:	True
-				},
-				'links'		:	{
-					'type'		:	'dict',
-					'required'	:	False,
-					'visible'	:	True
-				},
+#				'publish_all_ports'	:	{
+#					'type'		:	'bool',
+#					'required'	:	False,
+#					'default'	:	False,
+#					'visible'	:	True
+#				},
+#				'links'		:	{
+#					'type'		:	'dict',
+#					'required'	:	False,
+#					'visible'	:	True
+#				},
 				'port_bindings'		:	{
 					'type'		:	'dict',
 					'required'	:	False,
