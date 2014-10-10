@@ -698,9 +698,15 @@ class Client(requests.Session):
         else:
             return self._result(response)
 
-    def push(self, repository, stream=False):
+    def push(self, repository, tag=None, stream=False):
+        if not tag:
+            repository, tag = utils.parse_repository_tag(repository)
         registry, repo_name = auth.resolve_repository_name(repository)
+
         u = self._url("/images/{0}/push".format(repository))
+        params = {
+            'tag': tag
+        }
         headers = {}
 
         if utils.compare_version('1.5', self._version) >= 0:
@@ -716,12 +722,15 @@ class Client(requests.Session):
             if authcfg:
                 headers['X-Registry-Auth'] = auth.encode_header(authcfg)
 
-            response = self._post_json(u, None, headers=headers, stream=stream)
+            response = self._post_json(u, None, headers=headers,
+                                       stream=stream, params=params)
         else:
-            response = self._post_json(u, None, stream=stream)
+            response = self._post_json(u, None, stream=stream, params=params)
 
-        return stream and self._stream_helper(response) \
-            or self._result(response)
+        if stream:
+            return self._stream_helper(response)
+        else:
+            return self._result(response)
 
     def remove_container(self, container, v=False, link=False, force=False):
         if isinstance(container, dict):
