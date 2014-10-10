@@ -1742,7 +1742,7 @@ def _push_assemble_error_status(status, ret, logs):
     return status
 
 
-def push(repo, username=None, password=None, email=None, *args, **kwargs):
+def push(repo, tag=None, username=None, password=None, email=None, *args, **kwargs):
     '''
     Pushes an image from any registry
     See this top level documentation to know
@@ -1765,6 +1765,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
     client = _get_client()
     status = base_status.copy()
 
+    repository = ("%s:%s"%(repo,tag) if tag else repo)
     try:
         registry, repo_name = docker.auth.resolve_repository_name(repo)
         if username:
@@ -1779,7 +1780,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
                 return status
 
         registry, repo_name = docker.auth.resolve_repository_name(repo)
-        ret = client.push(repo)
+        ret = client.push(repo, tag)
         logs, infos = _parse_image_multilogs_string(ret, repo_name)
 #        # DEBUG
 #        print "RET=%s"%ret
@@ -1794,9 +1795,9 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
                 status['changes'] = True
             if status.get('changes') != None:
                 status['status'] = True
-                status['id'] = _get_image_infos(repo)['id']
+                status['id'] = _get_image_infos(repository)['id']
                 status['comment'] = 'Image {0}({1}) was pushed'.format(
-                    repo, status['id'])
+                    repository, status['id'])
                 status['out'] = obj_to_print(logs[::-1], "")
             else:
                 _push_assemble_error_status(status, ret, logs)
@@ -1804,7 +1805,7 @@ def push(repo, username=None, password=None, email=None, *args, **kwargs):
             _push_assemble_error_status(status, ret, logs)
 
     except Exception:
-        invalid(status, id=repo, out=traceback.format_exc(), comment="An error has occured pushing repo: %s"%(repo))
+        invalid(status, id=repo, out=traceback.format_exc(), comment="An error has occured pushing repo: %s"%(repository))
 
     return status
 
