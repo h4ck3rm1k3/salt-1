@@ -1538,10 +1538,12 @@ def inspect_image(image, *args, **kwargs):
                 comment='Image does not exist: %s'%(image))
     return _set_id(status)
 
-def _parse_image_multilogs_string(ret, repo):
+def _parse_image_multilogs_string(ret, repo, repotag=None):
     '''
     Parse image log strings into grokable data
     '''
+    if not repotag:
+        repotag = repo
     logs, infos = [], None
     ret = ret.strip()
     if ret and ret.startswith('{') and ret.endswith('}'):
@@ -1565,7 +1567,7 @@ def _parse_image_multilogs_string(ret, repo):
         for l in logs:
             if isinstance(l, dict):
                 if l.get('status') == 'Download complete' and l.get('id'):
-                    infos = _get_image_infos(repo)
+                    infos = _get_image_infos(repotag)
                     break
     return logs, infos
 
@@ -1680,11 +1682,9 @@ def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwar
 #        registry, repo_name = docker.auth.resolve_repository_name(repo)
         ret = client.pull(repo, tag=tag)
         if ret:
-            logs, infos = _parse_image_multilogs_string(ret, repo)
+            repotag = (repo if not tag else '{0}:{1}'.format(repo, tag))
+            logs, infos = _parse_image_multilogs_string(ret, repo, repotag=repotag)
             if infos and infos.get('id', None):
-                repotag = repo
-                if tag:
-                    repotag = '{0}:{1}'.format(repo, tag)
                 valid(status,
                       out=logs if logs else ret,
                       id=infos['id'],
