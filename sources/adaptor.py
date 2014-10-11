@@ -636,11 +636,15 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.yum.package' : { 'name' : [
                     {'key':'libcgroup'},
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
+                ] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
