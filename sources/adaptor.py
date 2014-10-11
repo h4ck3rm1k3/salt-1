@@ -7,6 +7,7 @@ VisualOps OpsAgent states adaptor
 # System imports
 import os
 import urllib2
+import hashlib
 from string import Template
 
 # Internal imports
@@ -635,11 +636,15 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.yum.package' : { 'name' : [
                     {'key':'libcgroup'},
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
+                ] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -658,11 +663,15 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.yum.package' : { 'name' : [
                     {'key':'libcgroup'},
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
+                ] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -697,11 +706,15 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.yum.package' : { 'name' : [
                     {'key':'libcgroup'},
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
+                ] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -724,11 +737,15 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.yum.package' : { 'name' : [
                     {'key':'libcgroup'},
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
+                ] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -785,11 +802,15 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.yum.package' : { 'name' : [
                     {'key':'libcgroup'},
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"linux-image-extra-%s"%os.uname()[2]},
                     {'key':"libcgroup-dev"},
+                ] }},
+                {'linux.yum.package' : { 'name' : [
+                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.rpm")},
+                ] }},
+                {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
                 {'linux.service' : { 'name' : ['docker'] }},
@@ -973,7 +994,8 @@ class StateAdaptor(object):
 
                 # tag
                 #name = addin['names'] if 'names' in addin else addin['name']
-                tag = self.__get_tag(module, None, step, None, state)
+                uid = hashlib.md5(str(addin)).hexdigest()
+                tag = self.__get_tag(module, uid, step, None, state)
                 utils.log("DEBUG", "Generated tag is %s" % tag, ("__salt", self))
                 salt_state[tag] = {
                     self.mod_map[module]['type'] : module_state
@@ -1856,7 +1878,8 @@ def ut():
 
     config = {
         'global' : {
-            'watch' : '/var/lib/visualops/opsagent/watch'
+            'watch' : '/var/lib/visualops/opsagent/watch',
+            'conf_path' : '/var/lib/visualops/opsagent',
         },
         'salt' : {
             'srv_root' : '/srv/salt',
