@@ -1894,9 +1894,17 @@ Ensure that a container from the given name is running. If not, run it.
 		example:
 			0
 
-*   **`publish_all_ports`** (*optional*): Publish all ports
-
 *   **`force`** (*optional*): Force (re)build container on each round
+
+*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
+
+		note:
+			If the count parameter is specified, the host port will be incremented by one on each.
+
+		example:
+			5000/tcp: 127.0.0.1:5000
+			6000/tcp: 6000 (default ip: 0.0.0.0)
+			80: 6666 (default protocol: tcp)
 
 *   **`watch`** (*optional*): watch a list of files, restart the container if any of them is modified
 
@@ -2143,7 +2151,15 @@ Run a container from a remote image
 		example:
 			0
 
-*   **`publish_all_ports`** (*optional*): Publish all ports
+*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port
+
+		note:
+			If the count parameter is specified, the host port will be incremented by one on each.
+
+		example:
+			5000/tcp: 127.0.0.1:5000
+			6000/tcp: 6000 (default ip: 0.0.0.0)
+			80: 6666 (default protocol: tcp)
 
 *   **`files`** (*optional*): list of persistent files
 
