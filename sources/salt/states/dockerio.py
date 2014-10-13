@@ -1030,7 +1030,7 @@ def vops_running_one(container,
     out_text = ""
     ret = installed(
         container,image,entrypoint=entrypoint,command=command,environment=environment,
-        ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force)
+        ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force,hostname=container)
 #    # DEBUG
 #    print "######### INSTALLED #####"
 #    print ret
