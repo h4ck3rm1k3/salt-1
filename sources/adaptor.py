@@ -165,7 +165,7 @@ class StateAdaptor(object):
             # ]
             'require_in' : {
                 'linux.cmd' : {
-                    'apt-get update' : 'name'
+                     'name' : 'apt-get update'
                 }
             }
         },
@@ -182,7 +182,7 @@ class StateAdaptor(object):
             'type' : 'file',
             # 'require_in' : {
             #   'linux.cmd' : {
-            #       'yum-config-manager --enable $name' : 'name'
+            #       'name' : 'yum-config-manager --enable $name'
             #   }
             # }
         },
@@ -196,7 +196,7 @@ class StateAdaptor(object):
             'type' : 'cmd',
             # 'require_in' : {
             #   'linux.cmd' : {
-            #       'yum-config-manager --enable $name' : 'name'
+            #       'name' : 'yum-config-manager --enable $name'
             #   }
             # }
         },
@@ -228,14 +228,6 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [{'key':'git'}] }},
                 {'linux.yum.package' : { 'name' : [{'key':'git'}] }}
             ],
-            # 'require_in' : {
-            #   'linux.dir' : {
-            #       'path'  : 'name',
-            #       'user'  : 'user',
-            #       'group' : 'group',
-            #       'mode'  : 'mode',
-            #   }
-            # }
         },
         'common.svn' : {
             'attributes' : {
@@ -255,14 +247,6 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [{'key':'subversion'}] }},
                 {'linux.yum.package' : { 'name' : [{'key':'subversion'}] }}
             ],
-            # 'require_in' : {
-            #   'linux.dir' : {
-            #       'path'  : 'name',
-            #       'user'  : 'user',
-            #       'group' : 'group',
-            #       'mode'  : 'mode'
-            #   }
-            # },
         },
         'common.hg' : {
             'attributes' : {
@@ -281,14 +265,6 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [{'key':'mercurial'}] }},
                 {'linux.yum.package' : { 'name' : [{'key':'mercurial'}] }}
             ],
-            # 'require_in' : {
-            #   'linux.dir' : {
-            #       'path'  : 'name',
-            #       'user'  : 'user',
-            #       'group' : 'group',
-            #       'mode'  : 'mode'
-            #   }
-            # },
         },
         ## path
         'linux.dir' : {
@@ -646,9 +622,11 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
-            ]
+                ] }}
+            ],
+            'require_in' : {
+                'linux.service' : { 'names' : ['docker']}
+            }
         },
         'linux.docker.built' : {
             'attributes' : {
@@ -673,9 +651,11 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
-            ]
+                ] }}
+            ],
+            'require_in' : {
+                'linux.service' : { 'names' : ['docker'] }
+            }
         },
         'linux.docker.running' : {
             'attributes' : {
@@ -716,9 +696,11 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
-            ]
+                ] }}
+            ],
+            'require_in' : {
+                'linux.service' : { 'names' : ['docker'] }
+            }
         },
         'linux.docker.pushed' : {
             'attributes' : {
@@ -747,9 +729,11 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
-            ]
+                ] }}
+            ],
+            'require_in' : {
+                'linux.service' : { 'names' : ['docker'] }
+            }
         },
         'linux.docker.deploy' : {
             'attributes' : {
@@ -813,8 +797,10 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
-            ]
+            ],
+            'require_in' : {
+                'linux.service' : { 'names' : ['docker'] }
+            }
         },
     }
 
@@ -1646,7 +1632,7 @@ class StateAdaptor(object):
                 for k, v in attrs.iteritems():
                     if not v:   continue
 
-                    req_addin[v] = parameter[k] if k in parameter else k
+                    req_addin[k] = v
 
                 if req_addin:
                     state = self.mod_map[module]['states'][0]
