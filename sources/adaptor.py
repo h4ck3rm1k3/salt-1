@@ -622,11 +622,9 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }}
-            ],
-            'require_in' : {
-                'linux.service' : { 'names' : ['docker']}
-            }
+                ] }},
+                {'linux.service' : { 'name' : ['docker'] }}
+            ]
         },
         'linux.docker.built' : {
             'attributes' : {
@@ -651,11 +649,9 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }}
-            ],
-            'require_in' : {
-                'linux.service' : { 'names' : ['docker'] }
-            }
+                ] }},
+                {'linux.service' : { 'name' : ['docker'] }}
+            ]
         },
         'linux.docker.running' : {
             'attributes' : {
@@ -696,11 +692,9 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }}
-            ],
-            'require_in' : {
-                'linux.service' : { 'names' : ['docker'] }
-            }
+                ] }},
+                {'linux.service' : { 'name' : ['docker'] }}
+            ]
         },
         'linux.docker.pushed' : {
             'attributes' : {
@@ -729,11 +723,9 @@ class StateAdaptor(object):
                 ] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }}
-            ],
-            'require_in' : {
-                'linux.service' : { 'names' : ['docker'] }
-            }
+                ] }},
+                {'linux.service' : { 'name' : ['docker'] }}
+            ]
         },
         'linux.docker.deploy' : {
             'attributes' : {
@@ -797,10 +789,8 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-            ],
-            'require_in' : {
-                'linux.service' : { 'names' : ['docker'] }
-            }
+                {'linux.service' : { 'name' : ['docker'] }}
+            ]
         },
     }
 
@@ -1493,7 +1483,7 @@ class StateAdaptor(object):
 
     def __expand(self):
         """
-            Expand state's requirity and require-in when special module(gem).
+            Expand state's requirity and require-in when special module(gem, docker).
         """
         if not self.states:
             utils.log("DEBUG", "No states to expand and return...", ("__expand", self))
@@ -1544,6 +1534,28 @@ class StateAdaptor(object):
 
                                 if the_state:
                                     state_list.append(the_state)
+
+                    # deal with docker service dependence
+                    elif module == 'docker':
+                        req_list = [ i['require'] for i in chunk if 'require' in i ]
+                        if req_list:
+                            req_list = req_list[0]
+
+                            req_pkg = []
+                            the_srv = None
+                            for r in req_list:
+                                for type, tag in r.iteritems():
+                                    if type == 'pkg':
+                                        req_pkg.append(tag)
+                                    elif type == 'service':
+                                        the_srv = tag
+
+                            if the_srv and len(req_pkg)>0:
+                                req = {'require':[]}
+                                for pkg_tag in req_pkg:
+                                    req['require'].append({'pkg':pkg_tag})
+                                self.states[the_srv]['service'].append(req)
+
         except Exception, e:
             utils.log("DEBUG", "Expand states exception: %s" % str(e), ("__expand", self))
             raise StateException(str(e))
