@@ -2163,6 +2163,8 @@ Run a container from a remote image
 
 *   **`files`** (*optional*): list of persistent files
 
+*   **`force`** (*optional*): Force (re)build container on each round
+
 		example:
 			/etc/nginx/nginx.conf : *content*
 			/etc/my.cnf           : *content*
@@ -2246,11 +2248,17 @@ Run a container from a remote image
 					'required'	:	False,
 					'visible'	:	True
 				},
-                                'files'          :	{
+                                'files'                 :	{
 					'type'		:	'dict',
 					'required'	:	False,
 					'visible'	:	True
-				}
+				},
+				'force'                 :	{
+					'type'		:	'bool',
+					'required'	:	False,
+					'default'	:	False,
+					'visible'	:	True
+				},
 			},
 		},
 

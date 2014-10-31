@@ -778,6 +778,7 @@ class StateAdaptor(object):
                     'links'         : 'links',
                     'port_bindings' : 'port_bindings',
                     'count'         : 'count',
+                    'force'         : 'force',
                     # deploy
                     'files'  : 'files',
                     'watch': 'watch',
