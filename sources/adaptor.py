@@ -165,7 +165,7 @@ class StateAdaptor(object):
             # ]
             'require_in' : {
                 'linux.cmd' : {
-                    'apt-get update' : 'name'
+                     'name' : 'apt-get update'
                 }
             }
         },
@@ -182,7 +182,7 @@ class StateAdaptor(object):
             'type' : 'file',
             # 'require_in' : {
             #   'linux.cmd' : {
-            #       'yum-config-manager --enable $name' : 'name'
+            #       'name' : 'yum-config-manager --enable $name'
             #   }
             # }
         },
@@ -196,7 +196,7 @@ class StateAdaptor(object):
             'type' : 'cmd',
             # 'require_in' : {
             #   'linux.cmd' : {
-            #       'yum-config-manager --enable $name' : 'name'
+            #       'name' : 'yum-config-manager --enable $name'
             #   }
             # }
         },
@@ -228,14 +228,6 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [{'key':'git'}] }},
                 {'linux.yum.package' : { 'name' : [{'key':'git'}] }}
             ],
-            # 'require_in' : {
-            #   'linux.dir' : {
-            #       'path'  : 'name',
-            #       'user'  : 'user',
-            #       'group' : 'group',
-            #       'mode'  : 'mode',
-            #   }
-            # }
         },
         'common.svn' : {
             'attributes' : {
@@ -255,14 +247,6 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [{'key':'subversion'}] }},
                 {'linux.yum.package' : { 'name' : [{'key':'subversion'}] }}
             ],
-            # 'require_in' : {
-            #   'linux.dir' : {
-            #       'path'  : 'name',
-            #       'user'  : 'user',
-            #       'group' : 'group',
-            #       'mode'  : 'mode'
-            #   }
-            # },
         },
         'common.hg' : {
             'attributes' : {
@@ -281,14 +265,6 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [{'key':'mercurial'}] }},
                 {'linux.yum.package' : { 'name' : [{'key':'mercurial'}] }}
             ],
-            # 'require_in' : {
-            #   'linux.dir' : {
-            #       'path'  : 'name',
-            #       'user'  : 'user',
-            #       'group' : 'group',
-            #       'mode'  : 'mode'
-            #   }
-            # },
         },
         ## path
         'linux.dir' : {
@@ -647,7 +623,7 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
+                {'linux.service' : { 'name' : ['docker'] }}
             ]
         },
         'linux.docker.built' : {
@@ -674,7 +650,7 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
+                {'linux.service' : { 'name' : ['docker'] }}
             ]
         },
         'linux.docker.running' : {
@@ -717,7 +693,7 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
+                {'linux.service' : { 'name' : ['docker'] }}
             ]
         },
         'linux.docker.pushed' : {
@@ -748,7 +724,7 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
+                {'linux.service' : { 'name' : ['docker'] }}
             ]
         },
         'linux.docker.deploy' : {
@@ -814,7 +790,7 @@ class StateAdaptor(object):
                 {'linux.apt.package' : { 'name' : [
                     {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
                 ] }},
-                {'linux.service' : { 'name' : ['docker'] }},
+                {'linux.service' : { 'name' : ['docker'] }}
             ]
         },
     }
@@ -1508,7 +1484,7 @@ class StateAdaptor(object):
 
     def __expand(self):
         """
-            Expand state's requirity and require-in when special module(gem).
+            Expand state's requirity and require-in when special module(gem, docker).
         """
         if not self.states:
             utils.log("DEBUG", "No states to expand and return...", ("__expand", self))
@@ -1559,6 +1535,28 @@ class StateAdaptor(object):
 
                                 if the_state:
                                     state_list.append(the_state)
+
+                    # deal with docker service dependence
+                    elif module == 'docker':
+                        req_list = [ i['require'] for i in chunk if 'require' in i ]
+                        if req_list:
+                            req_list = req_list[0]
+
+                            req_pkg = []
+                            the_srv = None
+                            for r in req_list:
+                                for type, tag in r.iteritems():
+                                    if type == 'pkg':
+                                        req_pkg.append(tag)
+                                    elif type == 'service':
+                                        the_srv = tag
+
+                            if the_srv and len(req_pkg)>0:
+                                req = {'require':[]}
+                                for pkg_tag in req_pkg:
+                                    req['require'].append({'pkg':pkg_tag})
+                                self.states[the_srv]['service'].append(req)
+
         except Exception, e:
             utils.log("DEBUG", "Expand states exception: %s" % str(e), ("__expand", self))
             raise StateException(str(e))
@@ -1647,7 +1645,7 @@ class StateAdaptor(object):
                 for k, v in attrs.iteritems():
                     if not v:   continue
 
-                    req_addin[v] = parameter[k] if k in parameter else k
+                    req_addin[k] = v
 
                 if req_addin:
                     state = self.mod_map[module]['states'][0]
