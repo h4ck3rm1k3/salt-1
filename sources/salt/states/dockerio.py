@@ -927,7 +927,7 @@ def vops_pulled(repo,
             a = absent(container)
             if a.get('comment') and re.search(a['comment'],"not found"):
                 for i in range(1000):
-                    a = absent("%s_%s",(container,i+1))
+                    a = absent("%s_%s"%(container,i+1))
                     if a.get('comment') and re.search(a['comment'],"not found"):
                         break
                     if a.get('changes') and a.get('comment'):
@@ -1135,6 +1135,7 @@ def vops_running(containers,
                  links=None,
                  port_bindings=None,
                  force=False,
+                 count=0,
                  *args, **kwargs):
 
     if not containers:
@@ -1149,6 +1150,8 @@ def vops_running(containers,
         image = "%s:%s"%(image,tag)
     comment = ""
 
+    result = True
+    i = 0
     for container in containers:
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
@@ -1169,6 +1172,21 @@ def vops_running(containers,
         comment += "%s\n"%status.get("comment")
         if status.get("status") is False:
             break
+        i += 1
+
+    container_root = container.pop()
+    while i:
+        container = ("%s_%s"%(container_root.rsplit("_",1),i+1)
+                     if count
+                     else "%s_%s"%(container_root,i))
+        abs_status = absent(container)
+        if re.search(abs_status.get("comment",""),"not found"):
+            break
+        comment += "%s\n"%abs_status.get("comment")
+        if abs_status.get("status") is False:
+            status["status"] = False
+            break
+        i += 1
 
     status["comment"] = comment
     return status
