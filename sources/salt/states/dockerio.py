@@ -1151,8 +1151,35 @@ def vops_running(containers,
     comment = ""
 
     result = True
+    if containers:
+        i = count
+        container_root = containers[0]
+        while True:
+            container = ("%s_%s"%(container_root.rsplit("_",1)[0],i+1)
+                         if count
+                         else "%s_%s"%(container_root,i+1))
+            tmp_status = absent(container)
+            if re.search(tmp_status.get("comment",""),"not found"):
+                break
+            status = tmp_status
+            comment += "%s\n"%status.get("comment")
+            if status.get("status") is False:
+                result = False
+                break
+            i += 1
+        if count:
+            container = container_root.rsplit("_",1)[0]
+            tmp_status = absent(container)
+            if not re.search(tmp_status.get("comment",""),"not found"):
+                status = tmp_status
+                comment += "%s\n"%status.get("comment")
+                if status.get("status") is False:
+                    result = False
+
     i = 0
     for container in containers:
+        if result is False:
+            break
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
         status = vops_running_one(container,
@@ -1171,20 +1198,6 @@ def vops_running(containers,
                                   force=force)
         comment += "%s\n"%status.get("comment")
         if status.get("status") is False:
-            break
-        i += 1
-
-    container_root = container.pop()
-    while i:
-        container = ("%s_%s"%(container_root.rsplit("_",1),i+1)
-                     if count
-                     else "%s_%s"%(container_root,i))
-        abs_status = absent(container)
-        if re.search(abs_status.get("comment",""),"not found"):
-            break
-        comment += "%s\n"%abs_status.get("comment")
-        if abs_status.get("status") is False:
-            status["status"] = False
             break
         i += 1
 
