@@ -1156,7 +1156,7 @@ def vops_running(containers,
         container_root = containers[0]
         while True:
             container = ("%s_%s"%(container_root.rsplit("_",1)[0],i+1)
-                         if count
+                         if count != 0
                          else "%s_%s"%(container_root,i+1))
             tmp_status = absent(container)
             if re.search(tmp_status.get("comment",""),"not found"):
@@ -1167,7 +1167,7 @@ def vops_running(containers,
                 result = False
                 break
             i += 1
-        if count:
+        if count != 0:
             container = container_root.rsplit("_",1)[0]
             tmp_status = absent(container)
             if not re.search(tmp_status.get("comment",""),"not found"):
