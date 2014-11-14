@@ -1150,6 +1150,8 @@ def vops_running(containers,
         image = "%s:%s"%(image,tag)
     comment = ""
 
+    count = int(count)
+
     result = True
     if containers:
         i = count
