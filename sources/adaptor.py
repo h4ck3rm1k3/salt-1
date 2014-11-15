@@ -1713,7 +1713,7 @@ class StateAdaptor(object):
 
                             if attr_value.find('$')>=0:
                                 try:
-                                    self.states[idx][tag][module][attr_idx][attr_name] = Template(attr_value).substitute(parameter)
+                                    self.states[idx][tag][module][attr_idx][attr_name] = Template(attr_value).safe_substitute(parameter)
                                 except Exception, e:
                                     utils.log("WARNING", "Render module %s attribute %s value %s failed: %s" % (module, attr_name, str(attr_value), e), ("__render",self))
 
