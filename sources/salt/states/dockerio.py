@@ -927,7 +927,7 @@ def vops_pulled(repo,
             a = absent(container)
             if a.get('comment') and re.search(a['comment'],"not found"):
                 for i in range(1000):
-                    a = absent("%s_%s",(container,i+1))
+                    a = absent("%s_%s"%(container,i+1))
                     if a.get('comment') and re.search(a['comment'],"not found"):
                         break
                     if a.get('changes') and a.get('comment'):
@@ -1135,6 +1135,7 @@ def vops_running(containers,
                  links=None,
                  port_bindings=None,
                  force=False,
+                 count=0,
                  *args, **kwargs):
 
     if not containers:
@@ -1149,7 +1150,38 @@ def vops_running(containers,
         image = "%s:%s"%(image,tag)
     comment = ""
 
+    count = int(count)
+
+    result = True
+    if containers:
+        i = count
+        container_root = containers[0]
+        while True:
+            container = ("%s_%s"%(container_root.rsplit("_",1)[0],i+1)
+                         if count != 0
+                         else "%s_%s"%(container_root,i+1))
+            tmp_status = absent(container)
+            if re.search("not found",tmp_status.get("comment","")):
+                break
+            status = tmp_status
+            comment += "%s\n"%status.get("comment")
+            if status.get("status") is False:
+                result = False
+                break
+            i += 1
+        if count != 0:
+            container = container_root.rsplit("_",1)[0]
+            tmp_status = absent(container)
+            if not re.search("not found",tmp_status.get("comment","")):
+                status = tmp_status
+                comment += "%s\n"%status.get("comment")
+                if status.get("status") is False:
+                    result = False
+
+    i = 0
     for container in containers:
+        if result is False:
+            break
         port = (ports.pop() if ports else None)
         port_binding = (port_bindings.pop() if port_bindings else None)
         status = vops_running_one(container,
@@ -1169,6 +1201,7 @@ def vops_running(containers,
         comment += "%s\n"%status.get("comment")
         if status.get("status") is False:
             break
+        i += 1
 
     status["comment"] = comment
     return status
