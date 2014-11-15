@@ -1715,8 +1715,7 @@ class StateAdaptor(object):
                                 try:
                                     self.states[idx][tag][module][attr_idx][attr_name] = Template(attr_value).substitute(parameter)
                                 except Exception, e:
-                                    utils.log("WARNING", "Render module %s attribute %s value %s failed" % (module, attr_name, str(attr_value)), ("__render",self))
-                                    pass
+                                    utils.log("WARNING", "Render module %s attribute %s value %s failed: %s" % (module, attr_name, str(attr_value), e), ("__render",self))
 
     def __check_module(self, module, parameter):
         """
