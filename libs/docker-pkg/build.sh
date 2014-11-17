@@ -67,6 +67,7 @@ EOF
 
     if [ $? -eq 0 ]; then
         echo "Build succeed."
+        cp docker-*.rpm $PREV/
     else
         echo "Build failed."
     fi
