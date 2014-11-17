@@ -101,6 +101,7 @@ case "$1" in
             $DOCKER_OPTS \
             >> "$DOCKER_LOGFILE" 2>&1
         log_end_msg $?
+        sleep 1
         ;;
 
     stop)
