@@ -39,13 +39,13 @@ fi
 chmod 755 ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/*
 cp -rf ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/{docker,mock.py,requests,six.py,websocket.py} ${S_OA_PACKAGE_PATH}/
 if [ "$S_PLATFORM" = "APT" ]; then
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.gpg -O ${S_OA_CONF_DIR}/docker.deb.gpg
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.gpg.cksum -O ${S_OA_CONF_DIR}/docker.deb.gpg.cksum
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb. -O ${S_OA_CONF_DIR}/docker.deb
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.cksum -O ${S_OA_CONF_DIR}/docker.deb.cksum
     DOCKER_NAME="docker.deb"
 #    cp -f ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/docker-pkg/docker_${DOCKER_DEB_VERSION}_all.deb ${S_OA_CONF_DIR}/docker.deb
 elif [ "$S_PLATFORM" = "YUM" ]; then
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm.gpg -O ${S_OA_CONF_DIR}/docker.rpm.gpg
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm.gpg.cksum -O ${S_OA_CONF_DIR}/docker.rpm.gpg.cksum
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm -O ${S_OA_CONF_DIR}/docker.rpm
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm.cksum -O ${S_OA_CONF_DIR}/docker.rpm.cksum
     DOCKER_NAME="docker.rpm"
 #    cp -f ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/docker-pkg/docker-${DOCKER_RPM_VERSION}.x86_64.rpm ${S_OA_CONF_DIR}/docker.rpm
 fi
@@ -53,24 +53,24 @@ fi
 # get docker package
 if [ "$DOCKER_NAME" != "" ]; then
     cd ${S_OA_CONF_DIR}
-    REF_CKSUM="$(cat ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg.cksum)"
-    CUR_CKSUM="$(cksum ${DOCKER_NAME}.gpg)"
+    REF_CKSUM="$(cat ${S_OA_CONF_DIR}/${DOCKER_NAME}.cksum | cut -d ' ' -f 1,2)"
+    CUR_CKSUM="$(cksum ${DOCKER_NAME} | cut -d ' ' -f 1,2)"
     cd -
     if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
-        echo "FATAL: Checksum failed on ${DOCKER_NAME}.gpg" >&2
+        echo "FATAL: Checksum failed on ${DOCKER_NAME}" >&2
         exit 2
     fi
 
-    chmod 640 ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
+    chmod 640 ${S_OA_CONF_DIR}/${DOCKER_NAME}
 
-    gpg --no-tty --import ${OA_GPG_KEY}
-    rm -f ${S_OA_CONF_DIR}/${DOCKER_NAME}
-    gpg --no-tty --verify ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
-    if [ $? -eq 0 ]; then
-        gpg --no-tty --output ${S_OA_CONF_DIR}/${DOCKER_NAME} --decrypt ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
-        chmod 640 ${S_OA_CONF_DIR}/${DOCKER_NAME}
-    else
-        echo "FATAL: couldn't verify ${DOCKER_NAME}.gpg" >&2
-        exit 1
-    fi
+#    gpg --no-tty --import ${OA_GPG_KEY}
+#    rm -f ${S_OA_CONF_DIR}/${DOCKER_NAME}
+#    gpg --no-tty --verify ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
+#    if [ $? -eq 0 ]; then
+#        gpg --no-tty --output ${S_OA_CONF_DIR}/${DOCKER_NAME} --decrypt ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
+#        chmod 640 ${S_OA_CONF_DIR}/${DOCKER_NAME}
+#    else
+#        echo "FATAL: couldn't verify ${DOCKER_NAME}.gpg" >&2
+#        exit 1
+#    fi
 fi
