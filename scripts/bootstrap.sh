@@ -39,7 +39,7 @@ fi
 chmod 755 ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/*
 cp -rf ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/{docker,mock.py,requests,six.py,websocket.py} ${S_OA_PACKAGE_PATH}/
 if [ "$S_PLATFORM" = "APT" ]; then
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb. -O ${S_OA_CONF_DIR}/docker.deb
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb -O ${S_OA_CONF_DIR}/docker.deb
     wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.cksum -O ${S_OA_CONF_DIR}/docker.deb.cksum
     DOCKER_NAME="docker.deb"
 #    cp -f ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/docker-pkg/docker_${DOCKER_DEB_VERSION}_all.deb ${S_OA_CONF_DIR}/docker.deb
