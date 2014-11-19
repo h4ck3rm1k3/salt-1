@@ -7,7 +7,11 @@
 ##
 
 USAGE="$0 deb|rpm [path]"
-VERSION="1.2.0"
+VERSION="1.3.1"
+
+function get_docker() {
+    curl -sSL -O https://get.docker.com/builds/Linux/x86_64/docker-$VERSION
+}
 
 function deb() {
     PREV=$PWD
@@ -71,9 +75,11 @@ EOF
 
 case $1 in
     deb)
+        get_docker
         deb $2
         ;;
     rpm)
+        get_docker
         rpm $2
         ;;
     *)

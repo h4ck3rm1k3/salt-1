@@ -58,6 +58,7 @@ start() {
         done
         success
         echo
+        sleep 1
     else
         failure
         echo
