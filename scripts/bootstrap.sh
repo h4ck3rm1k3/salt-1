@@ -39,15 +39,25 @@ fi
 chmod 755 ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/*
 cp -rf ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/{docker,mock.py,requests,six.py,websocket.py} ${S_OA_PACKAGE_PATH}/
 if [ "$S_PLATFORM" = "APT" ]; then
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb -O ${S_OA_CONF_DIR}/docker.deb
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.cksum -O ${S_OA_CONF_DIR}/docker.deb.cksum
     DOCKER_NAME="docker.deb"
-#    cp -f ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/docker-pkg/docker_${DOCKER_DEB_VERSION}_all.deb ${S_OA_CONF_DIR}/docker.deb
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.cksum -O ${S_OA_CONF_DIR}/docker.deb.cksum
+    cd ${S_OA_CONF_DIR}
+    REF_CKSUM="$(cat ${S_OA_CONF_DIR}/${DOCKER_NAME}.cksum | cut -d ' ' -f 1,2)"
+    CUR_CKSUM="$(cksum ${DOCKER_NAME} | cut -d ' ' -f 1,2)"
+    cd -
+    if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
+        wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb -O ${S_OA_CONF_DIR}/docker.deb
+    fi
 elif [ "$S_PLATFORM" = "YUM" ]; then
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm -O ${S_OA_CONF_DIR}/docker.rpm
-    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm.cksum -O ${S_OA_CONF_DIR}/docker.rpm.cksum
     DOCKER_NAME="docker.rpm"
-#    cp -f ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/docker-pkg/docker-${DOCKER_RPM_VERSION}.x86_64.rpm ${S_OA_CONF_DIR}/docker.rpm
+    wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm.cksum -O ${S_OA_CONF_DIR}/docker.rpm.cksum
+    cd ${S_OA_CONF_DIR}
+    REF_CKSUM="$(cat ${S_OA_CONF_DIR}/${DOCKER_NAME}.cksum | cut -d ' ' -f 1,2)"
+    CUR_CKSUM="$(cksum ${DOCKER_NAME} | cut -d ' ' -f 1,2)"
+    cd -
+    if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
+        wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm -O ${S_OA_CONF_DIR}/docker.rpm
+    fi
 fi
 
 # get docker package
