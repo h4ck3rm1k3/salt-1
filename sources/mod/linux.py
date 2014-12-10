@@ -38,6 +38,7 @@ manage apt packages
 					'option'	:	['latest', 'removed', 'purged'],	# autofill options to show in IDE
 					'default'	:	'',			# the default value to show in IDE,
 					'required'	:	True,
+					'visible'	:	True
 				},
 				'repo'	:	{
 					'type'		:	'line',
