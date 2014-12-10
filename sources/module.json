@@ -285,7 +285,8 @@
                         "purged"
                     ], 
                     "required": true, 
-                    "type": "dict"
+                    "type": "dict", 
+                    "visible": true
                 }, 
                 "repo": {
                     "required": false, 
