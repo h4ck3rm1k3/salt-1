@@ -1098,6 +1098,51 @@
                 "en": "\n### Description\nmanage mount points\n\n### Parameters\n\n*   **`path`** (*required*): the path of the mount point\n\n*   **`device`** (*required*): the device name\n\n*   **`filesystem`** (*required*): the file system type of the device\n\n*   **`fstab`** (*optional*): whether to save in /etc/fstab or not, by default ***`false`***\n\n*   **`opts`** (*optional*): a list of options for /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab is `true`\n\n*   **`dump`** (*optional*): the dump value in /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab` is `true`\n\n*   **`pass`** (*optional*): the pass value in /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab` is `true`\n\t\t\t\t"
             }
         }, 
+        "puppet apply": {
+            "distro": null, 
+            "module": "linux.puppet.apply", 
+            "parameter": {
+                "arguments": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "manifests": {
+                    "required": true, 
+                    "type": "array", 
+                    "visible": true
+                }, 
+                "version": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nApply a puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t2.7\n\t\t\t\t"
+            }
+        }, 
+        "puppet run": {
+            "distro": null, 
+            "module": "linux.puppet.run", 
+            "parameter": {
+                "arguments": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "version": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nRun a puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t2.7\n\t\t\t\t"
+            }
+        }, 
         "pv": {
             "distro": null, 
             "module": "linux.lvm.pv", 

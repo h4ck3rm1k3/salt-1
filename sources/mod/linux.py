@@ -2265,6 +2265,95 @@ Run a container from a remote image
 
 
 
+
+		# Apply a puppet manifest
+		'puppet apply'	:	{
+			'module'	:	'linux.puppet.apply',
+			'distro'	:	None,
+			'reference'	:	{
+				'en'	:	'''
+### Description
+Apply a puppet manifest
+
+### Parameters
+
+*   **`manifests`** (*required*): Manifests to run
+
+		example:
+			/path/to/manifest1
+			/path/to/manifest2
+
+*   **`arguments`** (*optional*): Arguments to the manifest
+
+		example:
+			modulepath: /a/b/modules
+			tags:       basefiles::edit,apache::server
+
+*   **`version`** (*optional*): Puppet version
+
+		example:
+			2.7
+				''',
+				'cn'	:	''''''
+			},
+			'parameter'	:	{
+				'manifests'		:	{
+					'type'		:	'array',
+					'required'	:	True,
+					'visible'	:	True,
+				},
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'version'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True
+				},
+			},
+		},
+		# Run a puppet manifest round
+		'puppet run'	:	{
+			'module'	:	'linux.puppet.run',
+			'distro'	:	None,
+			'reference'	:	{
+				'en'	:	'''
+### Description
+Run a puppet round
+
+### Parameters
+
+*   **`arguments`** (*optional*): Arguments to the round
+
+		example:
+			tags:       basefiles::edit,apache::server
+
+*   **`version`** (*optional*): Puppet version
+
+		example:
+			2.7
+				''',
+				'cn'	:	''''''
+			},
+			'parameter'	:	{
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'version'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True
+				},
+			},
+		},
+
+
+
+
 #		'ntp'	:	{},
 #		'quota'	:	{},
 #		'ssh'	:	{},

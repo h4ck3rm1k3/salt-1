@@ -1,6 +1,7 @@
 '''
 VisualOps OpsAgent states adaptor
 @author: Michael (michael@mc2.io)
+         + Thibault Bronchain (thibault@visualops.io)
 '''
 
 
@@ -17,6 +18,7 @@ from opsagent import utils
 URI_TIMEOUT=600
 CONFIG_PATH="/var/lib/visualops/opsagent"
 
+# Watch special action for docker deploy state (config file change)
 def watch_docker_deploy(config, parameter, e=None):
     elems = ([e]
              if e
@@ -26,6 +28,13 @@ def watch_docker_deploy(config, parameter, e=None):
                          parameter.get("container"),
                          ("%s"%key).replace('/','-'))
             for key in elems]
+
+# Puppet special requirements
+def puppet_req(module, cur_parameter, cur_module):
+    return { 'name' : [
+        {'key':'puppet','value':cur_parameter.get("version",None)},
+    ]}
+
 
 class StateAdaptor(object):
 
@@ -793,6 +802,29 @@ class StateAdaptor(object):
                 {'linux.service' : { 'name' : ['docker'] }}
             ]
         },
+
+        # Puppet
+        'linux.puppet.apply' : {
+            'attributes' : {
+                "manifests": "manifests",
+                "arguments": "arguments",
+            },
+            'states' : ['apply'],
+            'type' : 'puppet',
+            'require' : [
+                {'common.gem.package' : puppet_req},
+            ]
+        },
+        'linux.puppet.run' : {
+            'attributes' : {
+                "arguments": "arguments",
+            },
+            'states' : ['run'],
+            'type' : 'puppet',
+            'require' : [
+                {'common.gem.package' : puppet_req},
+            ]
+        },
     }
 
 
@@ -932,7 +964,7 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Begin to generate requirity ...", ("__salt", self))
                 require = []
                 if 'require' in self.mod_map[module]:
-                    req_state = self.__get_require(self.mod_map[module]['require'])
+                    req_state = self.__get_require(self.mod_map[module]['require'], module, parameter)
                     if req_state:
                         for item in req_state:
                             for req_tag, req_value in item.iteritems():
@@ -1575,7 +1607,7 @@ class StateAdaptor(object):
         if state:   tag += '_' + state
         return '_' + tag
 
-    def __get_require(self, require):
+    def __get_require(self, require, cur_parameter, cur_module):
         """
             Generate require state.
         """
@@ -1613,6 +1645,9 @@ class StateAdaptor(object):
                     if module in ['linux.service'] and parameter.get('pkg_mgr'):
                         if parameter['pkg_mgr'] != self.__agent_pkg_module: continue
                         del parameter['pkg_mgr']
+
+                    if hasattr(parameter, '__call__'):
+                        parameter = parameter(module, cur_parameter, cur_module)
 
                     the_require_state = self.__salt('require', module, parameter)
 
