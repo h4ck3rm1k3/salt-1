@@ -352,6 +352,71 @@
                 "en": "\n### Description\nmanage apt repo\n\n### Parameters\n\n*   **`name`** (*required*): the repository name (`/etc/apt/sources.list.d/$name.list` will be created)\n\n* **`content`** (*required*): the source list file content\n\n\t\texample: deb http://www.rabbitmq.com/debian/ testing main\n\t\t\t\t"
             }
         }, 
+        "chef client": {
+            "distro": null, 
+            "module": "linux.chef.client", 
+            "parameter": {
+                "arguments": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "client_key": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "config": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "server": {
+                    "required": true, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "version": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nRun a Chef client\n\n### Parameters\n\n*   **`server`** (*required*): URI to remote Chef server\n\n\t\texample:\n\t\t\thttps://localhost\n\n*   **`client_key`** (*optional*): Path to client authentication key\n\n\t\texample:\n\t\t\t/path/to/client/key\n\n*   **`config`** (*optional*): Path to chef config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation)\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t7\n\t\t\t\t"
+            }
+        }, 
+        "chef solo": {
+            "distro": null, 
+            "module": "linux.chef.solo", 
+            "parameter": {
+                "arguments": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "config": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "recipe_url": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "version": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nRun a Chef solo\n\n### Parameters\n\n*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes\n\n\t\texample:\n\t\t\thttp://server.com/recipe.tgz\n\n*   **`config`** (*optional*): Path to Chef config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t7\n\t\t\t\t"
+            }
+        }, 
         "cmd": {
             "distro": null, 
             "module": "linux.cmd", 
@@ -1121,7 +1186,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nApply a puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t2.7\n\t\t\t\t"
+                "en": "\n### Description\nApply a puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7\n\t\t\t\t"
             }
         }, 
         "puppet run": {
@@ -1141,7 +1206,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t2.7\n\t\t\t\t"
+                "en": "\n### Description\nRun a puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7\n\t\t\t\t"
             }
         }, 
         "pv": {

@@ -84,3 +84,7 @@ if [ "$DOCKER_NAME" != "" ]; then
 #        exit 1
 #    fi
 fi
+
+# get chef bootstrap script
+wget -nv "https://www.opscode.com/chef/install.sh" -O ${S_OA_CONF_DIR}/chef-install.sh
+#chmod 555 ${S_OA_CONF_DIR}/chef-install.sh

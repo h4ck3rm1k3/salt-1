@@ -2284,7 +2284,7 @@ Apply a puppet manifest
 			/path/to/manifest1
 			/path/to/manifest2
 
-*   **`arguments`** (*optional*): Arguments to the manifest
+*   **`arguments`** (*optional*): Arguments to the manifest, passed to the puppet binary (see puppet documentation)
 
 		example:
 			modulepath: /a/b/modules
@@ -2293,7 +2293,7 @@ Apply a puppet manifest
 *   **`version`** (*optional*): Puppet version
 
 		example:
-			2.7
+			3.7
 				''',
 				'cn'	:	''''''
 			},
@@ -2326,7 +2326,7 @@ Run a puppet round
 
 ### Parameters
 
-*   **`arguments`** (*optional*): Arguments to the round
+*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)
 
 		example:
 			tags:       basefiles::edit,apache::server
@@ -2334,7 +2334,7 @@ Run a puppet round
 *   **`version`** (*optional*): Puppet version
 
 		example:
-			2.7
+			3.7
 				''',
 				'cn'	:	''''''
 			},
@@ -2351,6 +2351,135 @@ Run a puppet round
 				},
 			},
 		},
+
+
+
+
+		# Run a chef solo recipe
+		'chef solo'	:	{
+			'module'	:	'linux.chef.solo',
+			'distro'	:	None,
+			'reference'	:	{
+				'en'	:	'''
+### Description
+Run a Chef solo
+
+### Parameters
+
+*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes
+
+		example:
+			http://server.com/recipe.tgz
+
+*   **`config`** (*optional*): Path to Chef config file
+
+		example:
+			/path/to/config/file
+
+*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)
+
+		example:
+			group:     root
+			log_level: warning
+
+*   **`version`** (*optional*): Chef version
+
+		example:
+			7
+				''',
+				'cn'	:	''''''
+			},
+			'parameter'	:	{
+				'recipe_url'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'config'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'version'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True
+				},
+			},
+		},
+		# Run a chef client
+		'chef client'	:	{
+			'module'	:	'linux.chef.client',
+			'distro'	:	None,
+			'reference'	:	{
+				'en'	:	'''
+### Description
+Run a Chef client
+
+### Parameters
+
+*   **`server`** (*required*): URI to remote Chef server
+
+		example:
+			https://localhost
+
+*   **`client_key`** (*optional*): Path to client authentication key
+
+		example:
+			/path/to/client/key
+
+*   **`config`** (*optional*): Path to chef config file
+
+		example:
+			/path/to/config/file
+
+*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation)
+
+		example:
+			group:     root
+			log_level: warning
+
+*   **`version`** (*optional*): Chef version
+
+		example:
+			7
+				''',
+				'cn'	:	''''''
+			},
+			'parameter'	:	{
+				'server'		:	{
+					'type'		:	'line',
+					'required'	:	True,
+					'visible'	:	True,
+				},
+				'client_key'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'config'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'version'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True
+				},
+			},
+		},
+
 
 
 

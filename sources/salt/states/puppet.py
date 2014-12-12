@@ -23,7 +23,7 @@ def _invalid(name="",changes={},comment="",stdout=''):
 
 
 # Apply recipe manifest
-def apply(manifests, arguments):
+def apply(manifests, arguments=[]):
     if not manifests:
         return _invalid(comment="No file specified")
     comment = ""

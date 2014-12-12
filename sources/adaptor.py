@@ -34,6 +34,11 @@ def puppet_req(module, cur_parameter, cur_module):
     return { 'name' : [
         {'key':'puppet','value':cur_parameter.get("version",None)},
     ]}
+# Chef special requirements
+def chef_req(module, cur_parameter, cur_module):
+    return ("bash %s/chef-install.sh -v %s"%(CONFIG_PATH,cur_parameter["version"])
+            if cur_parameter.get("version",None)
+            else "/bin/sh %s/chef-install.sh"%(CONFIG_PATH))
 
 
 class StateAdaptor(object):
@@ -823,6 +828,32 @@ class StateAdaptor(object):
             'type' : 'puppet',
             'require' : [
                 {'common.gem.package' : puppet_req},
+            ]
+        },
+        # Chef
+        'linux.chef.client' : {
+            'attributes' : {
+                "server": "server",
+                "client_key": "client_key",
+                "config": "config",
+                "arguments": "arguments",
+            },
+            'states' : ['client'],
+            'type' : 'chef',
+            'require' : [
+                {'linux.cmd' : chef_req},
+            ]
+        },
+        'linux.chef.solo' : {
+            'attributes' : {
+                "recipe_url": "recipe_url",
+                "config": "config",
+                "arguments": "arguments",
+            },
+            'states' : ['solo'],
+            'type' : 'chef',
+            'require' : [
+                {'linux.cmd' : chef_req},
             ]
         },
     }
