@@ -34,7 +34,7 @@ def client(*args, **kwargs):
 
         salt '*' chef.client server=https://localhost -l debug
     '''
-    args += ('chef-client',)
+    args = ('chef-client',) + args
     return __exec_cmd(*args, **kwargs)
 
 
@@ -50,7 +50,7 @@ def solo(*args, **kwargs):
 
         salt '*' chef.solo config=/etc/chef/solo.rb -l debug
     '''
-    args += ('chef-solo',)
+    args = ('chef-solo',) + args
     return __exec_cmd(*args, **kwargs)
 
 
@@ -66,7 +66,7 @@ def ohai(*args, **kwargs):
 
         salt '*' chef.ohai
     '''
-    args += ('ohai',)
+    args = ('ohai',) + args
     return __exec_cmd(*args, **kwargs)
 
 
