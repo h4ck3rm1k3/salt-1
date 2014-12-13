@@ -1069,7 +1069,7 @@ class StateAdaptor(object):
             utils.log("DEBUG", "Init module %s addin exception: %s" % (module, str(e)))
             raise StateException(str(e))
 
-#        if not addin:   raise StateException("No addin found: %s, %s" % (module, parameter), ("__init_addin", self))
+        if not addin:   raise StateException("No addin found: %s, %s" % (module, parameter), ("__init_addin", self))
         return addin
 
     def __build_up(self, module, addin):

@@ -2366,7 +2366,7 @@ Run a Chef solo
 
 ### Parameters
 
-*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes
+*   **`recipe_url`** (*required*): URI to remote gzipped tarball of recipes
 
 		example:
 			http://server.com/recipe.tgz
@@ -2392,7 +2392,7 @@ Run a Chef solo
 			'parameter'	:	{
 				'recipe_url'		:	{
 					'type'		:	'line',
-					'required'	:	False,
+					'required'	:	True,
 					'visible'	:	True,
 				},
 				'config'		:	{
