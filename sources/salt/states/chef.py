@@ -63,7 +63,7 @@ def solo(config=None, recipe_url=None, arguments=[]):
         ags[a["key"]] = a["value"]
 #    ag = ["%s=%s"%(a,ags[a]) for a in ags]
     try:
-        ret = __salt__['chef.solo'](*ags)
+        ret = __salt__['chef.solo'](**ags)
     except Exception as e:
         comment = "Error running chef solo: %s\n"%e
         return _invalid(comment=comment)
