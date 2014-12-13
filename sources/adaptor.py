@@ -36,9 +36,11 @@ def puppet_req(module, cur_parameter, cur_module):
     ]}
 # Chef special requirements
 def chef_req(module, cur_parameter, cur_module):
-    return ("bash %s/chef-install.sh -v %s"%(CONFIG_PATH,cur_parameter["version"])
-            if cur_parameter.get("version",None)
-            else "/bin/sh %s/chef-install.sh"%(CONFIG_PATH))
+    return { 'cmd' : (
+        "bash %s/chef-install.sh -v %s"%(CONFIG_PATH,cur_parameter["version"])
+        if cur_parameter.get("version",None)
+        else "/bin/sh %s/chef-install.sh"%(CONFIG_PATH)
+    )}
 
 
 class StateAdaptor(object):
@@ -1638,7 +1640,7 @@ class StateAdaptor(object):
         if state:   tag += '_' + state
         return '_' + tag
 
-    def __get_require(self, require, cur_parameter, cur_module):
+    def __get_require(self, require, cur_module, cur_parameter):
         """
             Generate require state.
         """
