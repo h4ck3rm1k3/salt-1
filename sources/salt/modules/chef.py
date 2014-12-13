@@ -77,4 +77,4 @@ def __exec_cmd(*args, **kwargs):
     )
     cmd_exec = '{0} {1}'.format(cmd, cmd_args)
     log.debug('ChefCommand: {0}'.format(cmd_exec))
-    return __salt__['cmd.run'](cmd_exec)
+    return __salt__['cmd.run_all'](cmd_exec)

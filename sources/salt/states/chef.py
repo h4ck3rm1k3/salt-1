@@ -64,10 +64,6 @@ def solo(config=None, recipe_url=None, arguments=[]):
 #    ag = ["%s=%s"%(a,ags[a]) for a in ags]
     try:
         ret = __salt__['chef.solo'](**ags)
-    except Exception as e:
-        comment = "Error running chef solo: %s\n"%e
-        return _invalid(comment=comment)
-    else:
         out = "%s\n%s"%(ret["stdout"],ret["stderr"])
         if ret.get("retcode"):
             comment = "Receipe processed with error(s) (code %s).\n"%(ret["retcode"])
@@ -77,3 +73,6 @@ def solo(config=None, recipe_url=None, arguments=[]):
             comment = "Recipe processed without error.\n"
             return _valid(comment=comment,
                           stdout=out)
+    except Exception as e:
+        comment = "Error running chef solo: %s\n"%e
+        return _invalid(comment=comment)
