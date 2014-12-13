@@ -53,7 +53,7 @@ def solo(*args, **kwargs):
     print "args=%s"%args
     import time
     time.sleep(1)
-    args = += ('chef-solo',)
+    args += ('chef-solo',)
     print "args=%s"%args
     return __exec_cmd(*args, **kwargs)
 
