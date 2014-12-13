@@ -38,7 +38,7 @@ def client(server, client_key=None, config=None, arguments=[]):
     try:
         ret = __salt__['chef.client'](*ag)
     except Exception as e:
-        comment = "Error running chef client.\n"
+        comment = "Error running chef client: %s.\n"%e
         return _invalid(comment=comment)
     else:
         out = "%s\n%s"%(ret["stdout"],ret["stderr"])
@@ -65,7 +65,7 @@ def solo(config=None, recipe_url=None, arguments=[]):
     try:
         ret = __salt__['chef.solo'](*ag)
     except Exception as e:
-        comment = "Error running chef solo.\n"
+        comment = "Error running chef solo: %s\n"%e
         return _invalid(comment=comment)
     else:
         out = "%s\n%s"%(ret["stdout"],ret["stderr"])
