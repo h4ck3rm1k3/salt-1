@@ -51,6 +51,8 @@ def solo(*args, **kwargs):
         salt '*' chef.solo config=/etc/chef/solo.rb -l debug
     '''
     print "args=%s"%args
+    import time
+    time.sleep(1)
     args = += ('chef-solo',)
     print "args=%s"%args
     return __exec_cmd(*args, **kwargs)
