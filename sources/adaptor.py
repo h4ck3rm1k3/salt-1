@@ -928,7 +928,7 @@ class StateAdaptor(object):
                 utils.log("DEBUG", "Complete converting state %s" % self.states, ("convert", self))
             except StateException, e:
                 import json
-                utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s exception: %s" % \
+                utils.log("ERROR", "Generate salt states of id %s, module %s, parameter %s, os type %s, exception: %s" % \
                               (step, module, json.dumps(parameter), self.os_type, str(e)), ("convert", self))
                 return None
             except Exception, e:
@@ -1069,7 +1069,7 @@ class StateAdaptor(object):
             utils.log("DEBUG", "Init module %s addin exception: %s" % (module, str(e)))
             raise StateException(str(e))
 
-        if not addin:   raise StateException("No addin founded: %s, %s" % (module, parameter), ("__init_addin", self))
+#        if not addin:   raise StateException("No addin found: %s, %s" % (module, parameter), ("__init_addin", self))
         return addin
 
     def __build_up(self, module, addin):
