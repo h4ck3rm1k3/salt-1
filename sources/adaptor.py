@@ -32,7 +32,7 @@ def watch_docker_deploy(config, parameter, e=None):
 # Puppet special requirements
 def puppet_req(module, cur_parameter, cur_module):
     return { 'name' : [
-        {'key':'puppet','value':cur_parameter.get("version",None)},
+        {'key':'puppet','value':cur_parameter.get("version","latest")},
     ]}
 # Chef special requirements
 def chef_req(module, cur_parameter, cur_module):
