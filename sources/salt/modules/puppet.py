@@ -167,7 +167,8 @@ def run(*args, **kwargs):
 
     puppet.kwargs.update(salt.utils.clean_kwargs(**kwargs))
 
-    return __salt__['cmd.run_all'](repr(puppet))
+    os.environ["path"] = "%s:/usr/local/bin"%os.environ.get("PATH","/bin")
+    return __salt__['cmd.run_all'](repr(puppet),env=os.environ)
 
 
 def noop(*args, **kwargs):

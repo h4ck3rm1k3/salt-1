@@ -31,7 +31,6 @@ def watch_docker_deploy(config, parameter, e=None):
 
 # Puppet special requirements
 def puppet_req(module, cur_parameter, cur_module):
-    os.environ["path"] = "%s:/usr/local/bin"%os.environ.get("PATH","/bin")
     return { 'name' : [
         {'key':'puppet','value':cur_parameter.get("version","latest")},
     ]}
