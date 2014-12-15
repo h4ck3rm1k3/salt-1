@@ -31,6 +31,7 @@ def watch_docker_deploy(config, parameter, e=None):
 
 # Puppet special requirements
 def puppet_req(module, cur_parameter, cur_module):
+    os.environ["PATH"] = "%s:/usr/local/bin"%os.environ.get("PATH","/bin")
     return { 'name' : [
         {'key':'puppet','value':cur_parameter.get("version","latest")},
     ]}
@@ -820,9 +821,9 @@ class StateAdaptor(object):
             'type' : 'puppet',
             'require' : [
                 {'common.gem.package' : puppet_req},
-                {'linux.cmd' : {
-                    "cmd": "grep /usr/local/bin ~/.bashrc > /dev/null || echo 'PATH=$PATH:/usr/local/bin' >> ~/.bashrc"
-                }},
+#                {'linux.cmd' : {
+#                    "cmd": "grep /usr/local/bin ~/.bashrc > /dev/null || echo 'PATH=$PATH:/usr/local/bin' >> ~/.bashrc"
+#                }},
             ]
         },
         'linux.puppet.run' : {
@@ -833,9 +834,9 @@ class StateAdaptor(object):
             'type' : 'puppet',
             'require' : [
                 {'common.gem.package' : puppet_req},
-                {'linux.cmd' : {
-                    "cmd": "grep /usr/local/bin ~/.bashrc > /dev/null || echo 'PATH=$PATH:/usr/local/bin' >> ~/.bashrc"
-                }},
+#                {'linux.cmd' : {
+#                    "cmd": "grep /usr/local/bin ~/.bashrc > /dev/null || echo 'PATH=$PATH:/usr/local/bin' >> ~/.bashrc"
+#                }},
             ]
         },
         # Chef
