@@ -2293,7 +2293,7 @@ Apply a puppet manifest
 *   **`version`** (*optional*): Puppet version
 
 		example:
-			3.7
+			3.7.3
 				''',
 				'cn'	:	''''''
 			},
@@ -2334,7 +2334,7 @@ Run a puppet round
 *   **`version`** (*optional*): Puppet version
 
 		example:
-			3.7
+			3.7.3
 				''',
 				'cn'	:	''''''
 			},

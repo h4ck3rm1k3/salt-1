@@ -1186,7 +1186,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nApply a puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7\n\t\t\t\t"
+                "en": "\n### Description\nApply a puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
         }, 
         "puppet run": {
@@ -1206,7 +1206,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7\n\t\t\t\t"
+                "en": "\n### Description\nRun a puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
         }, 
         "pv": {
