@@ -2385,7 +2385,7 @@ Run a Chef solo
 *   **`version`** (*optional*): Chef version
 
 		example:
-			7
+			12.0.1
 				''',
 				'cn'	:	''''''
 			},
@@ -2447,7 +2447,7 @@ Run a Chef client
 *   **`version`** (*optional*): Chef version
 
 		example:
-			7
+			12.0.1
 				''',
 				'cn'	:	''''''
 			},
