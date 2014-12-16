@@ -22,7 +22,7 @@ def __virtual__():
     return False
 
 
-@decorators.which('chef-client')
+#@decorators.which('chef-client')
 def client(*args, **kwargs):
     '''
     Execute a chef client run and return a dict with the stderr, stdout,
@@ -38,7 +38,7 @@ def client(*args, **kwargs):
     return __exec_cmd(*args, **kwargs)
 
 
-@decorators.which('chef-solo')
+#@decorators.which('chef-solo')
 def solo(*args, **kwargs):
     '''
     Execute a chef solo run and return a dict with the stderr, stdout,
@@ -54,7 +54,7 @@ def solo(*args, **kwargs):
     return __exec_cmd(*args, **kwargs)
 
 
-@decorators.which('ohai')
+#@decorators.which('ohai')
 def ohai(*args, **kwargs):
     '''
     Execute a ohai and return a dict with the stderr, stdout,
