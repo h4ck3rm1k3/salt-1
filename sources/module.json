@@ -384,7 +384,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a Chef client\n\n### Parameters\n\n*   **`server`** (*required*): URI to remote Chef server\n\n\t\texample:\n\t\t\thttps://localhost\n\n*   **`client_key`** (*optional*): Path to client authentication key\n\n\t\texample:\n\t\t\t/path/to/client/key\n\n*   **`config`** (*optional*): Path to chef config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation)\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t7\n\t\t\t\t"
+                "en": "\n### Description\nRun a Chef client\n\n### Parameters\n\n*   **`server`** (*required*): URI to remote Chef server\n\n\t\texample:\n\t\t\thttps://localhost\n\n*   **`client_key`** (*optional*): Path to client authentication key\n\n\t\texample:\n\t\t\t/path/to/client/key\n\n*   **`config`** (*optional*): Path to chef config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation)\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t12.0.1\n\t\t\t\t"
             }
         }, 
         "chef solo": {
@@ -397,12 +397,12 @@
                     "visible": true
                 }, 
                 "config": {
-                    "required": false, 
+                    "required": true, 
                     "type": "line", 
                     "visible": true
                 }, 
                 "recipe_url": {
-                    "required": true, 
+                    "required": false, 
                     "type": "line", 
                     "visible": true
                 }, 
@@ -414,7 +414,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a Chef solo\n\n### Parameters\n\n*   **`recipe_url`** (*required*): URI to remote gzipped tarball of recipes\n\n\t\texample:\n\t\t\thttp://server.com/recipe.tgz\n\n*   **`config`** (*optional*): Path to Chef config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t7\n\t\t\t\t"
+                "en": "\n### Description\nRun a Chef solo\n\n### Parameters\n\n*   **`config`** (*required*): Path to Chef recipe config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`recipe_url`** (*required*): URI to remote gzipped tarball of recipes\n\n\t\texample:\n\t\t\thttp://server.com/recipe.tgz\n\n*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t12.0.1\n\t\t\t\t"
             }
         }, 
         "cmd": {

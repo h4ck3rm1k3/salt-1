@@ -2366,15 +2366,15 @@ Run a Chef solo
 
 ### Parameters
 
+*   **`config`** (*required*): Path to Chef recipe config file
+
+		example:
+			/path/to/config/file
+
 *   **`recipe_url`** (*required*): URI to remote gzipped tarball of recipes
 
 		example:
 			http://server.com/recipe.tgz
-
-*   **`config`** (*optional*): Path to Chef config file
-
-		example:
-			/path/to/config/file
 
 *   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)
 
@@ -2385,17 +2385,17 @@ Run a Chef solo
 *   **`version`** (*optional*): Chef version
 
 		example:
-			7
+			12.0.1
 				''',
 				'cn'	:	''''''
 			},
 			'parameter'	:	{
-				'recipe_url'		:	{
+				'config'		:	{
 					'type'		:	'line',
 					'required'	:	True,
 					'visible'	:	True,
 				},
-				'config'		:	{
+				'recipe_url'		:	{
 					'type'		:	'line',
 					'required'	:	False,
 					'visible'	:	True,
@@ -2447,7 +2447,7 @@ Run a Chef client
 *   **`version`** (*optional*): Chef version
 
 		example:
-			7
+			12.0.1
 				''',
 				'cn'	:	''''''
 			},
