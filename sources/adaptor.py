@@ -821,9 +821,6 @@ class StateAdaptor(object):
             'type' : 'puppet',
             'require' : [
                 {'common.gem.package' : puppet_req},
-#                {'linux.cmd' : {
-#                    "cmd": "grep /usr/local/bin ~/.bashrc > /dev/null || echo 'PATH=$PATH:/usr/local/bin' >> ~/.bashrc"
-#                }},
             ]
         },
         'linux.puppet.run' : {
@@ -834,9 +831,17 @@ class StateAdaptor(object):
             'type' : 'puppet',
             'require' : [
                 {'common.gem.package' : puppet_req},
-#                {'linux.cmd' : {
-#                    "cmd": "grep /usr/local/bin ~/.bashrc > /dev/null || echo 'PATH=$PATH:/usr/local/bin' >> ~/.bashrc"
-#                }},
+            ]
+        },
+        'linux.puppet.agent' : {
+            'attributes' : {
+                "server": "server",
+                "arguments": "arguments",
+            },
+            'states' : ['agent'],
+            'type' : 'puppet',
+            'require' : [
+                {'common.gem.package' : puppet_req},
             ]
         },
         # Chef

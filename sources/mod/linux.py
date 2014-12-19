@@ -2274,7 +2274,7 @@ Run a container from a remote image
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Apply a puppet manifest
+Apply a Puppet manifest
 
 ### Parameters
 
@@ -2284,7 +2284,7 @@ Apply a puppet manifest
 			/path/to/manifest1
 			/path/to/manifest2
 
-*   **`arguments`** (*optional*): Arguments to the manifest, passed to the puppet binary (see puppet documentation)
+*   **`arguments`** (*optional*): Arguments to the manifest, passed to the Puppet binary (see Puppet documentation)
 
 		example:
 			modulepath: /a/b/modules
@@ -2322,9 +2322,50 @@ Apply a puppet manifest
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Run a puppet round
+Run a Puppet round
 
 ### Parameters
+
+*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation)
+
+		example:
+			tags:       basefiles::edit,apache::server
+
+*   **`version`** (*optional*): Puppet version
+
+		example:
+			3.7.3
+				''',
+				'cn'	:	''''''
+			},
+			'parameter'	:	{
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'version'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True
+				},
+			},
+		},
+		# Run Puppet agent
+		'puppet agent'	:	{
+			'module'	:	'linux.puppet.agent',
+			'distro'	:	None,
+			'reference'	:	{
+				'en'	:	'''
+### Description
+Run Puppet agent
+
+### Parameters
+
+*   **`server`** (*required*): Server to connect to
+
+		example:
+			tags:       puppet.mydomain.com
 
 *   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)
 
@@ -2339,6 +2380,11 @@ Run a puppet round
 				'cn'	:	''''''
 			},
 			'parameter'	:	{
+				'server'		:	{
+					'type'		:	'line',
+					'required'	:	True,
+					'visible'	:	True,
+				},
 				'arguments'		:	{
 					'type'		:	'dict',
 					'required'	:	False,

@@ -54,12 +54,21 @@ def apply(manifests, arguments=[]):
                   stdout=out)
 
 
+# Run puppet agent
+def agent(server, arguments):
+    ags = ["agent","server=%s"%(server)] + arguments
+    return run(ags)
+
+
 # Run configured Puppet round
 def run(arguments):
     ags = []
     for a in arguments:
         if ("key" not in a) or ("value" not in a): continue
-        ags.append("%s=%s"%(a["key"],a["value"]))
+        if a.get("value"):
+            ags.append("%s=%s"%(a["key"],a["value"]))
+        else:
+            ags.append(a["key"])
     try:
         ret = __salt__['puppet.run'](*ags)
     except Exception as e:
