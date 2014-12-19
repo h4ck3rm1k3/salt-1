@@ -1164,6 +1164,31 @@
                 "en": "\n### Description\nmanage mount points\n\n### Parameters\n\n*   **`path`** (*required*): the path of the mount point\n\n*   **`device`** (*required*): the device name\n\n*   **`filesystem`** (*required*): the file system type of the device\n\n*   **`fstab`** (*optional*): whether to save in /etc/fstab or not, by default ***`false`***\n\n*   **`opts`** (*optional*): a list of options for /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab is `true`\n\n*   **`dump`** (*optional*): the dump value in /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab` is `true`\n\n*   **`pass`** (*optional*): the pass value in /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab` is `true`\n\t\t\t\t"
             }
         }, 
+        "puppet agent": {
+            "distro": null, 
+            "module": "linux.puppet.agent", 
+            "parameter": {
+                "arguments": {
+                    "required": false, 
+                    "type": "dict", 
+                    "visible": true
+                }, 
+                "server": {
+                    "required": true, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "version": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nRun Puppet agent\n\n### Parameters\n\n*   **`server`** (*required*): Server to connect to\n\n\t\texample:\n\t\t\ttags:       puppet.mydomain.com\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
+            }
+        }, 
         "puppet apply": {
             "distro": null, 
             "module": "linux.puppet.apply", 
@@ -1186,7 +1211,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nApply a puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
+                "en": "\n### Description\nApply a Puppet manifest\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifests to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest, passed to the Puppet binary (see Puppet documentation)\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
         }, 
         "puppet run": {
@@ -1206,7 +1231,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
+                "en": "\n### Description\nRun a Puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
         }, 
         "pv": {
