@@ -164,9 +164,9 @@ def extracted(name,
         return ret
 
     try:
-        # remove original directory
-        if os.path.isdir(name) and not __salt__['file.remove'](name):
-            log.debug("warning: remove original directory failed")
+        # # remove original directory
+        # if os.path.isdir(name) and not __salt__['file.remove'](name):
+        #     log.debug("warning: remove original directory failed")
 
         __salt__['file.makedirs'](name)
         # check dir

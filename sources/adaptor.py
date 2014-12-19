@@ -1594,8 +1594,9 @@ class StateAdaptor(object):
                                 })
 
                                 # build up the special package state
+                                the_tag = tag + '_' + name
                                 the_state = {
-                                    tag + '_' + name : {
+                                    the_tag : {
                                         "gem" : the_build_up
                                     }
                                 }
@@ -1610,8 +1611,17 @@ class StateAdaptor(object):
                                                 if r_tag in self.states:
                                                     the_state[r_tag] = self.states[r_tag]
 
-                                if the_state:
+                                if len(name_list)==0:
+                                    self.states[tag] = the_state[the_tag]
+                                else:
                                     state_list.append(the_state)
+
+                    ## update rubugems to rubygems-integration in ubuntu 14.04
+                    elif module == 'pkg':
+                        if self.os_type.upper() == 'UBUNTU' and float(self.os_release)>14 and "installed" in chunk:
+                            for idx, item in enumerate(chunk):
+                                if isinstance(item, dict) and 'pkgs' in item.keys() and 'rubygems' in item['pkgs']:
+                                    item['pkgs'][item['pkgs'].index("rubygems")] = "rubygems-integration"
 
                     # deal with docker service dependence
                     elif module == 'docker':
