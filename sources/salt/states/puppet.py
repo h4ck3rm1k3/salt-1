@@ -56,7 +56,8 @@ def apply(manifests, arguments=[]):
 
 # Run puppet agent
 def agent(server, arguments=[]):
-    ags = ["agent","server=%s"%(server)] + arguments
+    ags = [{"key":"agent"},
+           {"key":"server","value":server}] + arguments
     return run(ags)
 
 
