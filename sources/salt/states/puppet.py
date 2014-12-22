@@ -55,13 +55,13 @@ def apply(manifests, arguments=[]):
 
 
 # Run puppet agent
-def agent(server, arguments):
+def agent(server, arguments=[]):
     ags = ["agent","server=%s"%(server)] + arguments
     return run(ags)
 
 
 # Run configured Puppet round
-def run(arguments):
+def run(arguments=[]):
     ags = []
     for a in arguments:
         if ("key" not in a) or ("value" not in a): continue
