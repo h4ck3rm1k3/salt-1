@@ -65,7 +65,7 @@ def agent(server, arguments=[]):
 def run(arguments=[]):
     ags = []
     for a in arguments:
-        if ("key" not in a) or ("value" not in a): continue
+        if ("key" not in a): continue
         if a.get("value"):
             ags.append("%s=%s"%(a["key"],a["value"]))
         else:
