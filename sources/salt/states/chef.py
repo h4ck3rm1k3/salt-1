@@ -24,49 +24,56 @@ def _invalid(name="",changes={},comment="",stdout=''):
 
 # Run client node
 def client(server, client_key=None, config=None, arguments=[]):
-    ags = {}
+    agd = {}
+    agl = []
     if not server:
         return _invalid(comment="No server specified.")
-    if client_key:
-        ags["client_key"] = client_key
-    if config:
-        ags["config"] = config
-    for a in arguments:
-        if ("key" not in a) or ("value" not in a): continue
-        ags[a["key"]] = a["value"]
-    ag = ["%s=%s"%(a,ags[a]) for a in ags]
-    try:
-        ret = __salt__['chef.client'](*ag)
-    except Exception as e:
-        comment = "Error running chef client: %s.\n"%e
-        return _invalid(comment=comment)
     else:
+        agd["server"] = server
+    if client_key:
+        agd["client_key"] = client_key
+    if config:
+        agd["config"] = config
+    for a in arguments:
+        if ("key" not in a): continue
+        if a.get("value","") != "":
+            agd[a["key"]] = a["value"]
+        else:
+            agl.append(a["key"])
+    try:
+        ret = __salt__['chef.client'](*agl,**agd)
         out = "%s\n%s"%(ret["stdout"],ret["stderr"])
-        if ret.get("retcode"):
-            comment = "Client ran with error(s) (code %s).\n"%(ret["retcode"])
+        if ret.get("retcode",-1):
+            comment = "Client ran with error(s) (code %s).\n"%(ret.get("retcode",-1))
             return _invalid(comment=comment,
                             stdout=out)
         else:
             comment = "Client ran without error.\n"
             return _valid(comment=comment,
                           stdout=out)
+    except Exception as e:
+        comment = "Error running chef client: %s.\n"%e
+        return _invalid(comment=comment)
 
 # Run solo node
 def solo(config=None, recipe_url=None, arguments=[]):
-    ags = {}
+    agd = {}
+    agl = []
     if config:
-        ags["config"] = config
+        agd["config"] = config
     if recipe_url:
-        ags["recipe-url"] = recipe_url
+        agd["recipe-url"] = recipe_url
     for a in arguments:
-        if ("key" not in a) or ("value" not in a): continue
-        ags[a["key"]] = a["value"]
-#    ag = ["%s=%s"%(a,ags[a]) for a in ags]
+        if ("key" not in a): continue
+        if a.get("value","") != "":
+            agd[a["key"]] = a["value"]
+        else:
+            agl.append(a["key"])
     try:
-        ret = __salt__['chef.solo'](**ags)
+        ret = __salt__['chef.solo'](*agl,**agd)
         out = "%s\n%s"%(ret["stdout"],ret["stderr"])
-        if ret.get("retcode"):
-            comment = "Receipe processed with error(s) (code %s).\n"%(ret["retcode"])
+        if ret.get("retcode",-1):
+            comment = "Receipe processed with error(s) (code %s).\n"%(ret("retcode",-1))
             return _invalid(comment=comment,
                             stdout=out)
         else:
