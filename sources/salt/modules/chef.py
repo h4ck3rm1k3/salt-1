@@ -17,9 +17,10 @@ def __virtual__():
     '''
     Only load if chef is installed
     '''
-    if salt.utils.which('chef-client'):
-        return True
-    return False
+    return True
+#    if salt.utils.which('chef-client'):
+#        return True
+#    return False
 
 
 #@decorators.which('chef-client')
@@ -34,7 +35,7 @@ def client(*args, **kwargs):
 
         salt '*' chef.client server=https://localhost -l debug
     '''
-    args = ['chef-client',''] + args
+    args += ('chef-client',)
     return __exec_cmd(*args, **kwargs)
 
 
@@ -66,7 +67,7 @@ def ohai(*args, **kwargs):
 
         salt '*' chef.ohai
     '''
-    args = ['ohai',''] + args
+    args += ('ohai',)
     return __exec_cmd(*args, **kwargs)
 
 

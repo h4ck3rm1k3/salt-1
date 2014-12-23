@@ -20,9 +20,10 @@ def __virtual__():
     '''
     Only load if puppet is installed
     '''
-    if salt.utils.which('facter'):
-        return 'puppet'
-    return False
+    return 'puppet'
+#    if salt.utils.which('facter'):
+#        return 'puppet'
+#    return False
 
 
 def _check_puppet():
