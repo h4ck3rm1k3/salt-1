@@ -73,7 +73,7 @@ def solo(config=None, recipe_url=None, arguments=[]):
         ret = __salt__['chef.solo'](*agl,**agd)
         out = "%s\n%s"%(ret["stdout"],ret["stderr"])
         if ret.get("retcode",-1):
-            comment = "Receipe processed with error(s) (code %s).\n"%(ret("retcode",-1))
+            comment = "Receipe processed with error(s) (code %s).\n"%(ret.get("retcode",-1))
             return _invalid(comment=comment,
                             stdout=out)
         else:
