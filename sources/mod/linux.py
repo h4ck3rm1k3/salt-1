@@ -2324,6 +2324,8 @@ Apply a Puppet manifest
 ### Description
 Run a Puppet round
 
+Note: Puppet module is incompatible with CentOS 6.4
+
 ### Parameters
 
 *   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation)
@@ -2359,6 +2361,8 @@ Run a Puppet round
 				'en'	:	'''
 ### Description
 Run Puppet agent
+
+Note: Puppet module is incompatible with CentOS 6.4
 
 ### Parameters
 

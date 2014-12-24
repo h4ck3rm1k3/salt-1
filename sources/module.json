@@ -1191,7 +1191,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun Puppet agent\n\n### Parameters\n\n*   **`server`** (*required*): Server to connect to\n\n\t\texample:\n\t\t\ttags:       puppet.mydomain.com\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
+                "en": "\n### Description\nRun Puppet agent\n\nNote: Puppet module is incompatible with CentOS 6.4\n\n### Parameters\n\n*   **`server`** (*required*): Server to connect to\n\n\t\texample:\n\t\t\ttags:       puppet.mydomain.com\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
         }, 
         "puppet apply": {
@@ -1236,7 +1236,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a Puppet round\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
+                "en": "\n### Description\nRun a Puppet round\n\nNote: Puppet module is incompatible with CentOS 6.4\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation)\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
         }, 
         "pv": {
