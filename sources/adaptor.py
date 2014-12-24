@@ -820,7 +820,7 @@ class StateAdaptor(object):
             'states' : ['apply'],
             'type' : 'puppet',
             'require' : [
-                {'linux.user' : { 'username': 'puppet', 'password':''}},
+                {'linux.user' : { 'username': 'puppet', 'password':'', 'no-login': True }},
                 {'linux.group' : { 'groupame': 'puppet'}},
                 {'common.gem.package' : puppet_req},
             ]
@@ -832,7 +832,7 @@ class StateAdaptor(object):
             'states' : ['run'],
             'type' : 'puppet',
             'require' : [
-                {'linux.user' : { 'username': 'puppet', 'password':''}},
+                {'linux.user' : { 'username': 'puppet', 'password':'', 'no-login': True }},
                 {'linux.group' : { 'groupame': 'puppet'}},
                 {'common.gem.package' : puppet_req},
             ]
@@ -845,8 +845,8 @@ class StateAdaptor(object):
             'states' : ['agent'],
             'type' : 'puppet',
             'require' : [
-                {'linux.user' : { 'username': 'puppet', 'password':''}},
-                {'linux.group' : { 'groupame': 'puppet'}},
+                {'linux.user' : { 'username': 'puppet', 'password':'', 'no-login': True }},
+                {'linux.group' : { 'groupame': 'puppet' }},
                 {'common.gem.package' : puppet_req},
             ]
         },
