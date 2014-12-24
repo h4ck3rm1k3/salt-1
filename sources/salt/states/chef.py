@@ -56,13 +56,15 @@ def client(server, client_key=None, config=None, arguments=[]):
         return _invalid(comment=comment)
 
 # Run solo node
-def solo(config=None, recipe_url=None, arguments=[]):
+def solo(config=None, recipe_url=None, override_runlist=None, arguments=[]):
     agd = {}
     agl = []
     if config:
         agd["config"] = config
     if recipe_url:
         agd["recipe-url"] = recipe_url
+    if override_runlist:
+        agd["override-runlist"] = override_runlist
     for a in arguments:
         if ("key" not in a): continue
         if a.get("value","") != "":

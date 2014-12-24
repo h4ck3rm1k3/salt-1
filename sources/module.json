@@ -401,6 +401,11 @@
                     "type": "line", 
                     "visible": true
                 }, 
+                "override-runlist": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
                 "recipe_url": {
                     "required": false, 
                     "type": "line", 
@@ -414,7 +419,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRun a Chef solo\n\n### Parameters\n\n*   **`config`** (*recommended*): Path to Chef recipe config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes (`-r` option of chef-solo)\n\n\t\texample:\n\t\t\thttp://server.com/recipe.tgz\n\n*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)\n\n\t\texample:\n\t\t\tgroup:            root\n\t\t\tlog_level:        warning\n                        override-runlist: recipe[chef-server::default]\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t12.0.1\n\t\t\t\t"
+                "en": "\n### Description\nRun a Chef solo\n\n### Parameters\n\n*   **`config`** (*recommended*): Path to Chef recipe config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`override_runlist`** (*optional*): Replace current run list with specified items for a single run\n\n\t\texample:\n\t\t        recipe[chef-server::default]\n\n*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes (`-r` option of chef-solo)\n\n\t\texample:\n\t\t\thttp://server.com/recipe.tgz\n\n*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)\n\n\t\texample:\n\t\t\tgroup:            root\n\t\t\tlog_level:        warning\n\n*   **`version`** (*optional*): Chef version\n\n\t\texample:\n\t\t\t12.0.1\n\t\t\t\t"
             }
         }, 
         "cmd": {
