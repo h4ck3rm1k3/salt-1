@@ -886,7 +886,7 @@ class StateAdaptor(object):
                 },
             }
 
-    def convert(self, step, module, parameter):
+    def convert(self, step, module, parameter=None):
         """
             convert the module json data to salt states.
         """
@@ -894,7 +894,7 @@ class StateAdaptor(object):
         utils.log("INFO", "Begin to convert module json data ...", ("convert", self))
 
         if not isinstance(module, basestring):  raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
-        if not isinstance(parameter, dict):     raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
+        if parameter and not isinstance(parameter, dict):     raise StateException("Invalid input parameter: %s, %s" % (module, parameter))
         if module not in self.mod_map:          raise StateException("Unsupported module %s" % module)
         if not self.os_type or not isinstance(self.os_type, basestring) or self.os_type not in self.supported_os:
             raise   StateException("Invalid input parameter: %s" % self.os_type)
@@ -907,6 +907,9 @@ class StateAdaptor(object):
         # filter unhandler module
         if module in ['meta.comment']:
             return None
+        # init param if there isn't
+        if not parameter:
+            parameter = {}
 
         # get agent package module
         self.__agent_pkg_module = 'linux.apt.package' if self.os_type in ['debian', 'ubuntu'] else 'linux.yum.package'
@@ -1083,7 +1086,7 @@ class StateAdaptor(object):
             utils.log("DEBUG", "Init module %s addin exception: %s" % (module, str(e)))
             raise StateException(str(e))
 
-        if not addin:   raise StateException("No addin found: %s, %s" % (module, parameter), ("__init_addin", self))
+        # if not addin:   raise StateException("No addin found: %s, %s" % (module, parameter), ("__init_addin", self))
         return addin
 
     def __build_up(self, module, addin):
