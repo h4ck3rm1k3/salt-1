@@ -2412,12 +2412,12 @@ Run a Chef solo
 
 ### Parameters
 
-*   **`config`** (*required*): Path to Chef recipe config file
+*   **`config`** (*required if no url*): Path to Chef recipe config file
 
 		example:
 			/path/to/config/file
 
-*   **`recipe_url`** (*required*): URI to remote gzipped tarball of recipes
+*   **`recipe_url`** (*required if no config*): URI to remote gzipped tarball of recipes
 
 		example:
 			http://server.com/recipe.tgz
@@ -2438,7 +2438,7 @@ Run a Chef solo
 			'parameter'	:	{
 				'config'		:	{
 					'type'		:	'line',
-					'required'	:	True,
+					'required'	:	False,
 					'visible'	:	True,
 				},
 				'recipe_url'		:	{
