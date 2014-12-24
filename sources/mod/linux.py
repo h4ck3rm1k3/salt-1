@@ -2417,6 +2417,11 @@ Run a Chef solo
 		example:
 			/path/to/config/file
 
+*   **`override_runlist`** (*optional*): Replace current run list with specified items for a single run
+
+		example:
+		        recipe[chef-server::default]
+
 *   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes (`-r` option of chef-solo)
 
 		example:
@@ -2427,7 +2432,6 @@ Run a Chef solo
 		example:
 			group:            root
 			log_level:        warning
-                        override-runlist: recipe[chef-server::default]
 
 *   **`version`** (*optional*): Chef version
 
@@ -2438,6 +2442,11 @@ Run a Chef solo
 			},
 			'parameter'	:	{
 				'config'		:	{
+					'type'		:	'line',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+				'override-runlist'	:	{
 					'type'		:	'line',
 					'required'	:	False,
 					'visible'	:	True,
