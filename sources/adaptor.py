@@ -1040,10 +1040,15 @@ class StateAdaptor(object):
                             addin[item] = StateAdaptor.mod_watch_param[module][item]
 
                 # build up module state
-                module_state = [
-                    state,
-                    addin
-                ]
+                module_state = [ state ]
+                if addin:
+                    module_state.append(addin)
+
+#                # build up module state
+#                module_state = [
+#                    state,
+#                    addin
+#                ]
 
                 if require:     module_state.append({ 'require' : require })
                 if require_in:  module_state.append({ 'require_in' : require_in })
