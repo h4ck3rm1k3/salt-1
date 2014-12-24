@@ -2412,12 +2412,12 @@ Run a Chef solo
 
 ### Parameters
 
-*   **`config`** (*required if no url*): Path to Chef recipe config file
+*   **`config`** (*recommended*): Path to Chef recipe config file
 
 		example:
 			/path/to/config/file
 
-*   **`recipe_url`** (*required if no config*): URI to remote gzipped tarball of recipes
+*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes (`-r` option of chef-solo)
 
 		example:
 			http://server.com/recipe.tgz
@@ -2425,8 +2425,9 @@ Run a Chef solo
 *   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)
 
 		example:
-			group:     root
-			log_level: warning
+			group:            root
+			log_level:        warning
+                        override-runlist: recipe[chef-server::default]
 
 *   **`version`** (*optional*): Chef version
 
