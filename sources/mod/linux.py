@@ -2274,23 +2274,27 @@ Run a container from a remote image
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Apply a Puppet manifest
+Apply a Puppet manifest. This module will run independently, and doesn't require to connect to any Puppet server.
+
+`puppet apply` will run the manifests files set in the `manifests` parameter.
+
+Note: Puppet module is incompatible with CentOS 6.4
 
 ### Parameters
 
-*   **`manifests`** (*required*): Manifests to run
+*   **`manifests`** (*required*): Manifest(s) to run
 
 		example:
 			/path/to/manifest1
 			/path/to/manifest2
 
-*   **`arguments`** (*optional*): Arguments to the manifest, passed to the Puppet binary (see Puppet documentation)
+*   **`arguments`** (*optional*): Arguments to the manifest, passed to the Puppet binary (see Puppet documentation). You can use these arguments to specify a modules directory, or some specific classes to run, for example.
 
 		example:
 			modulepath: /a/b/modules
 			tags:       basefiles::edit,apache::server
 
-*   **`version`** (*optional*): Puppet version
+*   **`version`** (*optional*): Puppet version to install. Leave empty for latest version.
 
 		example:
 			3.7.3
@@ -2322,18 +2326,18 @@ Apply a Puppet manifest
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Run a Puppet round
+Run a Puppet round. This module is useful in case you already have a custom configuration for the puppet client, and simply want to run a round. No argument is required. If you don't have any specific requirement and want to apply a Puppet manifest or connect to a Puppet server, this module is probably not the one you want to use.
 
 Note: Puppet module is incompatible with CentOS 6.4
 
 ### Parameters
 
-*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation)
+*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation). You can use these arguments to specify a modules directory, or some specific classes to run, for example.
 
 		example:
 			tags:       basefiles::edit,apache::server
 
-*   **`version`** (*optional*): Puppet version
+*   **`version`** (*optional*): Puppet version. Leave empty for latest version.
 
 		example:
 			3.7.3
@@ -2360,7 +2364,9 @@ Note: Puppet module is incompatible with CentOS 6.4
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Run Puppet agent
+Run Puppet agent. This module will connect to the server specified in `server` and act as a regular Puppet client. Note that, as Puppet require, you need to use the name of the server, not its IP address. You need to be able to resolve this name, either via DNS resolution or host file.
+
+This module is useful if you already have a Puppet server running and you want to control the client recipe execution on your instance using VisualOps.
 
 Note: Puppet module is incompatible with CentOS 6.4
 
@@ -2371,12 +2377,12 @@ Note: Puppet module is incompatible with CentOS 6.4
 		example:
 			tags:       puppet.mydomain.com
 
-*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation)
+*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation). You can use these arguments to specify a modules directory, or some specific classes to run, for example.
 
 		example:
 			tags:       basefiles::edit,apache::server
 
-*   **`version`** (*optional*): Puppet version
+*   **`version`** (*optional*): Puppet version. Leave empty for latest version.
 
 		example:
 			3.7.3
@@ -2412,11 +2418,13 @@ Note: Puppet module is incompatible with CentOS 6.4
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Run a Chef solo
+Run a Chef solo. You should have your Chef recipe already present on your instance, or download it using the `recipe_url` parameter. Not that it is highly recommended to write a Chef configuration file, that you can specify in the `config` parameter. The config file may contains the location of your recipe, as well as the different items to run.
+
+See Chef documentation for more details.
 
 ### Parameters
 
-*   **`config`** (*recommended*): Path to Chef recipe config file
+*   **`config`** (*recommended*): Path to Chef recipe config file. Generally used to specify a custom location of your Chef recipe.
 
 		example:
 			/path/to/config/file
@@ -2431,13 +2439,13 @@ Run a Chef solo
 		example:
 			http://server.com/recipe.tgz
 
-*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation)
+*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation). You can use these arguments to specify a running group, or a log level, for example.
 
 		example:
 			group:            root
 			log_level:        warning
 
-*   **`version`** (*optional*): Chef version
+*   **`version`** (*optional*): Chef version. Leave empty for latest version.
 
 		example:
 			12.0.1
@@ -2479,16 +2487,18 @@ Run a Chef solo
 			'reference'	:	{
 				'en'	:	'''
 ### Description
-Run a Chef client
+Run a Chef client. This module allows you to run a Chef recipe distributed by a Chef server. This is useful if you already have a Chef server running and you want to control the client recipe execution on your instance using VisualOps.
+
+See Chef documentation for more details.
 
 ### Parameters
 
-*   **`server`** (*required*): URI to remote Chef server
+*   **`server`** (*required*): URI to remote Chef server. Ensure you are able to resolv its hostname.
 
 		example:
 			https://localhost
 
-*   **`client_key`** (*optional*): Path to client authentication key
+*   **`client_key`** (*optional*): Path to client authentication key. This is usually required to establish a connection to the chef server.
 
 		example:
 			/path/to/client/key
@@ -2498,13 +2508,13 @@ Run a Chef client
 		example:
 			/path/to/config/file
 
-*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation)
+*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation). You can use these arguments to specify a running group, or a log level, for example.
 
 		example:
 			group:     root
 			log_level: warning
 
-*   **`version`** (*optional*): Chef version
+*   **`version`** (*optional*): Chef version. Leave empty for latest version.
 
 		example:
 			12.0.1
