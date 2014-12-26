@@ -31,6 +31,6 @@ fi
 git tag -a $TAG -m "$TAG"
 git push origin $TAG
 
-#
+# back to develop branch
 git checkout develop
 echo "Release done"
