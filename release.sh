@@ -6,7 +6,6 @@
 
 DEFAULT_TAG="v2014-07-18"
 
-
 # get tag
 echo "Input the tag you want to publish [${DEFAULT_TAG}]"
 read TAG
