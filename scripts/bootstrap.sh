@@ -60,31 +60,6 @@ elif [ "$S_PLATFORM" = "YUM" ]; then
     fi
 fi
 
-# get docker package
-if [ "$DOCKER_NAME" != "" ]; then
-    cd ${S_OA_CONF_DIR}
-    REF_CKSUM="$(cat ${S_OA_CONF_DIR}/${DOCKER_NAME}.cksum | cut -d ' ' -f 1,2)"
-    CUR_CKSUM="$(cksum ${DOCKER_NAME} | cut -d ' ' -f 1,2)"
-    cd -
-    if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
-        echo "FATAL: Checksum failed on ${DOCKER_NAME}" >&2
-        exit 2
-    fi
-
-    chmod 640 ${S_OA_CONF_DIR}/${DOCKER_NAME}
-
-#    gpg --no-tty --import ${OA_GPG_KEY}
-#    rm -f ${S_OA_CONF_DIR}/${DOCKER_NAME}
-#    gpg --no-tty --verify ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
-#    if [ $? -eq 0 ]; then
-#        gpg --no-tty --output ${S_OA_CONF_DIR}/${DOCKER_NAME} --decrypt ${S_OA_CONF_DIR}/${DOCKER_NAME}.gpg
-#        chmod 640 ${S_OA_CONF_DIR}/${DOCKER_NAME}
-#    else
-#        echo "FATAL: couldn't verify ${DOCKER_NAME}.gpg" >&2
-#        exit 1
-#    fi
-fi
-
 # get chef bootstrap script
 wget -nv "https://www.opscode.com/chef/install.sh" -O ${S_OA_CONF_DIR}/chef-install.sh
 #chmod 555 ${S_OA_CONF_DIR}/chef-install.sh

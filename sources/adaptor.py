@@ -4,7 +4,6 @@ VisualOps OpsAgent states adaptor
          + Thibault Bronchain (thibault@visualops.io)
 '''
 
-
 # System imports
 import os
 import urllib2
