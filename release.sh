@@ -33,4 +33,4 @@ git push origin $TAG
 
 # back to develop branch
 git checkout develop
-echo "Release done"
+echo "Release done."
