@@ -1049,18 +1049,10 @@ class StateAdaptor(object):
                 if addin:
                     module_state.append(addin)
 
-#                # build up module state
-#                module_state = [
-#                    state,
-#                    addin
-#                ]
-
                 if require:     module_state.append({ 'require' : require })
                 if require_in:  module_state.append({ 'require_in' : require_in })
-                # if watch:     module_state.append({ 'watch' : watch })
 
                 # tag
-                #name = addin['names'] if 'names' in addin else addin['name']
                 uid = hashlib.md5(str(addin)).hexdigest()
                 tag = self.__get_tag(module, uid, step, None, state)
                 utils.log("DEBUG", "Generated tag is %s" % tag, ("__salt", self))
@@ -1146,6 +1138,10 @@ class StateAdaptor(object):
                         pkg_state = default_state
                         if pkg_version and pkg_version in self.mod_map[module]['states']:
                             pkg_state = pkg_version
+
+                        ## add update param
+                        if pkg_state in ['installed', 'latest'] and module in ['linux.apt.package', 'linux.yum.package']:
+                            addin['refresh'] = True
 
                         if pkg_state not in module_state:           module_state[pkg_state] = {}
                         if pkg_flag not in module_state[pkg_state]: module_state[pkg_state][pkg_flag] = []
