@@ -679,6 +679,7 @@ class StateAdaptor(object):
                     'entry_point'   : 'entry_point',
                     'environment'   : 'environment',
                     'volumes'       : 'volumes',
+                    'devices'       : 'devices',
                     'mem_limit'     : 'mem_limit',
                     'cpu_shares'    : 'cpu_shares',
                     'ports'         : 'ports',
@@ -761,6 +762,7 @@ class StateAdaptor(object):
                     'command'       : 'command',
                     'environment'   : 'environment',
                     'volumes'       : 'volumes',
+                    'devices'       : 'devices',
                     'mem_limit'     : 'mem_limit',
                     'cpu_shares'    : 'cpu_shares',
                     'ports'         : 'ports',
@@ -1499,6 +1501,27 @@ class StateAdaptor(object):
                     utils.log("DEBUG", "Generating volumes, current: %s"%(addin.get("volumes")), ("__build_up", self))
                     volumes = []
                     binds = {}
+                    vol = addin.get("volumes",{})
+                    for item in vol:
+                        key = item.get("key",None)
+                        value = item.get("value",None)
+                        if not key or not value: continue
+                        mp = value.split(":")
+                        ro = (True if (len(mp) == 2 and mp[1] == "ro") else False)
+                        value = mp[0]
+                        volumes.append(value)
+                        binds[key] = {
+                            'bind': value,
+                            'ro': ro
+                        }
+                    addin.pop("volumes")
+                    if volumes and binds:
+                        addin["volumes"] = volumes
+                        addin["binds"] = binds
+                if addin.get("devices"):
+                    utils.log("DEBUG", "Generating devices, current: %s"%(addin.get("devices")), ("__build_up", self))
+                    devices = {}
+                    # TODO
                     vol = addin.get("volumes",{})
                     for item in vol:
                         key = item.get("key",None)

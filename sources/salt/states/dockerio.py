@@ -369,6 +369,9 @@ def installed(name,
               dns=None,
               volumes=None,
               volumes_from=None,
+              devices=None,
+              port_bindings=None,
+              binds=None,
               force=False,
               *args, **kwargs):
     '''
@@ -472,6 +475,7 @@ def installed(name,
         dns=dns,
         volumes=dvolumes,
         volumes_from=volumes_from,
+        devices=devices,
         name=name)
     out = create(*a, **kw)
     # if container has been created, even if not started, we mark
@@ -669,10 +673,10 @@ def running(name, container=None, port_bindings=None, binds=None,
         return _valid(
             comment='Container {0!r} is started'.format(container))
     else:
-        started = __salt__['docker.start'](
-            container, binds=binds, port_bindings=port_bindings,
-            lxc_conf=lxc_conf, publish_all_ports=publish_all_ports,
-            links=links, privileged=privileged)
+        started = __salt__['docker.start'](container)
+#            container, binds=binds, port_bindings=port_bindings,
+#            lxc_conf=lxc_conf, publish_all_ports=publish_all_ports,
+#            links=links, privileged=privileged)
         is_running = __salt__['docker.is_running'](container)
         if is_running:
             return _valid(
@@ -1017,6 +1021,7 @@ def vops_running_one(container,
                      environment=None,
                      ports=None,
                      volumes=None,
+                     devices=None,
                      mem_limit=0,
                      cpu_shares=None,
                      # running
@@ -1029,8 +1034,8 @@ def vops_running_one(container,
 
     out_text = ""
     ret = installed(
-        container,image,entrypoint=entrypoint,command=command,environment=environment,
-        ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force,hostname=container)
+        container,image,entrypoint=entrypoint,command=command,environment=environment,binds=binds,port_bindings=port_bindings,
+        ports=ports,volumes=volumes,mem_limit=mem_limit,cpu_shares=cpu_shares,force=force,hostname=container,devices=devices)
 #    # DEBUG
 #    print "######### INSTALLED #####"
 #    print ret
@@ -1049,9 +1054,9 @@ def vops_running_one(container,
 #    print container
 #    print "########## /CONTAINER ID ##########"
 
-    ret = running(
-        container,container=container,port_bindings=port_bindings,
-        binds=binds,publish_all_ports=publish_all_ports,links=links)
+    ret = running(container)
+#        container,container=container,port_bindings=port_bindings,
+#        binds=binds,publish_all_ports=publish_all_ports,links=links)
 #    # DEBUG
 #    print "######### RUNNING #####"
 #    print ret
@@ -1127,6 +1132,7 @@ def vops_running(containers,
                  environment=None,
                  ports=None,
                  volumes=None,
+                 devices=None,
                  mem_limit=0,
                  cpu_shares=None,
                  # running
@@ -1191,6 +1197,7 @@ def vops_running(containers,
                                   environment=environment,
                                   ports=port,
                                   volumes=volumes,
+                                  devices=devices,
                                   mem_limit=mem_limit,
                                   cpu_shares=cpu_shares,
                                   binds=binds,

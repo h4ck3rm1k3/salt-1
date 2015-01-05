@@ -585,6 +585,9 @@ def create_container(image,
                      ports=None,
                      environment=None,
                      dns=None,
+                     devices=None,
+                     port_bindings=None,
+                     binds=None,
                      volumes=None,
                      volumes_from=None,
                      name=None,
@@ -643,19 +646,28 @@ def create_container(image,
     client = _get_client()
     try:
         mountpoints = {}
-        binds = {}
-        # create empty mountpoints for them to be
-        # editable
-        # either we have a list of guest or host:guest
-        if isinstance(volumes, list):
-            for mountpoint in volumes:
-                mounted = mountpoint
-                if ':' in mountpoint:
-                    parts = mountpoint.split(':')
-                    mountpoint = parts[1]
-                    mounted = parts[0]
-                mountpoints[mountpoint] = {}
-                binds[mounted] = mountpoint
+        if not binds:
+            binds = {}
+#        binds = {}
+#        # create empty mountpoints for them to be
+#        # editable
+#        # either we have a list of guest or host:guest
+#        if isinstance(volumes, list):
+#            for mountpoint in volumes:
+#                mounted = mountpoint
+#                if ':' in mountpoint:
+#                    parts = mountpoint.split(':')
+#                    mountpoint = parts[1]
+#                    mounted = parts[0]
+#                mountpoints[mountpoint] = {}
+#                binds[mounted] = mountpoint
+        #TODO: check
+        bindings = None
+        if port_bindings is not None:
+            bindings = {}
+            for k, v in port_bindings.iteritems():
+                bindings[k] = (v.get('HostIp', ''), v['HostPort'])
+        # TODO: devices
         info = _set_id(client.create_container(
             image=image,
             command=command,
@@ -671,6 +683,10 @@ def create_container(image,
             dns=dns,
             volumes=mountpoints,
             volumes_from=volumes_from,
+            devices=devices,
+            port_bindings=bindings,
+            binds=binds,
+            ports=ports,
             name=name,
             cpu_shares=cpu_shares
         ))
