@@ -730,6 +730,61 @@
                 "en": "\n### Description\nPull the latest image from the specified repository at the specified tag (if any)\n\n### Parameters\n\n*   **`repo`** (*required*): Repository URL or/and Image name\n\n\t\texample:\n\t\t\tnamespace/repo\n\n*   **`tag`** (*optional*): Repository tag (default: latest)\n\n\t\texample:\n\t\t\tlatest\n\n*   **`username`** (*optional*): Username used to login to repository\n\n*   **`password`** (*optional*): Password used to login to repository (required if username specified)\n\n*   **`email`** (*optional*): Email used to login to repository (required if username specified)\n\n*   **`containers`** (*optional*): Container(s) associated to this image (specify it if you want your container to be re-created when a new version of the image is pulled)\n\n\t\texample:\n\t\t\tmy_container\n\t\t\t\t"
             }
         }, 
+        "docker pushed": {
+            "distro": null, 
+            "module": "linux.docker.pushed", 
+            "parameter": {
+                "author": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "container": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "dep_containers": {
+                    "required": false, 
+                    "type": "array", 
+                    "visible": true
+                }, 
+                "email": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "message": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "password": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "repository": {
+                    "required": true, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "tag": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }, 
+                "username": {
+                    "required": false, 
+                    "type": "line", 
+                    "visible": true
+                }
+            }, 
+            "reference": {
+                "cn": "", 
+                "en": "\n### Description\nPush an image to a docker registry. (`docker push`)\n\n### Parameters\n\n*   **`repository`** (*required*): Repository to push\n\n\t\texample:\n\t\t\tnamespace/image\n\n\t\texample:\n\t\t\tnamespace/my_container\n\n*   **`container`** (*optional*): Container id to commit (if desired to push a container as an image)\n\n\t\texample:\n\t\t\tmy_container\n\n*   **`tag`** (*optional*): Repository tag (default: latest)\n\n\t\texample:\n\t\t\tlatest\n\n*   **`message`** (*optional*): Commit message (if container specified to be commited)\n\n*   **`author`** (*optional*): Author (if container specified to be commited)\n\n*   **`username`** (*optional*): Username used to login to repository\n\n*   **`password`** (*optional*): Password used to login to repository (required if username specified)\n\n*   **`email`** (*optional*): Email used to login to repository (required if username specified)\n\n*   **`dep_containers`** (*optional*): Containers needed to be shutdown if something new is pushed (in order to be rebuilt)\n\n\t\texample:\n\t\t\tmy_container\n\t\t\t\t"
+            }
+        }, 
         "docker running": {
             "distro": null, 
             "module": "linux.docker.running", 
