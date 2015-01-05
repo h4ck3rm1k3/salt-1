@@ -34,37 +34,36 @@ def swap_protocol(url):
     return url
 
 
-def expand_registry_url(hostname, insecure=False):
+def expand_registry_url(hostname):
     if hostname.startswith('http:') or hostname.startswith('https:'):
+        if '/' not in hostname[9:]:
+            hostname = hostname + '/v1/'
         return hostname
     if utils.ping('https://' + hostname + '/v1/_ping'):
-        return 'https://' + hostname
-    elif insecure:
-        return 'http://' + hostname
-    else:
-        raise errors.DockerException(
-            "HTTPS endpoint unresponsive and insecure mode isn't enabled."
-        )
+        return 'https://' + hostname + '/v1/'
+    return 'http://' + hostname + '/v1/'
 
 
-def resolve_repository_name(repo_name, insecure=False):
+def resolve_repository_name(repo_name):
     if '://' in repo_name:
         raise errors.InvalidRepository(
             'Repository name cannot contain a scheme ({0})'.format(repo_name))
     parts = repo_name.split('/', 1)
-    if '.' not in parts[0] and ':' not in parts[0] and parts[0] != 'localhost':
+    if ('.' not in parts[0]) and (':' not in parts[0]) and (parts[0] != 'localhost'):
         # This is a docker index repo (ex: foo/bar or ubuntu)
+        print "Docker repo"
         return INDEX_URL, repo_name
     if len(parts) < 2:
         raise errors.InvalidRepository(
             'Invalid repository name ({0})'.format(repo_name))
 
-    if 'index.docker.io' in parts[0] or 'registry.hub.docker.com' in parts[0]:
+    if 'index.docker.io' in parts[0]:
         raise errors.InvalidRepository(
-            'Invalid repository name, try "{0}" instead'.format(parts[1])
-        )
+            'Invalid repository name, try "{0}" instead'.format(parts[1]))
 
-    return expand_registry_url(parts[0], insecure), parts[1]
+    print parts
+#    parts = repo_name.split(':', 1)
+    return expand_registry_url(parts[0]), parts[1]
 
 
 def resolve_authconfig(authconfig, registry=None):
@@ -117,20 +116,14 @@ def encode_full_header(auth):
     return encode_header({'configs': auth})
 
 
-def load_config(config_path=None):
-    """
-    Loads authentication data from a Docker configuration file in the given
-    root directory or if config_path is passed use given path.
-    """
+def load_config(root=None):
+    """Loads authentication data from a Docker configuration file in the given
+    root directory."""
     conf = {}
     data = None
 
-    config_file = config_path or os.path.join(os.environ.get('HOME', '.'),
-                                              DOCKER_CONFIG_FILENAME)
-
-    # if config path doesn't exist return empty config
-    if not os.path.exists(config_file):
-        return {}
+    config_file = os.path.join(root or os.environ.get('HOME', '.'),
+                               DOCKER_CONFIG_FILENAME)
 
     # First try as JSON
     try:

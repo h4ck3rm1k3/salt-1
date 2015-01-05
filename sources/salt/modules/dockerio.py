@@ -585,9 +585,9 @@ def create_container(image,
                      ports=None,
                      environment=None,
                      dns=None,
-                     devices=None,
-                     port_bindings=None,
-                     binds=None,
+#                     devices=None,
+#                     port_bindings=None,
+#                     binds=None,
                      volumes=None,
                      volumes_from=None,
                      name=None,
@@ -646,28 +646,21 @@ def create_container(image,
     client = _get_client()
     try:
         mountpoints = {}
-        if not binds:
-            binds = {}
-#        binds = {}
-#        # create empty mountpoints for them to be
-#        # editable
-#        # either we have a list of guest or host:guest
-#        if isinstance(volumes, list):
-#            for mountpoint in volumes:
-#                mounted = mountpoint
-#                if ':' in mountpoint:
-#                    parts = mountpoint.split(':')
-#                    mountpoint = parts[1]
-#                    mounted = parts[0]
-#                mountpoints[mountpoint] = {}
-#                binds[mounted] = mountpoint
-        #TODO: check
-        bindings = None
-        if port_bindings is not None:
-            bindings = {}
-            for k, v in port_bindings.iteritems():
-                bindings[k] = (v.get('HostIp', ''), v['HostPort'])
-        # TODO: devices
+#        if not binds:
+#            binds = {}
+        binds = {}
+        # create empty mountpoints for them to be
+        # editable
+        # either we have a list of guest or host:guest
+        if isinstance(volumes, list):
+            for mountpoint in volumes:
+                mounted = mountpoint
+                if ':' in mountpoint:
+                    parts = mountpoint.split(':')
+                    mountpoint = parts[1]
+                    mounted = parts[0]
+                mountpoints[mountpoint] = {}
+                binds[mounted] = mountpoint
         info = _set_id(client.create_container(
             image=image,
             command=command,
@@ -683,10 +676,9 @@ def create_container(image,
             dns=dns,
             volumes=mountpoints,
             volumes_from=volumes_from,
-            devices=devices,
-            port_bindings=bindings,
-            binds=binds,
-            ports=ports,
+#            devices=devices,
+#            port_bindings=bindings,
+#            binds=binds,
             name=name,
             cpu_shares=cpu_shares
         ))
@@ -922,7 +914,7 @@ def restart(container, timeout=10, *args, **kwargs):
 
 def start(container, binds=None, ports=None, port_bindings=None,
           lxc_conf=None, publish_all_ports=None, links=None,
-          privileged=False,
+          privileged=False, devices=None,
           *args, **kwargs):
     '''
     restart the specified container
@@ -954,7 +946,7 @@ def start(container, binds=None, ports=None, port_bindings=None,
                 for k, v in port_bindings.iteritems():
                     bindings[k] = (v.get('HostIp', ''), v['HostPort'])
             client.start(dcontainer, binds=binds, port_bindings=bindings,
-                         lxc_conf=lxc_conf,
+                         lxc_conf=lxc_conf, devices=devices,
                          publish_all_ports=publish_all_ports, links=links,
                          privileged=privileged)
             if is_running(dcontainer):

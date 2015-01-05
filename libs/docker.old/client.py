@@ -13,7 +13,6 @@
 #    limitations under the License.
 
 import json
-import os
 import re
 import shlex
 import struct
@@ -25,48 +24,37 @@ import six
 
 from .auth import auth
 from .unixconn import unixconn
-from .ssladapter import ssladapter
 from .utils import utils
 from . import errors
-from .tls import TLSConfig
 
 if not six.PY3:
     import websocket
 
-DEFAULT_DOCKER_API_VERSION = '1.16'
+DEFAULT_DOCKER_API_VERSION = '1.12'
 DEFAULT_TIMEOUT_SECONDS = 60
 STREAM_HEADER_SIZE_BYTES = 8
 
 
 class Client(requests.Session):
     def __init__(self, base_url=None, version=DEFAULT_DOCKER_API_VERSION,
-                 timeout=DEFAULT_TIMEOUT_SECONDS, tls=False):
+                 timeout=DEFAULT_TIMEOUT_SECONDS):
         super(Client, self).__init__()
-        base_url = utils.parse_host(base_url)
-        if 'http+unix:///' in base_url:
+        if base_url is None:
+            base_url = "http+unix://var/run/docker.sock"
+        if 'unix:///' in base_url:
             base_url = base_url.replace('unix:/', 'unix:')
-        if tls and not base_url.startswith('https://'):
-            raise errors.TLSParameterError(
-                'If using TLS, the base_url argument must begin with '
-                '"https://".')
-        if not isinstance(version, six.string_types):
-            raise errors.DockerException(
-                'version parameter must be a string. Found {0}'.format(
-                    type(version).__name__
-                )
-            )
+        if base_url.startswith('unix:'):
+            base_url = "http+" + base_url
+        if base_url.startswith('tcp:'):
+            base_url = base_url.replace('tcp:', 'http:')
+        if base_url.endswith('/'):
+            base_url = base_url[:-1]
         self.base_url = base_url
         self._version = version
         self._timeout = timeout
         self._auth_configs = auth.load_config()
 
-        # Use SSLAdapter for the ability to specify SSL version
-        if isinstance(tls, TLSConfig):
-            tls.configure_client(self)
-        elif tls:
-            self.mount('https://', ssladapter.SSLAdapter())
-        else:
-            self.mount('http+unix://', unixconn.UnixAdapter(base_url, timeout))
+        self.mount('http+unix://', unixconn.UnixAdapter(base_url, timeout))
 
     def _set_request_timeout(self, kwargs):
         """Prepare the kwargs for an HTTP request by inserting the timeout
@@ -108,51 +96,14 @@ class Client(requests.Session):
                           mem_limit=0, ports=None, environment=None, dns=None,
                           volumes=None, volumes_from=None,
                           network_disabled=False, entrypoint=None,
-                          cpu_shares=None, working_dir=None,
-                          domainname=None, memswap_limit=0, cpuset=None,
-                          host_config=None):
+                          cpu_shares=None, working_dir=None, domainname=None,
+                          memswap_limit=0):
         if isinstance(command, six.string_types):
             command = shlex.split(str(command))
         if isinstance(environment, dict):
             environment = [
-                six.text_type('{0}={1}').format(k, v)
-                for k, v in six.iteritems(environment)
+                '{0}={1}'.format(k, v) for k, v in environment.items()
             ]
-
-        if isinstance(mem_limit, six.string_types):
-            if len(mem_limit) == 0:
-                mem_limit = 0
-            else:
-                units = {'b': 1,
-                         'k': 1024,
-                         'm': 1024 * 1024,
-                         'g': 1024 * 1024 * 1024}
-                suffix = mem_limit[-1].lower()
-
-                # Check if the variable is a string representation of an int
-                # without a units part. Assuming that the units are bytes.
-                if suffix.isdigit():
-                    digits_part = mem_limit
-                    suffix = 'b'
-                else:
-                    digits_part = mem_limit[:-1]
-
-                if suffix in units.keys() or suffix.isdigit():
-                    try:
-                        digits = int(digits_part)
-                    except ValueError:
-                        message = ('Failed converting the string value for'
-                                   ' mem_limit ({0}) to a number.')
-                        formatted_message = message.format(digits_part)
-                        raise errors.DockerException(formatted_message)
-
-                    mem_limit = digits * units[suffix]
-                else:
-                    message = ('The specified value for mem_limit parameter'
-                               ' ({0}) should specify the units. The postfix'
-                               ' should be one of the `b` `k` `m` `g`'
-                               ' characters')
-                    raise errors.DockerException(message.format(mem_limit))
 
         if isinstance(ports, list):
             exposed_ports = {}
@@ -165,9 +116,6 @@ class Client(requests.Session):
                     port = port_definition[0]
                 exposed_ports['{0}/{1}'.format(port, proto)] = {}
             ports = exposed_ports
-
-        if isinstance(volumes, six.string_types):
-            volumes = [volumes, ]
 
         if isinstance(volumes, list):
             volumes_dict = {}
@@ -224,10 +172,8 @@ class Client(requests.Session):
             'NetworkDisabled': network_disabled,
             'Entrypoint': entrypoint,
             'CpuShares': cpu_shares,
-            'Cpuset': cpuset,
             'WorkingDir': working_dir,
-            'MemorySwap': memswap_limit,
-            'HostConfig': host_config
+            'MemorySwap': memswap_limit
         }
 
     def _post_json(self, url, data, **kwargs):
@@ -265,41 +211,31 @@ class Client(requests.Session):
     def _create_websocket_connection(self, url):
         return websocket.create_connection(url)
 
-    def _warn_deprecated(self, arg_name, version):
-        warning_message = (
-            '{0!r} is deprecated for API version >= {1}'
-        ).format(arg_name, version)
-        warnings.warn(warning_message, DeprecationWarning)
-
     def _get_raw_response_socket(self, response):
         self._raise_for_status(response)
         if six.PY3:
-            sock = response.raw._fp.fp.raw._sock
+            return response.raw._fp.fp.raw._sock
         else:
-            sock = response.raw._fp.fp._sock
-        try:
-            # Keep a reference to the response to stop it being garbage
-            # collected. If the response is garbage collected, it will close
-            # TLS sockets.
-            sock._response = response
-        except AttributeError:
-            # UNIX sockets can't have attributes set on them, but that's fine
-            # because we won't be doing TLS over them
-            pass
-
-        return sock
+            return response.raw._fp.fp._sock
 
     def _stream_helper(self, response):
         """Generator for data coming from a chunked-encoded HTTP response."""
-        reader = response.raw
-        assert reader._fp.chunked
-        while not reader.closed:
-            # this read call will block until we get a chunk
-            data = reader.read(1)
+        socket_fp = self._get_raw_response_socket(response)
+        socket_fp.setblocking(1)
+        socket = socket_fp.makefile()
+        while True:
+            # Because Docker introduced newlines at the end of chunks in v0.9,
+            # and only on some API endpoints, we have to cater for both cases.
+            size_line = socket.readline()
+            if size_line == '\r\n':
+                size_line = socket.readline()
+
+            size = int(size_line, 16)
+            if size <= 0:
+                break
+            data = socket.readline()
             if not data:
                 break
-            if reader._fp.chunk_left:
-                data += reader.read(reader._fp.chunk_left)
             yield data
 
     def _multiplexed_buffer_helper(self, response):
@@ -400,8 +336,7 @@ class Client(requests.Session):
 
     def build(self, path=None, tag=None, quiet=False, fileobj=None,
               nocache=False, rm=False, stream=False, timeout=None,
-              custom_context=False, encoding=None, pull=True,
-              forcerm=False):
+              custom_context=False, encoding=None):
         remote = context = headers = None
         if path is None and fileobj is None:
             raise TypeError("Either path or fileobj needs to be provided.")
@@ -415,18 +350,14 @@ class Client(requests.Session):
         elif path.startswith(('http://', 'https://',
                               'git://', 'github.com/')):
             remote = path
-        elif not os.path.isdir(path):
-            raise TypeError("You must specify a directory to build in path")
         else:
-            dockerignore = os.path.join(path, '.dockerignore')
-            exclude = None
-            if os.path.exists(dockerignore):
-                with open(dockerignore, 'r') as f:
-                    exclude = list(filter(bool, f.read().split('\n')))
-            context = utils.tar(path, exclude=exclude)
+            context = utils.tar(path)
 
         if utils.compare_version('1.8', self._version) >= 0:
             stream = True
+
+        # disable streams
+        stream = False
 
         u = self._url('/build')
         params = {
@@ -434,9 +365,7 @@ class Client(requests.Session):
             'remote': remote,
             'q': quiet,
             'nocache': nocache,
-            'rm': rm,
-            'forcerm': forcerm,
-            'pull': pull
+            'rm': rm
         }
 
         if context is not None:
@@ -493,8 +422,7 @@ class Client(requests.Session):
                             json=True)
 
     def containers(self, quiet=False, all=False, trunc=True, latest=False,
-                   since=None, before=None, limit=-1, size=False,
-                   filters=None):
+                   since=None, before=None, limit=-1, size=False):
         params = {
             'limit': 1 if latest else limit,
             'all': 1 if all else 0,
@@ -503,8 +431,6 @@ class Client(requests.Session):
             'since': since,
             'before': before
         }
-        if filters:
-            params['filters'] = utils.convert_filters(filters)
         u = self._url("/containers/json")
         res = self._result(self._get(u, params=params), True)
 
@@ -529,19 +455,12 @@ class Client(requests.Session):
                          volumes=None, volumes_from=None,
                          network_disabled=False, name=None, entrypoint=None,
                          cpu_shares=None, working_dir=None, domainname=None,
-                         memswap_limit=0, cpuset=None, host_config=None):
-
-        if isinstance(volumes, six.string_types):
-            volumes = [volumes, ]
-
-        if host_config and utils.compare_version('1.15', self._version) < 0:
-            raise errors.APIError('host_config is not supported in API < 1.15')
+                         memswap_limit=0):
 
         config = self._container_config(
             image, command, hostname, user, detach, stdin_open, tty, mem_limit,
             ports, environment, dns, volumes, volumes_from, network_disabled,
-            entrypoint, cpu_shares, working_dir, domainname,
-            memswap_limit, cpuset, host_config
+            entrypoint, cpu_shares, working_dir, domainname, memswap_limit
         )
         return self.create_container_from_config(config, name)
 
@@ -562,48 +481,6 @@ class Client(requests.Session):
     def events(self):
         return self._stream_helper(self.get(self._url('/events'), stream=True))
 
-    def execute(self, container, cmd, detach=False, stdout=True, stderr=True,
-                stream=False, tty=False):
-        if utils.compare_version('1.15', self._version) < 0:
-            raise errors.APIError('Exec is not supported in API < 1.15')
-        if isinstance(container, dict):
-            container = container.get('Id')
-        if isinstance(cmd, six.string_types):
-            cmd = shlex.split(str(cmd))
-
-        data = {
-            'Container': container,
-            'User': '',
-            'Privileged': False,
-            'Tty': tty,
-            'AttachStdin': False,
-            'AttachStdout': stdout,
-            'AttachStderr': stderr,
-            'Detach': detach,
-            'Cmd': cmd
-        }
-
-        # create the command
-        url = self._url('/containers/{0}/exec'.format(container))
-        res = self._post_json(url, data=data)
-        self._raise_for_status(res)
-
-        # start the command
-        cmd_id = res.json().get('Id')
-        res = self._post_json(self._url('/exec/{0}/start'.format(cmd_id)),
-                              data=data, stream=stream)
-        self._raise_for_status(res)
-        if stream:
-            return self._multiplexed_socket_stream_helper(res)
-        elif six.PY3:
-            return bytes().join(
-                [x for x in self._multiplexed_buffer_helper(res)]
-            )
-        else:
-            return str().join(
-                [x for x in self._multiplexed_buffer_helper(res)]
-            )
-
     def export(self, container):
         if isinstance(container, dict):
             container = container.get('Id')
@@ -620,10 +497,10 @@ class Client(requests.Session):
 
     def history(self, image):
         res = self._get(self._url("/images/{0}/history".format(image)))
-        return self._result(res, True)
+        self._raise_for_status(res)
+        return self._result(res)
 
-    def images(self, name=None, quiet=False, all=False, viz=False,
-               filters=None):
+    def images(self, name=None, quiet=False, all=False, viz=False):
         if viz:
             if utils.compare_version('1.7', self._version) >= 0:
                 raise Exception('Viz output is not supported in API >= 1.7!')
@@ -633,8 +510,6 @@ class Client(requests.Session):
             'only_ids': 1 if quiet else 0,
             'all': 1 if all else 0,
         }
-        if filters:
-            params['filters'] = utils.convert_filters(filters)
         res = self._result(self._get(self._url("/images/json"), params=params),
                            True)
         if quiet:
@@ -715,18 +590,13 @@ class Client(requests.Session):
         self._raise_for_status(res)
 
     def login(self, username, password=None, email=None, registry=None,
-              reauth=False, insecure_registry=False, dockercfg_path=None):
+              reauth=False):
         # If we don't have any auth data so far, try reloading the config file
         # one more time in case anything showed up in there.
-        # If dockercfg_path is passed check to see if the config file exists,
-        # if so load that config.
-        if dockercfg_path and os.path.exists(dockercfg_path):
-            self._auth_configs = auth.load_config(dockercfg_path)
-        elif not self._auth_configs:
+        if not self._auth_configs:
             self._auth_configs = auth.load_config()
 
-        registry = auth.expand_registry_url(registry, insecure_registry) \
-            if registry else auth.INDEX_URL
+        registry = registry or auth.INDEX_URL
 
         authcfg = auth.resolve_authconfig(self._auth_configs, registry)
         # If we found an existing auth config for this registry and username
@@ -748,19 +618,14 @@ class Client(requests.Session):
         return self._result(response, json=True)
 
     def logs(self, container, stdout=True, stderr=True, stream=False,
-             timestamps=False, tail='all'):
+             timestamps=False):
         if isinstance(container, dict):
             container = container.get('Id')
         if utils.compare_version('1.11', self._version) >= 0:
             params = {'stderr': stderr and 1 or 0,
                       'stdout': stdout and 1 or 0,
                       'timestamps': timestamps and 1 or 0,
-                      'follow': stream and 1 or 0,
-                      }
-            if utils.compare_version('1.13', self._version) >= 0:
-                if tail != 'all' and (not isinstance(tail, int) or tail <= 0):
-                    tail = 'all'
-                params['tail'] = tail
+                      'follow': stream and 1 or 0}
             url = self._url("/containers/{0}/logs".format(container))
             res = self._get(url, params=params, stream=stream)
             if stream:
@@ -781,13 +646,6 @@ class Client(requests.Session):
             logs=True
         )
 
-    def pause(self, container):
-        if isinstance(container, dict):
-            container = container.get('Id')
-        url = self._url('/containers/{0}/pause'.format(container))
-        res = self._post(url)
-        self._raise_for_status(res)
-
     def ping(self):
         return self._result(self._get(self._url('/_ping')))
 
@@ -806,13 +664,10 @@ class Client(requests.Session):
 
         return h_ports
 
-    def pull(self, repository, tag=None, stream=False,
-             insecure_registry=False):
+    def pull(self, repository, tag=None, stream=False):
         if not tag:
             repository, tag = utils.parse_repository_tag(repository)
-        registry, repo_name = auth.resolve_repository_name(
-            repository, insecure=insecure_registry
-        )
+        registry, repo_name = auth.resolve_repository_name(repository)
         if repo_name.count(":") == 1:
             repository, tag = repository.rsplit(":", 1)
 
@@ -843,13 +698,11 @@ class Client(requests.Session):
         else:
             return self._result(response)
 
-    def push(self, repository, tag=None, stream=False,
-             insecure_registry=False):
+    def push(self, repository, tag=None, stream=False):
         if not tag:
             repository, tag = utils.parse_repository_tag(repository)
-        registry, repo_name = auth.resolve_repository_name(
-            repository, insecure=insecure_registry
-        )
+        registry, repo_name = auth.resolve_repository_name(repository)
+
         u = self._url("/images/{0}/push".format(repository))
         params = {
             'tag': tag
@@ -874,8 +727,10 @@ class Client(requests.Session):
         else:
             response = self._post_json(u, None, stream=stream, params=params)
 
-        return stream and self._stream_helper(response) \
-            or self._result(response)
+        if stream:
+            return self._stream_helper(response)
+        else:
+            return self._result(response)
 
     def remove_container(self, container, v=False, link=False, force=False):
         if isinstance(container, dict):
@@ -886,8 +741,6 @@ class Client(requests.Session):
         self._raise_for_status(res)
 
     def remove_image(self, image, force=False, noprune=False):
-        if isinstance(image, dict):
-            image = image.get('Id')
         params = {'force': force, 'noprune': noprune}
         res = self._delete(self._url("/images/" + image), params=params)
         self._raise_for_status(res)
@@ -907,35 +760,67 @@ class Client(requests.Session):
 
     def start(self, container, binds=None, port_bindings=None, lxc_conf=None,
               publish_all_ports=False, links=None, privileged=False,
-              dns=None, dns_search=None, volumes_from=None, network_mode=None,
-              restart_policy=None, cap_add=None, cap_drop=None, devices=None,
-              extra_hosts=None):
-
-        if utils.compare_version('1.10', self._version) < 0:
-            if dns is not None:
-                raise errors.APIError(
-                    'dns is only supported for API version >= 1.10'
-                )
-            if volumes_from is not None:
-                raise errors.APIError(
-                    'volumes_from is only supported for API version >= 1.10'
-                )
-
-        start_config = utils.create_host_config(
-            binds=binds, port_bindings=port_bindings, lxc_conf=lxc_conf,
-            publish_all_ports=publish_all_ports, links=links, dns=dns,
-            privileged=privileged, dns_search=dns_search, cap_add=cap_add,
-            cap_drop=cap_drop, volumes_from=volumes_from, devices=devices,
-            network_mode=network_mode, restart_policy=restart_policy,
-            extra_hosts=extra_hosts
-        )
-
+              dns=None, dns_search=None, volumes_from=None, network_mode=None):
         if isinstance(container, dict):
             container = container.get('Id')
 
+        if isinstance(lxc_conf, dict):
+            formatted = []
+            for k, v in six.iteritems(lxc_conf):
+                formatted.append({'Key': k, 'Value': str(v)})
+            lxc_conf = formatted
+
+        start_config = {
+            'LxcConf': lxc_conf
+        }
+        if binds:
+            start_config['Binds'] = utils.convert_volume_binds(binds)
+
+        if port_bindings:
+            start_config['PortBindings'] = utils.convert_port_bindings(
+                port_bindings
+            )
+
+        start_config['PublishAllPorts'] = publish_all_ports
+
+        if links:
+            if isinstance(links, dict):
+                links = six.iteritems(links)
+
+            formatted_links = [
+                '{0}:{1}'.format(k, v) for k, v in sorted(links)
+            ]
+
+            start_config['Links'] = formatted_links
+
+        start_config['Privileged'] = privileged
+
+        if utils.compare_version('1.10', self._version) >= 0:
+            if dns is not None:
+                start_config['Dns'] = dns
+            if volumes_from is not None:
+                if isinstance(volumes_from, six.string_types):
+                    volumes_from = volumes_from.split(',')
+                start_config['VolumesFrom'] = volumes_from
+        else:
+            warning_message = ('{0!r} parameter is discarded. It is only'
+                               ' available for API version greater or equal'
+                               ' than 1.10')
+
+            if dns is not None:
+                warnings.warn(warning_message.format('dns'),
+                              DeprecationWarning)
+            if volumes_from is not None:
+                warnings.warn(warning_message.format('volumes_from'),
+                              DeprecationWarning)
+
+        if dns_search:
+            start_config['DnsSearch'] = dns_search
+
+        if network_mode:
+            start_config['NetworkMode'] = network_mode
+
         url = self._url("/containers/{0}/start".format(container))
-        if not start_config:
-            start_config = None
         res = self._post_json(url, data=start_config)
         self._raise_for_status(res)
 
@@ -954,7 +839,7 @@ class Client(requests.Session):
         params = {'t': timeout}
         url = self._url("/containers/{0}/stop".format(container))
         res = self._post(url, params=params,
-                         timeout=(timeout + self._timeout))
+                         timeout=max(timeout, self._timeout))
         self._raise_for_status(res)
 
     def tag(self, image, repository, tag=None, force=False):
@@ -975,18 +860,11 @@ class Client(requests.Session):
     def version(self):
         return self._result(self._get(self._url("/version")), True)
 
-    def unpause(self, container):
-        if isinstance(container, dict):
-            container = container.get('Id')
-        url = self._url('/containers/{0}/unpause'.format(container))
-        res = self._post(url)
-        self._raise_for_status(res)
-
-    def wait(self, container, timeout=None):
+    def wait(self, container):
         if isinstance(container, dict):
             container = container.get('Id')
         url = self._url("/containers/{0}/wait".format(container))
-        res = self._post(url, timeout=timeout)
+        res = self._post(url, timeout=None)
         self._raise_for_status(res)
         json_ = res.json()
         if 'StatusCode' in json_:

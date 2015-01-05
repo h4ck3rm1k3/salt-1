@@ -1472,7 +1472,8 @@ class StateAdaptor(object):
                     utils.log("DEBUG", "Generating ports bindings, current: %s"%(addin["port_bindings"]), ("__build_up", self))
                     ports = []
                     pb = {}
-                    for item in addin["port_bindings"]:
+                    port_bindings = addin.get("port_bindings",[])
+                    for item in port_bindings:
                         key = item.get("key",None)
                         value = item.get("value",None)
                         if not key or not value: continue
@@ -1497,7 +1498,7 @@ class StateAdaptor(object):
                     utils.log("DEBUG", "Generating volumes, current: %s"%(addin.get("volumes")), ("__build_up", self))
                     volumes = []
                     binds = {}
-                    vol = addin.get("volumes",{})
+                    vol = addin.get("volumes",[])
                     for item in vol:
                         key = item.get("key",None)
                         value = item.get("value",None)
@@ -1516,45 +1517,34 @@ class StateAdaptor(object):
                         addin["binds"] = binds
                 if addin.get("devices"):
                     utils.log("DEBUG", "Generating devices, current: %s"%(addin.get("devices")), ("__build_up", self))
-                    devices = {}
-                    # TODO
-                    vol = addin.get("volumes",{})
-                    for item in vol:
+                    devices = []
+                    devs = addin.get("devices",[])
+                    for item in devs:
+                        dev = {}
                         key = item.get("key",None)
                         value = item.get("value",None)
                         if not key or not value: continue
                         mp = value.split(":")
-                        ro = (True if (len(mp) == 2 and mp[1] == "ro") else False)
-                        value = mp[0]
-                        volumes.append(value)
-                        binds[key] = {
-                            'bind': value,
-                            'ro': ro
-                        }
-                    addin.pop("volumes")
-                    if volumes and binds:
-                        addin["volumes"] = volumes
-                        addin["binds"] = binds
+                        if len(mp) == 2:
+                            dev["CgroupPermissions"] = mp[1]
+                        dev["PathOnHost"] = key
+                        dev["PathInContainer"] = mp[0]
+                        devices.append(dev)
+                    addin.pop("devices")
+                    if devices:
+                        addin["devices"] = devices
+                    utils.log("DEBUG", "Devices generated, current: %s"%(addin.get("devices")), ("__build_up", self))
                 if addin.get("environment"):
                     utils.log("DEBUG", "Generating environment, current: %s"%(addin["environment"]), ("__build_up", self))
                     env = {}
-                    for item in addin["environment"]:
+                    environment = addin.get("environment",[])
+                    for item in environment:
                         key = item.get("key","")
                         value = item.get("value","")
                         if not key: continue
                         env[key] = value
                     addin.pop("environment")
                     addin["environment"] = env
-                if addin.get("links"):
-                    utils.log("DEBUG", "Generating links, current: %s"%(addin["links"]), ("__build_up", self))
-                    links = {}
-                    for item in addin["links"]:
-                        key = item.get("key","")
-                        value = item.get("value","")
-                        if not key or not value: continue
-                        links[key] = value
-                    addin.pop("links")
-                    addin["links"] = links
                 if addin.get("mem_limit"):
                     utils.log("DEBUG", "Generating memory limit, current: %s"%(addin["mem_limit"]), ("__build_up", self))
                     mem=addin.get("mem_limit")
