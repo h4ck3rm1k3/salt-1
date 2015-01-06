@@ -18,6 +18,7 @@ function deb() {
     if [ "$1" != "" ]; then
         cd $1
     fi
+    cp docker-$VERSION deb/docker
     cd deb
     # build here
     sudo apt-get -y install make devscripts
