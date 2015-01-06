@@ -7,6 +7,6 @@ Build-Depends:
 
 Package: docker
 Architecture: all
-Depends: ${shlibs:Depends}
+Depends: libcgroup-dev
 Description: An open source project to pack, ship and run any application as a lightweight container
  Docker is an open-source engine that automates the deployment of any application as a lightweight, portable, self-sufficient container that will run virtually anywhere.

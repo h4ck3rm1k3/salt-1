@@ -76,6 +76,7 @@ EOF
 
 case $1 in
     deb)
+        apt-get -y install curl
         get_docker
         deb $2
         ;;
