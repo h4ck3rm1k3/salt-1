@@ -63,7 +63,7 @@ binary-arch: build
 #	dpkg-shlibdeps $(BIN_DIR)/$(package)
 
 # Generate the control file
-#	dpkg-gencontrol -isp -P$(DESTDIR)
+	dpkg-gencontrol -P$(DESTDIR)
 
 # Make DEBIAN/md5sums
 	cd $(DESTDIR) && find . -type f ! -regex '.*DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums
