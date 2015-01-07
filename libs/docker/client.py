@@ -396,7 +396,7 @@ class Client(requests.Session):
 
         u = self._url("/containers/{0}/attach".format(container))
         return self._get_raw_response_socket(self.post(
-            u, None, params=self._attach_params(params), stream=True))
+            u, None, params=self._attach_params(params), stream=False))
 
     def build(self, path=None, tag=None, quiet=False, fileobj=None,
               nocache=False, rm=False, stream=False, timeout=None,
@@ -425,8 +425,8 @@ class Client(requests.Session):
                     exclude = list(filter(bool, f.read().split('\n')))
             context = utils.tar(path, exclude=exclude)
 
-        if utils.compare_version('1.8', self._version) >= 0:
-            stream = True
+#        if utils.compare_version('1.8', self._version) >= 0:
+#            stream = True
 
         u = self._url('/build')
         params = {
@@ -518,7 +518,7 @@ class Client(requests.Session):
         res = self._post_json(
             self._url("/containers/{0}/copy".format(container)),
             data={"Resource": resource},
-            stream=True
+            stream=False
         )
         self._raise_for_status(res)
         return res.raw
@@ -560,9 +560,9 @@ class Client(requests.Session):
                             format(container))), True)
 
     def events(self):
-        return self._stream_helper(self.get(self._url('/events'), stream=True))
+        return self._stream_helper(self.get(self._url('/events'), stream=False))
 
-    def execute(self, container, cmd, detach=False, stdout=True, stderr=True,
+    def execute(self, container, cmd, detach=False, stdout=True, stderr=False,
                 stream=False, tty=False):
         if utils.compare_version('1.15', self._version) < 0:
             raise errors.APIError('Exec is not supported in API < 1.15')
@@ -608,13 +608,13 @@ class Client(requests.Session):
         if isinstance(container, dict):
             container = container.get('Id')
         res = self._get(self._url("/containers/{0}/export".format(container)),
-                        stream=True)
+                        stream=False)
         self._raise_for_status(res)
         return res.raw
 
     def get_image(self, image):
         res = self._get(self._url("/images/{0}/get".format(image)),
-                        stream=True)
+                        stream=False)
         self._raise_for_status(res)
         return res.raw
 
