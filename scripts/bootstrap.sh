@@ -9,8 +9,8 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-DOCKER_DEB_VERSION="1.3.1-0"
-DOCKER_RPM_VERSION="1.3.1-1"
+DOCKER_DEB_VERSION="1.4.1-0"
+DOCKER_RPM_VERSION="1.4.1-1"
 
 # get variables
 S_OA_PACKAGE_PATH=$(cat "$1" | grep "^package_path=" | cut -d '=' -f 2)
@@ -20,7 +20,7 @@ S_OA_CONF_DIR=$(cat "$1" | grep "^conf_path=" | cut -d '=' -f 2)
 S_OA_GPG_KEY_URI=$(cat "$1" | grep "^gpg_key_uri=" | cut -d '=' -f 2)
 S_OA_BASE_REMOTE_DEFAULT="https://s3.amazonaws.com/opsagent"
 S_OA_BASE_REMOTE=$(cat "$1" | grep "^base_remote=" | cut -d '=' -f 2)
-if [ "$BASE_REMOTE" = "" ]; then
+if [ "$S_OA_BASE_REMOTE" = "" ]; then
     S_OA_BASE_REMOTE=$S_OA_BASE_REMOTE_DEFAULT
 fi
 S_OA_GPG_KEY="${S_OA_CONF_DIR}/madeira.gpg.public.key"
