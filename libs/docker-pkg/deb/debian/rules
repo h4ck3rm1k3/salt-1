@@ -60,10 +60,10 @@ binary-arch: build
 	strip -R .comment $(BIN_DIR)/$(package)
 
 # Work out the shared library dependancies
-	dpkg-shlibdeps $(BIN_DIR)/$(package)
+#	dpkg-shlibdeps $(BIN_DIR)/$(package)
 
 # Generate the control file
-	dpkg-gencontrol -isp -P$(DESTDIR)
+#	dpkg-gencontrol -isp -P$(DESTDIR)
 
 # Make DEBIAN/md5sums
 	cd $(DESTDIR) && find . -type f ! -regex '.*DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums
