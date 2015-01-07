@@ -1517,19 +1517,21 @@ class StateAdaptor(object):
                         addin["binds"] = binds
                 if addin.get("devices"):
                     utils.log("DEBUG", "Generating devices, current: %s"%(addin.get("devices")), ("__build_up", self))
-                    devices = []
+#                    devices = []
+                    devices = {}
                     devs = addin.get("devices",[])
                     for item in devs:
-                        dev = {}
                         key = item.get("key",None)
                         value = item.get("value",None)
                         if not key or not value: continue
-                        mp = value.split(":")
-                        if len(mp) == 2:
-                            dev["CgroupPermissions"] = mp[1]
-                        dev["PathOnHost"] = key
-                        dev["PathInContainer"] = mp[0]
-                        devices.append(dev)
+                        devices[key] = value
+#                        dev = {}
+#                        mp = value.split(":")
+#                        if len(mp) == 2:
+#                            dev["CgroupPermissions"] = mp[1]
+#                        dev["PathOnHost"] = key
+#                        dev["PathInContainer"] = mp[0]
+#                        devices.append(dev)
                     addin.pop("devices")
                     if devices:
                         addin["devices"] = devices
