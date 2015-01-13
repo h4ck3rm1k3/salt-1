@@ -12,7 +12,7 @@ except ImportError:
 
 # Import salt libs
 import salt.utils
-
+from salt.modules import state_std
 
 def __virtual__():
     return 'shadow' if 'kernel' in __grains__ and __grains__.get('kernel', '') == 'Linux' else False
